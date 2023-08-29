@@ -1,0 +1,13 @@
+{
+  "version": "3.171.9",
+  "appimage": {
+    "x86_64-linux": {
+      "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes%2Fdesktop%403.171.9/standard-notes-3.171.9-linux-x86_64.AppImage",
+      "hash": "sha256-PIw3OiUKRNM0nAvWMbi4UQ0nNGPrAmtC5UJ2PNIo6kQ="
+    },
+    "aarch64-linux": {
+      "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes/desktop%403.161.0/standard-notes-3.161.0-linux-arm64.AppImage",
+      "hash": "sha256-C5HcFEJitSQmrm1dOyqeGJw4NS/TUFy+9/AzVJQT7tw="
+    }
+  }
+}

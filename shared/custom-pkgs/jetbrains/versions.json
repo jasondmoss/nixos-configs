@@ -1,0 +1,13 @@
+{
+  "linux": {
+    "phpstorm": {
+      "update-channel": "PhpStorm RELEASE",
+      "url-template": "https://download.jetbrains.com/webide/PhpStorm-{version}.tar.gz",
+      "version": "232.9559.64",
+      "sha256": "sha256-vLUG+icHj3jaRKOPT7qwogAM6iY4X1GADJMdDL0bR8Q=",
+      "url": "https://download.jetbrains.com/webide/PhpStorm-2023.2.1.tar.gz",
+      "version-major-minor": "2023.2.1",
+      "build_number": "232.9559.64"
+    }
+  }
+}
