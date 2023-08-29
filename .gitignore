@@ -1,2 +1,6 @@
+.idea
+**/nixpkgs
+**/scratch
+**/secret.txt
 examples/
 scratch/
