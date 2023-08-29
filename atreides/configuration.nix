@@ -10,6 +10,7 @@ in {
     ./hardware.nix
     ./webserver.nix
     ../shared/applications.nix
+    # JetBrains PHPStorm Beta
     ../shared/custom-pkgs/jetbrains/default.nix
   ];
 

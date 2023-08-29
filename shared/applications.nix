@@ -244,8 +244,6 @@ in {
       rustc
       yarn
 
-
-      #-- LAMP
       php82
       php82Extensions.bz2
       php82Extensions.curl
@@ -265,12 +263,6 @@ in {
       php82Packages.phpcs
       php82Packages.phpmd
       php82Packages.phpstan
-
-
-      #-- Flatpak
-      flatpak
-      flatpak-builder
-      libportal
 
 
       #-- Security
@@ -333,6 +325,9 @@ in {
       #-- MISCELLANEOUS/UTILITIES
       bitwarden
       conky
+      flatpak
+      flatpak-builder
+      libportal
       protonmail-bridge
       protonvpn-cli
       protonvpn-gui

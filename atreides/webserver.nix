@@ -184,59 +184,59 @@
           '';
         };
 
-        "spectacularnwt" = {
-          documentRoot = "/srv/spectacularnwt/web";
-          servedDirs = [{
-            urlPath = "/srv/spectacularnwt/web";
-            dir = "/srv/spectacularnwt/web";
-          }];
-          serverAliases = [ "spectacularnwt.test" "spectacularnwt-redirect.test" ];
-          extraConfig = ''
-            <Directory "/srv/spectacularnwt/web">
-              Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
-              RewriteEngine On
-              DirectoryIndex index.html index.html.var index.php
-              Require all granted
-              AllowOverride All
-            </Directory>
-          '';
-        };
+        # "spectacularnwt" = {
+        #   documentRoot = "/srv/spectacularnwt/web";
+        #   servedDirs = [{
+        #     urlPath = "/srv/spectacularnwt/web";
+        #     dir = "/srv/spectacularnwt/web";
+        #   }];
+        #   serverAliases = [ "spectacularnwt.test" "spectacularnwt-redirect.test" ];
+        #   extraConfig = ''
+        #     <Directory "/srv/spectacularnwt/web">
+        #       Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
+        #       RewriteEngine On
+        #       DirectoryIndex index.html index.html.var index.php
+        #       Require all granted
+        #       AllowOverride All
+        #     </Directory>
+        #   '';
+        # };
 
-        "travel-media" = {
-          documentRoot = "/srv/travel-media/web";
-          servedDirs = [{
-            urlPath = "/srv/travel-media/web";
-            dir = "/srv/travel-media/web";
-          }];
-          serverAliases = [ "travel-media.test" "travel-media-redirect.test" ];
-          extraConfig = ''
-            <Directory "/srv/travel-media/web">
-              Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
-              RewriteEngine On
-              DirectoryIndex index.html index.html.var index.php
-              Require all granted
-              AllowOverride All
-            </Directory>
-          '';
-        };
+        # "travel-media" = {
+        #   documentRoot = "/srv/travel-media/web";
+        #   servedDirs = [{
+        #     urlPath = "/srv/travel-media/web";
+        #     dir = "/srv/travel-media/web";
+        #   }];
+        #   serverAliases = [ "travel-media.test" "travel-media-redirect.test" ];
+        #   extraConfig = ''
+        #     <Directory "/srv/travel-media/web">
+        #       Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
+        #       RewriteEngine On
+        #       DirectoryIndex index.html index.html.var index.php
+        #       Require all granted
+        #       AllowOverride All
+        #     </Directory>
+        #   '';
+        # };
 
-        "travel-trade" = {
-          documentRoot = "/srv/travel-trade/web";
-          servedDirs = [{
-            urlPath = "/srv/travel-trade/web";
-            dir = "/srv/travel-trade/web";
-          }];
-          serverAliases = [ "travel-trade.test" "travel-trade-redirect.test" ];
-          extraConfig = ''
-            <Directory "/srv/travel-trade/web">
-              Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
-              RewriteEngine On
-              DirectoryIndex index.html index.html.var index.php
-              Require all granted
-              AllowOverride All
-            </Directory>
-          '';
-        };
+        # "travel-trade" = {
+        #   documentRoot = "/srv/travel-trade/web";
+        #   servedDirs = [{
+        #     urlPath = "/srv/travel-trade/web";
+        #     dir = "/srv/travel-trade/web";
+        #   }];
+        #   serverAliases = [ "travel-trade.test" "travel-trade-redirect.test" ];
+        #   extraConfig = ''
+        #     <Directory "/srv/travel-trade/web">
+        #       Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
+        #       RewriteEngine On
+        #       DirectoryIndex index.html index.html.var index.php
+        #       Require all granted
+        #       AllowOverride All
+        #     </Directory>
+        #   '';
+        # };
       };
     };
 
