@@ -193,8 +193,8 @@ in {
       libsForQt5.sddm-kcm
       libsForQt5.xdg-desktop-portal-kde
 
-      # qt6.qtgrpc # Currently not compatible with latest protobuf
-      # qt6.full # Build fails with qt6.qtgrpc
+#      qt6.qtgrpc # Currently not compatible with latest protobuf
+#      qt6.full # Build fails with qt6.qtgrpc
       qt6.qt5compat
       qt6.qtbase
       qt6.qtimageformats
