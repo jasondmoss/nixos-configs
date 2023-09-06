@@ -381,6 +381,9 @@ in {
       #-- QT 6: GRPC - Needs work
 #      (pkgs.qt6.callPackage ./custom-pkgs/qtgrpc/default.nix {})
 
+      #-- QT 6 - Needs work
+#      (pkgs.qt6Packages.callPackage ./custom-pkgs/qt-6/default.nix {})
+
       #-- Standard Notes
       (pkgs.callPackage ./custom-pkgs/standardnotes/default.nix {})
 
@@ -393,7 +396,7 @@ in {
     ];
 
     sessionVariables = {
-      DEFAULT_BROWSER = "${pkgs.latest.firefox-nightly-bin}/bin/firefox-nightly";
+      DEFAULT_BROWSER = "${pkgs.latest.firefox-nightly-bin}/bin/firefox-nightly -P 'Nightly'";
       GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
         pkgs.gst_all_1.gst-editing-services
         pkgs.gst_all_1.gst-libav

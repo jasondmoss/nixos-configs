@@ -3,7 +3,7 @@ let
   theme = import ../shared/theme.nix;
 in {
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 
 
   imports = [
@@ -12,25 +12,7 @@ in {
     ../shared/applications.nix
     # JetBrains PHPStorm Beta
     ../shared/custom-pkgs/jetbrains/default.nix
-    # QT 6 Development Release
-#    ../shared/custom-pkgs/qt-6/default.nix
   ];
-
-
-  boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ "amd_iommu=on" ];
-
-    loader = {
-      systemd-boot.enable = true;
-      grub.enable = false;
-
-      efi = {
-        efiSysMountPoint = "/boot/efi";
-        canTouchEfiVariables = true;
-      };
-    };
-  };
 
 
   i18n = {
@@ -130,7 +112,7 @@ in {
       videoDrivers = [ "nvidia" ];
       layout = "us";
       xkbVariant = "";
-      dpi = 162;
+      # dpi = 162;
 
       displayManager = {
         gdm.enable = false;
@@ -176,12 +158,12 @@ in {
       askPassword = pkgs.lib.mkForce "${pkgs.ksshaskpass.out}/bin/ksshaskpass";
     };
 
-    steam = {
-      enable = true;
+    # steam = {
+    #   enable = true;
 
-      remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
-    };
+    #   remotePlay.openFirewall = true;
+    #   dedicatedServer.openFirewall = true;
+    # };
 
     sway.enable = true;
     xwayland.enable = false;
@@ -210,7 +192,7 @@ in {
 
   systemd.user.services.add_ssh_keys = {
     script = ''
-      ssh-add $HOME/.ssh/id_development_global
+      ssh-add $HOME/.ssh/icarus_development_global
     '';
     wantedBy = [ "multi-user.target" ];
   };
