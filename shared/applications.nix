@@ -119,6 +119,7 @@ in {
       ffmpegthumbnailer
       flex
       fwupd
+      fwupd-efi
       gcr
       gd
       gsasl
@@ -154,6 +155,7 @@ in {
       #-- Core Utils
       clinfo
       htop
+      libxfs
       lsd
       nvme-cli
       rar
@@ -162,6 +164,7 @@ in {
       unrar
       unzip
       wirelesstools
+      xfsprogs
       zip
 
 
@@ -231,6 +234,7 @@ in {
       #-- Development
       bison
       bisoncpp
+      bun
       cargo
       cmake
       desktop-file-utils
@@ -278,6 +282,7 @@ in {
       darktable
       emem
       gcolor3
+      gimp
       inkscape
       jetbrains-toolbox
       libreoffice-qt
@@ -297,6 +302,7 @@ in {
       libva-utils
       libva1
       libva1-minimal
+      mpg321
       speechd
       vaapiVdpau
 
@@ -366,32 +372,32 @@ in {
       #
 
       #-- Anytype
-      (pkgs.callPackage ./custom-pkgs/anytype/default.nix {})
+      (pkgs.callPackage ./pkgs/anytype/default.nix {})
 
       #-- GIMP Development
-      (pkgs.callPackage ./custom-pkgs/gegl-devel/default.nix {})
-      (pkgs.callPackage ./custom-pkgs/gimp-devel/default.nix {})
+      # (pkgs.callPackage ./pkgs/gegl-devel/default.nix {})
+      # (pkgs.callPackage ./pkgs/gimp-devel/default.nix {})
 
       #-- Klassy KDE Theme
-      (pkgs.libsForQt5.callPackage ./custom-pkgs/klassy/default.nix {})
+      (pkgs.libsForQt5.callPackage ./pkgs/klassy/default.nix {})
 
       #-- Master PDF 5
-#      (pkgs.libsForQt5.callPackage ./custom-pkgs/masterpdf5/default.nix {})
+#      (pkgs.libsForQt5.callPackage ./pkgs/masterpdf5/default.nix {})
 
       #-- QT 6: GRPC - Needs work
-#      (pkgs.qt6.callPackage ./custom-pkgs/qtgrpc/default.nix {})
+#      (pkgs.qt6.callPackage ./pkgs/qtgrpc/default.nix {})
 
       #-- QT 6 - Needs work
-#      (pkgs.qt6Packages.callPackage ./custom-pkgs/qt-6/default.nix {})
+#      (pkgs.qt6Packages.callPackage ./pkgs/qt-6/default.nix {})
 
       #-- Standard Notes
-      (pkgs.callPackage ./custom-pkgs/standardnotes/default.nix {})
+      (pkgs.callPackage ./pkgs/standardnotes/default.nix {})
 
       #-- Strawberry Music Player
-      (pkgs.callPackage ./custom-pkgs/strawberry/default.nix {})
+      (pkgs.callPackage ./pkgs/strawberry/default.nix {})
 
       #-- Wavebox Beta
-      (pkgs.callPackage ./custom-pkgs/wavebox/default.nix {})
+      (pkgs.callPackage ./pkgs/wavebox/default.nix {})
 
     ];
 

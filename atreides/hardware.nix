@@ -7,11 +7,26 @@
   boot = {
     initrd = {
       availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
-      kernelModules = [ ];
+      kernelModules = [];
     };
 
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [ "kvm-amd" ];
-    extraModulePackages = [ ];
+    kernelParams = [ "amd_iommu=on" ];
+
+    extraModulePackages = [];
+
+    loader = {
+      systemd-boot.enable = true;
+      grub.enable = false;
+
+      efi = {
+        efiSysMountPoint = "/boot/efi";
+        canTouchEfiVariables = true;
+      };
+    };
+
+    swraid.enable = false;
   };
 
   fileSystems."/" = {

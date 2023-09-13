@@ -3,7 +3,7 @@ let
   theme = import ../shared/theme.nix;
 in {
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 
 
   imports = [
@@ -11,26 +11,8 @@ in {
     ./webserver.nix
     ../shared/applications.nix
     # JetBrains PHPStorm Beta
-    ../shared/custom-pkgs/jetbrains/default.nix
-    # QT 6 Development Release
-#    ../shared/custom-pkgs/qt-6/default.nix
+    ../shared/pkgs/jetbrains/default.nix
   ];
-
-
-  boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ "amd_iommu=on" ];
-
-    loader = {
-      systemd-boot.enable = true;
-      grub.enable = false;
-
-      efi = {
-        efiSysMountPoint = "/boot/efi";
-        canTouchEfiVariables = true;
-      };
-    };
-  };
 
 
   i18n = {

@@ -5,14 +5,16 @@
 with lib;
 let
   bits = "x86_64";
-  version = "10.116.10-3";
+  version = "10.117.10-3";
 
   desktopItem = makeDesktopItem rec {
+    type = "Application";
+    terminal = false;
     name = "Wavebox";
+    desktopName = name;
     exec = "wavebox";
     icon = "wavebox";
-    desktopName = name;
-    genericName = name;
+    mimeTypes = [ "x-scheme-handler/mailto" "text/calendar" ];
     categories = [ "Network" "WebBrowser" ];
   };
 
@@ -34,7 +36,7 @@ in stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-    sha256 = "sha256-qj1CLZUVjO457W6oxSqGFdw/seouG82zWM1nKE6pqbM=";
+    sha256 = "sha256-CL2JM5Dh8wfqwqZOh+o2Yb2LPzUzjLZf/XWSjiWQRJI=";
   };
 
   # Ignore missing QT5 dependencies.
