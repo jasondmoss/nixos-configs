@@ -5,7 +5,6 @@ in {
 
     system.stateVersion = "23.11";
 
-
     imports = [
         ./hardware.nix
         ./webserver.nix
@@ -16,7 +15,6 @@ in {
         ../shared/pkgs/jetbrains/default.nix
     ];
 
-
     i18n = {
         defaultLocale = "en_CA.utf8";
 
@@ -26,9 +24,7 @@ in {
         };
     };
 
-
     time.timeZone = "America/Toronto";
-
 
     nix = {
         package = pkgs.nixUnstable;
@@ -41,13 +37,11 @@ in {
         };
     };
 
-
     documentation = {
         enable = true;
         man.enable = true;
         dev.enable = true;
     };
-
 
     fonts = {
         fontconfig.enable = true;
@@ -66,7 +60,6 @@ in {
         ];
     };
 
-
     console = {
         earlySetup = true;
         font = "Lat2-Terminus16";
@@ -74,13 +67,16 @@ in {
         colors = theme.colors16;
     };
 
-
     services = {
         gnome = {
             at-spi2-core.enable = true;
         };
 
+        dbus.enable = true;
         gvfs.enable = true;
+        udev.enable = true;
+        devmon.enable = true;
+        sysstat.enable = true;
 
         locate = {
             enable = true;
@@ -103,7 +99,6 @@ in {
 
         pipewire = {
             enable = true;
-
             alsa.enable = true;
             alsa.support32Bit = true;
             pulse.enable = true;
@@ -132,6 +127,7 @@ in {
                 };
 
                 defaultSession = "plasma";
+                # defaultSession = "plasmawayland";
             };
 
             desktopManager = {
@@ -145,10 +141,14 @@ in {
         };
     };
 
+    xdg.portal = {
+        enable = true;
+        wlr.enable = true;
+        # gtk portal needed to make gtk apps happy
+        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    };
 
-    xdg.portal.enable = true;
     sound.enable = true;
-
 
     programs = {
         bash.enableCompletion = true;
@@ -167,10 +167,13 @@ in {
             dedicatedServer.openFirewall = true;
         };
 
-        sway.enable = true;
-        xwayland.enable = false;
-    };
+        sway = {
+            enable = true;
+            wrapperFeatures.gtk = true;
+        };
 
+        xwayland.enable = true;
+    };
 
     security = {
         rtkit.enable = true;
@@ -180,6 +183,10 @@ in {
                 name = "kwallet";
                 enableKwallet = true;
             };
+
+            swaylock.text = ''
+                auth include login
+            '';
         };
 
         sudo = {
@@ -189,16 +196,26 @@ in {
                 Defaults:me !authenticate
             '';
         };
+
+        auditd.enable = true;
+        #audit = {
+        #    enable = true;
+        #    rules = [
+        #        "-a exit,always -F arch=x86_64-linux -S execve"
+        #    ];
+        #};
     };
 
+    systemd = {
+        extraConfig = "DefaultTimeoutStopSec=10s";
 
-    systemd.user.services.add_ssh_keys = {
-        script = ''
-            ssh-add $HOME/.ssh/id_development_global
-        '';
-        wantedBy = [ "multi-user.target" ];
+        user.services.add_ssh_keys = {
+            script = ''
+                ssh-add $HOME/.ssh/id_development_global
+            '';
+            wantedBy = [ "multi-user.target" ];
+        };
     };
-
 
     users.users = {
         me = {

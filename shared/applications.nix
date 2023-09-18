@@ -1,5 +1,18 @@
 { config, lib, pkgs, ... }:
 let
+    # Sway
+    dbus-sway-environment = pkgs.writeTextFile {
+        name = "dbus-sway-environment";
+        destination = "/bin/dbus-sway-environment";
+        executable = true;
+
+        text = ''
+            dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+            systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+            systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+        '';
+    };
+
     # Firefox Nightly
     firefoxNightlyDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
@@ -162,13 +175,27 @@ in {
             xfsprogs
             zip
 
+            #--
+            wayland
+            xdg-utils
+
+            #-- Sway
+            dbus-sway-environment
+            swaylock
+            swayidle
+            grim
+            slurp
+            wl-clipboard
+            bemenu
+            mako
+            wdisplays
+
             #-- GNOME/GTK
             gtk3 gtk3-x11
             gtk4
             xdg-desktop-portal
             xdg-desktop-portal-gnome
             xdg-desktop-portal-gtk
-            xdg-utils
             gnome.gnome-tweaks
 
             #-- KDE/PLASMA
@@ -386,6 +413,8 @@ in {
 
         sessionVariables = {
             DEFAULT_BROWSER = "${pkgs.latest.firefox-nightly-bin}/bin/firefox-nightly -P 'Nightly'";
+            MOZ_ENABLE_WAYLAND = "1";
+            NIXOS_OZONE_WL = "1";
             GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
                 pkgs.gst_all_1.gst-editing-services
                 pkgs.gst_all_1.gst-libav

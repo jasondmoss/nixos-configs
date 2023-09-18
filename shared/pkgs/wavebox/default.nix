@@ -5,7 +5,7 @@
 with lib;
 let
     bits = "x86_64";
-    version = "10.117.10-3";
+    version = "10.117.15-3";
 
     desktopItem = makeDesktopItem rec {
         type = "Application";
@@ -36,7 +36,7 @@ in stdenv.mkDerivation rec {
 
     src = fetchurl {
         url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-        sha256 = "sha256-CL2JM5Dh8wfqwqZOh+o2Yb2LPzUzjLZf/XWSjiWQRJI=";
+        sha256 = "sha256-/WFrXhPE8IY7ceZYt8yhyNfvGoA3ddaqQV9/p6ZjcK8=";
     };
 
     # Ignore missing QT5 dependencies.
