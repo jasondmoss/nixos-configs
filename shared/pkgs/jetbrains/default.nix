@@ -1,5 +1,4 @@
 { config, lib, pkgs, self, ... }: with lib;
-
 let
     versions = builtins.fromJSON(readFile(./versions.json));
     customizeJetbrains = map(pkg:
@@ -34,5 +33,7 @@ in {
                 }))
             ]);
     };
+
+    # "sha256": "sha256-Go5HvEnQckGsf6962uu5Hj/xuKjgiC8BRlm7LjXorwA=",
 
 }

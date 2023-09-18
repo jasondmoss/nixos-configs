@@ -11,7 +11,7 @@ in {
     ./webserver.nix
     ../shared/applications.nix
     # JetBrains PHPStorm Beta
-    ../shared/custom-pkgs/jetbrains/default.nix
+    ../shared/pkgs/jetbrains/default.nix
   ];
 
 
