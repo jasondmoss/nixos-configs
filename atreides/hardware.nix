@@ -1,18 +1,18 @@
-{ config, lib, pkgs, modulesPath, ... }: {
-
+{ config, lib, pkgs, modulesPath, ... }:
+{
     imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
     boot = {
+        kernelPackages = pkgs.linuxPackages_latest;
+        kernelModules = [ "kvm-amd" ];
+        kernelParams = [ "amd_iommu=on" ];
+
         initrd = {
             availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
             kernelModules = [];
         };
-
-        kernelPackages = pkgs.linuxPackages_latest;
-        kernelModules = [ "kvm-amd" ];
-        kernelParams = [ "amd_iommu=on" ];
 
         extraModulePackages = [];
 
@@ -106,6 +106,7 @@
         opengl = {
             enable = true;
             driSupport = true;
+            driSupport32Bit = true;
 
             extraPackages = with pkgs; [
                 vaapiVdpau
@@ -116,5 +117,13 @@
 
         pulseaudio.enable = false;
     };
+
+    virtualisation.docker = {
+        enable = true;
+        enableOnBoot = true;
+        enableNvidia = true;
+    };
+
+    powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 
 }

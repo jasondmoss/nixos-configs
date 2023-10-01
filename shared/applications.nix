@@ -1,68 +1,55 @@
 { config, lib, pkgs, ... }:
 let
-    # Sway
-    dbus-sway-environment = pkgs.writeTextFile {
-        name = "dbus-sway-environment";
-        destination = "/bin/dbus-sway-environment";
-        executable = true;
-
-        text = ''
-            dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-            systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
-            systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
-        '';
-    };
-
     # Firefox Nightly
     firefoxNightlyDesktopItem = pkgs.makeDesktopItem rec {
-        type = "Application";
-        terminal = false;
-        name = "FirefoxNightly";
-        desktopName = "FirefoxNightly";
-        exec = "firefox-nightly -P \"Nightly\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
-        mimeTypes = [
-            "application/pdf"
-            "application/rdf+xml"
-            "application/rss+xml"
-            "application/xhtml+xml"
-            "application/xhtml_xml"
-            "application/xml"
-            "image/gif"
-            "image/jpeg"
-            "image/png"
-            "image/webp"
-            "text/html"
-            "text/xml"
-            "x-scheme-handler/http"
-            "x-scheme-handler/https"
-        ];
-        categories = [ "Network" "WebBrowser" ];
-        actions = {
-            NewWindow = {
-                name = "Open a New Window";
-                exec = "firefox-nightly -P \"Nightly\" --new-window %u";
-            };
+       type = "Application";
+       terminal = false;
+       name = "Firefox Nightly";
+       desktopName = "Firefox Nightly";
+       exec = "$out/bin/firefox-nightly -P \"Nightly\" %u";
+       icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
+       mimeTypes = [
+           "application/pdf"
+           "application/rdf+xml"
+           "application/rss+xml"
+           "application/xhtml+xml"
+           "application/xhtml_xml"
+           "application/xml"
+           "image/gif"
+           "image/jpeg"
+           "image/png"
+           "image/webp"
+           "text/html"
+           "text/xml"
+           "x-scheme-handler/http"
+           "x-scheme-handler/https"
+       ];
+       categories = [ "Network" "WebBrowser" ];
+       actions = {
+           NewWindow = {
+               name = "Open a New Window";
+               exec = "firefox-nightly -P \"Nightly\" --new-window %u";
+           };
 
-            NewPrivateWindow = {
-                name = "Open a New Private Window";
-                exec = "firefox-nightly -P \"Nightly\" --private-window %u";
-            };
+           NewPrivateWindow = {
+               name = "Open a New Private Window";
+               exec = "firefox-nightly -P \"Nightly\" --private-window %u";
+          };
 
-            ProfileSelect = {
-                name = "Select a Profile";
-                exec = "firefox-nightly --ProfileManager";
-            };
-        };
+           ProfileSelect = {
+               name = "Select a Profile";
+               exec = "firefox-nightly --ProfileManager";
+           };
+       };
     };
 
     # Firefox Stable
     firefoxStableDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
-        name = "FirefoxStable";
-        desktopName = "FirefoxStable";
-        exec = "firefox-stable -P \"Default\" %u";
+        name = "Firefox Stable";
+        desktopName = "Firefox Stable";
+        exec = "$out/bin/firefox-stable -P \"Default\" %u";
         icon = "firefox";
         mimeTypes = [
             "application/vnd.mozilla.xul+xml"
@@ -93,6 +80,8 @@ let
     };
 in {
     nixpkgs = {
+        hostPlatform = lib.mkDefault "x86_64-linux";
+
         config = {
             allowBroken = false;
             allowUnfree = true;
@@ -107,7 +96,10 @@ in {
                 };
             };
 
-            permittedInsecurePackages = [ "openssl-1.1.1w" ];
+            permittedInsecurePackages = [
+                "openssl-1.1.1w"
+                "qtwebkit-5.212.0-alpha4"
+            ];
         };
 
         overlays = [
@@ -119,24 +111,19 @@ in {
     environment = {
         systemPackages = with pkgs; [
 
-            #-- Core
+            #-- CORE
             babl
             coreutils-full
             curl
             expect
-            ffmpeg
-            ffmpegthumbnailer
             flex
             fwupd
             fwupd-efi
             gcr
             gd
             gsasl
-            imagemagick
             inetutils
             inotify-tools
-            jpegoptim
-            jq
             killall
             libxml2
             links2
@@ -144,7 +131,6 @@ in {
             nix-du
             nix-index
             nix-prefetch-git
-            #nixFlakes
             openssl
             openvpn
             optipng
@@ -157,10 +143,7 @@ in {
             usbutils
             wget
 
-            nvidia-vaapi-driver
-            egl-wayland
-
-            #-- Core Utils
+            #-- CORE UTILS
             clinfo
             htop
             libxfs
@@ -175,20 +158,18 @@ in {
             xfsprogs
             zip
 
-            #--
+            #-- GRAPHICS
+            egl-wayland
+            imagemagick
+            jpegoptim
+            jq
+            libva
+            libva-minimal
+            libva-utils
+            libva1
+            libva1-minimal
             wayland
             xdg-utils
-
-            #-- Sway
-            dbus-sway-environment
-            swaylock
-            swayidle
-            grim
-            slurp
-            wl-clipboard
-            bemenu
-            mako
-            wdisplays
 
             #-- GNOME/GTK
             gtk3 gtk3-x11
@@ -216,64 +197,67 @@ in {
             libsForQt5.sddm-kcm
             libsForQt5.xdg-desktop-portal-kde
 
-            # qt6.qtgrpc # Currently not compatible with latest protobuf
-            # qt6.full # Build fails with qt6.qtgrpc
-            qt6.qt5compat
-            qt6.qtbase
-            qt6.qtimageformats
-            qt6.qtmultimedia
-            qt6.qttools
-            qt6.qtwayland
-            qt6.qtwebengine
-            qt6.qtwebview
-            qt6.wrapQtAppsHook
-
+            qt6.full
             qt6Packages.qt6ct
             qt6Packages.qt6gtk2
+            qt6Packages.qtkeychain
             qt6Packages.qtstyleplugin-kvantum
             qt6Packages.quazip
+            qt6Packages.qscintilla
+            qt6Packages.poppler
 
             python310Packages.pyqt6
             python311Packages.pyqt6
 
             ksmoothdock
 
-            #-- Theming
+            #-- THEMING
             adwaita-qt6
             adapta-kde-theme
             adementary-theme
             arc-kde-theme
             ayu-theme-gtk
+            materia-kde-theme
 
             gnome.adwaita-icon-theme
             gnome-icon-theme
             pantheon.elementary-icon-theme
 
-            #-- Development
+            #-- DEVELOPMENT
             bison
             bisoncpp
             bun
             cargo
             cmake
+            ddev
             desktop-file-utils
             eww
             gcc
+            gdb
+            ggshield
             git
             go
             lua
             nodejs
             perl
+            pre-commit
             rustc
+            seer
             yarn
 
             php82
             php82Extensions.bz2
             php82Extensions.curl
+            php82Extensions.fileinfo
             php82Extensions.gd
+            php82Extensions.imagick
             php82Extensions.intl
             php82Extensions.mbstring
             php82Extensions.mysqlnd
             php82Extensions.pdo
+            php82Extensions.pdo_dblib
+            php83Extensions.pdo_mysql
+            php82Extensions.pdo_odbc
             php82Extensions.tidy
             php82Extensions.xml
             php82Extensions.xsl
@@ -286,12 +270,12 @@ in {
             php82Packages.phpmd
             php82Packages.phpstan
 
-            #-- Security
+            #-- SECURITY
             chkrootkit
             encfs
             lynis
+            mkcert
             sniffnet
-            wireshark
 
             #-- EDITORS
             bcompare
@@ -310,16 +294,12 @@ in {
             sublime4-dev
             vim
 
-            #-- Multimedia
+            #-- MULTIMEDIA
+            ffmpeg
+            ffmpegthumbnailer
             libdrm
-            libva
-            libva-minimal
-            libva-utils
-            libva1
-            libva1-minimal
             mpg321
             speechd
-            vaapiVdpau
 
             aaxtomp3
             audacity
@@ -344,12 +324,13 @@ in {
             #-- MISCELLANEOUS/UTILITIES
             bitwarden
             conky
-            flatpak
-            flatpak-builder
+            #flatpak
+            #flatpak-builder
             libportal
             protonmail-bridge
             protonvpn-cli
             protonvpn-gui
+            qemu
             sticky
             ulauncher
             wezterm
@@ -357,28 +338,32 @@ in {
         ] ++ [
 
             #
-            #    Custom Package Builds.
+            #    CUSTOM PACKAGE BUILDS.
             #
 
-            #-- Firefox Nightly (nixpkgs-mozilla) -- Rename executable
+            #-- Firefox Nightly (nixpkgs-mozilla)
             (pkgs.runCommand "firefox-nightly" {
-                preferLocalBuild = true;
+               preferLocalBuild = true;
             } ''
-                mkdir -p $out/bin
-                ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
+               mkdir -p $out/bin
+               ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
             '')
-            # Create desktop file
             firefoxNightlyDesktopItem
 
-            #-- Firefox Stable -- Rename executable
+            #-- Firefox Stable
             (pkgs.runCommand "firefox-stable" {
                 preferLocalBuild = true;
             } ''
                 mkdir -p $out/bin
                 ln -s ${pkgs.firefox}/bin/firefox $out/bin/firefox-stable
             '')
-            # Create desktop file
             firefoxStableDesktopItem
+
+            (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
+                qemu-system-x86_64 \
+                -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
+                "$@"
+            '')
 
             #
             # --------------
@@ -396,9 +381,6 @@ in {
 
             #-- Master PDF 5
             # (pkgs.libsForQt5.callPackage ./pkgs/masterpdf5/default.nix {})
-
-            #-- QT 6 - Needs work
-            # (pkgs.callPackage ./pkgs/qt6-devel/default.nix {})
 
             #-- Standard Notes
             (pkgs.callPackage ./pkgs/standardnotes/default.nix {})
@@ -425,6 +407,7 @@ in {
                 pkgs.gst_all_1.gstreamer
             ];
         };
+
     };
 
 }
