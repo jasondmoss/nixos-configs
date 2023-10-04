@@ -1,55 +1,51 @@
 { config, lib, pkgs, ... }:
 let
-    # Firefox Nightly
-    firefoxNightlyDesktopItem = pkgs.makeDesktopItem rec {
-       type = "Application";
-       terminal = false;
-       name = "Firefox Nightly";
-       desktopName = "Firefox Nightly";
-       exec = "$out/bin/firefox-nightly -P \"Nightly\" %u";
-       icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
-       mimeTypes = [
-           "application/pdf"
-           "application/rdf+xml"
-           "application/rss+xml"
-           "application/xhtml+xml"
-           "application/xhtml_xml"
-           "application/xml"
-           "image/gif"
-           "image/jpeg"
-           "image/png"
-           "image/webp"
-           "text/html"
-           "text/xml"
-           "x-scheme-handler/http"
-           "x-scheme-handler/https"
-       ];
-       categories = [ "Network" "WebBrowser" ];
-       actions = {
-           NewWindow = {
-               name = "Open a New Window";
-               exec = "firefox-nightly -P \"Nightly\" --new-window %u";
-           };
-
-           NewPrivateWindow = {
-               name = "Open a New Private Window";
-               exec = "firefox-nightly -P \"Nightly\" --private-window %u";
-          };
-
-           ProfileSelect = {
-               name = "Select a Profile";
-               exec = "firefox-nightly --ProfileManager";
-           };
-       };
+    FirefoxNightlyDesktopEntry = pkgs.makeDesktopItem rec {
+        type = "Application";
+        terminal = false;
+        name = "Firefox Nightly";
+        desktopName = "Firefox Nightly";
+        exec = "firefox-nightly -P \"Nightly\" %u";
+        icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
+        mimeTypes = [
+            "application/pdf"
+            "application/rdf+xml"
+            "application/rss+xml"
+            "application/xhtml+xml"
+            "application/xhtml_xml"
+            "application/xml"
+            "image/gif"
+            "image/jpeg"
+            "image/png"
+            "image/webp"
+            "text/html"
+            "text/xml"
+            "x-scheme-handler/http"
+            "x-scheme-handler/https"
+        ];
+        categories = [ "Network" "WebBrowser" ];
+        actions = {
+            NewWindow = {
+                name = "Open a New Window";
+                exec = "firefox-nightly -P \"Nightly\" --new-window %u";
+            };
+            NewPrivateWindow = {
+                name = "Open a New Private Window";
+                exec = "firefox-nightly -P \"Nightly\" --private-window %u";
+            };
+            ProfileSelect = {
+                name = "Select a Profile";
+                exec = "firefox-nightly --ProfileManager";
+            };
+        };
     };
 
-    # Firefox Stable
-    firefoxStableDesktopItem = pkgs.makeDesktopItem rec {
+    FirefoxStableDesktopEntry = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
         name = "Firefox Stable";
         desktopName = "Firefox Stable";
-        exec = "$out/bin/firefox-stable -P \"Default\" %u";
+        exec = "firefox-stable -P \"Default\" %u";
         icon = "firefox";
         mimeTypes = [
             "application/vnd.mozilla.xul+xml"
@@ -66,12 +62,10 @@ let
                 name = "Open a New Window";
                 exec = "firefox-stable -P \"Default\" --new-window %u";
             };
-
             NewPrivateWindow = {
                 name = "Open a New Private Window";
                 exec = "firefox-stable -P \"Default\" --private-window %u";
             };
-
             ProfileSelect = {
                 name = "Select a Profile";
                 exec = "firefox-stable --ProfileManager";
@@ -208,6 +202,7 @@ in {
 
             python310Packages.pyqt6
             python311Packages.pyqt6
+            python311Packages.pytz
 
             ksmoothdock
 
@@ -341,34 +336,6 @@ in {
             #    CUSTOM PACKAGE BUILDS.
             #
 
-            #-- Firefox Nightly (nixpkgs-mozilla)
-            (pkgs.runCommand "firefox-nightly" {
-               preferLocalBuild = true;
-            } ''
-               mkdir -p $out/bin
-               ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
-            '')
-            firefoxNightlyDesktopItem
-
-            #-- Firefox Stable
-            (pkgs.runCommand "firefox-stable" {
-                preferLocalBuild = true;
-            } ''
-                mkdir -p $out/bin
-                ln -s ${pkgs.firefox}/bin/firefox $out/bin/firefox-stable
-            '')
-            firefoxStableDesktopItem
-
-            (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
-                qemu-system-x86_64 \
-                -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
-                "$@"
-            '')
-
-            #
-            # --------------
-            #
-
             #-- Anytype
             (pkgs.callPackage ./pkgs/anytype/default.nix {})
 
@@ -390,6 +357,34 @@ in {
 
             #-- Wavebox Beta
             (pkgs.callPackage ./pkgs/wavebox/default.nix {})
+
+            #
+            # --------------
+            #
+
+            (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
+                qemu-system-x86_64 \
+                -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
+                "$@"
+            '')
+
+            #-- Firefox Nightly (nixpkgs-mozilla)
+            (pkgs.runCommand "firefox-nightly" {
+               preferLocalBuild = true;
+            } ''
+               mkdir -p $out/bin
+               ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
+            '')
+            FirefoxNightlyDesktopEntry
+
+            #-- Firefox Stable
+            (pkgs.runCommand "firefox-stable" {
+                preferLocalBuild = true;
+            } ''
+                mkdir -p $out/bin
+                ln -s ${pkgs.firefox}/bin/firefox $out/bin/firefox-stable
+            '')
+            FirefoxStableDesktopEntry
 
         ];
 

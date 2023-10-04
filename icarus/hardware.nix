@@ -4,7 +4,6 @@
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
         kernelModules = [ "kvm-intel" "module_blacklist=i915" ];
@@ -22,8 +21,6 @@
             };
         };
 
-        extraModulePackages = [];
-
         kernel.sysctl = {
             "fs.inotify.max_user_watches" = 2140000000;
         };
@@ -36,7 +33,6 @@
         swraid.enable = false;
     };
 
-
     fileSystems."/" = {
         device = "/dev/disk/by-uuid/5e7a3096-5275-4bb2-973d-b00b032438a6";
         fsType = "ext4";
@@ -47,7 +43,6 @@
         fsType = "vfat";
     };
 
-
     swapDevices = [
         { device = "/dev/disk/by-uuid/8a9e0e21-ada8-4830-9836-3f9d678ac477"; }
     ];
@@ -55,18 +50,37 @@
     networking = {
         useDHCP = lib.mkDefault true;
 
+        networkmanager.unmanaged = [
+            "*:enp3s0"
+            "*:wlo1"
+        ];
+
+        wireless = {
+            enable = true;
+
+            userControlled = {
+                enable = true;
+                group = "wheel";
+            };
+
+            networks = {
+                Skynet = {
+                    psk = "96Hgpqo5$%h#5mv#6^eac^KT5q3S@$ZP2Mp7";
+                };
+            };
+        };
+
         interfaces = {
             enp3s0.useDHCP = lib.mkDefault true;
             wlo1.useDHCP = lib.mkDefault true;
         };
 
-        firewall = {
-            enable = true;
-            allowedTCPPorts = [];
-            allowedUDPPorts = [];
-        };
+        # firewall = {
+        #     enable = true;
+        #     allowedTCPPorts = [];
+        #     allowedUDPPorts = [];
+        # };
     };
-
 
     hardware = {
         cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
