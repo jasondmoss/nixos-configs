@@ -22,7 +22,6 @@
             script = ''
                 ssh-add $HOME/.ssh/id_development_global
             '';
-            # wantedBy = [ "multi-user.target" ];
             wantedBy = [ "default.target" ];
         };
     };

@@ -91,6 +91,16 @@ in {
             pulse.enable = true;
         };
 
+        # "phpstorm": {
+        #     "update-channel": "PhpStorm RELEASE",
+        #     "version": "232.9921.29",
+        #     "version-major-minor": "2023.2.2",
+        #     "sha256": "sha256-Xj3QIbgtytD1G97Wd6qHaA3MP12EOVHEiEipGRFBvx0=",
+        #     "url-template": "https://download.jetbrains.com/webide/PhpStorm-{version}.tar.gz",
+        #     "url": "https://download.jetbrains.com/webide/PhpStorm-2023.2.2.tar.gz",
+        #     "build_number": "232.9921.29"
+        # }
+
         xserver = {
             enable = true;
             videoDrivers = [ "nvidia" ];
@@ -104,16 +114,24 @@ in {
                     enable = true;
                     enableHidpi = true;
 
+                    # wayland = {
+                    #     enable = true;
+                    # };
+
                     # theme = "${(pkgs.fetchFromGitLab {
                     #     owner = "Matt.Jolly";
                     #     repo = "sddm-eucalyptus-drop";
                     #     rev = "433ca77c1dd73f227a0d28d378e36c8f61aff33d";
                     #     sha256 = "sha256-lIDPvXtqUdnLaGFtsH6KT89Kn6VPk7xItUiU3Uzf2AQ=";
                     # })}";
+
+                    settings = {
+                        Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
+                    };
                 };
 
-                defaultSession = "plasma";
-                # defaultSession = "plasmawayland";
+                # defaultSession = "plasma";
+                defaultSession = "plasmawayland";
             };
 
             desktopManager = {
@@ -302,10 +320,10 @@ in {
             dedicatedServer.openFirewall = true;
         };
 
-        # sway = {
-        #     enable = true;
-        #     wrapperFeatures.gtk = true;
-        # };
+        sway = {
+             enable = true;
+             wrapperFeatures.gtk = true;
+        };
 
         xwayland.enable = true;
     };

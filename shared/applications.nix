@@ -1,78 +1,5 @@
 { config, lib, pkgs, ... }:
-let
-    FirefoxNightlyDesktopEntry = pkgs.makeDesktopItem rec {
-        type = "Application";
-        terminal = false;
-        name = "Firefox Nightly";
-        desktopName = "Firefox Nightly";
-        exec = "firefox-nightly -P \"Nightly\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
-        mimeTypes = [
-            "application/pdf"
-            "application/rdf+xml"
-            "application/rss+xml"
-            "application/xhtml+xml"
-            "application/xhtml_xml"
-            "application/xml"
-            "image/gif"
-            "image/jpeg"
-            "image/png"
-            "image/webp"
-            "text/html"
-            "text/xml"
-            "x-scheme-handler/http"
-            "x-scheme-handler/https"
-        ];
-        categories = [ "Network" "WebBrowser" ];
-        actions = {
-            NewWindow = {
-                name = "Open a New Window";
-                exec = "firefox-nightly -P \"Nightly\" --new-window %u";
-            };
-            NewPrivateWindow = {
-                name = "Open a New Private Window";
-                exec = "firefox-nightly -P \"Nightly\" --private-window %u";
-            };
-            ProfileSelect = {
-                name = "Select a Profile";
-                exec = "firefox-nightly --ProfileManager";
-            };
-        };
-    };
-
-    FirefoxStableDesktopEntry = pkgs.makeDesktopItem rec {
-        type = "Application";
-        terminal = false;
-        name = "Firefox Stable";
-        desktopName = "Firefox Stable";
-        exec = "firefox-stable -P \"Default\" %u";
-        icon = "firefox";
-        mimeTypes = [
-            "application/vnd.mozilla.xul+xml"
-            "application/xhtml+xml"
-            "text/html"
-            "text/xml"
-            "x-scheme-handler/ftp"
-            "x-scheme-handler/http"
-            "x-scheme-handler/https"
-        ];
-        categories = [ "Network" "WebBrowser" ];
-        actions = {
-            NewWindow = {
-                name = "Open a New Window";
-                exec = "firefox-stable -P \"Default\" --new-window %u";
-            };
-            NewPrivateWindow = {
-                name = "Open a New Private Window";
-                exec = "firefox-stable -P \"Default\" --private-window %u";
-            };
-            ProfileSelect = {
-                name = "Select a Profile";
-                exec = "firefox-stable --ProfileManager";
-            };
-        };
-    };
-in {
+{
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -310,6 +237,8 @@ in {
             filezilla
             google-chrome
             chrome-gnome-shell
+            latest.firefox-bin
+            latest.firefox-nightly-bin
             megasync
             microsoft-edge
             steam
@@ -319,8 +248,6 @@ in {
             #-- MISCELLANEOUS/UTILITIES
             bitwarden
             conky
-            #flatpak
-            #flatpak-builder
             libportal
             protonmail-bridge
             protonvpn-cli
@@ -368,28 +295,10 @@ in {
                 "$@"
             '')
 
-            #-- Firefox Nightly (nixpkgs-mozilla)
-            (pkgs.runCommand "firefox-nightly" {
-               preferLocalBuild = true;
-            } ''
-               mkdir -p $out/bin
-               ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
-            '')
-            FirefoxNightlyDesktopEntry
-
-            #-- Firefox Stable
-            (pkgs.runCommand "firefox-stable" {
-                preferLocalBuild = true;
-            } ''
-                mkdir -p $out/bin
-                ln -s ${pkgs.firefox}/bin/firefox $out/bin/firefox-stable
-            '')
-            FirefoxStableDesktopEntry
-
         ];
 
         sessionVariables = {
-            DEFAULT_BROWSER = "${pkgs.latest.firefox-nightly-bin}/bin/firefox-nightly -P 'Nightly'";
+            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly -P 'Nightly'";
             MOZ_ENABLE_WAYLAND = "1";
             NIXOS_OZONE_WL = "1";
             GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [

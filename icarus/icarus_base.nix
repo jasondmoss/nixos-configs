@@ -22,7 +22,6 @@
             script = ''
                 ssh-add $HOME/.ssh/icarus_development
             '';
-            # wantedBy = [ "multi-user.target" ];
             wantedBy = [ "default.target" ];
         };
     };
