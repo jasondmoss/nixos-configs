@@ -207,6 +207,7 @@
             gimp
             inkscape
             jetbrains-toolbox
+            krita
             libreoffice-qt
             masterpdfeditor4
             nomacs

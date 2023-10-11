@@ -67,7 +67,7 @@ in {
 
         locate = {
             enable = true;
-            locate = pkgs.mlocate;
+            package = pkgs.mlocate;
             interval = "hourly";
             localuser = null;
         };
@@ -90,16 +90,6 @@ in {
             alsa.support32Bit = true;
             pulse.enable = true;
         };
-
-        # "phpstorm": {
-        #     "update-channel": "PhpStorm RELEASE",
-        #     "version": "232.9921.29",
-        #     "version-major-minor": "2023.2.2",
-        #     "sha256": "sha256-Xj3QIbgtytD1G97Wd6qHaA3MP12EOVHEiEipGRFBvx0=",
-        #     "url-template": "https://download.jetbrains.com/webide/PhpStorm-{version}.tar.gz",
-        #     "url": "https://download.jetbrains.com/webide/PhpStorm-2023.2.2.tar.gz",
-        #     "build_number": "232.9921.29"
-        # }
 
         xserver = {
             enable = true;
@@ -130,8 +120,8 @@ in {
                     };
                 };
 
-                # defaultSession = "plasma";
-                defaultSession = "plasmawayland";
+                defaultSession = "plasma";
+                # defaultSession = "plasmawayland";
             };
 
             desktopManager = {
