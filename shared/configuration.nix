@@ -226,19 +226,19 @@ local {
         enableIPv6 = true;
 
         ## Switched to DDEV
-        #extraHosts = ''
-        #    127.0.0.1 adminer.test
-        #    127.0.0.1 jdmlabs-craft.test
-        #    127.0.0.1 jdmlabs-drupal.test
-        #    127.0.0.1 jdmlabs-laravel.test
-        #    127.0.0.1 canoe-north.test
-        #    127.0.0.1 hay-river.test
-        #    # 127.0.0.1 travel-media.test
-        #    # 127.0.0.1 travel-trade.test
-        #    # 127.0.0.1 spectacularnwt.test
-        #    127.0.0.1 localhost
-        #    127.0.0.1 localhost.localdomain
-        #'';
+        # extraHosts = ''
+        #     127.0.0.1 adminer.test
+        #     127.0.0.1 jdmlabs-craft.test
+        #     127.0.0.1 jdmlabs-drupal.test
+        #     127.0.0.1 jdmlabs-laravel.test
+        #     127.0.0.1 canoe-north.test
+        #     127.0.0.1 hay-river.test
+        #     # 127.0.0.1 travel-media.test
+        #     # 127.0.0.1 travel-trade.test
+        #     # 127.0.0.1 spectacularnwt.test
+        #     127.0.0.1 localhost
+        #     127.0.0.1 localhost.localdomain
+        # '';
 
         firewall = {
             allowPing = true;

@@ -3,24 +3,24 @@
     system.stateVersion = "23.11";
 
     imports = [
-        ./hardware.nix
-        ../shared/configuration.nix
-        ../shared/applications.nix
+        ./atreides_hardware.nix
+        ./shared/configuration.nix
+        ./shared/applications.nix
 
         # JetBrains PHPStorm Beta
-        ../shared/pkgs/jetbrains/default.nix
+        ./shared/pkgs/jetbrains/default.nix
     ];
 
     time.timeZone = "America/Toronto";
 
-    networking.hostName = "icarus";
+    networking.hostName = "atreides";
 
-    services.xserver.dpi = 96;
+    services.xserver.dpi = 162;
 
     systemd = {
         user.services.add_ssh_keys = {
             script = ''
-                ssh-add $HOME/.ssh/icarus_development
+ssh-add $HOME/.ssh/id_development_global
             '';
             wantedBy = [ "default.target" ];
         };
