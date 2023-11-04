@@ -10,7 +10,7 @@ let
     inherit (lib) optionals;
 
     pname = "strawberry";
-    version = "1.0.18";
+    version = "1.0.21";
 
     meta = with lib; {
         description = "Music player and music collection organizer";

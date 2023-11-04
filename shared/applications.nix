@@ -7,8 +7,6 @@
             allowBroken = false;
             allowUnfree = true;
 
-            firefox.enablePlasmaBrowserIntegration = true;
-
             packageOverrides = pkgs: {
                 steam = pkgs.steam.override {
                     extraPkgs = pkgs: with pkgs; [
@@ -34,6 +32,7 @@
 
             #-- CORE
             babl
+            clinfo
             coreutils-full
             curl
             expect
@@ -43,15 +42,19 @@
             gcr
             gd
             gsasl
+            htop
             inetutils
             inotify-tools
             killall
+            libxfs
             libxml2
             links2
             lm_sensors
+            lsd
             nix-du
             nix-index
             nix-prefetch-git
+            nvme-cli
             openssl
             openvpn
             optipng
@@ -59,22 +62,15 @@
             pmutils
             pngquant
             psensor
-            tldr
-            unixtools.script
-            usbutils
-            wget
-
-            #-- CORE UTILS
-            clinfo
-            htop
-            libxfs
-            lsd
-            nvme-cli
             rar
             smartmontools
+            tldr
             unar
+            unixtools.script
             unrar
             unzip
+            usbutils
+            wget
             wirelesstools
             xfsprogs
             zip
@@ -151,6 +147,7 @@
             bun
             cargo
             cmake
+            cockpit
             ddev
             desktop-file-utils
             eww
@@ -167,30 +164,31 @@
             seer
             yarn
 
-            php82
-            php82Extensions.bz2
-            php82Extensions.curl
-            php82Extensions.fileinfo
-            php82Extensions.gd
-            php82Extensions.imagick
-            php82Extensions.intl
-            php82Extensions.mbstring
-            php82Extensions.mysqlnd
-            php82Extensions.pdo
-            php82Extensions.pdo_dblib
+            php83
+            php83Extensions.bz2
+            php83Extensions.curl
+            php83Extensions.fileinfo
+            php83Extensions.gd
+            php83Extensions.imagick
+            php83Extensions.intl
+            php83Extensions.mbstring
+            php83Extensions.mysqlnd
+            php83Extensions.pdo
+            php83Extensions.pdo_dblib
             php83Extensions.pdo_mysql
-            php82Extensions.pdo_odbc
-            php82Extensions.tidy
-            php82Extensions.xml
-            php82Extensions.xsl
-            php82Extensions.zip
-            php82Extensions.zlib
+            php83Extensions.pdo_odbc
+            php83Extensions.tidy
+            php83Extensions.xdebug
+            php83Extensions.xml
+            php83Extensions.xsl
+            php83Extensions.zip
+            php83Extensions.zlib
 
-            php82Packages.php-cs-fixer
-            php82Packages.phpcbf
-            php82Packages.phpcs
-            php82Packages.phpmd
-            php82Packages.phpstan
+            php83Packages.php-cs-fixer
+            php83Packages.phpcbf
+            php83Packages.phpcs
+            php83Packages.phpmd
+            #php83Packages.phpstan
 
             #-- SECURITY
             chkrootkit
@@ -291,18 +289,16 @@
             #
 
             (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
-                qemu-system-x86_64 \
-                -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
-                "$@"
+qemu-system-x86_64 -bios ${pkgs.OVMF.fd}/FV/OVMF.fd "$@"
             '')
 
         ];
 
         sessionVariables = {
-            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly -P 'Nightly'";
-            MOZ_ENABLE_WAYLAND = "1";
-            NIXOS_OZONE_WL = "1";
-            GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
+            DEFAULT_BROWSER="/run/current-system/sw/bin/firefox-nightly -P 'Nightly'";
+            MOZ_ENABLE_WAYLAND="1";
+            NIXOS_OZONE_WL="1";
+            GST_PLUGIN_SYSTEM_PATH_1_0=lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
                 pkgs.gst_all_1.gst-editing-services
                 pkgs.gst_all_1.gst-libav
                 pkgs.gst_all_1.gst-plugins-bad

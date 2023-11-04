@@ -1,5 +1,5 @@
 {
-    "version": "3.171.9",
+    "version": "3.181.15",
     "appimage": {
         "x86_64-linux": {
             "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes%2Fdesktop%403.171.9/standard-notes-3.171.9-linux-x86_64.AppImage",

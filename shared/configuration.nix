@@ -41,17 +41,17 @@ in {
         coredns = {
             enable = true;
             config = ''
-                . {
-                    # Cloudflare and Google
-                    forward . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
-                    cache
-                }
+. {
+    # Cloudflare and Google
+    forward . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
+    cache
+}
 
-                local {
-                    template IN A {
-                        answer "{{ .Name }} 0 IN A 127.0.0.1"
-                    }
-                }
+local {
+    template IN A {
+        answer "{{ .Name }} 0 IN A 127.0.0.1"
+    }
+}
             '';
         };
 
@@ -108,16 +108,16 @@ in {
                     #     enable = true;
                     # };
 
+                    # settings = {
+                    #     Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
+                    # };
+
                     # theme = "${(pkgs.fetchFromGitLab {
                     #     owner = "Matt.Jolly";
                     #     repo = "sddm-eucalyptus-drop";
                     #     rev = "433ca77c1dd73f227a0d28d378e36c8f61aff33d";
                     #     sha256 = "sha256-lIDPvXtqUdnLaGFtsH6KT89Kn6VPk7xItUiU3Uzf2AQ=";
                     # })}";
-
-                    settings = {
-                        Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
-                    };
                 };
 
                 defaultSession = "plasma";
@@ -135,7 +135,7 @@ in {
         };
 
         httpd = {
-            enable = false;
+            enable = false; # Switched to DDEV
             adminAddr = "me@localhost";
             user = "me";
             group = "users";
@@ -162,43 +162,43 @@ in {
                 allow_url_include = On;
             '';
 
-            #virtualHosts = {
-               #"jdmlabs-drupal" = {
-               #    documentRoot = "/srv/jdmlabs-drupal/web";
-               #    servedDirs = [{
-               #        urlPath = "/srv/jdmlabs-drupal/web";
-               #        dir = "/srv/jdmlabs-drupal/web";
-               #    }];
-               #    serverAliases = [ "jdmlabs-drupal.test" "jdmlabs-drupal-redirect.test" ];
-               #    extraConfig = ''
-               #        <Directory "/srv/jdmlabs-drupal/web">
-               #            Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
-               #            RewriteEngine On
-               #            DirectoryIndex index.html index.html.var index.php
-               #            Require all granted
-               #            AllowOverride All
-               #        </Directory>
-               #    '';
-               #};
-
-               #"jdmlabs-laravel" = {
-               #    documentRoot = "/srv/jdmlabs-laravel/public";
-               #    servedDirs = [{
-               #        urlPath = "/srv/jdmlabs-laravel/public";
-               #        dir = "/srv/jdmlabs-laravel/public";
-               #    }];
-               #    serverAliases = [ "jdmlabs-laravel.test" "jdmlabs-laravel-redirect.test" ];
-               #    extraConfig = ''
-               #        <Directory "/srv/jdmlabs-laravel/public">
-               #            Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
-               #            RewriteEngine On
-               #            DirectoryIndex index.html index.html.var index.php
-               #            Require all granted
-               #            AllowOverride All
-               #        </Directory>
-               #    '';
-               #};
-            #};
+            # Switched to DDEV
+            # virtualHosts = {
+            #    "jdmlabs-drupal" = {
+            #        documentRoot = "/srv/jdmlabs-drupal/web";
+            #        servedDirs = [{
+            #            urlPath = "/srv/jdmlabs-drupal/web";
+            #            dir = "/srv/jdmlabs-drupal/web";
+            #        }];
+            #        serverAliases = [ "jdmlabs-drupal.test" "jdmlabs-drupal-redirect.test" ];
+            #        extraConfig = ''
+            #            <Directory "/srv/jdmlabs-drupal/web">
+            #                Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
+            #                RewriteEngine On
+            #                DirectoryIndex index.html index.html.var index.php
+            #                Require all granted
+            #                AllowOverride All
+            #            </Directory>
+            #        '';
+            #    };
+            #    "jdmlabs-laravel" = {
+            #        documentRoot = "/srv/jdmlabs-laravel/public";
+            #        servedDirs = [{
+            #            urlPath = "/srv/jdmlabs-laravel/public";
+            #            dir = "/srv/jdmlabs-laravel/public";
+            #        }];
+            #        serverAliases = [ "jdmlabs-laravel.test" "jdmlabs-laravel-redirect.test" ];
+            #        extraConfig = ''
+            #            <Directory "/srv/jdmlabs-laravel/public">
+            #                Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
+            #                RewriteEngine On
+            #                DirectoryIndex index.html index.html.var index.php
+            #                Require all granted
+            #                AllowOverride All
+            #            </Directory>
+            #        '';
+            #    };
+            # };
         };
 
         mysql = {
@@ -260,9 +260,9 @@ in {
                 enableKwallet = true;
             };
 
-            # swaylock.text = ''
-            #     auth include login
-            # '';
+            swaylock.text = ''
+                auth include login
+            '';
         };
 
         sudo = {
@@ -274,12 +274,12 @@ in {
         };
 
         auditd.enable = true;
-        #audit = {
-        #    enable = true;
-        #    rules = [
-        #        "-a exit,always -F arch=x86_64-linux -S execve"
-        #    ];
-        #};
+        # audit = {
+        #     enable = true;
+        #     rules = [
+        #         "-a exit,always -F arch=x86_64-linux -S execve"
+        #     ];
+        # };
     };
 
     i18n = {
@@ -287,7 +287,9 @@ in {
 
         inputMethod = {
             enabled = "ibus";
-            ibus.engines = with pkgs.ibus-engines; [ table table-others ];
+            ibus.engines = with pkgs.ibus-engines; [
+                table table-others
+            ];
         };
     };
 
@@ -305,7 +307,6 @@ in {
 
         steam = {
             enable = true;
-
             remotePlay.openFirewall = true;
             dedicatedServer.openFirewall = true;
         };
