@@ -5,7 +5,7 @@
 with lib;
 let
     bits = "x86_64";
-    version = "10.118.5-3";
+    version = "10.1198.3-3";
 
     desktopItem = makeDesktopItem rec {
         type = "Application";

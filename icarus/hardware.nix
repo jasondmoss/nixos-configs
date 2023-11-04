@@ -50,47 +50,22 @@
     networking = {
         useDHCP = lib.mkDefault true;
 
-        networkmanager.unmanaged = [
-            "*:enp3s0"
-            "*:wlo1"
-        ];
-
-        wireless = {
-            enable = true;
-
-            userControlled = {
-                enable = true;
-                group = "wheel";
-            };
-
-            networks = {
-                Skynet = {
-                    psk = "96Hgpqo5$%h#5mv#6^eac^KT5q3S@$ZP2Mp7";
-                };
-            };
-        };
-
-        interfaces = {
-            enp3s0.useDHCP = lib.mkDefault true;
-            wlo1.useDHCP = lib.mkDefault true;
-        };
-
-        # firewall = {
-        #     enable = true;
-        #     allowedTCPPorts = [];
-        #     allowedUDPPorts = [];
-        # };
+         firewall = {
+             enable = true;
+             allowedTCPPorts = [];
+             allowedUDPPorts = [];
+         };
     };
 
     hardware = {
         cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
         nvidia = {
-            modesetting.enable = true;
+            package = config.boot.kernelPackages.nvidiaPackages.beta;
             open = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            package = config.boot.kernelPackages.nvidiaPackages.beta;
+            modesetting.enable = true;
 
             powerManagement = {
                 enable = true;

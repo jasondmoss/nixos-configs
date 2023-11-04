@@ -80,12 +80,6 @@
     networking = {
         useDHCP = lib.mkDefault true;
 
-        interfaces = {
-            wlp5s0.useDHCP = lib.mkDefault true;
-            enp6s0.useDHCP = lib.mkDefault true;
-            enp7s0.useDHCP = lib.mkDefault true;
-        };
-
         firewall = {
             enable = true;
             allowedTCPPorts = [];
@@ -101,6 +95,7 @@
             open = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
+            modesetting.enable = true;
         };
 
         opengl = {

@@ -20,7 +20,7 @@
     systemd = {
         user.services.add_ssh_keys = {
             script = ''
-                ssh-add $HOME/.ssh/icarus_development
+ssh-add $HOME/.ssh/icarus_development
             '';
             wantedBy = [ "default.target" ];
         };
