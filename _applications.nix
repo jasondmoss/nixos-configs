@@ -188,7 +188,7 @@
             php83Packages.phpcbf
             php83Packages.phpcs
             php83Packages.phpmd
-            #php83Packages.phpstan
+            # php83Packages.phpstan
 
             #-- SECURITY
             chkrootkit
@@ -241,6 +241,7 @@
             megasync
             microsoft-edge
             steam
+            thunderbird-bin
             tor-browser-bundle-bin
             zoom-us
 

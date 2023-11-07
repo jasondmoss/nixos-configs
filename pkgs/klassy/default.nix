@@ -5,7 +5,6 @@
 }:
 mkDerivation rec {
     pname = "klassy";
-    # version = "4.3.breeze5.27.5";
     version = "master";
 
     src = fetchFromGitHub {

@@ -4,11 +4,11 @@
 
     imports = [
         ./atreides_hardware.nix
-        ./shared/configuration.nix
-        ./shared/applications.nix
+        ./_configuration.nix
+        ./_applications.nix
 
         # JetBrains PHPStorm Beta
-        ./shared/pkgs/jetbrains/default.nix
+        ./pkgs/jetbrains/default.nix
     ];
 
     time.timeZone = "America/Toronto";

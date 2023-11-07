@@ -1,6 +1,6 @@
 { config, options, pkgs, ... }:
 let
-    theme = import ./theme.nix;
+    theme = import ./_theme.nix;
 in {
     nix = {
         package = pkgs.nixUnstable;
