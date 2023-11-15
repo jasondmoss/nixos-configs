@@ -123,7 +123,9 @@
             qt6Packages.qscintilla
             qt6Packages.poppler
 
+            python310Packages.gyp
             python310Packages.pyqt6
+            python311Packages.gyp
             python311Packages.pyqt6
             python311Packages.pytz
 
@@ -150,11 +152,16 @@
             cockpit
             ddev
             desktop-file-utils
+            docker
+            docker-client
             eww
             gcc
             gdb
             ggshield
             git
+            # gitlab-runner
+            # gitlab-shell
+            # glab
             go
             lua
             nodejs
@@ -163,6 +170,31 @@
             rustc
             seer
             yarn
+
+            php81
+            php81Extensions.bz2
+            php81Extensions.curl
+            php81Extensions.fileinfo
+            php81Extensions.gd
+            php81Extensions.imagick
+            php81Extensions.intl
+            php81Extensions.mbstring
+            php81Extensions.mysqlnd
+            php81Extensions.pdo
+            php81Extensions.pdo_dblib
+            php81Extensions.pdo_mysql
+            php81Extensions.pdo_odbc
+            php81Extensions.tidy
+            php81Extensions.xdebug
+            php81Extensions.xml
+            php81Extensions.xsl
+            php81Extensions.zip
+            php81Extensions.zlib
+
+            php81Packages.php-cs-fixer
+            php81Packages.phpcbf
+            php81Packages.phpcs
+            php81Packages.phpmd
 
             php83
             php83Extensions.bz2
@@ -240,6 +272,7 @@
             latest.firefox-nightly-bin
             megasync
             microsoft-edge
+            slack
             steam
             thunderbird-bin
             tor-browser-bundle-bin
