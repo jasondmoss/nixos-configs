@@ -152,6 +152,7 @@
             cockpit
             ddev
             desktop-file-utils
+            diffutils
             docker
             docker-client
             eww
@@ -195,6 +196,7 @@
             php81Packages.phpcbf
             php81Packages.phpcs
             php81Packages.phpmd
+            # php81Packages.phpstan
 
             php83
             php83Extensions.bz2
@@ -254,7 +256,7 @@
             mpg321
             speechd
 
-            aaxtomp3
+            # aaxtomp3
             audacity
             audible-cli
             easytag
