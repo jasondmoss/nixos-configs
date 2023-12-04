@@ -239,6 +239,10 @@ local {
         #     127.0.0.1 localhost
         #     127.0.0.1 localhost.localdomain
         # '';
+        extraHosts = ''
+            23.128.160.24 cyanserver.ca
+            23.128.160.24 web-a7g7.hostresolver.net
+        '';
 
         firewall = {
             allowPing = true;

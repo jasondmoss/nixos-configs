@@ -95,6 +95,7 @@
             xdg-desktop-portal-gnome
             xdg-desktop-portal-gtk
             gnome.gnome-tweaks
+            gnome.nautilus
 
             #-- KDE/PLASMA
             libsForQt5.ark
