@@ -16,8 +16,9 @@
             };
 
             permittedInsecurePackages = [
+                "electron-25.9.0"
                 "openssl-1.1.1w"
-                "qtwebkit-5.212.0-alpha4"
+                #"qtwebkit-5.212.0-alpha4"
             ];
         };
 
@@ -106,6 +107,7 @@
             libsForQt5.kcalc
             libsForQt5.kdeplasma-addons
             libsForQt5.kcoreaddons
+            libsForQt5.kdeconnect-kde
             libsForQt5.ksshaskpass
             libsForQt5.ktorrent
             libsForQt5.kwallet
@@ -161,9 +163,6 @@
             gdb
             ggshield
             git
-            # gitlab-runner
-            # gitlab-shell
-            # glab
             go
             lua
             nodejs
@@ -251,20 +250,29 @@
             vim
 
             #-- MULTIMEDIA
-            ffmpeg
-            ffmpegthumbnailer
-            libdrm
-            mpg321
-            speechd
-
             # aaxtomp3
             audacity
             audible-cli
+            cuetools
             easytag
+            faac
+            ffmpeg
+            ffmpegthumbnailer
+            flac
             flacon
             isoimagewriter
+            lame
+            libcue
+            libdrm
+            mac
+            mkcue
+            mpg123
+            mpg321
             mpv
             pavucontrol
+            shntool
+            sox
+            speechd
 
             #-- INTERNET
             element-desktop # Matrix client
