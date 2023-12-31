@@ -13,18 +13,26 @@ in {
         };
     };
 
+    i18n = {
+        defaultLocale = "en_CA.utf8";
+
+        inputMethod = {
+            enabled = "ibus";
+            ibus.engines = with pkgs.ibus-engines; [
+                table table-others
+            ];
+        };
+    };
+
     fonts = {
         fontconfig.enable = true;
         fontDir.enable = true;
 
         packages = with pkgs; [
             corefonts
-            fira-code-symbols
             freefont_ttf
             jetbrains-mono
             nerdfonts
-            overpass
-            powerline-fonts
             terminus_font
             unifont
         ];
@@ -41,22 +49,22 @@ in {
         coredns = {
             enable = true;
             config = ''
-. {
-    # Cloudflare and Google
-    forward . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
-    cache
-}
+                . {
+                    # Cloudflare and Google
+                    forward . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
+                    cache
+                }
 
-local {
-    template IN A {
-        answer "{{ .Name }} 0 IN A 127.0.0.1"
-    }
-}
+                local {
+                    template IN A {
+                        answer "{{ .Name }} 0 IN A 127.0.0.1"
+                    }
+                }
             '';
         };
 
         gnome = {
-            at-spi2-core.enable = true;
+           at-spi2-core.enable = true;
         };
 
         dbus.enable = true;
@@ -82,7 +90,7 @@ local {
             };
         };
 
-        pcscd.enable = true;
+        # pcscd.enable = true;
 
         pipewire = {
             enable = true;
@@ -98,19 +106,15 @@ local {
             xkbVariant = "";
 
             displayManager = {
-                gdm.enable = false;
+                # gdm.enable = false;
+                # lightdm.enable = false;
 
                 sddm = {
                     enable = true;
                     enableHidpi = true;
 
-                    # wayland = {
-                    #     enable = true;
-                    # };
-
-                    # settings = {
-                    #     Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
-                    # };
+                    # wayland.enable = true;
+                    # settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
 
                     # theme = "${(pkgs.fetchFromGitLab {
                     #     owner = "Matt.Jolly";
@@ -120,12 +124,12 @@ local {
                     # })}";
                 };
 
-                defaultSession = "plasma";
-                # defaultSession = "plasmawayland";
+                 defaultSession = "plasma";
+                 # defaultSession = "plasmawayland";
             };
 
             desktopManager = {
-                gnome.enable = false;
+                # gnome.enable = false;
 
                 plasma5 = {
                     enable = true;
@@ -161,48 +165,10 @@ local {
                 memory_limit = 1024M;
                 allow_url_include = On;
             '';
-
-            # Switched to DDEV
-            # virtualHosts = {
-            #    "jdmlabs-drupal" = {
-            #        documentRoot = "/srv/jdmlabs-drupal/web";
-            #        servedDirs = [{
-            #            urlPath = "/srv/jdmlabs-drupal/web";
-            #            dir = "/srv/jdmlabs-drupal/web";
-            #        }];
-            #        serverAliases = [ "jdmlabs-drupal.test" "jdmlabs-drupal-redirect.test" ];
-            #        extraConfig = ''
-            #            <Directory "/srv/jdmlabs-drupal/web">
-            #                Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
-            #                RewriteEngine On
-            #                DirectoryIndex index.html index.html.var index.php
-            #                Require all granted
-            #                AllowOverride All
-            #            </Directory>
-            #        '';
-            #    };
-            #    "jdmlabs-laravel" = {
-            #        documentRoot = "/srv/jdmlabs-laravel/public";
-            #        servedDirs = [{
-            #            urlPath = "/srv/jdmlabs-laravel/public";
-            #            dir = "/srv/jdmlabs-laravel/public";
-            #        }];
-            #        serverAliases = [ "jdmlabs-laravel.test" "jdmlabs-laravel-redirect.test" ];
-            #        extraConfig = ''
-            #            <Directory "/srv/jdmlabs-laravel/public">
-            #                Options +Indexes +ExecCGI +FollowSymlinks -SymLinksIfOwnerMatch
-            #                RewriteEngine On
-            #                DirectoryIndex index.html index.html.var index.php
-            #                Require all granted
-            #                AllowOverride All
-            #            </Directory>
-            #        '';
-            #    };
-            # };
         };
 
         mysql = {
-            enable = false;
+            enable = false; # Switched to DDEV
             package = pkgs.mariadb;
 
             settings = {
@@ -218,81 +184,6 @@ local {
                         "*.*" = "ALL PRIVILEGES";
                     };
                 }
-            ];
-        };
-    };
-
-    networking = {
-        enableIPv6 = true;
-
-        ## Switched to DDEV
-        # extraHosts = ''
-        #     127.0.0.1 adminer.test
-        #     127.0.0.1 jdmlabs-craft.test
-        #     127.0.0.1 jdmlabs-drupal.test
-        #     127.0.0.1 jdmlabs-laravel.test
-        #     127.0.0.1 canoe-north.test
-        #     127.0.0.1 hay-river.test
-        #     # 127.0.0.1 travel-media.test
-        #     # 127.0.0.1 travel-trade.test
-        #     # 127.0.0.1 spectacularnwt.test
-        #     127.0.0.1 localhost
-        #     127.0.0.1 localhost.localdomain
-        # '';
-        extraHosts = ''
-            23.128.160.24 cyanserver.ca
-            23.128.160.24 web-a7g7.hostresolver.net
-        '';
-
-        firewall = {
-            allowPing = true;
-            allowedTCPPorts = [ 22 80 443 1025 1143 33728 ];
-        };
-
-        networkmanager = {
-            enable = true;
-            insertNameservers = [ "127.0.0.1" ];
-        };
-    };
-
-    security = {
-        rtkit.enable = true;
-
-        pam.services = {
-            kwallet = {
-                name = "kwallet";
-                enableKwallet = true;
-            };
-
-            swaylock.text = ''
-                auth include login
-            '';
-        };
-
-        sudo = {
-            enable = true;
-            wheelNeedsPassword = false;
-            extraConfig = ''
-                Defaults:me !authenticate
-            '';
-        };
-
-        auditd.enable = true;
-        # audit = {
-        #     enable = true;
-        #     rules = [
-        #         "-a exit,always -F arch=x86_64-linux -S execve"
-        #     ];
-        # };
-    };
-
-    i18n = {
-        defaultLocale = "en_CA.utf8";
-
-        inputMethod = {
-            enabled = "ibus";
-            ibus.engines = with pkgs.ibus-engines; [
-                table table-others
             ];
         };
     };
@@ -315,15 +206,81 @@ local {
             dedicatedServer.openFirewall = true;
         };
 
-        sway = {
-             enable = true;
-             wrapperFeatures.gtk = true;
-        };
+        #sway = {
+        #     enable = true;
+        #     #wrapperFeatures.gtk = true;
+        #};
 
-        xwayland.enable = true;
+        #wayfire = {
+        #    enable = true;
+        #    plugins = with pkgs.wayfirePlugins; [
+        #        wcm
+        #        wf-shell
+        #        wayfire-plugins-extra
+        #    ];
+        #};
+
+        # xwayland.enable = true;
     };
 
-    xdg.portal.enable = true;
+    xdg.portal = {
+        enable = true;
+
+        config = {
+            common.default = "*";
+        };
+    };
+
+    networking = {
+        enableIPv6 = true;
+
+        extraHosts = ''
+            23.128.160.24 cyanserver.ca
+            23.128.160.24 web-a7g7.hostresolver.net
+        '';
+
+        firewall = {
+            allowPing = true;
+            allowedTCPPorts = [ 22 80 443 1025 1143 33728 ];
+        };
+
+        networkmanager = {
+            enable = true;
+            insertNameservers = [ "127.0.0.1" ];
+        };
+    };
+
+    security = {
+        rtkit.enable = true;
+        polkit.enable = true;
+
+        pam.services = {
+            kwallet = {
+                name = "kwallet";
+                enableKwallet = true;
+            };
+
+            #swaylock.text = ''
+            #    auth include login
+            #'';
+        };
+
+        sudo = {
+            enable = true;
+            wheelNeedsPassword = false;
+            extraConfig = ''
+                Defaults:me !authenticate
+            '';
+        };
+
+        # auditd.enable = true;
+        # audit = {
+        #     enable = true;
+        #     rules = [
+        #         "-a exit,always -F arch=x86_64-linux -S execve"
+        #     ];
+        # };
+    };
 
     documentation = {
         enable = true;

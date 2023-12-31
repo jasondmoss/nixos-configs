@@ -91,11 +91,13 @@
         cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
         nvidia = {
-            package = config.boot.kernelPackages.nvidiaPackages.beta;
-            open = true;
+            open = false;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
             modesetting.enable = true;
+
+            # package = config.boot.kernelPackages.nvidiaPackages.beta;
+            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
 
         opengl = {

@@ -4,7 +4,7 @@ let
     firefoxNightlyDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
-        name = "firefox-nightly";
+        name = "Firefox Nightly";
         desktopName = "Firefox Nightly";
         exec = "firefox-nightly -P \"Nightly\" %u";
         icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
@@ -45,10 +45,10 @@ let
     firefoxStableDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
-        name = "firefox-stable";
+        name = "Firefox Stable";
         desktopName = "Firefox Stable";
         exec = "firefox-stable -P \"Default\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
+        icon = "firefox";
         mimeTypes = [
             "application/vnd.mozilla.xul+xml"
             "application/xhtml+xml"
@@ -74,8 +74,7 @@ let
             };
         };
     };
-in
-{
+in {
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -175,9 +174,8 @@ in
             xrgears
 
             #-- GNOME/GTK
-            gtk3
+            gtk3 gtk3-x11
             gtk4
-            libcanberra-gtk3
             xdg-desktop-portal
             xdg-desktop-portal-gnome
             xdg-desktop-portal-gtk
@@ -397,21 +395,23 @@ in
             #
 
             #-- Firefox Nightly (nixpkgs-mozilla) -- Rename executable
-            (pkgs.runCommand "latest.firefox-nightly-bin" {
+            (pkgs.runCommand "firefox-nightly" {
                 preferLocalBuild = true;
             } ''
                 mkdir -p $out/bin
                 ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
             '')
+            # Create custom desktop file
             firefoxNightlyDesktopItem
 
             #-- Firefox Stable -- Rename executable
-            (pkgs.runCommand "latest.firefox-bin" {
+            (pkgs.runCommand "firefox-stable" {
                 preferLocalBuild = true;
             } ''
                 mkdir -p $out/bin
-                ln -s ${latest.firefox-bin}/bin/firefox $out/bin/firefox-stable
+                ln -s ${pkgs.firefox}/bin/firefox $out/bin/firefox-stable
             '')
+            # Create custom desktop file
             firefoxStableDesktopItem
 
             #-- Anytype
@@ -451,7 +451,7 @@ in
             XDG_CURRENT_DESKTOP="KDE";
             # XDG_CURRENT_DESKTOP="wlroots";
             XCURSOR_THEME="ComixCursors";
-            DEFAULT_BROWSER="/run/current-system/sw/bin/firefox-nightly";
+            DEFAULT_BROWSER="/run/current-system/sw/bin/firefox-nightly -P 'Nightly'";
 
             GST_PLUGIN_SYSTEM_PATH_1_0=lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
                 pkgs.gst_all_1.gst-editing-services
