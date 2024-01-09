@@ -94,6 +94,11 @@
             ];
         };
 
+        # bluetooth = {
+        #     enable = true;
+        #     powerOnBoot = true;
+        # };
+
         pulseaudio.enable = false;
     };
 

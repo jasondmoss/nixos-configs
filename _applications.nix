@@ -125,6 +125,7 @@ in
             libxfs
             libxml2
             links2
+            linuxquota
             lm_sensors
             lsd
             lshw
@@ -221,6 +222,8 @@ in
             python311Packages.pyqt6
             python311Packages.pytz
 
+            ksmoothdock
+
             #-- LabWC
             # labwc
             # lemurs
@@ -295,32 +298,6 @@ in
             php81Packages.phpmd
             php81Packages.phpstan
 
-            # php83
-            # php83Extensions.bz2
-            # php83Extensions.curl
-            # php83Extensions.fileinfo
-            # php83Extensions.gd
-            # php83Extensions.imagick
-            # php83Extensions.intl
-            # php83Extensions.mbstring
-            # php83Extensions.mysqlnd
-            # php83Extensions.pdo
-            # php83Extensions.pdo_dblib
-            # php83Extensions.pdo_mysql
-            # php83Extensions.pdo_odbc
-            # php83Extensions.tidy
-            # php83Extensions.xdebug
-            # php83Extensions.xml
-            # php83Extensions.xsl
-            # php83Extensions.zip
-            # php83Extensions.zlib
-
-            # php83Packages.php-cs-fixer
-            # php83Packages.phpcbf
-            # php83Packages.phpcs
-            # php83Packages.phpmd
-            # php83Packages.phpstan
-
             #-- SECURITY
             chkrootkit
             encfs
@@ -371,8 +348,6 @@ in
             filezilla
             google-chrome
             chrome-gnome-shell
-            # latest.firefox-bin
-            # latest.firefox-nightly-bin
             megasync
             microsoft-edge
             # slack
@@ -380,7 +355,7 @@ in
             tor-browser-bundle-bin
             zoom-us
 
-            # #-- MISCELLANEOUS/UTILITIES
+            #-- MISCELLANEOUS/UTILITIES
             bitwarden
             libportal
             protonmail-bridge
@@ -396,15 +371,6 @@ in
             #    CUSTOM PACKAGE BUILDS.
             #
 
-            #-- Firefox Nightly (nixpkgs-mozilla) -- Rename executable
-            (pkgs.runCommand "latest.firefox-nightly-bin" {
-                preferLocalBuild = true;
-            } ''
-                mkdir -p $out/bin
-                ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
-            '')
-            firefoxNightlyDesktopItem
-
             #-- Firefox Stable -- Rename executable
             (pkgs.runCommand "latest.firefox-bin" {
                 preferLocalBuild = true;
@@ -413,6 +379,15 @@ in
                 ln -s ${latest.firefox-bin}/bin/firefox $out/bin/firefox-stable
             '')
             firefoxStableDesktopItem
+
+            #-- Firefox Nightly (nixpkgs-mozilla) -- Rename executable
+            (pkgs.runCommand "latest.firefox-nightly-bin" {
+                preferLocalBuild = true;
+            } ''
+                mkdir -p $out/bin
+                ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
+            '')
+            firefoxNightlyDesktopItem
 
             #-- Anytype
             (pkgs.callPackage ./pkgs/anytype/default.nix {})

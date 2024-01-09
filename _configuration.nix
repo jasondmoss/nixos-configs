@@ -148,21 +148,21 @@ in {
 
             phpPackage = pkgs.php82.buildEnv {
                 extensions = ({ enabled, all }: enabled);
-                extraConfig = "memory_limit = 1024M";
+                extraConfig = "memory_limit = 2048M";
             };
 
             phpOptions = ''
                 display_errors = On
                 display_startup_errors = On
                 allow_url_fopen = on
-                post_max_size = 200M
-                upload_max_filesize = 1024M
-                max_execution_time = 6000
+                post_max_size = 1024M
+                upload_max_filesize = 2048M
+                max_execution_time = 10000
                 max_input_time = 3000
                 mbstring.http_input = pass
                 mbstring.http_output = pass
                 mbstring.internal_encoding = pass
-                memory_limit = 1024M;
+                memory_limit = 2048M;
                 allow_url_include = On;
             '';
         };
