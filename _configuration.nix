@@ -106,22 +106,12 @@ in {
             xkbVariant = "";
 
             displayManager = {
-                # gdm.enable = false;
-                # lightdm.enable = false;
-
                 sddm = {
                     enable = true;
                     enableHidpi = true;
 
                     # wayland.enable = true;
                     # settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
-
-                    # theme = "${(pkgs.fetchFromGitLab {
-                    #     owner = "Matt.Jolly";
-                    #     repo = "sddm-eucalyptus-drop";
-                    #     rev = "433ca77c1dd73f227a0d28d378e36c8f61aff33d";
-                    #     sha256 = "sha256-lIDPvXtqUdnLaGFtsH6KT89Kn6VPk7xItUiU3Uzf2AQ=";
-                    # })}";
                 };
 
                  defaultSession = "plasma";
@@ -129,8 +119,6 @@ in {
             };
 
             desktopManager = {
-                # gnome.enable = false;
-
                 plasma5 = {
                     enable = true;
                     useQtScaling = true;
@@ -139,7 +127,7 @@ in {
         };
 
         httpd = {
-            enable = false; # Switched to DDEV
+            enable = true;
             adminAddr = "me@localhost";
             user = "me";
             group = "users";
@@ -155,7 +143,8 @@ in {
                 display_errors = On
                 display_startup_errors = On
                 allow_url_fopen = on
-                post_max_size = 1024M
+                memory_limit = 2048M
+                post_max_size = 2048M
                 upload_max_filesize = 2048M
                 max_execution_time = 10000
                 max_input_time = 3000
@@ -168,7 +157,7 @@ in {
         };
 
         mysql = {
-            enable = false; # Switched to DDEV
+            enable = true;
             package = pkgs.mariadb;
 
             settings = {
@@ -220,7 +209,7 @@ in {
         #    ];
         #};
 
-        # xwayland.enable = true;
+        xwayland.enable = true;
     };
 
     xdg.portal = {

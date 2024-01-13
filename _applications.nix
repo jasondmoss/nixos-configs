@@ -339,10 +339,13 @@ in
             mpg123
             mpg321
             mpv
+            opusTools
             pavucontrol
             shntool
             sox
             speechd
+            vorbis-tools
+            wavpack
 
             #-- INTERNET
             filezilla
@@ -350,7 +353,6 @@ in
             chrome-gnome-shell
             megasync
             microsoft-edge
-            # slack
             steam
             tor-browser-bundle-bin
             zoom-us
