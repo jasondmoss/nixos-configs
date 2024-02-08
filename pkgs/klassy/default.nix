@@ -11,7 +11,7 @@ mkDerivation rec {
         owner = "paulmcauley";
         repo = pname;
         rev = version;
-        sha256 = "sha256-8sahZdB1la/WTQShcGBXQyC+/x7RM5yDrDg7TD8sL10=";
+        sha256 = "sha256-AzNJlA/XaLks+sYZkqIOb9eTR5M+AR44KYDKakGUQmE=";
     };
 
     extraCmakeFlags = [ "-DBUILD_TESTING=OFF" ];

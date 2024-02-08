@@ -76,6 +76,10 @@ let
     };
 in
 {
+    # imports = [
+    #     <kde2nix>
+    # ];
+
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -162,6 +166,7 @@ in
             libva
             libva-utils
             libva1
+            nvtop
             virtualgl
             # vkdt-wayland
             vulkan-caps-viewer
@@ -191,15 +196,20 @@ in
             libsForQt5.clip
             libsForQt5.dolphin-plugins
             libsForQt5.flatpak-kcm
+            libsForQt5.kaddressbook
             libsForQt5.kate
             libsForQt5.kcalc
-            libsForQt5.kdeplasma-addons
             libsForQt5.kcoreaddons
             libsForQt5.kdeconnect-kde
+            libsForQt5.kdeplasma-addons
+            libsForQt5.kmail
+            libsForQt5.kmail-account-wizard
+            libsForQt5.kmailtransport
             libsForQt5.ksshaskpass
             libsForQt5.ktorrent
             libsForQt5.kwallet
             libsForQt5.kwallet-pam
+            libsForQt5.okular
             libsForQt5.plasma-browser-integration
             libsForQt5.plasma-wayland-protocols
             libsForQt5.qt5ct
@@ -258,10 +268,11 @@ in
             diffutils
             docker
             docker-client
+            # elasticsearch
             eww
             gcc
             gdb
-            ggshield
+            # ggshield
             git
             go
             lua
@@ -312,7 +323,7 @@ in
             gimp
             inkscape
             libreoffice-qt
-            masterpdfeditor4
+            # masterpdfeditor4
             nomacs
             nano
             retext
@@ -348,13 +359,16 @@ in
             wavpack
 
             #-- INTERNET
+            brave
             filezilla
             google-chrome
             chrome-gnome-shell
             megasync
             microsoft-edge
+            opera
             steam
             tor-browser-bundle-bin
+            vivaldi
             zoom-us
 
             #-- MISCELLANEOUS/UTILITIES

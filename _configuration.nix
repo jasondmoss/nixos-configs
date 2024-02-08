@@ -63,6 +63,11 @@ in {
             '';
         };
 
+        # elasticsearch = {
+        #     enable = true;
+        #     listenAddress = "9200";
+        # };
+
         gnome = {
            at-spi2-core.enable = true;
         };
@@ -102,8 +107,10 @@ in {
         xserver = {
             enable = true;
             videoDrivers = [ "nvidia" ];
-            layout = "us";
-            xkbVariant = "";
+            xkb = {
+                layout = "us";
+                variant = "";
+            };
 
             displayManager = {
                 sddm = {
@@ -153,6 +160,7 @@ in {
                 mbstring.internal_encoding = pass
                 memory_limit = 2048M;
                 allow_url_include = On;
+                session.cookie_samesite = "Strict"
             '';
         };
 
