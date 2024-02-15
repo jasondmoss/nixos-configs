@@ -1,6 +1,7 @@
 { config, options, pkgs, ... }:
 let
     theme = import ./_theme.nix;
+    localAddress = "127.0.0.1";
 in {
     nix = {
         package = pkgs.nixUnstable;
@@ -65,7 +66,34 @@ in {
 
         # elasticsearch = {
         #     enable = true;
-        #     listenAddress = "9200";
+        #     dataDir = "/var/lib/elasticsearch";
+        #     cluster_name = "cluster";
+        #     port = 9200;
+        #     tcp_port = 9300;
+        #     listenAddress = localAddress;
+        #     package = pkgs.elasticsearch7;
+        #     extraJavaOptions = [
+        #         "-Djava.net.preferIPv4Stack=true"
+        #         "-Des.http.cname_in_publish_address=true"
+        #         "-Xms512M"
+        #         "-Xmx512M"
+        #     ];
+        #     logging = ''
+        #         logger.action.name = org.elasticsearch.action
+        #         logger.action.level = info
+
+        #         appender.console.type = Console
+        #         appender.console.name = console
+        #         appender.console.layout.type = PatternLayout
+        #         appender.console.layout.pattern = [%d{ISO8601}][%-5p][%-25c{1.}] %marker%m%n
+
+        #         rootLogger.level = info
+        #         rootLogger.appenderRef.console.ref = console
+        #     '';
+        #     extraConf = ''
+        #         network.publish_host: ${localAddress}
+        #         network.bind_host: ${localAddress}
+        #     '';
         # };
 
         gnome = {

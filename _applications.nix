@@ -76,10 +76,6 @@ let
     };
 in
 {
-    # imports = [
-    #     <kde2nix>
-    # ];
-
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -193,18 +189,19 @@ in
 
             #-- KDE/PLASMA
             libsForQt5.ark
+            # libsForQt5.breeze-qt5
             libsForQt5.clip
             libsForQt5.dolphin-plugins
-            libsForQt5.flatpak-kcm
+            # libsForQt5.flatpak-kcm
             libsForQt5.kaddressbook
             libsForQt5.kate
             libsForQt5.kcalc
             libsForQt5.kcoreaddons
-            libsForQt5.kdeconnect-kde
+            # libsForQt5.kdeconnect-kde
             libsForQt5.kdeplasma-addons
-            libsForQt5.kmail
-            libsForQt5.kmail-account-wizard
-            libsForQt5.kmailtransport
+            # libsForQt5.kmail
+            # libsForQt5.kmail-account-wizard
+            # libsForQt5.kmailtransport
             libsForQt5.ksshaskpass
             libsForQt5.ktorrent
             libsForQt5.kwallet
@@ -218,21 +215,84 @@ in
             libsForQt5.xdg-desktop-portal-kde
 
             qt6.full
+            qt6.qmake
+            qt6.qt5compat
+            qt6.qtbase
+            qt6.qtcharts
+            qt6.qtconnectivity
+            qt6.qtdatavis3d
+            qt6.qtdeclarative
+            qt6.qtdoc
+            qt6.qtgraphs
+            qt6.qtgrpc
+            qt6.qthttpserver
+            qt6.qtimageformats
+            qt6.qtlanguageserver
+            qt6.qtlocation
+            qt6.qtlottie
+            qt6.qtmqtt
+            qt6.qtmultimedia
+            qt6.qtnetworkauth
+            qt6.qtpositioning
+            qt6.qtquick3d
+            qt6.qtquick3dphysics
+            qt6.qtquickeffectmaker
+            qt6.qtquicktimeline
+            qt6.qtremoteobjects
+            qt6.qtscxml
+            qt6.qtsensors
+            qt6.qtserialbus
+            qt6.qtserialport
+            qt6.qtshadertools
+            qt6.qtspeech
+            qt6.qtsvg
+            qt6.qttools
+            qt6.qttranslations
+            qt6.qtvirtualkeyboard
+            qt6.qtwayland
+            qt6.qtwebchannel
+            qt6.qtwebengine
+            qt6.qtwebsockets
+            qt6.qtwebview
+            qt6.wrapQtAppsHook
+
+            qt6Packages.appstream-qt
+            qt6Packages.futuresql
+            qt6Packages.kdsoap
+            qt6Packages.kquickimageedit
+            qt6Packages.libqaccessibilityclient
+            qt6Packages.libquotient
+            qt6Packages.mlt
+            qt6Packages.packagekit-qt
+            qt6Packages.poppler
+            qt6Packages.qca
+            qt6Packages.qcoro
+            qt6Packages.qgpgme
+            qt6Packages.qscintilla
             qt6Packages.qt6ct
             qt6Packages.qt6gtk2
+            qt6Packages.qtforkawesome
             qt6Packages.qtkeychain
+            qt6Packages.qtpbfimageplugin
             qt6Packages.qtstyleplugin-kvantum
+            qt6Packages.qtutilities
             qt6Packages.quazip
-            qt6Packages.qscintilla
-            qt6Packages.poppler
+            qt6Packages.qwlroots
+            qt6Packages.qxlsx
+            qt6Packages.qzxing
+            qt6Packages.sddm
+            qt6Packages.waylib
+            qt6Packages.wayqt
 
-            python310Packages.gyp
-            python310Packages.pyqt6
+            lightly-qt
+
+            # python310Packages.gyp
+            # python310Packages.pyqt6
             python311Packages.gyp
             python311Packages.pyqt6
             python311Packages.pytz
 
-            ksmoothdock
+            # ksmoothdock
 
             #-- LabWC
             # labwc
@@ -268,7 +328,6 @@ in
             diffutils
             docker
             docker-client
-            # elasticsearch
             eww
             gcc
             gdb
