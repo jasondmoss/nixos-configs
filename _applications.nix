@@ -82,6 +82,8 @@ in
         config = {
             allowBroken = false;
             allowUnfree = true;
+            # cudaSupport = true;
+            # cudnnSupport = true;
 
             packageOverrides = pkgs: {
                 steam = pkgs.steam.override {
@@ -92,11 +94,12 @@ in
             };
 
             permittedInsecurePackages = [
-                "electron-25.9.0"
+                # "electron-25.9.0"
                 "openssl-1.1.1w"
             ];
         };
 
+        # Mozilla Firefox Nightly overlay.
         overlays = [
             (import ./overlays/nixpkgs-mozilla/lib-overlay.nix)
             (import ./overlays/nixpkgs-mozilla/firefox-overlay.nix)
@@ -154,7 +157,7 @@ in
             zip
 
             #-- GRAPHICS
-            egl-wayland
+            # egl-wayland
             imagemagick
             jpegoptim
             jq
@@ -162,30 +165,25 @@ in
             libva
             libva-utils
             libva1
+            nvidia-system-monitor-qt
             nvtop
             virtualgl
-            # vkdt-wayland
-            vulkan-caps-viewer
-            vulkan-extension-layer
-            vulkan-tools
-            vulkan-utility-libraries
-            vulkan-validation-layers
-            wayland-utils
+            # wayland-utils
             xdg-utils
             xorg.libxcb
             xorg.xrdb
             xrgears
 
             #-- GNOME/GTK
-            gtk3
-            gtk4
-            libcanberra-gtk3
-            xdg-desktop-portal
-            xdg-desktop-portal-gnome
-            xdg-desktop-portal-gtk
-            xdg-desktop-portal-wlr
-            gnome.gnome-tweaks
-            gnome.nautilus
+            # gtk3
+            # gtk4
+            # libcanberra-gtk3
+            # xdg-desktop-portal
+            # xdg-desktop-portal-gnome
+            # xdg-desktop-portal-gtk
+            # xdg-desktop-portal-wlr
+            # gnome.gnome-tweaks
+            # gnome.nautilus
 
             #-- KDE/PLASMA
             libsForQt5.ark
@@ -206,9 +204,12 @@ in
             libsForQt5.ktorrent
             libsForQt5.kwallet
             libsForQt5.kwallet-pam
+            # libsForQt5.kwayland
+            # libsForQt5.kwayland-integration
             libsForQt5.okular
             libsForQt5.plasma-browser-integration
-            libsForQt5.plasma-wayland-protocols
+            # libsForQt5.plasma-wayland-protocols
+            # libsForQt5.qt5.qtwayland
             libsForQt5.qt5ct
             libsForQt5.qtstyleplugins
             libsForQt5.sddm-kcm
@@ -249,7 +250,7 @@ in
             qt6.qttools
             qt6.qttranslations
             qt6.qtvirtualkeyboard
-            qt6.qtwayland
+            # qt6.qtwayland
             qt6.qtwebchannel
             qt6.qtwebengine
             qt6.qtwebsockets
@@ -282,7 +283,7 @@ in
             qt6Packages.qzxing
             qt6Packages.sddm
             qt6Packages.waylib
-            qt6Packages.wayqt
+            # qt6Packages.wayqt
 
             lightly-qt
 
@@ -381,10 +382,10 @@ in
             gcolor3
             gimp
             inkscape
-            libreoffice-qt
-            # masterpdfeditor4
+            # libreoffice-qt
             nomacs
             nano
+            onlyoffice-bin_latest
             retext
             sublime4-dev
             vim
@@ -497,11 +498,59 @@ in
         ];
 
         sessionVariables = {
-            # XDG_SESSION_TYPE="wayland";
-            XDG_CURRENT_DESKTOP="KDE";
-            # XDG_CURRENT_DESKTOP="wlroots";
-            XCURSOR_THEME="ComixCursors";
-            DEFAULT_BROWSER="/run/current-system/sw/bin/firefox-nightly";
+
+            ##
+            # X11
+            ####################################################################
+
+            # DESKTOP_SESSION = "plasma";
+            # XDG_CURRENT_DESKTOP = "KDE";
+            # XDG_SESSION_DESKTOP = "KDE" ;
+            # XDG_SESSION_TYPE = "x11";
+
+            # # QT_QPA_PLATFORMTHEME = "qt6ct";
+            # QT_QPA_PLATFORMTHEME = "qt5ct";
+
+            # GBM_BACKEND = "nvidia-drm";
+            # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+            # LIBVA_DRIVER_NAME = "nvidia";
+            # __GL_GSYNC_ALLOWED = "1";
+
+            # SDL_VIDEODRIVER = "x11";
+
+            ##
+            # WAYLAND
+            ####################################################################
+
+            # DESKTOP_SESSION = "plasmawayland";
+            # XDG_CURRENT_DESKTOP = "KDE";
+            # XDG_SESSION_DESKTOP = "KDE" ;
+            # XDG_SESSION_TYPE = "wayland";
+
+            # # QT
+            # # QT_QPA_PLATFORM = "wayland-egl";
+            # QT_QPA_PLATFORM = "wayland;xcb";
+            # QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+            # # QT_QPA_PLATFORMTHEME = "qt5ct";
+            # QT_QPA_PLATFORMTHEME = "qt6ct";
+
+            # # NVIDIA
+            # GBM_BACKEND = "nvidia-drm";
+            # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+            # LIBVA_DRIVER_NAME = "nvidia";
+            # __GL_GSYNC_ALLOWED = "1";
+
+            # WLR_DRM_NO_ATOMIC = "1";
+            # WLR_NO_HARDWARE_CURSORS = "1";
+
+            # # JetBrains
+            # _JAVA_AWT_WM_NONREPARENTING = "1";
+
+            # SDL_VIDEODRIVER = "wayland";
+
+            # MOZ_ENABLE_WAYLAND = "1";
+            # NIXOS_OZONE_WL = "1";
+
 
             GST_PLUGIN_SYSTEM_PATH_1_0=lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
                 pkgs.gst_all_1.gst-editing-services
@@ -513,18 +562,10 @@ in
                 pkgs.gst_all_1.gstreamer
             ];
 
-            ## -- WAYLAND
-            # MOZ_ENABLE_WAYLAND="1";
-            # NIXOS_OZONE_WL="1";
-            # QT_QPA_PLATFORM="wayland;xcb";
-            # GBM_BACKEND="nvidia-drm";
-            # __GLX_VENDOR_LIBRARY_NAME="nvidia";
-            ENABLE_VKBASALT="1";
-            # LIBVA_DRIVER_NAME="nvidia";
-            # QT_WAYLAND_DISABLE_WINDOWDECORATION="1";
-            # WLR_NO_HARDWARE_CURSORS="1";
-            # SDL_VIDEODRIVER="wayland";
-            # _JAVA_AWT_WM_NONREPARENTING="1"; # For JetBrains
+            XDG_MENU_PREFIX = "kde-";
+
+            XCURSOR_THEME = "ComixCursors";
+            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
         };
     };
 

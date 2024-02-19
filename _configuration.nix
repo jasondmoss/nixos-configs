@@ -96,12 +96,12 @@ in {
         #     '';
         # };
 
-        gnome = {
-           at-spi2-core.enable = true;
-        };
+        # gnome = {
+        #    at-spi2-core.enable = true;
+        # };
 
-        dbus.enable = true;
-        gvfs.enable = true;
+        # dbus.enable = true;
+        # gvfs.enable = true;
         udev.enable = true;
         devmon.enable = true;
         sysstat.enable = true;
@@ -122,8 +122,6 @@ in {
                 KbdInteractiveAuthentication = true;
             };
         };
-
-        # pcscd.enable = true;
 
         pipewire = {
             enable = true;
@@ -219,6 +217,7 @@ in {
         bash.enableCompletion = true;
         dconf.enable = true;
         mtr.enable = true;
+        xwayland.enable = true;
 
         ssh = {
             startAgent = true;
@@ -230,22 +229,6 @@ in {
             remotePlay.openFirewall = true;
             dedicatedServer.openFirewall = true;
         };
-
-        #sway = {
-        #     enable = true;
-        #     #wrapperFeatures.gtk = true;
-        #};
-
-        #wayfire = {
-        #    enable = true;
-        #    plugins = with pkgs.wayfirePlugins; [
-        #        wcm
-        #        wf-shell
-        #        wayfire-plugins-extra
-        #    ];
-        #};
-
-        xwayland.enable = true;
     };
 
     xdg.portal = {
@@ -284,10 +267,6 @@ in {
                 name = "kwallet";
                 enableKwallet = true;
             };
-
-            #swaylock.text = ''
-            #    auth include login
-            #'';
         };
 
         sudo = {
