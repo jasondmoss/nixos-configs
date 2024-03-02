@@ -69,8 +69,8 @@ in {
             at-spi2-core.enable = true;
         };
 
-        dbus.enable = true;
-        gvfs.enable = true;
+        # dbus.enable = true;
+        # gvfs.enable = true;
         udev.enable = true;
         devmon.enable = true;
         sysstat.enable = true;
@@ -180,8 +180,6 @@ in {
         };
     };
 
-    sound.enable = true;
-
     programs = {
         bash.enableCompletion = true;
         dconf.enable = true;
@@ -197,6 +195,29 @@ in {
             enable = true;
             remotePlay.openFirewall = true;
             dedicatedServer.openFirewall = true;
+        };
+
+        kdeconnect.enable = true;
+
+        git = {
+            enable = true;
+
+            config = {
+                user.name = "jasondmoss";
+                user.email = "jason@jdmlabs.com";
+                credential.helper = "cache --timeout=86400";
+            };
+
+            lfs.enable = true;
+        };
+
+        neovim = {
+            enable = true;
+            defaultEditor = true;
+            viAlias = true;
+            vimAlias = true;
+            withNodeJs = true;
+            withPython3 = true;
         };
     };
 
@@ -241,6 +262,8 @@ in {
             '';
         };
     };
+
+    sound.enable = true;
 
     documentation = {
         enable = true;

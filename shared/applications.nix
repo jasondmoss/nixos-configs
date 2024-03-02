@@ -92,8 +92,8 @@ in
             };
 
             permittedInsecurePackages = [
-                "freeimage-unstable-2021-11-01"
-                "openssl-1.1.1w"
+                "freeimage-unstable-2021-11-01"  # Megasync requirement
+                "openssl-1.1.1w"  # Still not sure what is requiring this...
             ];
         };
 
@@ -313,11 +313,11 @@ in
             gimp
             inkscape
             # libreoffice-qt
+            # neovim
             nomacs
             nano
             onlyoffice-bin_latest
             sublime4-dev
-            neovim
 
             #-- MULTIMEDIA
             # aaxtomp3

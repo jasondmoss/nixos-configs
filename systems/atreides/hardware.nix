@@ -105,10 +105,11 @@
         };
 
         nvidia = {
-            open = true;
+            forceFullCompositionPipeline = true;
+            modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            modesetting.enable = true;
+            open = true;
             powerManagement.enable = false;
 
             package = config.boot.kernelPackages.nvidiaPackages.beta;

@@ -1,5 +1,4 @@
 **/nixpkgs
 **/secret.txt
 .idea
-#overlays/nixpkgs-mozilla
 result
