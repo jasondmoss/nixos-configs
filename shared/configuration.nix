@@ -1,6 +1,7 @@
 { config, options, pkgs, ... }:
 let
-    theme = import ./_theme.nix;
+    theme = import ./theme.nix;
+
     localAddress = "127.0.0.1";
 in {
     nix = {
@@ -64,44 +65,12 @@ in {
             '';
         };
 
-        # elasticsearch = {
-        #     enable = true;
-        #     dataDir = "/var/lib/elasticsearch";
-        #     cluster_name = "cluster";
-        #     port = 9200;
-        #     tcp_port = 9300;
-        #     listenAddress = localAddress;
-        #     package = pkgs.elasticsearch7;
-        #     extraJavaOptions = [
-        #         "-Djava.net.preferIPv4Stack=true"
-        #         "-Des.http.cname_in_publish_address=true"
-        #         "-Xms512M"
-        #         "-Xmx512M"
-        #     ];
-        #     logging = ''
-        #         logger.action.name = org.elasticsearch.action
-        #         logger.action.level = info
+        gnome = {
+            at-spi2-core.enable = true;
+        };
 
-        #         appender.console.type = Console
-        #         appender.console.name = console
-        #         appender.console.layout.type = PatternLayout
-        #         appender.console.layout.pattern = [%d{ISO8601}][%-5p][%-25c{1.}] %marker%m%n
-
-        #         rootLogger.level = info
-        #         rootLogger.appenderRef.console.ref = console
-        #     '';
-        #     extraConf = ''
-        #         network.publish_host: ${localAddress}
-        #         network.bind_host: ${localAddress}
-        #     '';
-        # };
-
-        # gnome = {
-        #    at-spi2-core.enable = true;
-        # };
-
-        # dbus.enable = true;
-        # gvfs.enable = true;
+        dbus.enable = true;
+        gvfs.enable = true;
         udev.enable = true;
         devmon.enable = true;
         sysstat.enable = true;
@@ -143,18 +112,18 @@ in {
                     enable = true;
                     enableHidpi = true;
 
-                    # wayland.enable = true;
-                    # settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
+                    wayland.enable = true;
+                    settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
                 };
 
-                 defaultSession = "plasma";
+                 defaultSession = "plasmax11";
                  # defaultSession = "plasmawayland";
             };
 
             desktopManager = {
-                plasma5 = {
+                plasma6 = {
                     enable = true;
-                    useQtScaling = true;
+                    enableQt5Integration = true;
                 };
             };
         };
@@ -242,11 +211,6 @@ in {
     networking = {
         enableIPv6 = true;
 
-        extraHosts = ''
-            23.128.160.24 cyanserver.ca
-            23.128.160.24 web-a7g7.hostresolver.net
-        '';
-
         firewall = {
             allowPing = true;
             allowedTCPPorts = [ 22 80 443 1025 1143 33728 ];
@@ -276,14 +240,6 @@ in {
                 Defaults:me !authenticate
             '';
         };
-
-        # auditd.enable = true;
-        # audit = {
-        #     enable = true;
-        #     rules = [
-        #         "-a exit,always -F arch=x86_64-linux -S execve"
-        #     ];
-        # };
     };
 
     documentation = {

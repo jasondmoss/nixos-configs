@@ -3,12 +3,12 @@
     system.stateVersion = "23.11";
 
     imports = [
-        ./atreides_hardware.nix
-        ./_configuration.nix
-        ./_applications.nix
+        ./hardware.nix
+        ../../shared/configuration.nix
+        ../../shared/applications.nix
 
         # JetBrains PHPStorm Beta
-        ./pkgs/jetbrains/default.nix
+        ../../custom/jetbrains/default.nix
     ];
 
     time.timeZone = "America/Toronto";
@@ -19,8 +19,12 @@
 
     systemd = {
         user.services.add_ssh_keys = {
+#ssh-add $HOME/.ssh/coach_cyan
+#ssh-add $HOME/.ssh/cyan_jason_new
+#ssh-add $HOME/.ssh/icarus_development
             script = ''
-                ssh-add $HOME/.ssh/id_development_global
+ssh-add $HOME/.ssh/cyan_jason
+ssh-add $HOME/.ssh/id_development_global
             '';
             wantedBy = [ "default.target" ];
         };

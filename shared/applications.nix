@@ -82,8 +82,6 @@ in
         config = {
             allowBroken = false;
             allowUnfree = true;
-            # cudaSupport = true;
-            # cudnnSupport = true;
 
             packageOverrides = pkgs: {
                 steam = pkgs.steam.override {
@@ -94,15 +92,15 @@ in
             };
 
             permittedInsecurePackages = [
-                # "electron-25.9.0"
+                "freeimage-unstable-2021-11-01"
                 "openssl-1.1.1w"
             ];
         };
 
         # Mozilla Firefox Nightly overlay.
         overlays = [
-            (import ./overlays/nixpkgs-mozilla/lib-overlay.nix)
-            (import ./overlays/nixpkgs-mozilla/firefox-overlay.nix)
+            (import ../overlays/nixpkgs-mozilla/lib-overlay.nix)
+            (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
         ];
     };
 
@@ -110,6 +108,7 @@ in
         systemPackages = with pkgs; [
 
             #-- CORE
+            aha
             babl
             clinfo
             coreutils-full
@@ -157,143 +156,85 @@ in
             zip
 
             #-- GRAPHICS
-            # egl-wayland
+            egl-wayland
             imagemagick
             jpegoptim
             jq
+            libdrm
             libglvnd
             libva
             libva-utils
             libva1
-            nvidia-system-monitor-qt
+            mesa
             nvtop
             virtualgl
-            # wayland-utils
+            wayland-utils
+            xdg-desktop-portal
             xdg-utils
             xorg.libxcb
             xorg.xrdb
             xrgears
 
-            #-- GNOME/GTK
-            # gtk3
-            # gtk4
-            # libcanberra-gtk3
-            # xdg-desktop-portal
-            # xdg-desktop-portal-gnome
-            # xdg-desktop-portal-gtk
-            # xdg-desktop-portal-wlr
-            # gnome.gnome-tweaks
-            # gnome.nautilus
-
             #-- KDE/PLASMA
-            libsForQt5.ark
-            # libsForQt5.breeze-qt5
-            libsForQt5.clip
-            libsForQt5.dolphin-plugins
-            # libsForQt5.flatpak-kcm
-            libsForQt5.kaddressbook
-            libsForQt5.kate
-            libsForQt5.kcalc
-            libsForQt5.kcoreaddons
-            # libsForQt5.kdeconnect-kde
-            libsForQt5.kdeplasma-addons
-            # libsForQt5.kmail
-            # libsForQt5.kmail-account-wizard
-            # libsForQt5.kmailtransport
-            libsForQt5.ksshaskpass
-            libsForQt5.ktorrent
-            libsForQt5.kwallet
-            libsForQt5.kwallet-pam
-            # libsForQt5.kwayland
-            # libsForQt5.kwayland-integration
-            libsForQt5.okular
-            libsForQt5.plasma-browser-integration
-            # libsForQt5.plasma-wayland-protocols
-            # libsForQt5.qt5.qtwayland
+            libsForQt5.full
             libsForQt5.qt5ct
-            libsForQt5.qtstyleplugins
-            libsForQt5.sddm-kcm
-            libsForQt5.xdg-desktop-portal-kde
 
-            qt6.full
-            qt6.qmake
-            qt6.qt5compat
-            qt6.qtbase
-            qt6.qtcharts
-            qt6.qtconnectivity
-            qt6.qtdatavis3d
-            qt6.qtdeclarative
-            qt6.qtdoc
-            qt6.qtgraphs
-            qt6.qtgrpc
-            qt6.qthttpserver
-            qt6.qtimageformats
-            qt6.qtlanguageserver
-            qt6.qtlocation
-            qt6.qtlottie
-            qt6.qtmqtt
-            qt6.qtmultimedia
-            qt6.qtnetworkauth
-            qt6.qtpositioning
-            qt6.qtquick3d
-            qt6.qtquick3dphysics
-            qt6.qtquickeffectmaker
-            qt6.qtquicktimeline
-            qt6.qtremoteobjects
-            qt6.qtscxml
-            qt6.qtsensors
-            qt6.qtserialbus
-            qt6.qtserialport
-            qt6.qtshadertools
-            qt6.qtspeech
-            qt6.qtsvg
-            qt6.qttools
-            qt6.qttranslations
-            qt6.qtvirtualkeyboard
-            # qt6.qtwayland
-            qt6.qtwebchannel
-            qt6.qtwebengine
-            qt6.qtwebsockets
-            qt6.qtwebview
-            qt6.wrapQtAppsHook
+            kdePackages.full
+            kdePackages.qt6ct
 
-            qt6Packages.appstream-qt
-            qt6Packages.futuresql
-            qt6Packages.kdsoap
-            qt6Packages.kquickimageedit
-            qt6Packages.libqaccessibilityclient
-            qt6Packages.libquotient
-            qt6Packages.mlt
-            qt6Packages.packagekit-qt
-            qt6Packages.poppler
-            qt6Packages.qca
-            qt6Packages.qcoro
-            qt6Packages.qgpgme
-            qt6Packages.qscintilla
-            qt6Packages.qt6ct
-            qt6Packages.qt6gtk2
-            qt6Packages.qtforkawesome
-            qt6Packages.qtkeychain
-            qt6Packages.qtpbfimageplugin
-            qt6Packages.qtstyleplugin-kvantum
-            qt6Packages.qtutilities
-            qt6Packages.quazip
-            qt6Packages.qwlroots
-            qt6Packages.qxlsx
-            qt6Packages.qzxing
-            qt6Packages.sddm
-            qt6Packages.waylib
-            # qt6Packages.wayqt
+            kdePackages.accounts-qt
+            kdePackages.akonadi
+            kdePackages.akonadi-calendar
+            kdePackages.akonadi-calendar-tools
+            kdePackages.akonadi-contacts
+            kdePackages.ark
+            kdePackages.dolphin
+            kdePackages.dolphin-plugins
+            kdePackages.frameworkintegration
+            kdePackages.ghostwriter
+            kdePackages.kate
+            kdePackages.karchive
+            kdePackages.kbreakout
+            kdePackages.kcalc
+            kdePackages.kcmutils
+            kdePackages.kcoreaddons
+            kdePackages.kdeconnect-kde
+            kdePackages.kdeplasma-addons
+            kdePackages.kiconthemes
+            kdePackages.kio
+            kdePackages.kio-admin
+            kdePackages.kio-extras
+            kdePackages.kio-extras-kf5
+            kdePackages.kio-fuse
+            kdePackages.kio-gdrive
+            kdePackages.kio-zeroconf
+            kdePackages.kirigami
+            kdePackages.kirigami-addons
+            kdePackages.knewstuff
+            kdePackages.ksshaskpass
+            kdePackages.ksvg
+            kdePackages.ktorrent
+            kdePackages.kwallet
+            kdePackages.kwallet-pam
+            kdePackages.okular
+            kdePackages.plasma5support
+            kdePackages.plasma-browser-integration
+            kdePackages.plasma-wayland-protocols
+            kdePackages.plymouth-kcm
+            kdePackages.qt5compat
+            kdePackages.qtsvg
+            kdePackages.qttools
+            kdePackages.qtvirtualkeyboard
+            kdePackages.wrapQtAppsHook
+            kdePackages.xdg-desktop-portal-kde
 
-            lightly-qt
-
-            # python310Packages.gyp
-            # python310Packages.pyqt6
             python311Packages.gyp
             python311Packages.pyqt6
             python311Packages.pytz
 
-            # ksmoothdock
+            #-- GNOME/GTK
+            gtk3
+            gtk4
 
             #-- LabWC
             # labwc
@@ -306,16 +247,6 @@ in
 
             #-- THEMING
             adwaita-qt6
-            adapta-kde-theme
-            adementary-theme
-            arc-kde-theme
-            ayu-theme-gtk
-            hicolor-icon-theme
-            materia-kde-theme
-
-            gnome.adwaita-icon-theme
-            gnome-icon-theme
-            pantheon.elementary-icon-theme
 
             #-- DEVELOPMENT
             bison
@@ -332,7 +263,6 @@ in
             eww
             gcc
             gdb
-            # ggshield
             git
             go
             lua
@@ -363,9 +293,8 @@ in
             php81Extensions.zip
             php81Extensions.zlib
 
+            # php81Packages.php-codesniffer
             php81Packages.php-cs-fixer
-            php81Packages.phpcbf
-            php81Packages.phpcs
             php81Packages.phpmd
             php81Packages.phpstan
 
@@ -377,18 +306,18 @@ in
             sniffnet
 
             #-- EDITORS
-            # bcompare
+            blender
             darktable
             gcolor3
+            gegl
             gimp
             inkscape
             # libreoffice-qt
             nomacs
             nano
             onlyoffice-bin_latest
-            retext
             sublime4-dev
-            vim
+            neovim
 
             #-- MULTIMEDIA
             # aaxtomp3
@@ -466,26 +395,23 @@ in
             firefoxNightlyDesktopItem
 
             #-- Anytype
-            (pkgs.callPackage ./pkgs/anytype/default.nix {})
+            (pkgs.callPackage ../custom/anytype/default.nix {})
 
             #-- GIMP Development
-            # (pkgs.callPackage ./pkgs/gegl-devel/default.nix {})
-            # (pkgs.callPackage ./pkgs/gimp-devel/default.nix {})
+            # (pkgs.callPackage ../custom/gegl-devel/default.nix {})
+            # (pkgs.callPackage ../custom/gimp-devel/default.nix {})
 
             #-- Klassy KDE Theme
-            (pkgs.libsForQt5.callPackage ./pkgs/klassy/default.nix {})
-
-            #-- Master PDF 5
-            # (pkgs.libsForQt5.callPackage ./pkgs/masterpdf5/default.nix {})
+            #(pkgs.libsForQt5.callPackage ../custom/klassy/default.nix {})
 
             #-- Standard Notes
-            (pkgs.callPackage ./pkgs/standardnotes/default.nix {})
+            (pkgs.callPackage ../custom/standardnotes/default.nix {})
 
             #-- Strawberry Music Player
-            (pkgs.callPackage ./pkgs/strawberry/default.nix {})
+            (pkgs.callPackage ../custom/strawberry/default.nix {})
 
             #-- Wavebox Beta
-            (pkgs.callPackage ./pkgs/wavebox/default.nix {})
+            (pkgs.callPackage ../custom/wavebox/default.nix {})
 
             #
             # --------------
@@ -500,39 +426,15 @@ in
         sessionVariables = {
 
             ##
-            # X11
+            # Desktop
             ####################################################################
 
-            # DESKTOP_SESSION = "plasma";
+            # DESKTOP_SESSION = "plasmax11";
             # XDG_CURRENT_DESKTOP = "KDE";
             # XDG_SESSION_DESKTOP = "KDE" ;
             # XDG_SESSION_TYPE = "x11";
 
-            # # QT_QPA_PLATFORMTHEME = "qt6ct";
-            # QT_QPA_PLATFORMTHEME = "qt5ct";
-
-            # GBM_BACKEND = "nvidia-drm";
-            # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-            # LIBVA_DRIVER_NAME = "nvidia";
-            # __GL_GSYNC_ALLOWED = "1";
-
-            # SDL_VIDEODRIVER = "x11";
-
-            ##
-            # WAYLAND
-            ####################################################################
-
-            # DESKTOP_SESSION = "plasmawayland";
-            # XDG_CURRENT_DESKTOP = "KDE";
-            # XDG_SESSION_DESKTOP = "KDE" ;
-            # XDG_SESSION_TYPE = "wayland";
-
-            # # QT
-            # # QT_QPA_PLATFORM = "wayland-egl";
-            # QT_QPA_PLATFORM = "wayland;xcb";
-            # QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-            # # QT_QPA_PLATFORMTHEME = "qt5ct";
-            # QT_QPA_PLATFORMTHEME = "qt6ct";
+            QT_QPA_PLATFORMTHEME = "qt6ct";
 
             # # NVIDIA
             # GBM_BACKEND = "nvidia-drm";
@@ -548,8 +450,8 @@ in
 
             # SDL_VIDEODRIVER = "wayland";
 
-            # MOZ_ENABLE_WAYLAND = "1";
-            # NIXOS_OZONE_WL = "1";
+            MOZ_ENABLE_WAYLAND = "1";
+            NIXOS_OZONE_WL = "1";
 
 
             GST_PLUGIN_SYSTEM_PATH_1_0=lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [

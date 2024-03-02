@@ -92,17 +92,6 @@
     hardware = {
         cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-        nvidia = {
-            open = true;
-            nvidiaPersistenced = true;
-            nvidiaSettings = true;
-            modesetting.enable = true;
-            powerManagement.enable = true;
-
-            # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-            package = config.boot.kernelPackages.nvidiaPackages.beta;
-        };
-
         opengl = {
             enable = true;
             driSupport = true;
@@ -113,6 +102,17 @@
                 libvdpau-va-gl
                 nvidia-vaapi-driver
             ];
+        };
+
+        nvidia = {
+            open = true;
+            nvidiaPersistenced = true;
+            nvidiaSettings = true;
+            modesetting.enable = true;
+            powerManagement.enable = false;
+
+            package = config.boot.kernelPackages.nvidiaPackages.beta;
+            # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
 
         pulseaudio.enable = false;

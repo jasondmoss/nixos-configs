@@ -1,7 +1,5 @@
-.idea
 **/nixpkgs
-**/scratch
 **/secret.txt
+.idea
 examples/
 result/
-scratch/

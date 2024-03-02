@@ -17,7 +17,7 @@ let
     ]);
 in stdenv.mkDerivation (finalAttrs: {
     pname = "gimp";
-    version = "2_99_16+date=2023-07-09";
+    version = "2_99_18";
 
     outputs = [ "out" "dev" "devdoc" ];
 
