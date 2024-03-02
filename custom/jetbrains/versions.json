@@ -3,9 +3,9 @@
         "gateway": {
             "update-channel": "Gateway RELEASE",
             "url-template": "https://download.jetbrains.com/idea/gateway/JetBrainsGateway-{version}.tar.gz",
-            "version": "2023.3.3",
-            "sha256": "sha256-QRpNlkqbEvDNDA6vR+7IyOHahcObtQ0HlJBd1JCisYo=",
-            "url": "https://download.jetbrains.com/idea/gateway/JetBrainsGateway-2023.3.3.tar.gz",
+            "version": "2023.3.4",
+            "sha256": "sha256-piNdRwbVlMlcNP7W8y1d7Zfq5q9biAPEfr0Oxsz3egY=",
+            "url": "https://download.jetbrains.com/idea/gateway/JetBrainsGateway-2023.3.4.tar.gz",
             "build_number": "233.14475.28"
         },
         "phpstorm": {
