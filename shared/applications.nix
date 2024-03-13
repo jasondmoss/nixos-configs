@@ -92,7 +92,7 @@ in
             };
 
             permittedInsecurePackages = [
-                "freeimage-unstable-2021-11-01"  # Megasync requirement
+                "freeimage-unstable-2021-11-01"  # Megasync requirement?
                 "openssl-1.1.1w"  # Still not sure what is requiring this...
             ];
         };
@@ -166,6 +166,7 @@ in
             libva-utils
             libva1
             mesa
+            nvidia-system-monitor-qt
             nvtop
             virtualgl
             wayland-utils
@@ -273,30 +274,30 @@ in
             seer
             yarn
 
-            php81
-            php81Extensions.bz2
-            php81Extensions.curl
-            php81Extensions.fileinfo
-            php81Extensions.gd
-            php81Extensions.imagick
-            php81Extensions.intl
-            php81Extensions.mbstring
-            php81Extensions.mysqlnd
-            php81Extensions.pdo
-            php81Extensions.pdo_dblib
-            php81Extensions.pdo_mysql
-            php81Extensions.pdo_odbc
-            php81Extensions.tidy
-            php81Extensions.xdebug
-            php81Extensions.xml
-            php81Extensions.xsl
-            php81Extensions.zip
-            php81Extensions.zlib
+            php82
+            php82Extensions.bz2
+            php82Extensions.curl
+            php82Extensions.fileinfo
+            php82Extensions.gd
+            php82Extensions.imagick
+            php82Extensions.intl
+            php82Extensions.mbstring
+            php82Extensions.mysqlnd
+            php82Extensions.pdo
+            php82Extensions.pdo_dblib
+            php82Extensions.pdo_mysql
+            php82Extensions.pdo_odbc
+            php82Extensions.tidy
+            php82Extensions.xdebug
+            php82Extensions.xml
+            php82Extensions.xsl
+            php82Extensions.zip
+            php82Extensions.zlib
 
-            # php81Packages.php-codesniffer
-            php81Packages.php-cs-fixer
-            php81Packages.phpmd
-            php81Packages.phpstan
+            php82Packages.php-codesniffer
+            php82Packages.php-cs-fixer
+            php82Packages.phpmd
+            php82Packages.phpstan
 
             #-- SECURITY
             chkrootkit
@@ -312,8 +313,6 @@ in
             gegl
             gimp
             inkscape
-            # libreoffice-qt
-            # neovim
             nomacs
             nano
             onlyoffice-bin_latest
@@ -424,15 +423,10 @@ in
         ];
 
         sessionVariables = {
+            XDG_MENU_PREFIX = "kde-";
 
-            ##
-            # Desktop
-            ####################################################################
-
-            # DESKTOP_SESSION = "plasmax11";
-            # XDG_CURRENT_DESKTOP = "KDE";
-            # XDG_SESSION_DESKTOP = "KDE" ;
-            # XDG_SESSION_TYPE = "x11";
+            XCURSOR_THEME = "ComixCursors";
+            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
             QT_QPA_PLATFORMTHEME = "qt6ct";
 
@@ -446,7 +440,7 @@ in
             # WLR_NO_HARDWARE_CURSORS = "1";
 
             # # JetBrains
-            # _JAVA_AWT_WM_NONREPARENTING = "1";
+            _JAVA_AWT_WM_NONREPARENTING = "1";
 
             # SDL_VIDEODRIVER = "wayland";
 
@@ -463,11 +457,6 @@ in
                 pkgs.gst_all_1.gst-plugins-ugly
                 pkgs.gst_all_1.gstreamer
             ];
-
-            XDG_MENU_PREFIX = "kde-";
-
-            XCURSOR_THEME = "ComixCursors";
-            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
         };
     };
 

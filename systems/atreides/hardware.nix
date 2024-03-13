@@ -109,11 +109,11 @@
             modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            open = true;
+            open = false;
             powerManagement.enable = false;
 
-            package = config.boot.kernelPackages.nvidiaPackages.beta;
-            # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+            # package = config.boot.kernelPackages.nvidiaPackages.beta;
+            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
 
         pulseaudio.enable = false;

@@ -99,9 +99,17 @@ in {
             pulse.enable = true;
         };
 
+        desktopManager = {
+            plasma6 = {
+                enable = true;
+                enableQt5Integration = true;
+            };
+        };
+
         xserver = {
             enable = true;
             videoDrivers = [ "nvidia" ];
+
             xkb = {
                 layout = "us";
                 variant = "";
@@ -120,12 +128,12 @@ in {
                  # defaultSession = "plasmawayland";
             };
 
-            desktopManager = {
-                plasma6 = {
-                    enable = true;
-                    enableQt5Integration = true;
-                };
-            };
+            #desktopManager = {
+            #    plasma6 = {
+            #        enable = true;
+            #        enableQt5Integration = true;
+            #    };
+            #};
         };
 
         httpd = {
@@ -182,7 +190,8 @@ in {
 
     programs = {
         bash.enableCompletion = true;
-        dconf.enable = true;
+        #dconf.enable = true;
+        kdeconnect.enable = true;
         mtr.enable = true;
         xwayland.enable = true;
 
@@ -196,8 +205,6 @@ in {
             remotePlay.openFirewall = true;
             dedicatedServer.openFirewall = true;
         };
-
-        kdeconnect.enable = true;
 
         git = {
             enable = true;
