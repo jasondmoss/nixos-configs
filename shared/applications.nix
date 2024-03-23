@@ -167,7 +167,7 @@ in
             libva1
             mesa
             nvidia-system-monitor-qt
-            nvtop
+            nvtopPackages.full
             virtualgl
             wayland-utils
             xdg-desktop-portal
@@ -177,8 +177,10 @@ in
             xrgears
 
             #-- KDE/PLASMA
-            libsForQt5.full
-            libsForQt5.qt5ct
+            # libsForQt5.full
+            # libsForQt5.qt5ct
+            # libsForQt5.qt5.qtbase
+            # libsForQt5.qt5.qtx11extras
 
             kdePackages.full
             kdePackages.qt6ct
@@ -189,6 +191,7 @@ in
             kdePackages.akonadi-calendar-tools
             kdePackages.akonadi-contacts
             kdePackages.ark
+            kdePackages.bluez-qt
             kdePackages.dolphin
             kdePackages.dolphin-plugins
             kdePackages.frameworkintegration
@@ -198,9 +201,12 @@ in
             kdePackages.kbreakout
             kdePackages.kcalc
             kdePackages.kcmutils
+            kdePackages.kconfigwidgets
             kdePackages.kcoreaddons
             kdePackages.kdeconnect-kde
+            kdePackages.kdecoration
             kdePackages.kdeplasma-addons
+            kdePackages.kguiaddons
             kdePackages.kiconthemes
             kdePackages.kio
             kdePackages.kio-admin
@@ -217,6 +223,11 @@ in
             kdePackages.ktorrent
             kdePackages.kwallet
             kdePackages.kwallet-pam
+            kdePackages.kwayland
+            kdePackages.kwindowsystem
+            kdePackages.layer-shell-qt
+            kdePackages.modemmanager-qt
+            kdePackages.networkmanager-qt
             kdePackages.okular
             kdePackages.plasma5support
             kdePackages.plasma-browser-integration
@@ -234,7 +245,7 @@ in
             python311Packages.pytz
 
             #-- GNOME/GTK
-            gtk3
+            #gtk3
             gtk4
 
             #-- LabWC
@@ -261,7 +272,9 @@ in
             diffutils
             docker
             docker-client
+            docker-compose
             eww
+            extra-cmake-modules
             gcc
             gdb
             git
@@ -269,10 +282,36 @@ in
             lua
             nodejs
             perl
+            phpunit
             pre-commit
             rustc
             seer
             yarn
+
+            php81
+            php81Extensions.bz2
+            php81Extensions.curl
+            php81Extensions.fileinfo
+            php81Extensions.gd
+            php81Extensions.imagick
+            php81Extensions.intl
+            php81Extensions.mbstring
+            php81Extensions.mysqlnd
+            php81Extensions.pdo
+            php81Extensions.pdo_dblib
+            php81Extensions.pdo_mysql
+            php81Extensions.pdo_odbc
+            php81Extensions.tidy
+            php81Extensions.xdebug
+            php81Extensions.xml
+            php81Extensions.xsl
+            php81Extensions.zip
+            php81Extensions.zlib
+
+            #php81Packages.php-codesniffer
+            php81Packages.php-cs-fixer
+            php81Packages.phpmd
+            php81Packages.phpstan
 
             php82
             php82Extensions.bz2
@@ -401,7 +440,7 @@ in
             # (pkgs.callPackage ../custom/gimp-devel/default.nix {})
 
             #-- Klassy KDE Theme
-            #(pkgs.libsForQt5.callPackage ../custom/klassy/default.nix {})
+            (pkgs.kdePackages.callPackage ../custom/klassy/default.nix {})
 
             #-- Standard Notes
             (pkgs.callPackage ../custom/standardnotes/default.nix {})

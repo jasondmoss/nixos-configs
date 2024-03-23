@@ -1,40 +1,45 @@
 {
-    lib, mkDerivation, fetchFromGitHub, cmake, extra-cmake-modules, kdecoration,
-    qtx11extras, kcoreaddons, kguiaddons, kconfigwidgets, kiconthemes,
-    kwindowsystem, kwayland, kirigami2, frameworkintegration, kcmutils
+    lib, stdenv, fetchFromGitHub, kdePackages, cmake, qt6
 }:
-mkDerivation rec {
+
+stdenv.mkDerivation rec {
     pname = "klassy";
-    version = "master";
+    version = "plasma6.0";
 
     src = fetchFromGitHub {
         owner = "paulmcauley";
-        repo = pname;
+        repo = "klassy";
         rev = version;
-        sha256 = "sha256-coFcUPEwGbYxFeZaLlM/n0ZUF7b/InwS7lGrBGHBVdM=";
+        hash = "sha256-mKLkdMblcV/1K/QFyO1+kEjGQMuEHNNppmARbrnEf2w=";
     };
 
-    extraCmakeFlags = [ "-DBUILD_TESTING=OFF" ];
-
-    nativeBuildInputs = [ cmake extra-cmake-modules ];
-
     buildInputs = [
-        kdecoration
-        qtx11extras
-        kcoreaddons
-        kguiaddons
-        kconfigwidgets
-        kiconthemes
-        kwayland
-        kwindowsystem
-        kirigami2
-        frameworkintegration
-        kcmutils
+        kdePackages.frameworkintegration
+        kdePackages.kcmutils
+        kdePackages.kdecoration
+        kdePackages.kirigami
+        kdePackages.qtwayland
+        qt6.full
     ];
 
-    meta = with lib; {
+    nativeBuildInputs = [
+        cmake
+        kdePackages.extra-cmake-modules
+        kdePackages.wrapQtAppsHook
+    ];
+
+    cmakeFlags = [
+        "-DCMAKE_INSTALL_PREFIX=$out"
+        "-DCMAKE_BUILD_TYPE=Release"
+        "-DBUILD_TESTING=OFF"
+        "-DKDE_INSTALL_USE_QT_SYS_PATHS=ON"
+        "-DBUILD_QT5=OFF"
+    ];
+
+    meta = {
         description = "A highly customizable binary Window Decoration and Application Style plugin for recent versions of the KDE Plasma desktop";
         homepage = "https://github.com/paulmcauley/klassy";
-        license = with licenses; [ gpl2Only gpl2Plus gpl3Only bsd3 mit ];
+        changelog = "https://github.com/paulmcauley/klassy/releases/tag/${version}";
+        license = with lib.licenses; [ bsd3 cc0 fdl12Plus gpl2Only gpl2Plus gpl3Only mit ];
     };
 }
