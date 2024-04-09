@@ -47,7 +47,7 @@ in appimageTools.wrapType2 rec {
             end-to-end encryption, powerful extensions, and open-source applications.
         '';
         homepage = "https://standardnotes.org";
-        license = licenses.agpl3;
+        license = licenses.gpl3;
         maintainers = with maintainers; [ mgregoire chuangzhu squalus ];
         sourceProvenance = [ sourceTypes.binaryNativeCode ];
         platforms = builtins.attrNames srcjson.appimage;

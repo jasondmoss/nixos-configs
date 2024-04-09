@@ -19,9 +19,6 @@
 
     systemd = {
         user.services.add_ssh_keys = {
-#ssh-add $HOME/.ssh/coach_cyan
-#ssh-add $HOME/.ssh/cyan_jason_new
-#ssh-add $HOME/.ssh/icarus_development
             script = ''
 ssh-add $HOME/.ssh/cyan_jason
 ssh-add $HOME/.ssh/id_development_global

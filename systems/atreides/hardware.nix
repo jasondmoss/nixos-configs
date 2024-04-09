@@ -109,7 +109,7 @@
             modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            open = false;
+            open = true;
             powerManagement.enable = false;
 
             # package = config.boot.kernelPackages.nvidiaPackages.beta;
@@ -126,5 +126,42 @@
     };
 
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+
+    environment.sessionVariables = {
+        XDG_MENU_PREFIX = "kde-";
+
+        XCURSOR_THEME = "ComixCursors";
+        DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
+
+        QT_QPA_PLATFORMTHEME = "qt6ct";
+
+        # # NVIDIA
+        # GBM_BACKEND = "nvidia-drm";
+        # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        # LIBVA_DRIVER_NAME = "nvidia";
+        # __GL_GSYNC_ALLOWED = "1";
+
+        # WLR_DRM_NO_ATOMIC = "1";
+        # WLR_NO_HARDWARE_CURSORS = "1";
+
+        # # JetBrains
+        _JAVA_AWT_WM_NONREPARENTING = "1";
+
+        # SDL_VIDEODRIVER = "wayland";
+
+        MOZ_ENABLE_WAYLAND = "1";
+        NIXOS_OZONE_WL = "1";
+
+
+        GST_PLUGIN_SYSTEM_PATH_1_0=lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
+            pkgs.gst_all_1.gst-editing-services
+            pkgs.gst_all_1.gst-libav
+            pkgs.gst_all_1.gst-plugins-bad
+            pkgs.gst_all_1.gst-plugins-base
+            pkgs.gst_all_1.gst-plugins-good
+            pkgs.gst_all_1.gst-plugins-ugly
+            pkgs.gst_all_1.gstreamer
+        ];
+    };
 
 }
