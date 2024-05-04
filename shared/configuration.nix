@@ -5,7 +5,8 @@ let
     localAddress = "127.0.0.1";
 in {
     nix = {
-        package = pkgs.nixUnstable;
+        # package = pkgs.nixUnstable;
+        package = pkgs.nixVersions.latest;
 
         settings = {
             trusted-users = [ "root" "@wheel" ];
@@ -51,17 +52,17 @@ in {
         coredns = {
             enable = true;
             config = ''
-                . {
-                    # Cloudflare and Google
-                    forward . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
-                    cache
-                }
+. {
+    # Cloudflare and Google
+    forward . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
+    cache
+}
 
-                local {
-                    template IN A {
-                        answer "{{ .Name }} 0 IN A 127.0.0.1"
-                    }
-                }
+local {
+    template IN A {
+        answer "{{ .Name }} 0 IN A 127.0.0.1"
+    }
+}
             '';
         };
 
@@ -69,8 +70,8 @@ in {
             at-spi2-core.enable = true;
         };
 
-        # dbus.enable = true;
-        # gvfs.enable = true;
+        dbus.enable = true;
+        gvfs.enable = true;
         udev.enable = true;
         devmon.enable = true;
         sysstat.enable = true;
@@ -106,6 +107,19 @@ in {
             };
         };
 
+        displayManager = {
+            sddm = {
+                enable = true;
+                enableHidpi = true;
+
+                wayland.enable = true;
+                settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
+            };
+
+             defaultSession = "plasmax11";
+             # defaultSession = "plasmawayland";
+        };
+
         xserver = {
             enable = true;
             videoDrivers = [ "nvidia" ];
@@ -115,25 +129,11 @@ in {
                 variant = "";
             };
 
-            displayManager = {
-                sddm = {
-                    enable = true;
-                    enableHidpi = true;
-
-                    wayland.enable = true;
-                    settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
-                };
-
-                 defaultSession = "plasmax11";
-                 # defaultSession = "plasmawayland";
-            };
-
-            #desktopManager = {
-            #    plasma6 = {
-            #        enable = true;
-            #        enableQt5Integration = true;
-            #    };
-            #};
+            screenSection = ''
+Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+Option "AllowIndirectGLXProtocol" "off"
+Option "TripleBuffer" "on"
+            '';
         };
 
         httpd = {
@@ -150,20 +150,20 @@ in {
             };
 
             phpOptions = ''
-                display_errors = On
-                display_startup_errors = On
-                allow_url_fopen = on
-                memory_limit = 2048M
-                post_max_size = 2048M
-                upload_max_filesize = 2048M
-                max_execution_time = 10000
-                max_input_time = 3000
-                mbstring.http_input = pass
-                mbstring.http_output = pass
-                mbstring.internal_encoding = pass
-                memory_limit = 2048M;
-                allow_url_include = On;
-                session.cookie_samesite = "Strict"
+display_errors = On
+display_startup_errors = On
+allow_url_fopen = on
+memory_limit = 2048M
+post_max_size = 2048M
+upload_max_filesize = 2048M
+max_execution_time = 10000
+max_input_time = 3000
+mbstring.http_input = pass
+mbstring.http_output = pass
+mbstring.internal_encoding = pass
+memory_limit = 2048M;
+allow_url_include = On;
+session.cookie_samesite = "Strict"
             '';
         };
 
@@ -190,7 +190,7 @@ in {
 
     programs = {
         bash.enableCompletion = true;
-        #dconf.enable = true;
+        dconf.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;
         xwayland.enable = true;

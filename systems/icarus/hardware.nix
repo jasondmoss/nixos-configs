@@ -6,11 +6,29 @@
 
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
-        kernelModules = [ "kvm-intel" "module_blacklist=i915" ];
-        extraModulePackages = [];
+
+        kernelModules = [
+            "kvm-intel"
+            "module_blacklist=i915"
+        ];
+
+        kernelParams = [
+            "amd_iommu=on"
+            "mem_sleep_default=deep"
+            "nvidia-drm.modeset=1"
+        ];
 
         initrd = {
-            availableKernelModules = [ "vmd" "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+            availableKernelModules = [
+                "vmd"
+                "xhci_pci"
+                "ahci"
+                "nvme"
+                "usbhid"
+                "usb_storage"
+                "sd_mod"
+            ];
+
             kernelModules = [ "dm-snapshot" ];
 
             luks.devices = {
@@ -20,6 +38,10 @@
                 };
             };
         };
+
+        blacklistedKernelModules = [ "nouveau" ];
+
+        extraModulePackages = [];
 
         kernel.sysctl = {
             "fs.inotify.max_user_watches" = 2140000000;
@@ -60,26 +82,6 @@
     hardware = {
         cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-        nvidia = {
-            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-            # package = config.boot.kernelPackages.nvidiaPackages.beta;
-            open = true;
-            nvidiaPersistenced = true;
-            nvidiaSettings = true;
-            modesetting.enable = true;
-
-            powerManagement = {
-                enable = true;
-                finegrained = true;
-            };
-
-            prime = {
-                offload.enable = true;
-                intelBusId = "PCI:0:2:0";
-                nvidiaBusId = "PCI:1:0:0";
-            };
-        };
-
         opengl = {
             enable = true;
             driSupport = true;
@@ -95,10 +97,26 @@
             ];
         };
 
-        # bluetooth = {
-        #     enable = true;
-        #     powerOnBoot = true;
-        # };
+        nvidia = {
+            open = false;
+            nvidiaPersistenced = true;
+            nvidiaSettings = true;
+            modesetting.enable = true;
+
+            package = config.boot.kernelPackages.nvidiaPackages.beta;
+            # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+
+            powerManagement = {
+                enable = true;
+                finegrained = true;
+            };
+
+            prime = {
+                offload.enable = true;
+                intelBusId = "PCI:0:2:0";
+                nvidiaBusId = "PCI:1:0:0";
+            };
+        };
 
         pulseaudio.enable = false;
     };
@@ -119,11 +137,11 @@
 
         QT_QPA_PLATFORMTHEME = "qt6ct";
 
-        # NVIDIA
-        #GBM_BACKEND = "nvidia-drm";
-        #__GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        #LIBVA_DRIVER_NAME = "nvidia";
-        #__GL_GSYNC_ALLOWED = "1";
+        # # NVIDIA
+        # GBM_BACKEND = "nvidia-drm";
+        # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        # LIBVA_DRIVER_NAME = "nvidia";
+        # __GL_GSYNC_ALLOWED = "1";
 
         # WLR_DRM_NO_ATOMIC = "1";
         # WLR_NO_HARDWARE_CURSORS = "1";
@@ -133,9 +151,8 @@
 
         # SDL_VIDEODRIVER = "wayland";
 
-        #MOZ_ENABLE_WAYLAND = "1";
-        #NIXOS_OZONE_WL = "1";
-
+        MOZ_ENABLE_WAYLAND = "1";
+        NIXOS_OZONE_WL = "1";
 
         GST_PLUGIN_SYSTEM_PATH_1_0=lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
             pkgs.gst_all_1.gst-editing-services

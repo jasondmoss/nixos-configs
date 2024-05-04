@@ -92,7 +92,7 @@ in
             };
 
             permittedInsecurePackages = [
-                "freeimage-unstable-2021-11-01"  # Megasync requirement?
+                # "freeimage-unstable-2021-11-01"  # Megasync requirement?
                 "openssl-1.1.1w"  # Still not sure what is requiring this...
             ];
         };
@@ -178,11 +178,6 @@ in
             xrgears
 
             #-- KDE/PLASMA
-            # libsForQt5.full
-            # libsForQt5.qt5ct
-            # libsForQt5.qt5.qtbase
-            # libsForQt5.qt5.qtx11extras
-
             kdePackages.full
             kdePackages.qt6ct
 
@@ -246,21 +241,7 @@ in
             python311Packages.pytz
 
             #-- GNOME/GTK
-            #gtk3
             gtk4
-
-            #-- Arcan Durden
-            #arcan-all-wrapped
-            #durden
-
-            #-- LabWC
-            # labwc
-            # lemurs
-            # kanshi
-            # mako
-            # swaybg
-            # waybar
-            # wmctrl
 
             #-- THEMING
             adwaita-qt6
@@ -313,7 +294,6 @@ in
             php81Extensions.zip
             php81Extensions.zlib
 
-            #php81Packages.php-codesniffer
             php81Packages.php-cs-fixer
             php81Packages.phpmd
             php81Packages.phpstan
@@ -344,6 +324,7 @@ in
             php82Packages.phpstan
 
             #-- SECURITY
+            certbot
             chkrootkit
             encfs
             lynis
@@ -363,7 +344,6 @@ in
             sublime4-dev
 
             #-- MULTIMEDIA
-            # aaxtomp3
             audacity
             audible-cli
             cuetools
@@ -400,6 +380,7 @@ in
             opera
             steam
             tor-browser-bundle-bin
+            transmission
             vivaldi
             zoom-us
 
@@ -407,6 +388,7 @@ in
             bitwarden
             libportal
             protonmail-bridge
+            protonmail-desktop
             protonvpn-cli
             protonvpn-gui
             qemu

@@ -6,11 +6,25 @@
 
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
+
         kernelModules = [ "kvm-amd" ];
-        kernelParams = [ "amd_iommu=on" ];
+
+        kernelParams = [
+            "amd_iommu=on"
+            "mem_sleep_default=deep"
+            "nvidia-drm.modeset=1"
+        ];
 
         initrd = {
-            availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
+            availableKernelModules = [
+                "nvme"
+                "xhci_pci"
+                "ahci"
+                "usbhid"
+                "usb_storage"
+                "sd_mod"
+            ];
+
             kernelModules = [];
         };
 
@@ -109,11 +123,11 @@
             modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            open = true;
+            open = false;
             powerManagement.enable = false;
 
-            # package = config.boot.kernelPackages.nvidiaPackages.beta;
-            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+            package = config.boot.kernelPackages.nvidiaPackages.beta;
+            # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
 
         pulseaudio.enable = false;
@@ -151,7 +165,6 @@
 
         MOZ_ENABLE_WAYLAND = "1";
         NIXOS_OZONE_WL = "1";
-
 
         GST_PLUGIN_SYSTEM_PATH_1_0=lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
             pkgs.gst_all_1.gst-editing-services
