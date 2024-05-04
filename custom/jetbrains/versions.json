@@ -10,11 +10,11 @@
         },
         "phpstorm": {
             "update-channel": "PhpStorm RELEASE",
-            "version": "2024.1",
-            "sha256": "sha256-EcaGKVT4e4nQgcwDguVLEF2LDJM9rnj9lSzSo2BIibI=",
+            "version": "2024.1.1",
+            "sha256": "sha256-uz0Q1c50GfUSOTe81A8VhPykuESi+DtoUP7FfNH0QoI=",
             "url-template": "https://download.jetbrains.com/webide/PhpStorm-{version}.tar.gz",
-            "url": "https://download-cdn.jetbrains.com/webide/PhpStorm-2024.1.tar.gz",
-            "build_number": "241.14494.237"
+            "url": "https://download-cdn.jetbrains.com/webide/PhpStorm-2024.1.1.tar.gz",
+            "build_number": "241.15989.102"
         }
     }
 }
