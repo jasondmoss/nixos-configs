@@ -6,7 +6,6 @@
 
     boot = {
         # kernelPackages = pkgs.linuxPackages_latest;
-        # kernelPackages = pkgs.linuxKernel.packages.linux_6_8;
         kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_8.override {
             argsOverride = rec {
                 src = pkgs.fetchurl {

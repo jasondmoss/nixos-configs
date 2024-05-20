@@ -92,7 +92,6 @@ in
             };
 
             permittedInsecurePackages = [
-                # "freeimage-unstable-2021-11-01"  # Megasync requirement?
                 "openssl-1.1.1w"  # Still not sure what is requiring this...
             ];
         };
@@ -186,21 +185,8 @@ in
 
 
             #-- GNOME DESKTOP
+            gtk3
             gtk4
-
-            #gnome.adwaita-icon-theme
-            #gnome.gnome-settings-daemon
-            #gnome.gnome-tweaks
-
-            #gnomeExtensions.appindicator
-            #gnomeExtensions.dock-from-dash
-            #gnomeExtensions.gtk4-desktop-icons-ng-ding
-            #gnomeExtensions.just-perfection
-            #gnomeExtensions.openweather
-            #gnomeExtensions.proton-vpn-button
-            #gnomeExtensions.system-monitor-tray-indicator
-            #gnomeExtensions.tray-icons-reloaded
-            #gnomeExtensions.transparent-top-bar-adjustable-transparency
 
 
             #-- KDE / PLASMA
@@ -264,23 +250,6 @@ in
             adwaita-qt6
 
 
-            #-- WINDOW MANAGERS
-            #awesome
-
-            #fluxbox
-            #fbmenugen
-
-            #fvwm3
-            #hypr
-            #nimdow
-
-            #openbox
-            #openbox-menu
-            #obconf
-
-            #sawfish
-
-
             #-- DEVELOPMENT
             bison
             bisoncpp
@@ -329,8 +298,8 @@ in
             php81Extensions.zip
             php81Extensions.zlib
 
-            #php81Packages.php-cs-fixer
-            #php81Packages.phpmd
+            # php81Packages.php-cs-fixer
+            # php81Packages.phpmd
             # php81Packages.phpstan
 
             php82
@@ -353,9 +322,9 @@ in
             php82Extensions.zip
             php82Extensions.zlib
 
-            #php82Packages.php-codesniffer
-            #php82Packages.php-cs-fixer
-            #php82Packages.phpmd
+            # php82Packages.php-codesniffer
+            # php82Packages.php-cs-fixer
+            # php82Packages.phpmd
             # php82Packages.phpstan
 
 

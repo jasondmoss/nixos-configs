@@ -134,28 +134,7 @@ local {
 
             # displayManager = {
             #     gdm.enable = true;
-            #     # lightdm.enable = true;
-            #     # startx.enable = true;
-
-            #     # defaultSession = "none+awesome";
             # };
-
-            #windowManager = {
-            #    awesome = {
-            #        enable = true;
-            #        luaModules = [
-            #            pkgs.luajitPackages.luarocks
-            #            pkgs.luajitPackages.luadbi-mysql
-            #        ];
-            #    };
-
-            #    fluxbox.enable = true;
-            #    fvwm3.enable = true;
-            #    hypr.enable = true;
-            #    nimdow.enable = true;
-            #    openbox.enable = true;
-            #    sawfish.enable = true;
-            #};
         };
 
         httpd = {
