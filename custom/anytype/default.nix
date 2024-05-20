@@ -1,36 +1,40 @@
-{ lib, fetchurl, appimageTools }:
+{ lib, fetchurl, appimageTools, makeWrapper }:
+
 let
     pname = "anytype";
-    version = "0.35.2";
+    version = "0.40.8";
     name = "Anytype-${version}";
-    nameExecutable = pname;
     src = fetchurl {
-        url = "https://anytype-release.fra1.cdn.digitaloceanspaces.com/Anytype-${version}.AppImage";
+        url = "https://github.com/anyproto/anytype-ts/releases/download/v${version}/${name}.AppImage";
         name = "Anytype-${version}.AppImage";
-        sha256 = "sha256-RLkAC9rNGHdbX/EfDTfpbBBKaY+BqdFuCMm99mkjOjw=";
+        hash = "sha256-Rvl52nKrOWQfT2qgssEpFjQCjva54zPvm6aEXmO0NTc=";
     };
     appimageContents = appimageTools.extractType2 { inherit name src; };
-
-    meta = with lib; {
-        description = "P2P note-taking tool";
-        homepage = "https://anytype.io/";
-        license = licenses.unfree;
-        maintainers = with maintainers; [ bbigras ];
-        platforms = [ "x86_64-linux" ];
-    };
-
 in appimageTools.wrapType2 {
-    inherit name src meta;
+    inherit name src;
 
     extraPkgs = pkgs: (appimageTools.defaultFhsEnvArgs.multiPkgs pkgs)
         ++ [ pkgs.libsecret ];
 
     extraInstallCommands = ''
         mv $out/bin/${name} $out/bin/${pname}
+        source "${makeWrapper}/nix-support/setup-hook"
+        wrapProgram $out/bin/${pname} \
+            --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
         install -m 444 -D ${appimageContents}/anytype.desktop -t $out/share/applications
         substituteInPlace $out/share/applications/anytype.desktop \
             --replace 'Exec=AppRun' 'Exec=${pname}'
-        install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/0x0/apps/anytype.png \
-            $out/share/icons/hicolor/512x512/apps/anytype.png
+        for size in 16 32 64 128 256 512 1024; do
+            install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/''${size}x''${size}/apps/anytype.png \
+                $out/share/icons/hicolor/''${size}x''${size}/apps/anytype.png
+        done
     '';
+
+    meta = with lib; {
+        description = "P2P note-taking tool";
+        homepage = "https://anytype.io/";
+        license = licenses.unfree;
+        maintainers = with maintainers; [ running-grass ];
+        platforms = [ "x86_64-linux" ];
+    };
 }

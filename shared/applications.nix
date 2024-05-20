@@ -104,8 +104,9 @@ in
         ];
     };
 
+    #-- CORE
     environment = {
-        systemPackages = with pkgs; [
+        systemPackages = (with pkgs; [
 
             #-- CORE
             aha
@@ -152,8 +153,10 @@ in
             usbutils
             wget
             wirelesstools
+            xclip
             xfsprogs
             zip
+
 
             #-- GRAPHICS
             egl-wayland
@@ -177,7 +180,30 @@ in
             xorg.xrdb
             xrgears
 
-            #-- KDE/PLASMA
+            python311Packages.gyp
+            python311Packages.pyqt6
+            python311Packages.pytz
+
+
+            #-- GNOME DESKTOP
+            gtk4
+
+            #gnome.adwaita-icon-theme
+            #gnome.gnome-settings-daemon
+            #gnome.gnome-tweaks
+
+            #gnomeExtensions.appindicator
+            #gnomeExtensions.dock-from-dash
+            #gnomeExtensions.gtk4-desktop-icons-ng-ding
+            #gnomeExtensions.just-perfection
+            #gnomeExtensions.openweather
+            #gnomeExtensions.proton-vpn-button
+            #gnomeExtensions.system-monitor-tray-indicator
+            #gnomeExtensions.tray-icons-reloaded
+            #gnomeExtensions.transparent-top-bar-adjustable-transparency
+
+
+            #-- KDE / PLASMA
             kdePackages.full
             kdePackages.qt6ct
 
@@ -213,7 +239,6 @@ in
             kdePackages.kio-zeroconf
             kdePackages.kirigami
             kdePackages.kirigami-addons
-            kdePackages.knewstuff
             kdePackages.ksshaskpass
             kdePackages.ksvg
             kdePackages.ktorrent
@@ -236,15 +261,25 @@ in
             kdePackages.wrapQtAppsHook
             kdePackages.xdg-desktop-portal-kde
 
-            python311Packages.gyp
-            python311Packages.pyqt6
-            python311Packages.pytz
-
-            #-- GNOME/GTK
-            gtk4
-
-            #-- THEMING
             adwaita-qt6
+
+
+            #-- WINDOW MANAGERS
+            #awesome
+
+            #fluxbox
+            #fbmenugen
+
+            #fvwm3
+            #hypr
+            #nimdow
+
+            #openbox
+            #openbox-menu
+            #obconf
+
+            #sawfish
+
 
             #-- DEVELOPMENT
             bison
@@ -294,9 +329,9 @@ in
             php81Extensions.zip
             php81Extensions.zlib
 
-            php81Packages.php-cs-fixer
-            php81Packages.phpmd
-            php81Packages.phpstan
+            #php81Packages.php-cs-fixer
+            #php81Packages.phpmd
+            # php81Packages.phpstan
 
             php82
             php82Extensions.bz2
@@ -318,10 +353,11 @@ in
             php82Extensions.zip
             php82Extensions.zlib
 
-            php82Packages.php-codesniffer
-            php82Packages.php-cs-fixer
-            php82Packages.phpmd
-            php82Packages.phpstan
+            #php82Packages.php-codesniffer
+            #php82Packages.php-cs-fixer
+            #php82Packages.phpmd
+            # php82Packages.phpstan
+
 
             #-- SECURITY
             certbot
@@ -330,6 +366,7 @@ in
             lynis
             mkcert
             sniffnet
+
 
             #-- EDITORS
             blender
@@ -342,6 +379,7 @@ in
             nano
             onlyoffice-bin_latest
             sublime4-dev
+
 
             #-- MULTIMEDIA
             audacity
@@ -360,7 +398,6 @@ in
             mac
             mkcue
             mpg123
-            mpg321
             mpv
             opusTools
             pavucontrol
@@ -369,6 +406,7 @@ in
             speechd
             vorbis-tools
             wavpack
+
 
             #-- INTERNET
             brave
@@ -380,12 +418,14 @@ in
             opera
             steam
             tor-browser-bundle-bin
-            transmission
+            transmission_4
             vivaldi
             zoom-us
 
+
             #-- MISCELLANEOUS/UTILITIES
             bitwarden
+            conky
             libportal
             protonmail-bridge
             protonmail-desktop
@@ -395,11 +435,9 @@ in
             ulauncher
             wezterm
 
-        ] ++ [
+        ]) ++ (with pkgs; [
 
-            #
-            #    CUSTOM PACKAGE BUILDS.
-            #
+            #-- CUSTOM PACKAGE BUILDS.
 
             #-- Firefox Stable -- Rename executable
             (pkgs.runCommand "latest.firefox-bin" {
@@ -427,7 +465,7 @@ in
             # (pkgs.callPackage ../custom/gimp-devel/default.nix {})
 
             #-- Klassy KDE Theme
-            (pkgs.kdePackages.callPackage ../custom/klassy/default.nix {})
+            (pkgs.callPackage ../custom/klassy/default.nix {})
 
             #-- Standard Notes
             (pkgs.callPackage ../custom/standardnotes/default.nix {})
@@ -446,7 +484,8 @@ in
                 qemu-system-x86_64 -bios ${pkgs.OVMF.fd}/FV/OVMF.fd "$@"
             '')
 
-        ];
+        ]);
+
     };
 
 }

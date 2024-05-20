@@ -5,7 +5,6 @@ let
     localAddress = "127.0.0.1";
 in {
     nix = {
-        # package = pkgs.nixUnstable;
         package = pkgs.nixVersions.latest;
 
         settings = {
@@ -100,13 +99,6 @@ local {
             pulse.enable = true;
         };
 
-        desktopManager = {
-            plasma6 = {
-                enable = true;
-                enableQt5Integration = true;
-            };
-        };
-
         displayManager = {
             sddm = {
                 enable = true;
@@ -116,8 +108,15 @@ local {
                 settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
             };
 
-             defaultSession = "plasmax11";
-             # defaultSession = "plasmawayland";
+            defaultSession = "plasmax11";
+            # defaultSession = "plasma";
+        };
+
+        desktopManager = {
+            plasma6 = {
+               enable = true;
+               enableQt5Integration = true;
+            };
         };
 
         xserver = {
@@ -129,11 +128,34 @@ local {
                 variant = "";
             };
 
-            screenSection = ''
-Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-Option "AllowIndirectGLXProtocol" "off"
-Option "TripleBuffer" "on"
-            '';
+            # desktopManager = {
+            #     gnome.enable = true;
+            # };
+
+            # displayManager = {
+            #     gdm.enable = true;
+            #     # lightdm.enable = true;
+            #     # startx.enable = true;
+
+            #     # defaultSession = "none+awesome";
+            # };
+
+            #windowManager = {
+            #    awesome = {
+            #        enable = true;
+            #        luaModules = [
+            #            pkgs.luajitPackages.luarocks
+            #            pkgs.luajitPackages.luadbi-mysql
+            #        ];
+            #    };
+
+            #    fluxbox.enable = true;
+            #    fvwm3.enable = true;
+            #    hypr.enable = true;
+            #    nimdow.enable = true;
+            #    openbox.enable = true;
+            #    sawfish.enable = true;
+            #};
         };
 
         httpd = {

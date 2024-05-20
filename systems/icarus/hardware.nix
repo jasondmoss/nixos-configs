@@ -9,12 +9,11 @@
 
         kernelModules = [
             "kvm-intel"
-            "module_blacklist=i915"
         ];
 
         kernelParams = [
             "amd_iommu=on"
-            "mem_sleep_default=deep"
+            #"i915.modeset=0"
             "nvidia-drm.modeset=1"
         ];
 
@@ -39,7 +38,10 @@
             };
         };
 
-        blacklistedKernelModules = [ "nouveau" ];
+        # blacklistedKernelModules = [
+        #     "i915"
+        #     "nouveau"
+        # ];
 
         extraModulePackages = [];
 
@@ -102,13 +104,15 @@
             nvidiaPersistenced = true;
             nvidiaSettings = true;
             modesetting.enable = true;
+            forceFullCompositionPipeline = true;
 
+            # package = config.boot.kernelPackages.nvidiaPackages.stable;
             package = config.boot.kernelPackages.nvidiaPackages.beta;
             # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
 
             powerManagement = {
-                enable = true;
-                finegrained = true;
+                enable = false;
+                finegrained = false;
             };
 
             prime = {
@@ -120,6 +124,16 @@
 
         pulseaudio.enable = false;
     };
+
+#     services = {
+#         xserver = {
+#            screenSection = ''
+# Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+# Option "AllowIndirectGLXProtocol" "off"
+# Option "TripleBuffer" "on"
+#            '';
+#         };
+#     };
 
     virtualisation.docker = {
         enable = true;

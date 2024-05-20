@@ -7,7 +7,7 @@ let
             vmopts = ''
                 -server
                 -Xms2048m
-                -Xmx8192m
+                -Xmx4096m
             '';
         })).overrideAttrs (attrs:
             # Replace version with the one from versions.json
