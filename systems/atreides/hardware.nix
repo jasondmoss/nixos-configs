@@ -173,13 +173,13 @@ Option "TripleBuffer" "on"
         QT_SCALE_FACTOR= "1";
 
         # # NVIDIA
-        GBM_BACKEND = "nvidia-drm";
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        LIBVA_DRIVER_NAME = "nvidia";
-        __GL_GSYNC_ALLOWED = "1";
+        #GBM_BACKEND = "nvidia-drm";
+        #__GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        #LIBVA_DRIVER_NAME = "nvidia";
+        #__GL_GSYNC_ALLOWED = "1";
 
-        WLR_DRM_NO_ATOMIC = "1";
-        WLR_NO_HARDWARE_CURSORS = "1";
+        #WLR_DRM_NO_ATOMIC = "1";
+        #WLR_NO_HARDWARE_CURSORS = "1";
 
         # # JetBrains
         _JAVA_AWT_WM_NONREPARENTING = "1";
