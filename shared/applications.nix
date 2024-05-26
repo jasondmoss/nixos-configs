@@ -387,7 +387,6 @@ in
             opera
             steam
             tor-browser-bundle-bin
-            transmission_4
             vivaldi
             zoom-us
 

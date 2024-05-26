@@ -7,8 +7,9 @@ let
             vmopts = ''
                 -server
                 -Xms2048m
-                -Xmx4096m
+                -Xmx2048m
             '';
+            # -Xmx4096m
         })).overrideAttrs (attrs:
             # Replace version with the one from versions.json
             let v = versions.linux.${attrs.pname} or {};

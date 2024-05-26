@@ -5,7 +5,7 @@
     ];
 
     boot = {
-        # kernelPackages = pkgs.linuxPackages_latest;
+        #kernelPackages = pkgs.linuxPackages_latest;
         kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_8.override {
             argsOverride = rec {
                 src = pkgs.fetchurl {
@@ -137,9 +137,9 @@
             powerManagement.enable = false;
             powerManagement.finegrained = false;
 
-            package = config.boot.kernelPackages.nvidiaPackages.beta;
+            # package = config.boot.kernelPackages.nvidiaPackages.beta;
             # package = config.boot.kernelPackages.nvidiaPackages.latest;
-            # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
 
         pulseaudio.enable = false;
@@ -170,15 +170,16 @@ Option "TripleBuffer" "on"
         DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
         QT_QPA_PLATFORMTHEME = "qt6ct";
+        QT_SCALE_FACTOR= "1";
 
         # # NVIDIA
-        # GBM_BACKEND = "nvidia-drm";
-        # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        # LIBVA_DRIVER_NAME = "nvidia";
-        # __GL_GSYNC_ALLOWED = "1";
+        GBM_BACKEND = "nvidia-drm";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        LIBVA_DRIVER_NAME = "nvidia";
+        __GL_GSYNC_ALLOWED = "1";
 
-        # WLR_DRM_NO_ATOMIC = "1";
-        # WLR_NO_HARDWARE_CURSORS = "1";
+        WLR_DRM_NO_ATOMIC = "1";
+        WLR_NO_HARDWARE_CURSORS = "1";
 
         # # JetBrains
         _JAVA_AWT_WM_NONREPARENTING = "1";
