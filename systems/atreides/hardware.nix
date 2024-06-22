@@ -1,11 +1,7 @@
 { config, lib, pkgs, modulesPath, ... }:
 {
-    imports = [
-        (modulesPath + "/installer/scan/not-detected.nix")
-    ];
-
     boot = {
-        #kernelPackages = pkgs.linuxPackages_latest;
+        # kernelPackages = pkgs.linuxPackages_latest;
         kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_8.override {
             argsOverride = rec {
                 src = pkgs.fetchurl {
@@ -103,30 +99,8 @@
 
     swapDevices = [];
 
-    networking = {
-        useDHCP = lib.mkDefault true;
-
-        firewall = {
-            enable = true;
-            allowedTCPPorts = [];
-            allowedUDPPorts = [];
-        };
-    };
-
     hardware = {
         cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
-        opengl = {
-            enable = true;
-            driSupport = true;
-            driSupport32Bit = true;
-
-            extraPackages = with pkgs; [
-                vaapiVdpau
-                libvdpau-va-gl
-                nvidia-vaapi-driver
-            ];
-        };
 
         nvidia = {
             forceFullCompositionPipeline = true;
@@ -134,15 +108,13 @@
             nvidiaPersistenced = true;
             nvidiaSettings = true;
             open = false;
-            powerManagement.enable = false;
-            powerManagement.finegrained = false;
+            # powerManagement.enable = false;
+            # powerManagement.finegrained = false;
 
             # package = config.boot.kernelPackages.nvidiaPackages.beta;
             # package = config.boot.kernelPackages.nvidiaPackages.latest;
             package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
-
-        pulseaudio.enable = false;
     };
 
     services = {
@@ -155,14 +127,6 @@ Option "TripleBuffer" "on"
         };
     };
 
-    virtualisation.docker = {
-        enable = true;
-        enableOnBoot = true;
-        enableNvidia = true;
-    };
-
-    powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
-
     environment.sessionVariables = {
         XDG_MENU_PREFIX = "kde-";
 
@@ -170,7 +134,7 @@ Option "TripleBuffer" "on"
         DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
         QT_QPA_PLATFORMTHEME = "qt6ct";
-        QT_SCALE_FACTOR= "1";
+        # QT_SCALE_FACTOR= "1";
 
         # # NVIDIA
         #GBM_BACKEND = "nvidia-drm";

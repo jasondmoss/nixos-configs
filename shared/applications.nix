@@ -198,12 +198,14 @@ in
             kdePackages.akonadi-calendar
             kdePackages.akonadi-calendar-tools
             kdePackages.akonadi-contacts
+            kdePackages.akonadi-import-wizard
+            kdePackages.akonadi-notes
             kdePackages.ark
-            kdePackages.bluez-qt
+            #kdePackages.bluez-qt
             kdePackages.dolphin
             kdePackages.dolphin-plugins
             kdePackages.frameworkintegration
-            kdePackages.ghostwriter
+            # kdePackages.ghostwriter
             kdePackages.kate
             kdePackages.karchive
             kdePackages.kbreakout
@@ -236,11 +238,11 @@ in
             kdePackages.modemmanager-qt
             kdePackages.networkmanager-qt
             kdePackages.okular
-            kdePackages.plasma5support
+            #kdePackages.plasma5support
             kdePackages.plasma-browser-integration
             kdePackages.plasma-wayland-protocols
             kdePackages.plymouth-kcm
-            kdePackages.qt5compat
+            # kdePackages.qt5compat
             kdePackages.qtsvg
             kdePackages.qttools
             kdePackages.qtvirtualkeyboard
@@ -269,6 +271,7 @@ in
             gdb
             git
             go
+            libunwind
             lua
             nodejs
             perl
@@ -336,10 +339,7 @@ in
             mkcert
             sniffnet
 
-
             #-- EDITORS
-            blender
-            darktable
             gcolor3
             gegl
             gimp
@@ -349,12 +349,7 @@ in
             onlyoffice-bin_latest
             sublime4-dev
 
-
             #-- MULTIMEDIA
-            audacity
-            audible-cli
-            cuetools
-            easytag
             faac
             ffmpeg
             ffmpegthumbnailer
@@ -376,7 +371,6 @@ in
             vorbis-tools
             wavpack
 
-
             #-- INTERNET
             brave
             filezilla
@@ -384,10 +378,8 @@ in
             chrome-gnome-shell
             megasync
             microsoft-edge
-            opera
             steam
             tor-browser-bundle-bin
-            vivaldi
             zoom-us
 
 
@@ -449,7 +441,7 @@ in
             #
 
             (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
-                qemu-system-x86_64 -bios ${pkgs.OVMF.fd}/FV/OVMF.fd "$@"
+qemu-system-x86_64 -bios ${pkgs.OVMF.fd}/FV/OVMF.fd "$@"
             '')
 
         ]);

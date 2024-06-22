@@ -1,9 +1,5 @@
 { config, lib, pkgs, modulesPath, ... }:
 {
-    imports = [
-        (modulesPath + "/installer/scan/not-detected.nix")
-    ];
-
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
 
@@ -71,33 +67,8 @@
         { device = "/dev/disk/by-uuid/8a9e0e21-ada8-4830-9836-3f9d678ac477"; }
     ];
 
-    networking = {
-        useDHCP = lib.mkDefault true;
-
-         firewall = {
-             enable = true;
-             allowedTCPPorts = [];
-             allowedUDPPorts = [];
-         };
-    };
-
     hardware = {
         cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
-        opengl = {
-            enable = true;
-            driSupport = true;
-            driSupport32Bit = true;
-
-            extraPackages = with pkgs; [
-                intel-media-driver
-                libvdpau-va-gl
-                nvidia-vaapi-driver
-                vaapiIntel
-                vaapiVdpau
-                vulkan-validation-layers
-            ];
-        };
 
         nvidia = {
             open = false;
@@ -106,8 +77,8 @@
             modesetting.enable = true;
             forceFullCompositionPipeline = true;
 
-            package = config.boot.kernelPackages.nvidiaPackages.beta;
-            # package = config.boot.kernelPackages.nvidiaPackages.latest;
+            # package = config.boot.kernelPackages.nvidiaPackages.beta;
+            package = config.boot.kernelPackages.nvidiaPackages.latest;
             # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
 
             powerManagement = {
@@ -121,27 +92,7 @@
                 nvidiaBusId = "PCI:1:0:0";
             };
         };
-
-        pulseaudio.enable = false;
     };
-
-#     services = {
-#         xserver = {
-#            screenSection = ''
-# Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-# Option "AllowIndirectGLXProtocol" "off"
-# Option "TripleBuffer" "on"
-#            '';
-#         };
-#     };
-
-    virtualisation.docker = {
-        enable = true;
-        enableOnBoot = true;
-        enableNvidia = true;
-    };
-
-    powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 
     environment.sessionVariables = {
         XDG_MENU_PREFIX = "kde-";

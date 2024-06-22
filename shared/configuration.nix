@@ -104,8 +104,8 @@ local {
                 enable = true;
                 enableHidpi = true;
 
-                wayland.enable = true;
-                settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
+                # wayland.enable = true;
+                # settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
             };
 
             defaultSession = "plasmax11";
@@ -190,7 +190,7 @@ session.cookie_samesite = "Strict"
     };
 
     programs = {
-        bash.enableCompletion = true;
+        bash.completion.enable = true;
         dconf.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;

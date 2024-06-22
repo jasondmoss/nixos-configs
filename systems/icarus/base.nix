@@ -4,8 +4,12 @@
 
     imports = [
         ./hardware.nix
+        ../../shared/hardware.nix
+
         ../../shared/configuration.nix
+
         ../../shared/applications.nix
+        # ./applications.nix
 
         # JetBrains PHPStorm Beta
         ../../custom/jetbrains/default.nix
