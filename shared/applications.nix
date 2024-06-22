@@ -378,20 +378,16 @@ in
             chrome-gnome-shell
             megasync
             microsoft-edge
-            steam
-            tor-browser-bundle-bin
             zoom-us
 
-
             #-- MISCELLANEOUS/UTILITIES
-            bitwarden
+            # bitwarden
             conky
             libportal
             protonmail-bridge
             protonmail-desktop
             protonvpn-cli
             protonvpn-gui
-            qemu
             ulauncher
             wezterm
 
@@ -417,9 +413,6 @@ in
             '')
             firefoxNightlyDesktopItem
 
-            #-- Anytype
-            (pkgs.callPackage ../custom/anytype/default.nix {})
-
             #-- GIMP Development
             # (pkgs.callPackage ../custom/gegl-devel/default.nix {})
             # (pkgs.callPackage ../custom/gimp-devel/default.nix {})
@@ -427,22 +420,11 @@ in
             #-- Klassy KDE Theme
             (pkgs.callPackage ../custom/klassy/default.nix {})
 
-            #-- Standard Notes
-            (pkgs.callPackage ../custom/standardnotes/default.nix {})
-
             #-- Strawberry Music Player
             (pkgs.callPackage ../custom/strawberry/default.nix {})
 
             #-- Wavebox Beta
             (pkgs.callPackage ../custom/wavebox/default.nix {})
-
-            #
-            # --------------
-            #
-
-            (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
-qemu-system-x86_64 -bios ${pkgs.OVMF.fd}/FV/OVMF.fd "$@"
-            '')
 
         ]);
 
