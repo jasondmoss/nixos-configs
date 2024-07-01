@@ -1,6 +1,5 @@
 { config, options, pkgs, ... }:
 {
-    # system.stateVersion = "23.11";
     system.stateVersion = "24.05";
 
     imports = [
@@ -13,7 +12,7 @@
         ./applications.nix
 
         # JetBrains PHPStorm Beta
-        ../../custom/jetbrains/default.nix
+        custom/jetbrains/default.nix
     ];
 
     time.timeZone = "America/Toronto";

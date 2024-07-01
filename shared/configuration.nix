@@ -104,12 +104,12 @@ local {
                 enable = true;
                 enableHidpi = true;
 
-                # wayland.enable = true;
-                # settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
+                #wayland.enable = true;
+                #settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
             };
 
             defaultSession = "plasmax11";
-            # defaultSession = "plasma";
+            #defaultSession = "plasma";
         };
 
         desktopManager = {
@@ -127,14 +127,6 @@ local {
                 layout = "us";
                 variant = "";
             };
-
-            # desktopManager = {
-            #     gnome.enable = true;
-            # };
-
-            # displayManager = {
-            #     gdm.enable = true;
-            # };
         };
 
         httpd = {

@@ -1,0 +1,20 @@
+{
+    "linux": {
+        "gateway": {
+            "update-channel": "Gateway RELEASE",
+            "url-template": "https://download.jetbrains.com/idea/gateway/JetBrainsGateway-{version}.tar.gz",
+            "version": "2024.1.2",
+            "sha256": "sha256-0MpUcdTkReqTGyXR7lXOwMQLtFXeGuyGHVqlygu8F20=",
+            "url": "https://download.jetbrains.com/idea/gateway/JetBrainsGateway-2024.1.2.tar.gz",
+            "build_number": "241.17011.87"
+        },
+        "phpstorm": {
+            "update-channel": "PhpStorm RELEASE",
+            "version": "2024.1.3",
+            "sha256": "sha256-14VZn31r/ft0buxo1eYG/m3zcJCROCQ8NcVJtXR1lDI=",
+            "url-template": "https://download.jetbrains.com/webide/PhpStorm-{version}.tar.gz",
+            "url": "https://download-cdn.jetbrains.com/webide/PhpStorm-2024.1.3.tar.gz",
+            "build_number": "241.17011.119"
+        }
+    }
+}

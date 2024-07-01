@@ -201,11 +201,9 @@ in
             kdePackages.akonadi-import-wizard
             kdePackages.akonadi-notes
             kdePackages.ark
-            #kdePackages.bluez-qt
             kdePackages.dolphin
             kdePackages.dolphin-plugins
             kdePackages.frameworkintegration
-            # kdePackages.ghostwriter
             kdePackages.kate
             kdePackages.karchive
             kdePackages.kbreakout
@@ -238,11 +236,9 @@ in
             kdePackages.modemmanager-qt
             kdePackages.networkmanager-qt
             kdePackages.okular
-            #kdePackages.plasma5support
             kdePackages.plasma-browser-integration
             kdePackages.plasma-wayland-protocols
             kdePackages.plymouth-kcm
-            # kdePackages.qt5compat
             kdePackages.qtsvg
             kdePackages.qttools
             kdePackages.qtvirtualkeyboard
@@ -381,7 +377,6 @@ in
             zoom-us
 
             #-- MISCELLANEOUS/UTILITIES
-            # bitwarden
             conky
             libportal
             protonmail-bridge

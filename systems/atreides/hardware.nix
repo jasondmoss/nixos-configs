@@ -1,17 +1,7 @@
 { config, lib, pkgs, modulesPath, ... }:
 {
     boot = {
-        # kernelPackages = pkgs.linuxPackages_latest;
-        kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_8.override {
-            argsOverride = rec {
-                src = pkgs.fetchurl {
-                    url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
-                    sha256 = "0xjirg2w5fc2w2q6wr702akszq32m31lk4q5nbjq10zqhbcr5fxh";
-                };
-                version = "6.8.10";
-                modDirVersion = "6.8.10";
-            };
-        });
+        kernelPackages = pkgs.linuxPackages_latest;
 
         kernelModules = [ "kvm-amd" ];
 
@@ -108,11 +98,9 @@
             nvidiaPersistenced = true;
             nvidiaSettings = true;
             open = false;
-            # powerManagement.enable = false;
-            # powerManagement.finegrained = false;
 
-            # package = config.boot.kernelPackages.nvidiaPackages.beta;
             # package = config.boot.kernelPackages.nvidiaPackages.latest;
+            # package = config.boot.kernelPackages.nvidiaPackages.beta;
             package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
     };
@@ -136,19 +124,19 @@ Option "TripleBuffer" "on"
         QT_QPA_PLATFORMTHEME = "qt6ct";
         # QT_SCALE_FACTOR= "1";
 
-        # # NVIDIA
-        #GBM_BACKEND = "nvidia-drm";
-        #__GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        #LIBVA_DRIVER_NAME = "nvidia";
-        #__GL_GSYNC_ALLOWED = "1";
+        # NVIDIA
+        GBM_BACKEND = "nvidia-drm";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        LIBVA_DRIVER_NAME = "nvidia";
+        __GL_GSYNC_ALLOWED = "1";
 
         #WLR_DRM_NO_ATOMIC = "1";
         #WLR_NO_HARDWARE_CURSORS = "1";
 
-        # # JetBrains
+        # JetBrains
         _JAVA_AWT_WM_NONREPARENTING = "1";
 
-        # SDL_VIDEODRIVER = "wayland";
+        #SDL_VIDEODRIVER = "wayland";
 
         MOZ_ENABLE_WAYLAND = "1";
         NIXOS_OZONE_WL = "1";

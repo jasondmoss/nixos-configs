@@ -6,8 +6,8 @@ let
             # Increase memory.
             vmopts = ''
                 -server
-                -Xms2048m
-                -Xmx2048m
+                -Xms4096m
+                -Xmx4096m
             '';
             # -Xmx4096m
         })).overrideAttrs (attrs:
