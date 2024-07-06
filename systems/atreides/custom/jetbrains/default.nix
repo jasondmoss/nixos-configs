@@ -1,6 +1,7 @@
 { config, lib, pkgs, self, ... }: with lib;
 let
     versions = builtins.fromJSON(readFile(./versions.json));
+
     customizeJetbrains = map(pkg:
         (pkg.override ({
             # Increase memory.
@@ -9,7 +10,6 @@ let
                 -Xms4096m
                 -Xmx4096m
             '';
-            # -Xmx4096m
         })).overrideAttrs (attrs:
             # Replace version with the one from versions.json
             let v = versions.linux.${attrs.pname} or {};
@@ -29,11 +29,11 @@ in {
         systemPackages = with pkgs;
 
         customizeJetbrains ([
-            (jetbrains.gateway.overrideAttrs (oldAttrs: rec {
-                src = pkgs.fetchurl rec {
-                    url = (lib.replaceStrings [ "-no-jbr" ] [ "" ] oldAttrs.src.url);
-                };
-            }))
+            # (jetbrains.gateway.overrideAttrs (oldAttrs: rec {
+            #     src = pkgs.fetchurl rec {
+            #         url = (lib.replaceStrings [ "-no-jbr" ] [ "" ] oldAttrs.src.url);
+            #     };
+            # }))
 
             (jetbrains.phpstorm.overrideAttrs (oldAttrs: rec {
                 src = pkgs.fetchurl rec {
