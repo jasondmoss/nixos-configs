@@ -7,6 +7,11 @@ let
     bits = "x86_64";
     version = "10.126.15-3";
 
+    src = fetchurl {
+        url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
+        sha256 = "sha256-U3MzQm0NI2hv5BvX5NObO8whHkm0dkKTMUQg1JSv5Ho=";
+    };
+
     desktopItem = makeDesktopItem rec {
         type = "Application";
         terminal = false;
@@ -33,11 +38,7 @@ in stdenv.mkDerivation rec {
     pname = "wavebox";
     inherit version;
     inherit meta;
-
-    src = fetchurl {
-        url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-        sha256 = "sha256-U3MzQm0NI2hv5BvX5NObO8whHkm0dkKTMUQg1JSv5Ho=";
-    };
+    inherit src;
 
     # Ignore missing QT5 dependencies.
     autoPatchelfIgnoreMissingDeps = [ "libQt5Widgets.so.5" "libQt5Gui.so.5" "libQt5Core.so.5" ];

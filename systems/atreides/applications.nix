@@ -15,9 +15,6 @@
             cuetools
             easytag
 
-            #-- MISCELLANEOUS/UTILITIES
-            qemu
-
         ]) ++ (with pkgs; [
 
             #-- Anytype

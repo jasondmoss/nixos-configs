@@ -10,7 +10,14 @@ let
     inherit (lib) optionals;
 
     pname = "strawberry";
-    version = "1.0.21";
+    version = "1.0.23";
+
+    src = fetchFromGitHub {
+        owner = "jonaski";
+        repo = pname;
+        rev = version;
+        hash = "sha256-vOay9xPSwgSYurFgL9f4OdBPzGJkV4t+7lJgeCeT0c4=";
+    };
 
     meta = with lib; {
         description = "Music player and music collection organizer";
@@ -26,13 +33,7 @@ in stdenv.mkDerivation rec {
     pname = "strawberry";
     inherit version;
     inherit meta;
-
-    src = fetchFromGitHub {
-        owner = "jonaski";
-        repo = pname;
-        rev = version;
-        hash = "sha256-vOay9xPSwgSYurFgL9f4OdBPzGJkV4t+7lJgeCeT0c4=";
-    };
+    inherit src;
 
     # The big strawberry shown in the context menu is *very* much in your face,
     # so use the grey version instead
