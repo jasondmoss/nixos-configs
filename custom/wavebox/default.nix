@@ -5,11 +5,11 @@
 with lib;
 let
     bits = "x86_64";
-    version = "10.126.15-3";
+    version = "10.127.3-3";
 
     src = fetchurl {
         url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-        sha256 = "sha256-U3MzQm0NI2hv5BvX5NObO8whHkm0dkKTMUQg1JSv5Ho=";
+        sha256 = "sha256-VZ8f4sBAl01CTn5Qmaw7RKKbvxZUil6/YYkWex2f0cI=";
     };
 
     desktopItem = makeDesktopItem rec {
@@ -33,7 +33,6 @@ let
     };
 
     tarball = "Wavebox_${version}.tar.gz";
-
 in stdenv.mkDerivation rec {
     pname = "wavebox";
     inherit version;

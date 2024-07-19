@@ -179,9 +179,17 @@ in
             xorg.xrdb
             xrgears
 
-            python311Packages.gyp
-            python311Packages.pyqt6
-            python311Packages.pytz
+            #python311Full
+            #python311Packages.pyasyncore
+            #python311Packages.gyp
+            #python311Packages.pyqt6
+            #python311Packages.pytz
+
+            python312Full
+            python312Packages.pyasyncore
+            python312Packages.gyp
+            python312Packages.pyqt6
+            python312Packages.pytz
 
 
             #-- GNOME DESKTOP
@@ -351,6 +359,7 @@ in
             ffmpegthumbnailer
             flac
             flacon
+            fooyin
             isoimagewriter
             lame
             libcue
@@ -417,6 +426,9 @@ in
 
             #-- Strawberry Music Player
             (pkgs.callPackage ../custom/strawberry/default.nix {})
+
+            #-- Ulauncher Beta
+            # (pkgs.callPackage ../custom/ulauncher/default.nix {})
 
             #-- Wavebox Beta
             (pkgs.callPackage ../custom/wavebox/default.nix {})

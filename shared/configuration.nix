@@ -20,6 +20,9 @@ in {
 
         inputMethod = {
             enabled = "ibus";
+            # enabled = true;
+            # type = "ibus";
+
             ibus.engines = with pkgs.ibus-engines; [
                 table table-others
             ];
@@ -263,7 +266,7 @@ session.cookie_samesite = "Strict"
         };
     };
 
-    sound.enable = true;
+    #sound.enable = true;
 
     documentation = {
         enable = true;

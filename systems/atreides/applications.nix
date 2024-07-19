@@ -14,6 +14,7 @@
             audible-cli
             cuetools
             easytag
+            vlc
 
         ]) ++ (with pkgs; [
 
@@ -23,9 +24,9 @@
             #-- Standard Notes
             (pkgs.callPackage ../../custom/standardnotes/default.nix {})
 
-            (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
-qemu-system-x86_64 -bios ${pkgs.OVMF.fd}/FV/OVMF.fd "$@"
-            '')
+#            (pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
+#qemu-system-x86_64 -bios ${pkgs.OVMF.fd}/FV/OVMF.fd "$@"
+#            '')
 
         ]);
     };

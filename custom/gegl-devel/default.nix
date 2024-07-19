@@ -7,7 +7,7 @@
 }:
 stdenv.mkDerivation rec {
     pname = "gegl";
-    version = "0.4.46";
+    version = "0.4.48";
 
     outputs = [ "out" "dev" "devdoc" ];
     outputBin = "dev";
