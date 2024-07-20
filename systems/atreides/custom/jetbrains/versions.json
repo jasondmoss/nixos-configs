@@ -11,7 +11,7 @@
         "phpstorm": {
             "update-channel": "PhpStorm RELEASE",
             "version": "2024.2",
-            "build_number": "242.20224.44",
+            "build_number": "242.20224.112",
             "url-template": "https://download.jetbrains.com/webide/PhpStorm-{build_number}.tar.gz",
             "url": "https://download.jetbrains.com/webide/PhpStorm-242.20224.44.tar.gz",
             "sha256": "sha256-DzY3UFPHwOQMyU00ukPAD24TdVBJ2pfRIsHeTNVEfW0="
