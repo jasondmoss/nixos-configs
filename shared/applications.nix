@@ -207,7 +207,9 @@ in
             kdePackages.akonadi-calendar-tools
             kdePackages.akonadi-contacts
             kdePackages.akonadi-import-wizard
+            kdePackages.akonadi-mime
             kdePackages.akonadi-notes
+            kdePackages.akonadi-search
             kdePackages.ark
             kdePackages.dolphin
             kdePackages.dolphin-plugins
@@ -233,6 +235,7 @@ in
             kdePackages.kio-zeroconf
             kdePackages.kirigami
             kdePackages.kirigami-addons
+            kdePackages.knotes
             kdePackages.ksshaskpass
             kdePackages.ksvg
             kdePackages.ktorrent
@@ -245,6 +248,7 @@ in
             kdePackages.networkmanager-qt
             kdePackages.okular
             kdePackages.plasma-browser-integration
+            kdePackages.plasma-integration
             kdePackages.plasma-wayland-protocols
             kdePackages.plymouth-kcm
             kdePackages.qtsvg
@@ -344,6 +348,7 @@ in
             sniffnet
 
             #-- EDITORS
+            figma-linux
             gcolor3
             gegl
             gimp
@@ -352,6 +357,7 @@ in
             nano
             onlyoffice-bin_latest
             sublime4-dev
+            zed-editor
 
             #-- MULTIMEDIA
             faac
@@ -383,9 +389,11 @@ in
             chrome-gnome-shell
             megasync
             microsoft-edge
+            thunderbirdPackages.thunderbird-128
             zoom-us
 
             #-- MISCELLANEOUS/UTILITIES
+            bitwarden
             conky
             libportal
             protonmail-bridge

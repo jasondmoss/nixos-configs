@@ -19,9 +19,8 @@ in {
         defaultLocale = "en_CA.utf8";
 
         inputMethod = {
-            enabled = "ibus";
-            # enabled = true;
-            # type = "ibus";
+            type = "ibus";
+            enable = true;
 
             ibus.engines = with pkgs.ibus-engines; [
                 table table-others
