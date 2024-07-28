@@ -2,8 +2,8 @@
     "version": "3.195.1",
     "appimage": {
         "x86_64-linux": {
-            "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes%2Fdesktop%403.194.13/standard-notes-3.194.13-linux-x86_64.AppImage",
-            "hash": "sha256-WUyZ8qzCBJ8kmBaKSh+12PJ8nnGloWa/vfy/OTjjEM8="
+            "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes%2Fdesktop%403.195.1/standard-notes-3.195.1-linux-x86_64.AppImage",
+            "hash": "sha256-d7B5nFgw4sbpnC+b/beXuos3uNQ89moRSkD6qR52sq0="
         }
     }
 }

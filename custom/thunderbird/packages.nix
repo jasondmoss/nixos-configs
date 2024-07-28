@@ -70,7 +70,7 @@ in rec {
     };
   };
 
-  thunderbird-129 = common {
+  thunderbird-daily = common {
     version = "129.0b5";
     sha512 = "8524fbdcc51eddf83fec439273319315c44e6d3be9e4dcf51e453ced7fd1676abdca44442dcb302c637a98b7873828168f2d2d2b635551e406645a134d09aee0";
 

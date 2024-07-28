@@ -6,6 +6,7 @@ with lib;
 let
     bits = "x86_64";
     version = "10.127.6-3";
+    tarball = "Wavebox_${version}.tar.gz";
 
     src = fetchurl {
         url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
@@ -31,8 +32,6 @@ let
         sourceProvenance = with sourceTypes; [ binaryNativeCode ];
         license = licenses.mpl20;
     };
-
-    tarball = "Wavebox_${version}.tar.gz";
 in stdenv.mkDerivation rec {
     pname = "wavebox";
     inherit version;
