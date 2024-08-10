@@ -106,12 +106,12 @@ local {
                 enable = true;
                 enableHidpi = true;
 
-                #wayland.enable = true;
-                #settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
+                wayland.enable = true;
+                settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
             };
 
-            defaultSession = "plasmax11";
-            #defaultSession = "plasma";
+            #defaultSession = "plasmax11";
+            defaultSession = "plasma";
         };
 
         desktopManager = {

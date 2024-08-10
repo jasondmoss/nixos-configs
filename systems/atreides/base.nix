@@ -27,7 +27,8 @@
 ssh-add $HOME/.ssh/cyan_jason
 ssh-add $HOME/.ssh/id_development_global
             '';
-            wantedBy = [ "default.target" ];
+            wantedBy = [ "graphical-session.target" ];
+            # wantedBy = [ "default.target" ];
         };
     };
 }

@@ -5,7 +5,7 @@
 
             #-- EDITORS
             blender
-            darktable
+            geeqie
             steam
             tor-browser-bundle-bin
 

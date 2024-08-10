@@ -163,15 +163,16 @@ in
             jpegoptim
             jq
             libdrm
+            libGL
             libglvnd
             libva
             libva-utils
             libva1
             mesa
-            nvidia-system-monitor-qt
+            # nvidia-system-monitor-qt
             nvtopPackages.full
             virtualgl
-            vulkan-tools
+            # vulkan-tools
             wayland-utils
             xdg-desktop-portal
             xdg-utils
@@ -251,6 +252,7 @@ in
             kdePackages.plasma-integration
             kdePackages.plasma-wayland-protocols
             kdePackages.plymouth-kcm
+            kdePackages.qtstyleplugin-kvantum
             kdePackages.qtsvg
             kdePackages.qttools
             kdePackages.qtvirtualkeyboard
@@ -289,25 +291,25 @@ in
             seer
             yarn
 
-            php81
-            php81Extensions.bz2
-            php81Extensions.curl
-            php81Extensions.fileinfo
-            php81Extensions.gd
-            php81Extensions.imagick
-            php81Extensions.intl
-            php81Extensions.mbstring
-            php81Extensions.mysqlnd
-            php81Extensions.pdo
-            php81Extensions.pdo_dblib
-            php81Extensions.pdo_mysql
-            php81Extensions.pdo_odbc
-            php81Extensions.tidy
-            php81Extensions.xdebug
-            php81Extensions.xml
-            php81Extensions.xsl
-            php81Extensions.zip
-            php81Extensions.zlib
+            # php81
+            # php81Extensions.bz2
+            # php81Extensions.curl
+            # php81Extensions.fileinfo
+            # php81Extensions.gd
+            # php81Extensions.imagick
+            # php81Extensions.intl
+            # php81Extensions.mbstring
+            # php81Extensions.mysqlnd
+            # php81Extensions.pdo
+            # php81Extensions.pdo_dblib
+            # php81Extensions.pdo_mysql
+            # php81Extensions.pdo_odbc
+            # php81Extensions.tidy
+            # php81Extensions.xdebug
+            # php81Extensions.xml
+            # php81Extensions.xsl
+            # php81Extensions.zip
+            # php81Extensions.zlib
 
             # php81Packages.php-cs-fixer
             # php81Packages.phpmd
@@ -337,6 +339,31 @@ in
             # php82Packages.php-cs-fixer
             # php82Packages.phpmd
             # php82Packages.phpstan
+
+            php83
+            php83Extensions.bz2
+            php83Extensions.curl
+            php83Extensions.fileinfo
+            php83Extensions.gd
+            php83Extensions.imagick
+            php83Extensions.intl
+            php83Extensions.mbstring
+            php83Extensions.mysqlnd
+            php83Extensions.pdo
+            php83Extensions.pdo_dblib
+            php83Extensions.pdo_mysql
+            php83Extensions.pdo_odbc
+            php83Extensions.tidy
+            php83Extensions.xdebug
+            php83Extensions.xml
+            php83Extensions.xsl
+            php83Extensions.zip
+            php83Extensions.zlib
+
+            # php83Packages.php-codesniffer
+            # php83Packages.php-cs-fixer
+            # php83Packages.phpmd
+            # php83Packages.phpstan
 
 
             #-- SECURITY

@@ -20,14 +20,26 @@
             enable32Bit = true;
 
             extraPackages = with pkgs; [
+                #egl-wayland
                 intel-media-driver
+                #libdrm
+                #libGL
+                #libglvnd
+                #libva
+                #libva-utils
+                #libva1
                 libvdpau-va-gl
+                #mesa
                 nvidia-vaapi-driver
                 vaapiIntel
                 vaapiVdpau
+                #virtualgl
+                vulkan-tools
                 vulkan-validation-layers
             ];
         };
+
+        nvidia-container-toolkit.enable = true;
 
         pulseaudio.enable = false;
     };
@@ -35,7 +47,6 @@
     virtualisation.docker = {
         enable = true;
         enableOnBoot = true;
-        enableNvidia = true;
     };
 
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";

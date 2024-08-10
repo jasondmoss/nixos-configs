@@ -122,7 +122,10 @@ Option "TripleBuffer" "on"
         DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
         QT_QPA_PLATFORMTHEME = "qt6ct";
-        # QT_SCALE_FACTOR= "1";
+        QT_SCALE_FACTOR = "1";
+        QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+        PLASMA_USE_QT_SCALING = "1";
+        KWIN_TRIPLE_BUFFER = "1";
 
         # NVIDIA
         GBM_BACKEND = "nvidia-drm";
@@ -130,13 +133,13 @@ Option "TripleBuffer" "on"
         LIBVA_DRIVER_NAME = "nvidia";
         __GL_GSYNC_ALLOWED = "1";
 
-        #WLR_DRM_NO_ATOMIC = "1";
-        #WLR_NO_HARDWARE_CURSORS = "1";
+        WLR_DRM_NO_ATOMIC = "1";
+        WLR_NO_HARDWARE_CURSORS = "1";
 
         # JetBrains
         _JAVA_AWT_WM_NONREPARENTING = "1";
 
-        #SDL_VIDEODRIVER = "wayland";
+        SDL_VIDEODRIVER = "wayland";
 
         MOZ_ENABLE_WAYLAND = "1";
         NIXOS_OZONE_WL = "1";
