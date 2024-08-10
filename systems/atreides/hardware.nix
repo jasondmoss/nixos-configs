@@ -3,7 +3,9 @@
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
 
-        kernelModules = [ "kvm-amd" ];
+        kernelModules = [
+            "kvm-amd"
+        ];
 
         kernelParams = [
             "amd_iommu=on"
@@ -24,7 +26,9 @@
             kernelModules = [];
         };
 
-        blacklistedKernelModules = [ "nouveau" ];
+        blacklistedKernelModules = [
+            "nouveau"
+        ];
 
         extraModulePackages = [];
 
@@ -98,6 +102,11 @@
             nvidiaPersistenced = true;
             nvidiaSettings = true;
             open = false;
+
+            powerManagement = {
+                enable = false;
+                finegrained = false;
+            };
 
             # package = config.boot.kernelPackages.nvidiaPackages.latest;
             # package = config.boot.kernelPackages.nvidiaPackages.beta;

@@ -24,7 +24,9 @@
                 "sd_mod"
             ];
 
-            kernelModules = [ "dm-snapshot" ];
+            kernelModules = [
+                "dm-snapshot"
+            ];
 
             luks.devices = {
                 crypted = {
@@ -34,10 +36,10 @@
             };
         };
 
-        # blacklistedKernelModules = [
-        #     "i915"
-        #     "nouveau"
-        # ];
+        blacklistedKernelModules = [
+            # "i915"
+            "nouveau"
+        ];
 
         extraModulePackages = [];
 
@@ -64,22 +66,20 @@
     };
 
     swapDevices = [
-        { device = "/dev/disk/by-uuid/8a9e0e21-ada8-4830-9836-3f9d678ac477"; }
+        {
+            device = "/dev/disk/by-uuid/8a9e0e21-ada8-4830-9836-3f9d678ac477";
+        }
     ];
 
     hardware = {
         cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
         nvidia = {
-            open = false;
+            forceFullCompositionPipeline = true;
+            modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            modesetting.enable = true;
-            forceFullCompositionPipeline = true;
-
-            # package = config.boot.kernelPackages.nvidiaPackages.latest;
-            # package = config.boot.kernelPackages.nvidiaPackages.beta;
-            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+            open = false;
 
             powerManagement = {
                 enable = false;
@@ -91,6 +91,20 @@
                 intelBusId = "PCI:0:2:0";
                 nvidiaBusId = "PCI:1:0:0";
             };
+
+            # package = config.boot.kernelPackages.nvidiaPackages.latest;
+            # package = config.boot.kernelPackages.nvidiaPackages.beta;
+            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+        };
+    };
+
+    services = {
+        xserver = {
+           screenSection = ''
+Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+Option "AllowIndirectGLXProtocol" "off"
+Option "TripleBuffer" "on"
+           '';
         };
     };
 
@@ -101,20 +115,24 @@
         DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
         QT_QPA_PLATFORMTHEME = "qt6ct";
+        QT_SCALE_FACTOR = "1";
+        QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+        PLASMA_USE_QT_SCALING = "1";
+        KWIN_TRIPLE_BUFFER = "1";
 
-        # # NVIDIA
-        # GBM_BACKEND = "nvidia-drm";
-        # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        # LIBVA_DRIVER_NAME = "nvidia";
-        # __GL_GSYNC_ALLOWED = "1";
+        # NVIDIA
+        GBM_BACKEND = "nvidia-drm";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        LIBVA_DRIVER_NAME = "nvidia";
+        __GL_GSYNC_ALLOWED = "1";
 
-        # WLR_DRM_NO_ATOMIC = "1";
-        # WLR_NO_HARDWARE_CURSORS = "1";
+        WLR_DRM_NO_ATOMIC = "1";
+        WLR_NO_HARDWARE_CURSORS = "1";
 
-        # # JetBrains
+        # JetBrains
         _JAVA_AWT_WM_NONREPARENTING = "1";
 
-        # SDL_VIDEODRIVER = "wayland";
+        SDL_VIDEODRIVER = "wayland";
 
         MOZ_ENABLE_WAYLAND = "1";
         NIXOS_OZONE_WL = "1";
@@ -129,4 +147,5 @@
             pkgs.gst_all_1.gstreamer
         ];
     };
+
 }
