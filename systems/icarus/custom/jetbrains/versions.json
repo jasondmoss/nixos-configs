@@ -3,10 +3,10 @@
         "phpstorm": {
             "update-channel": "PhpStorm RELEASE",
             "version": "2024.2",
-            "build_number": "242.20224.175",
-            "url-template": "https://download.jetbrains.com/webide/PhpStorm-{build_number}.tar.gz",
-            "url": "https://download.jetbrains.com/webide/PhpStorm-242.20224.175.tar.gz",
-            "sha256": "sha256-XbKkkPzvDleHiYvYCNEkPG5liq1JIfwoeBn3/WZ4qiY="
+            "build_number": "242.20224.362",
+            "url-template": "https://download.jetbrains.com/webide/PhpStorm-{version}.tar.gz",
+            "url": "https://download.jetbrains.com/webide/PhpStorm-2024.2.tar.gz",
+            "sha256": "sha256-LFnW1BqgYAcF2Mrt9a7UXxeeR6yFdh+dzX3K1h5j2Dk="
         }
     }
 }

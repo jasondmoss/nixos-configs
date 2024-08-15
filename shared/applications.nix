@@ -179,6 +179,7 @@ in
             xorg.libxcb
             xorg.xrdb
             xrgears
+            wmctrl
 
             #python311Full
             #python311Packages.pyasyncore
@@ -225,6 +226,8 @@ in
             kdePackages.kdeconnect-kde
             kdePackages.kdecoration
             kdePackages.kdeplasma-addons
+            kdePackages.kglobalaccel
+            kdePackages.kglobalacceld
             kdePackages.kguiaddons
             kdePackages.kiconthemes
             kdePackages.kio
@@ -384,7 +387,6 @@ in
             nano
             onlyoffice-bin_latest
             sublime4-dev
-            zed-editor
 
             #-- MULTIMEDIA
             faac
