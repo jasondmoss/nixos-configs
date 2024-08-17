@@ -169,10 +169,8 @@ in
             libva-utils
             libva1
             mesa
-            # nvidia-system-monitor-qt
             nvtopPackages.full
             virtualgl
-            # vulkan-tools
             wayland-utils
             xdg-desktop-portal
             xdg-utils
@@ -180,12 +178,6 @@ in
             xorg.xrdb
             xrgears
             wmctrl
-
-            #python311Full
-            #python311Packages.pyasyncore
-            #python311Packages.gyp
-            #python311Packages.pyqt6
-            #python311Packages.pytz
 
             python312Full
             python312Packages.pyasyncore
@@ -195,7 +187,7 @@ in
 
 
             #-- GNOME DESKTOP
-            gtk3
+            #gtk3
             gtk4
 
 
@@ -294,30 +286,6 @@ in
             seer
             yarn
 
-            # php81
-            # php81Extensions.bz2
-            # php81Extensions.curl
-            # php81Extensions.fileinfo
-            # php81Extensions.gd
-            # php81Extensions.imagick
-            # php81Extensions.intl
-            # php81Extensions.mbstring
-            # php81Extensions.mysqlnd
-            # php81Extensions.pdo
-            # php81Extensions.pdo_dblib
-            # php81Extensions.pdo_mysql
-            # php81Extensions.pdo_odbc
-            # php81Extensions.tidy
-            # php81Extensions.xdebug
-            # php81Extensions.xml
-            # php81Extensions.xsl
-            # php81Extensions.zip
-            # php81Extensions.zlib
-
-            # php81Packages.php-cs-fixer
-            # php81Packages.phpmd
-            # php81Packages.phpstan
-
             php82
             php82Extensions.bz2
             php82Extensions.curl
@@ -337,11 +305,6 @@ in
             php82Extensions.xsl
             php82Extensions.zip
             php82Extensions.zlib
-
-            # php82Packages.php-codesniffer
-            # php82Packages.php-cs-fixer
-            # php82Packages.phpmd
-            # php82Packages.phpstan
 
             php83
             php83Extensions.bz2
@@ -382,6 +345,7 @@ in
             gcolor3
             gegl
             gimp
+            github-desktop
             inkscape
             nomacs
             nano
@@ -422,6 +386,7 @@ in
             zoom-us
 
             #-- MISCELLANEOUS/UTILITIES
+            alacritty
             bitwarden
             conky
             libportal
@@ -430,7 +395,7 @@ in
             protonvpn-cli
             protonvpn-gui
             ulauncher
-            wezterm
+            #wezterm
 
         ]) ++ (with pkgs; [
 

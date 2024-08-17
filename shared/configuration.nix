@@ -110,7 +110,6 @@ local {
                 settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
             };
 
-            #defaultSession = "plasmax11";
             defaultSession = "plasma";
         };
 
@@ -264,8 +263,6 @@ session.cookie_samesite = "Strict"
             '';
         };
     };
-
-    #sound.enable = true;
 
     documentation = {
         enable = true;

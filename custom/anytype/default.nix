@@ -1,16 +1,18 @@
 { lib, fetchurl, appimageTools, makeWrapper }:
-
 let
+
     pname = "anytype";
-    version = "0.41.39-beta";
+    version = "0.42.4";
     name = "Anytype-${version}";
     src = fetchurl {
         url = "https://github.com/anyproto/anytype-ts/releases/download/v${version}/${name}.AppImage";
         name = "Anytype-${version}.AppImage";
-        hash = "sha256-8IJCaCNZ5+lKvNOmlFdSTjaBVstRXVhK9gmV0GT6E5s=";
+        hash = "sha256-SFLjjr+L7eTqaZ2teug7mzXhIU+eVebBqrE4q5aasLk=";
     };
     appimageContents = appimageTools.extractType2 { inherit name src; };
+
 in appimageTools.wrapType2 {
+
     inherit name src;
 
     extraPkgs = pkgs: (appimageTools.defaultFhsEnvArgs.multiPkgs pkgs)
@@ -37,4 +39,5 @@ in appimageTools.wrapType2 {
         maintainers = with maintainers; [ running-grass ];
         platforms = [ "x86_64-linux" ];
     };
+
 }

@@ -1,5 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }:
-{
+{ config, lib, pkgs, modulesPath, ... }: {
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
 
@@ -101,7 +100,7 @@
             modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            open = false;
+            open = true;
 
             powerManagement = {
                 enable = false;

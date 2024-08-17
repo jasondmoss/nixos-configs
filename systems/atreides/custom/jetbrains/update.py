@@ -13,10 +13,8 @@ versions_file_path = pathlib.Path(__file__).parent.joinpath("versions.json").res
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
-
 def one_or_more(x):
     return x if isinstance(x, list) else [x]
-
 
 def download_channels():
     logging.info("Checking for updates from %s", updates_url)
@@ -32,19 +30,16 @@ def download_channels():
         for channel in one_or_more(product["channel"])
     }
 
-
 def build_version(build):
     build_number = build["@fullNumber"] if "@fullNumber" in build else build["@number"]
 
     return version.parse(build_number)
-
 
 def latest_build(channel):
     builds = one_or_more(channel["build"])
     latest = max(builds, key=build_version)
 
     return latest
-
 
 def download_sha256(url):
     url = f"{url}.sha256"
@@ -53,9 +48,7 @@ def download_sha256(url):
 
     return download_response.content.decode('UTF-8').split(' ')[0]
 
-
 channels = download_channels()
-
 
 def update_product(name, product):
     update_channel = product["update-channel"]
@@ -93,11 +86,9 @@ def update_product(name, product):
             logging.warning("Skipping %s due to the above error.", name)
             logging.warning("It may be out-of-date. Fix the error and rerun.")
 
-
 def update_products(products):
     for name, product in products.items():
         update_product(name, product)
-
 
 with open(versions_file_path, "r") as versions_file:
     versions = json.load(versions_file)

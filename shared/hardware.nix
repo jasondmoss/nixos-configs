@@ -1,5 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }:
-{
+{ config, lib, pkgs, modulesPath, ... }: {
     imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
@@ -20,22 +19,13 @@
             enable32Bit = true;
 
             extraPackages = with pkgs; [
-                #egl-wayland
                 intel-media-driver
-                #libdrm
-                #libGL
-                #libglvnd
-                #libva
-                #libva-utils
-                #libva1
                 libvdpau-va-gl
-                #mesa
                 nvidia-vaapi-driver
                 vaapiIntel
                 vaapiVdpau
-                #virtualgl
-                vulkan-tools
-                vulkan-validation-layers
+                # vulkan-tools
+                # vulkan-validation-layers
             ];
         };
 

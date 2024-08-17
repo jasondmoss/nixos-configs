@@ -29,12 +29,6 @@ in {
         systemPackages = with pkgs;
 
         customizeJetbrains ([
-            # (jetbrains.gateway.overrideAttrs (oldAttrs: rec {
-            #     src = pkgs.fetchurl rec {
-            #         url = (lib.replaceStrings [ "-no-jbr" ] [ "" ] oldAttrs.src.url);
-            #     };
-            # }))
-
             (jetbrains.phpstorm.overrideAttrs (oldAttrs: rec {
                 src = pkgs.fetchurl rec {
                     url = (lib.replaceStrings [ "-no-jbr" ] [ "" ] oldAttrs.src.url);

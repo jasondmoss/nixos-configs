@@ -10,7 +10,8 @@ let
     inherit (lib) optionals;
 
     pname = "strawberry";
-    version = "1.1.1";
+    # version = "1.1.1";
+    version = "master";
 
     src = fetchFromGitHub {
         owner = "jonaski";
