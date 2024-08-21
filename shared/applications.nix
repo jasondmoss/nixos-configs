@@ -186,6 +186,10 @@ in
             python312Packages.pytz
 
 
+            #-- DISPLAY MANAGER
+            ly
+
+
             #-- GNOME DESKTOP
             #gtk3
             gtk4
@@ -235,6 +239,7 @@ in
             kdePackages.ksshaskpass
             kdePackages.ksvg
             kdePackages.ktorrent
+            # kdePackages.kwalletmanager
             kdePackages.kwallet
             kdePackages.kwallet-pam
             kdePackages.kwayland
@@ -247,14 +252,14 @@ in
             kdePackages.plasma-integration
             kdePackages.plasma-wayland-protocols
             kdePackages.plymouth-kcm
-            kdePackages.qtstyleplugin-kvantum
+            # kdePackages.qtstyleplugin-kvantum
             kdePackages.qtsvg
             kdePackages.qttools
             kdePackages.qtvirtualkeyboard
             kdePackages.wrapQtAppsHook
             kdePackages.xdg-desktop-portal-kde
 
-            adwaita-qt6
+            # adwaita-qt6
 
 
             #-- DEVELOPMENT
@@ -379,23 +384,27 @@ in
             brave
             filezilla
             google-chrome
-            chrome-gnome-shell
+            # chrome-gnome-shell
             megasync
             microsoft-edge
             thunderbirdPackages.thunderbird-128
             zoom-us
+
+            #-- PROTON
+            protonmail-bridge
+            protonmail-desktop
+            protonvpn-cli
+            protonvpn-gui
+            proton-pass
 
             #-- MISCELLANEOUS/UTILITIES
             alacritty
             bitwarden
             conky
             libportal
-            protonmail-bridge
-            protonmail-desktop
-            protonvpn-cli
-            protonvpn-gui
+            rarcrack
             ulauncher
-            #wezterm
+            # wezterm
 
         ]) ++ (with pkgs; [
 

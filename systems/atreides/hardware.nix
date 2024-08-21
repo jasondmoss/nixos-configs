@@ -9,6 +9,7 @@
         kernelParams = [
             "amd_iommu=on"
             "mem_sleep_default=deep"
+            "nvidia-drm.fbdev=1"
             "nvidia-drm.modeset=1"
         ];
 

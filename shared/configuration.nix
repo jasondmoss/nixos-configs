@@ -102,12 +102,14 @@ local {
         };
 
         displayManager = {
-            sddm = {
+            ly = {
                 enable = true;
-                enableHidpi = true;
 
-                wayland.enable = true;
-                settings.Wayland.SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
+                settings = {
+                    clear_password = true;
+                    clock = "%c";
+                    waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
+                };
             };
 
             defaultSession = "plasma";
