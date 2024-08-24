@@ -158,7 +158,10 @@ in
 
 
             #-- GRAPHICS
-            egl-wayland
+
+            # egl-wayland
+            # eglexternalplatform
+            glxinfo
             imagemagick
             jpegoptim
             jq
@@ -172,12 +175,14 @@ in
             nvtopPackages.full
             virtualgl
             wayland-utils
+            wmctrl
+            vulkan-tools
+            vulkan-validation-layers
             xdg-desktop-portal
             xdg-utils
-            xorg.libxcb
-            xorg.xrdb
-            xrgears
-            wmctrl
+            # xorg.libxcb
+            # xorg.xrdb
+            # xrgears
 
             python312Full
             python312Packages.pyasyncore
@@ -191,7 +196,6 @@ in
 
 
             #-- GNOME DESKTOP
-            #gtk3
             gtk4
 
 
@@ -239,7 +243,6 @@ in
             kdePackages.ksshaskpass
             kdePackages.ksvg
             kdePackages.ktorrent
-            # kdePackages.kwalletmanager
             kdePackages.kwallet
             kdePackages.kwallet-pam
             kdePackages.kwayland
@@ -258,8 +261,6 @@ in
             kdePackages.qtvirtualkeyboard
             kdePackages.wrapQtAppsHook
             kdePackages.xdg-desktop-portal-kde
-
-            # adwaita-qt6
 
 
             #-- DEVELOPMENT
@@ -348,7 +349,7 @@ in
             #-- EDITORS
             figma-linux
             gcolor3
-            gegl
+            # gegl
             gimp
             github-desktop
             inkscape
@@ -384,7 +385,6 @@ in
             brave
             filezilla
             google-chrome
-            # chrome-gnome-shell
             megasync
             microsoft-edge
             thunderbirdPackages.thunderbird-128

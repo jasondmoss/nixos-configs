@@ -24,8 +24,6 @@
                 nvidia-vaapi-driver
                 vaapiIntel
                 vaapiVdpau
-                # vulkan-tools
-                # vulkan-validation-layers
             ];
         };
 

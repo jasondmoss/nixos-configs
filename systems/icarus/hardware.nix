@@ -105,6 +105,14 @@ Option "AllowIndirectGLXProtocol" "off"
 Option "TripleBuffer" "on"
            '';
         };
+
+        displayManager = {
+            ly = {
+                settings = {
+                    animation = "none";
+                };
+            };
+        };
     };
 
     environment.sessionVariables = {

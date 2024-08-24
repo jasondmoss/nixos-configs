@@ -8,7 +8,7 @@
     perl, appstream-glib, desktop-file-utils, xorg, glib-networking, json-glib,
     libmypaint, gexiv2, harfbuzz, mypaint-brushes1, libwebp, libheif, gjs,
     libgudev, openexr, xvfb-run, dbus, gnome, hicolor-icon-theme, alsa-lib,
-    unstableGitUpdater
+    unstableGitUpdater, adwaita-icon-theme
 }:
 
 let
@@ -18,6 +18,7 @@ let
 in stdenv.mkDerivation (finalAttrs: {
     pname = "gimp";
     version = "2_99_18";
+    # version = "master";
 
     outputs = [ "out" "dev" "devdoc" ];
 
@@ -124,7 +125,7 @@ in stdenv.mkDerivation (finalAttrs: {
 
         # New file dialogue crashes with "Icon 'image-missing' not present in
         # theme Symbolic" without an icon theme.
-        gnome.adwaita-icon-theme
+        adwaita-icon-theme
 
         # For Lua plug-ins
         (luajit.withPackages (pp: [

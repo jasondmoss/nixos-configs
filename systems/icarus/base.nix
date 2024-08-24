@@ -29,14 +29,4 @@ ssh-add $HOME/.ssh/id_development_global
             wantedBy = [ "default.target" ];
         };
     };
-
-    services = {
-        displayManager = {
-            ly = {
-                settings = {
-                    animation = "none";
-                };
-            };
-        };
-    };
 }

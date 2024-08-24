@@ -19,8 +19,6 @@
 
     networking.hostName = "atreides";
 
-    services.xserver.dpi = 162;
-
     systemd = {
         user.services.add_ssh_keys = {
             script = ''
@@ -29,16 +27,6 @@ ssh-add $HOME/.ssh/id_development_global
             '';
             wantedBy = [ "graphical-session.target" ];
             # wantedBy = [ "default.target" ];
-        };
-    };
-
-    services = {
-        displayManager = {
-            ly = {
-                settings = {
-                    animation = "matrix";
-                };
-            };
         };
     };
 }

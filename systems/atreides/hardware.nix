@@ -116,11 +116,26 @@
 
     services = {
         xserver = {
-           screenSection = ''
+            dpi = 162;
+            screenSection = ''
 Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
 Option "AllowIndirectGLXProtocol" "off"
 Option "TripleBuffer" "on"
-           '';
+            '';
+        };
+
+        displayManager = {
+            ly = {
+                settings = {
+                    animation = "matrix";
+                    #animation_timeout_sec = "1..2e12";
+                };
+            };
+        };
+
+        ollama = {
+            enable = true;
+            acceleration = "cuda";
         };
     };
 

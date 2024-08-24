@@ -1,9 +1,9 @@
 {
-    lib, stdenv, fetchurl, pkg-config, vala, gobject-introspection, gtk-doc,
-    docbook-xsl-nons, docbook_xml_dtd_43, glib, babl, libpng, llvmPackages, cairo,
-    libjpeg, librsvg, lensfun, libspiro, maxflow, netsurf, pango, poly2tri-c,
-    poppler, bzip2, json-glib, gettext, meson, ninja, libraw, gexiv2, libwebp,
-    luajit, openexr, opencl-headers, suitesparse
+    lib, stdenv, fetchurl, pkg-config, vala, gobject-introspection, gi-docgen,
+    gtk-doc, docbook-xsl-nons, docbook_xml_dtd_43, glib, babl, libpng,
+    llvmPackages, cairo, libjpeg, librsvg, lensfun, libspiro, maxflow, netsurf,
+    pango, poly2tri-c, poppler, bzip2, json-glib, gettext, meson, ninja, libraw,
+    gexiv2, libwebp, luajit, openexr, opencl-headers, suitesparse
 }:
 stdenv.mkDerivation rec {
     pname = "gegl";
@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
 
     src = fetchurl {
         url = "https://download.gimp.org/pub/gegl/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-        sha256 = "sha256-0LOySBvId0xfPQpIdhGRAWbRju+COoWfuR54Grex6JI=";
+        sha256 = "sha256-QYwm2UvogF19mPbeDGglyia9dPystsGI2kdTPZ7igkc=";
     };
 
     nativeBuildInputs = [
@@ -24,6 +24,7 @@ stdenv.mkDerivation rec {
         ninja
         vala
         gobject-introspection
+        gi-docgen
         gtk-doc
         docbook-xsl-nons
         docbook_xml_dtd_43

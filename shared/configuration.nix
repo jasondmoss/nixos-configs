@@ -18,13 +18,22 @@ in {
     i18n = {
         defaultLocale = "en_CA.utf8";
 
-        inputMethod = {
-            type = "ibus";
-            enable = true;
+        # inputMethod = {
+        #     type = "ibus";
+        #     enable = true;
 
-            ibus.engines = with pkgs.ibus-engines; [
-                table table-others
-            ];
+        #     ibus.engines = with pkgs.ibus-engines; [
+        #         table table-others
+        #     ];
+        # };
+        inputMethod = {
+            enable = true;
+            type = "fcitx5";
+
+            fcitx5 = {
+                waylandFrontend = true;
+                addons = with pkgs; [ fcitx5-chinese-addons ];
+            };
         };
     };
 
@@ -108,6 +117,7 @@ local {
                 settings = {
                     clear_password = true;
                     clock = "%c";
+                    # animation = "none";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
                 };
             };
@@ -251,6 +261,10 @@ session.cookie_samesite = "Strict"
         polkit.enable = true;
 
         pam.services = {
+            "ly" = {
+                enableKwallet = true;
+            };
+
             kwallet = {
                 name = "kwallet";
                 enableKwallet = true;
