@@ -1,9 +1,10 @@
-{ config, options, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 let
     theme = import ./theme.nix;
 
     localAddress = "127.0.0.1";
 in {
+
     nix = {
         package = pkgs.nixVersions.latest;
 
@@ -312,4 +313,46 @@ session.cookie_samesite = "Strict"
     systemd = {
         extraConfig = "DefaultTimeoutStopSec=10s";
     };
+
+    environment = {
+        variables = {
+            LIBVA_DRIVER_NAME = "nvidia";
+            GBM_BACKEND = "nvidia-drm";
+            __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+            WLR_NO_HARDWARE_CURSORS = "1";
+            MOZ_DISABLE_RDD_SANDBOX = "1";
+            NVD_BACKEND = "direct";
+            EGL_PLATFORM = "wayland";
+            __GL_GSYNC_ALLOWED = "1";
+            WLR_DRM_NO_ATOMIC = "1";
+            _JAVA_AWT_WM_NONREPARENTING = "1";
+            SDL_VIDEODRIVER = "wayland";
+            MOZ_ENABLE_WAYLAND = "1";
+            NIXOS_OZONE_WL = "1";
+
+            GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
+                pkgs.gst_all_1.gst-editing-services
+                pkgs.gst_all_1.gst-libav
+                pkgs.gst_all_1.gst-plugins-bad
+                pkgs.gst_all_1.gst-plugins-base
+                pkgs.gst_all_1.gst-plugins-good
+                pkgs.gst_all_1.gst-plugins-ugly
+                pkgs.gst_all_1.gstreamer
+            ];
+        };
+
+        sessionVariables = {
+            XDG_MENU_PREFIX = "kde-";
+
+            XCURSOR_THEME = "ComixCursors";
+            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
+
+            QT_QPA_PLATFORMTHEME = "qt6ct";
+            QT_SCALE_FACTOR = "1";
+            QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+            PLASMA_USE_QT_SCALING = "1";
+            KWIN_TRIPLE_BUFFER = "1";
+        };
+    };
+
 }

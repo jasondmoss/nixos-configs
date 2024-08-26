@@ -239,7 +239,7 @@ in
             kdePackages.kio-zeroconf
             kdePackages.kirigami
             kdePackages.kirigami-addons
-            kdePackages.knotes
+            #kdePackages.knotes
             kdePackages.ksshaskpass
             kdePackages.ksvg
             kdePackages.ktorrent

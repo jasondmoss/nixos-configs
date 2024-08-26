@@ -1,23 +1,22 @@
 {
     callPackage, lib, stdenv, fetchurl, fetchFromGitHub, cmake, pkg-config, git,
     qt6, alsa-lib, boost, chromaprint, fftw, gnutls, libcdio, libmtp, libXdmcp,
-    libpthreadstubs, libtasn1, ninja, pcre, protobuf, sqlite, taglib, libgpod,
-    libidn2, libsepol, p11-kit, libpulseaudio, libselinux, util-linux, libvlc,
-    gst_all_1, glib-networking,
+    libpthreadstubs, libtasn1, ninja, pcre, protobuf, sqlite, taglib, libebur128,
+    libgpod, libidn2, libsepol, p11-kit, libpulseaudio, libselinux, util-linux,
+    libvlc, gst_all_1, glib-networking, kdsingleapplication,
     qtx11extras ? null, withGstreamer ? true, withVlc ? true
 }:
 let
     inherit (lib) optionals;
 
     pname = "strawberry";
-    # version = "1.1.1";
     version = "master";
 
     src = fetchFromGitHub {
         owner = "jonaski";
         repo = pname;
         rev = version;
-        hash = "sha256-vOay9xPSwgSYurFgL9f4OdBPzGJkV4t+7lJgeCeT0c4=";
+        hash = "sha256-godsl9qjwZMm3hYtITJuZZuN0R4dFwnzElSyLoVI3k4=";
     };
 
     meta = with lib; {
@@ -49,7 +48,9 @@ in stdenv.mkDerivation rec {
         chromaprint
         fftw
         gnutls
+        kdsingleapplication
         libcdio
+        libebur128
         libidn2
         libmtp
         libpthreadstubs
