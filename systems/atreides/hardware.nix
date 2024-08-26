@@ -1,16 +1,10 @@
 { config, lib, pkgs, modulesPath, ... }: {
     boot = {
-        kernelPackages = pkgs.linuxPackages_latest;
-
-        kernelModules = [
-            "kvm-amd"
-        ];
-
         kernelParams = [
             "amd_iommu=on"
             "mem_sleep_default=deep"
-            "nvidia-drm.fbdev=1"
-            "nvidia-drm.modeset=1"
+            "nvidia_drm.fbdev=1"
+            "nvidia_drm.modeset=1"
         ];
 
         initrd = {
@@ -25,6 +19,20 @@
 
             kernelModules = [];
         };
+
+        kernelModules = [
+            "kvm-amd"
+        ];
+
+        extraModprobeConfig =
+            "options nvidia " + lib.concatStringsSep " " [
+                "NVreg_UsePageAttributeTable=1"
+                "NVreg_EnablePCIeGen3=1"
+                "NVreg_PreserveVideoMemoryAllocations=1"
+                #"NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+            ];
+
+        kernelPackages = pkgs.linuxPackages_latest;
 
         blacklistedKernelModules = [
             "nouveau"
@@ -98,8 +106,8 @@
 
         nvidia = {
             forceFullCompositionPipeline = true;
-            modesetting.enable = true;
-            nvidiaPersistenced = true;
+            # modesetting.enable = true;
+            nvidiaPersistenced = false;
             nvidiaSettings = true;
             open = true;
 
