@@ -1,4 +1,5 @@
-{ config, lib, pkgs, modulesPath, ... }: {
+{ config, lib, pkgs, modulesPath, ... }:
+{
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
 
@@ -7,8 +8,10 @@
         ];
 
         kernelParams = [
-            "amd_iommu=on"
+            # "amd_iommu=on"
             #"i915.modeset=0"
+            "mem_sleep_default=deep"
+            "nvidia_drm.fbdev=1"
             "nvidia-drm.modeset=1"
         ];
 
@@ -71,47 +74,20 @@
     ];
 
     hardware = {
-        cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+        cpu.intel = {
+            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+        };
 
-        nvidia = {
-            forceFullCompositionPipeline = true;
-            modesetting.enable = true;
-            nvidiaPersistenced = true;
-            nvidiaSettings = true;
-            open = false;
-
-            powerManagement = {
-                enable = false;
-                finegrained = false;
-            };
-
-            prime = {
-                offload.enable = true;
-                intelBusId = "PCI:0:2:0";
-                nvidiaBusId = "PCI:1:0:0";
-            };
-
-            # package = config.boot.kernelPackages.nvidiaPackages.latest;
-            # package = config.boot.kernelPackages.nvidiaPackages.beta;
-            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+        nvidia.prime = {
+            offload.enable = true;
+            intelBusId = "PCI:0:2:0";
+            nvidiaBusId = "PCI:1:0:0";
         };
     };
 
     services = {
         xserver = {
-           screenSection = ''
-Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-Option "AllowIndirectGLXProtocol" "off"
-Option "TripleBuffer" "on"
-           '';
-        };
-
-        displayManager = {
-            ly = {
-                settings = {
-                    animation = "none";
-                };
-            };
+            dpi = 96;
         };
     };
 }

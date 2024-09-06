@@ -1,9 +1,8 @@
 {
-    callPackage, lib, stdenv, appimageTools, autoPatchelfHook,
-    desktop-file-utils, fetchurl, libsecret
+    callPackage, lib, stdenv, appimageTools, autoPatchelfHook, libsecret,
+    desktop-file-utils, fetchurl
 }:
 let
-
     srcjson = builtins.fromJSON (builtins.readFile ./src.json);
     version = srcjson.version;
     pname = "standardnotes";
@@ -17,9 +16,7 @@ let
     };
 
     nativeBuildInputs = [ autoPatchelfHook desktop-file-utils ];
-
 in appimageTools.wrapType2 rec {
-
     inherit name src;
 
     extraPkgs = pkgs: with pkgs; [

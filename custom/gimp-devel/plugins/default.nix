@@ -1,15 +1,11 @@
+{ config, lib, pkgs }:
 # Use `gimp-with-plugins` package for GIMP with all plug-ins.
 # If you just want a subset of plug-ins, you can specify them explicitly:
 # `gimp-with-plugins.override { plugins = with gimpPlugins; [ gap ]; }`.
-
-{ config, lib, pkgs }:
-
 let
     inherit (pkgs) stdenv fetchurl fetchpatch pkg-config intltool glib fetchFromGitHub;
 in
-
-lib.makeScope pkgs.newScope (self:
-
+    lib.makeScope pkgs.newScope (self:
 let
     # Use GIMP from the scope.
     inherit (self) gimp;
@@ -62,8 +58,7 @@ let
             runHook postInstall
         '';
     } // attrs);
-in
-{
+in {
     # Allow overriding GIMP package in the scope.
     inherit (pkgs) gimp;
 

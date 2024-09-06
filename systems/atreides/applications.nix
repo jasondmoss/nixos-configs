@@ -2,7 +2,6 @@
 {
     environment = {
         systemPackages = (with pkgs; [
-
             #-- EDITORS
             blender
             geeqie
@@ -14,16 +13,14 @@
             audible-cli
             cuetools
             easytag
+            haruna
             vlc
-
         ]) ++ (with pkgs; [
-
             #-- Anytype
-            (pkgs.callPackage ../../custom/anytype/default.nix {})
+            # (pkgs.callPackage ../../custom/anytype/default.nix {})
 
             #-- Standard Notes
             (pkgs.callPackage ../../custom/standardnotes/default.nix {})
-
         ]);
     };
 }

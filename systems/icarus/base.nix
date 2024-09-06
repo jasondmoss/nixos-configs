@@ -1,4 +1,5 @@
-{ config, options, pkgs, ... }: {
+{ config, options, pkgs, ... }:
+{
     system.stateVersion = "24.05";
 
     imports = [
@@ -19,14 +20,4 @@
     networking.hostName = "icarus";
 
     services.xserver.dpi = 96;
-
-    systemd = {
-        user.services.add_ssh_keys = {
-            script = ''
-ssh-add $HOME/.ssh/cyan_jason
-ssh-add $HOME/.ssh/id_development_global
-            '';
-            wantedBy = [ "default.target" ];
-        };
-    };
 }

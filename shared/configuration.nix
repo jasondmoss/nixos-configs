@@ -1,10 +1,8 @@
 { config, options, lib, pkgs, ... }:
 let
     theme = import ./theme.nix;
-
     localAddress = "127.0.0.1";
 in {
-
     nix = {
         package = pkgs.nixVersions.latest;
 
@@ -18,29 +16,22 @@ in {
 
     i18n = {
         defaultLocale = "en_CA.utf8";
-
-        # inputMethod = {
-        #     type = "ibus";
-        #     enable = true;
-
-        #     ibus.engines = with pkgs.ibus-engines; [
-        #         table table-others
-        #     ];
-        # };
-        inputMethod = {
-            enable = true;
-            type = "fcitx5";
-
-            fcitx5 = {
-                waylandFrontend = true;
-                addons = with pkgs; [ fcitx5-chinese-addons ];
-            };
-        };
     };
 
     fonts = {
-        fontconfig.enable = true;
-        fontDir.enable = true;
+        fontDir = {
+            enable = true;
+            decompressFonts = config.programs.xwayland.enable;
+        };
+
+        fontconfig = {
+            enable = true;
+            antialias = true;
+            hinting = {
+                enable = true;
+                style = "medium";
+            };
+        };
 
         packages = with pkgs; [
             corefonts
@@ -118,7 +109,8 @@ local {
                 settings = {
                     clear_password = true;
                     clock = "%c";
-                    # animation = "none";
+                    animation = "matrix";
+                    animation_timeout_sec = "20";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
                 };
             };
@@ -137,6 +129,12 @@ local {
             enable = true;
             videoDrivers = [ "nvidia" ];
 
+            screenSection = ''
+Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+Option "AllowIndirectGLXProtocol" "off"
+Option "TripleBuffer" "on"
+            '';
+
             xkb = {
                 layout = "us";
                 variant = "";
@@ -151,7 +149,7 @@ local {
             extraModules = [ "http2" ];
             enablePHP = true;
 
-            phpPackage = pkgs.php82.buildEnv {
+            phpPackage = pkgs.php84.buildEnv {
                 extensions = ({ enabled, all }: enabled);
                 extraConfig = "memory_limit = 2048M";
             };
@@ -192,6 +190,11 @@ session.cookie_samesite = "Strict"
                     };
                 }
             ];
+        };
+
+        ollama = {
+            enable = true;
+            acceleration = "cuda";
         };
     };
 
@@ -316,6 +319,7 @@ session.cookie_samesite = "Strict"
 
     environment = {
         variables = {
+            VDPAU_DRIVER = "va_gl";
             LIBVA_DRIVER_NAME = "nvidia";
             GBM_BACKEND = "nvidia-drm";
             __GLX_VENDOR_LIBRARY_NAME = "nvidia";
@@ -354,5 +358,4 @@ session.cookie_samesite = "Strict"
             KWIN_TRIPLE_BUFFER = "1";
         };
     };
-
 }

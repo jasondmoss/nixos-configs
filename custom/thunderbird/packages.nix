@@ -1,5 +1,4 @@
 { stdenv, lib, buildMozillaMach, callPackage, fetchurl, fetchpatch, nixosTests, icu73, fetchpatch2, config }:
-
 let
   common = { version, sha512, updateScript }: (buildMozillaMach rec {
     pname = "thunderbird";
@@ -45,7 +44,6 @@ let
       })];
     });
   };
-
 in rec {
   thunderbird = thunderbird-115;
 
@@ -84,4 +82,3 @@ in rec {
  // lib.optionalAttrs config.allowAliases {
   thunderbird-102 = throw "Thunderbird 102 support ended in September 2023";
 }
-

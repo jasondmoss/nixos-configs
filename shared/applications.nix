@@ -74,8 +74,23 @@ let
             };
         };
     };
-in
-{
+
+    # Thunderbird desktop file.
+    thunderbirdDesktopItem = pkgs.makeDesktopItem rec {
+        type = "Application";
+        terminal = false;
+        name = "thunderbird";
+        desktopName = "Thunderbird";
+        exec = "thunderbird -P \"Me\"";
+        icon = "/home/me/Mega/Images/Icons/Apps/thunderbird-daily.png";
+        mimeTypes = [
+            "message/rfc822"
+            "x-scheme-handler/mailto"
+        ];
+        startupNotify = true;
+        categories = [ "Application" "Network" "Email" ];
+    };
+in {
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -92,7 +107,7 @@ in
             };
 
             permittedInsecurePackages = [
-                "openssl-1.1.1w"  # Still not sure what is requiring this...
+                "openssl-1.1.1w"
             ];
         };
 
@@ -113,8 +128,10 @@ in
             clinfo
             coreutils-full
             curl
+            dwz
             expect
             flex
+            fontconfig
             fwupd
             fwupd-efi
             gcr
@@ -156,11 +173,9 @@ in
             xfsprogs
             zip
 
-
             #-- GRAPHICS
-
-            # egl-wayland
-            # eglexternalplatform
+            egl-wayland
+            eglexternalplatform
             glxinfo
             imagemagick
             jpegoptim
@@ -180,9 +195,6 @@ in
             vulkan-validation-layers
             xdg-desktop-portal
             xdg-utils
-            # xorg.libxcb
-            # xorg.xrdb
-            # xrgears
 
             python312Full
             python312Packages.pyasyncore
@@ -190,78 +202,11 @@ in
             python312Packages.pyqt6
             python312Packages.pytz
 
-
             #-- DISPLAY MANAGER
             ly
 
-
             #-- GNOME DESKTOP
             gtk4
-
-
-            #-- KDE / PLASMA
-            kdePackages.full
-            kdePackages.qt6ct
-
-            kdePackages.accounts-qt
-            kdePackages.akonadi
-            kdePackages.akonadi-calendar
-            kdePackages.akonadi-calendar-tools
-            kdePackages.akonadi-contacts
-            kdePackages.akonadi-import-wizard
-            kdePackages.akonadi-mime
-            kdePackages.akonadi-notes
-            kdePackages.akonadi-search
-            kdePackages.ark
-            kdePackages.dolphin
-            kdePackages.dolphin-plugins
-            kdePackages.frameworkintegration
-            kdePackages.kate
-            kdePackages.karchive
-            kdePackages.kbreakout
-            kdePackages.kcalc
-            kdePackages.kcmutils
-            kdePackages.kconfigwidgets
-            kdePackages.kcoreaddons
-            kdePackages.kdeconnect-kde
-            kdePackages.kdecoration
-            kdePackages.kdeplasma-addons
-            kdePackages.kglobalaccel
-            kdePackages.kglobalacceld
-            kdePackages.kguiaddons
-            kdePackages.kiconthemes
-            kdePackages.kio
-            kdePackages.kio-admin
-            kdePackages.kio-extras
-            kdePackages.kio-extras-kf5
-            kdePackages.kio-fuse
-            kdePackages.kio-gdrive
-            kdePackages.kio-zeroconf
-            kdePackages.kirigami
-            kdePackages.kirigami-addons
-            #kdePackages.knotes
-            kdePackages.ksshaskpass
-            kdePackages.ksvg
-            kdePackages.ktorrent
-            kdePackages.kwallet
-            kdePackages.kwallet-pam
-            kdePackages.kwayland
-            kdePackages.kwindowsystem
-            kdePackages.layer-shell-qt
-            kdePackages.modemmanager-qt
-            kdePackages.networkmanager-qt
-            kdePackages.okular
-            kdePackages.plasma-browser-integration
-            kdePackages.plasma-integration
-            kdePackages.plasma-wayland-protocols
-            kdePackages.plymouth-kcm
-            # kdePackages.qtstyleplugin-kvantum
-            kdePackages.qtsvg
-            kdePackages.qttools
-            kdePackages.qtvirtualkeyboard
-            kdePackages.wrapQtAppsHook
-            kdePackages.xdg-desktop-portal-kde
-
 
             #-- DEVELOPMENT
             bison
@@ -286,57 +231,14 @@ in
             lua
             nodejs
             perl
+            php82
+            php83
+            php84
             phpunit
             pre-commit
             rustc
             seer
             yarn
-
-            php82
-            php82Extensions.bz2
-            php82Extensions.curl
-            php82Extensions.fileinfo
-            php82Extensions.gd
-            php82Extensions.imagick
-            php82Extensions.intl
-            php82Extensions.mbstring
-            php82Extensions.mysqlnd
-            php82Extensions.pdo
-            php82Extensions.pdo_dblib
-            php82Extensions.pdo_mysql
-            php82Extensions.pdo_odbc
-            php82Extensions.tidy
-            php82Extensions.xdebug
-            php82Extensions.xml
-            php82Extensions.xsl
-            php82Extensions.zip
-            php82Extensions.zlib
-
-            php83
-            php83Extensions.bz2
-            php83Extensions.curl
-            php83Extensions.fileinfo
-            php83Extensions.gd
-            php83Extensions.imagick
-            php83Extensions.intl
-            php83Extensions.mbstring
-            php83Extensions.mysqlnd
-            php83Extensions.pdo
-            php83Extensions.pdo_dblib
-            php83Extensions.pdo_mysql
-            php83Extensions.pdo_odbc
-            php83Extensions.tidy
-            php83Extensions.xdebug
-            php83Extensions.xml
-            php83Extensions.xsl
-            php83Extensions.zip
-            php83Extensions.zlib
-
-            # php83Packages.php-codesniffer
-            # php83Packages.php-cs-fixer
-            # php83Packages.phpmd
-            # php83Packages.phpstan
-
 
             #-- SECURITY
             certbot
@@ -349,13 +251,13 @@ in
             #-- EDITORS
             figma-linux
             gcolor3
-            # gegl
+            gegl
             gimp
             github-desktop
             inkscape
+            libreoffice-qt6-fresh
             nomacs
             nano
-            onlyoffice-bin_latest
             sublime4-dev
 
             #-- MULTIMEDIA
@@ -387,24 +289,144 @@ in
             google-chrome
             megasync
             microsoft-edge
+            protonvpn-gui
             thunderbirdPackages.thunderbird-128
             zoom-us
 
-            #-- PROTON
-            protonmail-bridge
-            protonmail-desktop
-            protonvpn-cli
-            protonvpn-gui
-            proton-pass
-
-            #-- MISCELLANEOUS/UTILITIES
+            #-- MISCELLANEOUS / UTILITIES
             alacritty
             bitwarden
             conky
             libportal
             rarcrack
             ulauncher
-            # wezterm
+            wezterm
+
+        ]) ++ (with pkgs.kdePackages; [
+
+            #-- KDE
+            full
+            qt6ct
+            accounts-qt
+            akonadi
+            akonadi-calendar
+            akonadi-calendar-tools
+            akonadi-contacts
+            akonadi-import-wizard
+            akonadi-mime
+            akonadi-notes
+            akonadi-search
+            ark
+            dolphin
+            dolphin-plugins
+            frameworkintegration
+            kate
+            karchive
+            kbreakout
+            kcalc
+            kcmutils
+            kconfigwidgets
+            kcoreaddons
+            kde-cli-tools
+            kdeconnect-kde
+            kdecoration
+            kdeplasma-addons
+            kglobalaccel
+            kglobalacceld
+            kguiaddons
+            kiconthemes
+            kio
+            kio-admin
+            kio-extras
+            kio-extras-kf5
+            kio-fuse
+            kio-gdrive
+            kio-zeroconf
+            kirigami
+            kirigami-addons
+            ksshaskpass
+            ksvg
+            ktorrent
+            kwallet
+            kwallet-pam
+            kwayland
+            kwindowsystem
+            layer-shell-qt
+            modemmanager-qt
+            networkmanager-qt
+            okular
+            plasma-browser-integration
+            plasma-integration
+            plasma-wayland-protocols
+            plymouth-kcm
+            qtstyleplugin-kvantum
+            qtsvg
+            qttools
+            wrapQtAppsHook
+            xdg-desktop-portal-kde
+
+        ]) ++ (with pkgs.php82Extensions; [
+
+            #-- PHP 8.2
+            bz2
+            curl
+            fileinfo
+            gd
+            imagick
+            intl
+            mbstring
+            mysqlnd
+            pdo
+            pdo_dblib
+            pdo_mysql
+            pdo_odbc
+            tidy
+            xml
+            xsl
+            zip
+            zlib
+
+        ]) ++ (with pkgs.php83Extensions; [
+
+            #-- PHP 8.3
+            bz2
+            curl
+            fileinfo
+            gd
+            imagick
+            intl
+            mbstring
+            mysqlnd
+            pdo
+            pdo_dblib
+            pdo_mysql
+            pdo_odbc
+            tidy
+            xml
+            xsl
+            zip
+            zlib
+
+        ]) ++ (with pkgs.php84Extensions; [
+
+            #-- PHP 8.4
+            bz2
+            curl
+            fileinfo
+            gd
+            imagick
+            intl
+            mbstring
+            mysqlnd
+            pdo
+            pdo_dblib
+            pdo_mysql
+            pdo_odbc
+            tidy
+            xml
+            xsl
+            zip
+            zlib
 
         ]) ++ (with pkgs; [
 
@@ -414,19 +436,29 @@ in
             (pkgs.runCommand "latest.firefox-bin" {
                 preferLocalBuild = true;
             } ''
-                mkdir -p $out/bin
-                ln -s ${latest.firefox-bin}/bin/firefox $out/bin/firefox-stable
+mkdir -p $out/bin
+ln -s ${latest.firefox-bin}/bin/firefox $out/bin/firefox-stable
             '')
+
+            #-- Firefox Stable -- Desktop Entry
             firefoxStableDesktopItem
 
             #-- Firefox Nightly (nixpkgs-mozilla) -- Rename executable
             (pkgs.runCommand "latest.firefox-nightly-bin" {
                 preferLocalBuild = true;
             } ''
-                mkdir -p $out/bin
-                ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
+mkdir -p $out/bin
+ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
             '')
+
+            #-- Firefox Nightly -- Desktop Entry
             firefoxNightlyDesktopItem
+
+            #-- Thunderbird -- Desktop Entry
+            thunderbirdDesktopItem
+
+            #-- Zen Browser
+            # (pkgs.callPackage ../custom/zen-browser/default.nix {})
 
             #-- GIMP Development
             # (pkgs.callPackage ../custom/gegl-devel/default.nix {})

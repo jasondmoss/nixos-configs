@@ -10,7 +10,6 @@
     libgudev, openexr, xvfb-run, dbus, gnome, hicolor-icon-theme, alsa-lib,
     unstableGitUpdater, adwaita-icon-theme
 }:
-
 let
     python = python3.withPackages (pp: with pp; [
         pygobject3
@@ -237,5 +236,4 @@ in stdenv.mkDerivation (finalAttrs: {
         platforms = platforms.unix;
         mainProgram = "gimp";
     };
-
 })

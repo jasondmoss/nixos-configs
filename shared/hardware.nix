@@ -22,9 +22,25 @@
                 intel-media-driver
                 libvdpau-va-gl
                 nvidia-vaapi-driver
-                vaapiIntel
                 vaapiVdpau
             ];
+        };
+
+        nvidia = {
+            forceFullCompositionPipeline = true;
+            modesetting.enable = true;
+            nvidiaPersistenced = true;
+            nvidiaSettings = true;
+            open = true;
+
+            powerManagement = {
+                enable = false;
+                finegrained = false;
+            };
+
+            # package = config.boot.kernelPackages.nvidiaPackages.latest;
+            # package = config.boot.kernelPackages.nvidiaPackages.beta;
+            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
 
         nvidia-container-toolkit.enable = true;

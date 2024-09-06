@@ -1,4 +1,5 @@
-{ config, lib, pkgs, modulesPath, ... }: {
+{ config, lib, pkgs, modulesPath, ... }:
+{
     boot = {
         kernelParams = [
             "amd_iommu=on"
@@ -102,49 +103,23 @@
     swapDevices = [];
 
     hardware = {
-        cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+        cpu.amd = {
+            ryzen-smu.enable = true;
 
-        nvidia = {
-            forceFullCompositionPipeline = true;
-            # modesetting.enable = true;
-            nvidiaPersistenced = false;
-            nvidiaSettings = true;
-            open = true;
-
-            powerManagement = {
-                enable = false;
-                finegrained = false;
+            sev = {
+                enable = true;
+                mode = "0660";
+                group = "sev";
+                user = "root";
             };
 
-            # package = config.boot.kernelPackages.nvidiaPackages.latest;
-            # package = config.boot.kernelPackages.nvidiaPackages.beta;
-            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
     };
 
     services = {
         xserver = {
             dpi = 162;
-            screenSection = ''
-Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-Option "AllowIndirectGLXProtocol" "off"
-Option "TripleBuffer" "on"
-            '';
-        };
-
-        displayManager = {
-            ly = {
-                settings = {
-                    animation = "matrix";
-                    #animation_timeout_sec = "1..2e12";
-                };
-            };
-        };
-
-        ollama = {
-            enable = true;
-            acceleration = "cuda";
         };
     };
-
 }

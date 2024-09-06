@@ -18,15 +18,4 @@
     time.timeZone = "America/Toronto";
 
     networking.hostName = "atreides";
-
-    systemd = {
-        user.services.add_ssh_keys = {
-            script = ''
-ssh-add $HOME/.ssh/cyan_jason
-ssh-add $HOME/.ssh/id_development_global
-            '';
-            wantedBy = [ "graphical-session.target" ];
-            # wantedBy = [ "default.target" ];
-        };
-    };
 }
