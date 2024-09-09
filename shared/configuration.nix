@@ -29,7 +29,7 @@ in {
             antialias = true;
             hinting = {
                 enable = true;
-                style = "medium";
+                style = "slight";
             };
         };
 
@@ -149,7 +149,7 @@ Option "TripleBuffer" "on"
             extraModules = [ "http2" ];
             enablePHP = true;
 
-            phpPackage = pkgs.php84.buildEnv {
+            phpPackage = pkgs.php83.buildEnv {
                 extensions = ({ enabled, all }: enabled);
                 extraConfig = "memory_limit = 2048M";
             };
@@ -210,11 +210,11 @@ session.cookie_samesite = "Strict"
             askPassword = pkgs.lib.mkForce "${pkgs.ksshaskpass.out}/bin/ksshaskpass";
         };
 
-        steam = {
-            enable = true;
-            remotePlay.openFirewall = true;
-            dedicatedServer.openFirewall = true;
-        };
+        # steam = {
+        #     enable = true;
+        #     remotePlay.openFirewall = true;
+        #     dedicatedServer.openFirewall = true;
+        # };
 
         git = {
             enable = true;

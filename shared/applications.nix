@@ -48,7 +48,8 @@ let
         name = "firefox-stable";
         desktopName = "Firefox Stable";
         exec = "firefox-stable -P \"Default\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
+        # icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
+        icon = "firefox";
         mimeTypes = [
             "application/vnd.mozilla.xul+xml"
             "application/xhtml+xml"
@@ -82,7 +83,8 @@ let
         name = "thunderbird";
         desktopName = "Thunderbird";
         exec = "thunderbird -P \"Me\"";
-        icon = "/home/me/Mega/Images/Icons/Apps/thunderbird-daily.png";
+        # icon = "/home/me/Mega/Images/Icons/Apps/thunderbird-daily.png";
+        icon = "thunderbird";
         mimeTypes = [
             "message/rfc822"
             "x-scheme-handler/mailto"
@@ -202,10 +204,8 @@ in {
             python312Packages.pyqt6
             python312Packages.pytz
 
-            #-- DISPLAY MANAGER
+            #-- DESKTOP
             ly
-
-            #-- GNOME DESKTOP
             gtk4
 
             #-- DEVELOPMENT
@@ -231,7 +231,6 @@ in {
             lua
             nodejs
             perl
-            php82
             php83
             php84
             phpunit
@@ -364,27 +363,6 @@ in {
             qttools
             wrapQtAppsHook
             xdg-desktop-portal-kde
-
-        ]) ++ (with pkgs.php82Extensions; [
-
-            #-- PHP 8.2
-            bz2
-            curl
-            fileinfo
-            gd
-            imagick
-            intl
-            mbstring
-            mysqlnd
-            pdo
-            pdo_dblib
-            pdo_mysql
-            pdo_odbc
-            tidy
-            xml
-            xsl
-            zip
-            zlib
 
         ]) ++ (with pkgs.php83Extensions; [
 

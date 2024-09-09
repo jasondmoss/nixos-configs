@@ -25,13 +25,12 @@
             "kvm-amd"
         ];
 
-        extraModprobeConfig =
-            "options nvidia " + lib.concatStringsSep " " [
-                "NVreg_UsePageAttributeTable=1"
-                "NVreg_EnablePCIeGen3=1"
-                "NVreg_PreserveVideoMemoryAllocations=1"
-                #"NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
-            ];
+        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
+            "NVreg_UsePageAttributeTable=1"
+            "NVreg_EnablePCIeGen3=1"
+            "NVreg_PreserveVideoMemoryAllocations=1"
+            #"NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+        ];
 
         kernelPackages = pkgs.linuxPackages_latest;
 
@@ -117,9 +116,5 @@
         };
     };
 
-    services = {
-        xserver = {
-            dpi = 162;
-        };
-    };
+    services.xserver.dpi = 162;
 }

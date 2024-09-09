@@ -1,12 +1,6 @@
 { config, lib, pkgs, modulesPath, ... }:
 {
     boot = {
-        kernelPackages = pkgs.linuxPackages_latest;
-
-        kernelModules = [
-            "kvm-intel"
-        ];
-
         kernelParams = [
             # "amd_iommu=on"
             #"i915.modeset=0"
@@ -38,8 +32,20 @@
             };
         };
 
+        kernelModules = [
+            "kvm-intel"
+        ];
+
+        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
+            "NVreg_UsePageAttributeTable=1"
+            "NVreg_EnablePCIeGen3=1"
+            "NVreg_PreserveVideoMemoryAllocations=1"
+            #"NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+        ];
+
+        kernelPackages = pkgs.linuxPackages_latest;
+
         blacklistedKernelModules = [
-            # "i915"
             "nouveau"
         ];
 
@@ -85,9 +91,5 @@
         };
     };
 
-    services = {
-        xserver = {
-            dpi = 96;
-        };
-    };
+    services.xserver.dpi = 96;
 }
