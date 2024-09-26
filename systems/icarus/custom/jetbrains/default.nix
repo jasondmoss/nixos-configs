@@ -7,8 +7,8 @@ let
             # Increase memory.
             vmopts = ''
                 -server
-                -Xms2048m
-                -Xmx2048m
+                -Xms3072m
+                -Xmx3072m
             '';
         })).overrideAttrs (attrs:
             # Replace version with the one from versions.json

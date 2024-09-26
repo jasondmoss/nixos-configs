@@ -1,6 +1,8 @@
 { config, lib, pkgs, modulesPath, ... }:
 {
     boot = {
+        kernelPackages = pkgs.linuxPackages_latest;
+
         kernelParams = [
             # "amd_iommu=on"
             #"i915.modeset=0"
@@ -42,8 +44,6 @@
             "NVreg_PreserveVideoMemoryAllocations=1"
             #"NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
-
-        kernelPackages = pkgs.linuxPackages_latest;
 
         blacklistedKernelModules = [
             "nouveau"

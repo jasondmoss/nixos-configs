@@ -7,6 +7,7 @@
         ../../shared/hardware.nix
 
         ../../shared/configuration.nix
+        ./configuration.nix
 
         ../../shared/applications.nix
         ./applications.nix

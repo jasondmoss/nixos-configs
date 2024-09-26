@@ -1,6 +1,5 @@
 { lib, fetchurl, appimageTools, makeWrapper }:
 let
-
     pname = "anytype";
     version = "0.42.4";
     name = "Anytype-${version}";
@@ -10,7 +9,6 @@ let
         hash = "sha256-SFLjjr+L7eTqaZ2teug7mzXhIU+eVebBqrE4q5aasLk=";
     };
     appimageContents = appimageTools.extractType2 { inherit name src; };
-
 in appimageTools.wrapType2 {
     inherit name src;
 

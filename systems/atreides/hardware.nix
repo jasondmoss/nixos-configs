@@ -1,9 +1,22 @@
 { config, lib, pkgs, modulesPath, ... }:
 {
     boot = {
+        #kernelPackages = pkgs.linuxPackages_latest;
+        kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_10.override {
+            argsOverride = rec {
+                src = pkgs.fetchurl {
+                    url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
+                    sha256 = "sha256-5ofnNbXrnvttZ7QkM8k/yRGBBqmVUU8GJlKHO16Am80=";
+                };
+                version = "6.10.10";
+                modDirVersion = "6.10.10";
+            };
+        });
+
         kernelParams = [
             "amd_iommu=on"
             "mem_sleep_default=deep"
+            "nvidia-drm.fbdev=1"
             "nvidia_drm.fbdev=1"
             "nvidia_drm.modeset=1"
         ];
@@ -17,8 +30,6 @@
                 "usb_storage"
                 "sd_mod"
             ];
-
-            kernelModules = [];
         };
 
         kernelModules = [
@@ -31,8 +42,6 @@
             "NVreg_PreserveVideoMemoryAllocations=1"
             #"NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
-
-        kernelPackages = pkgs.linuxPackages_latest;
 
         blacklistedKernelModules = [
             "nouveau"
@@ -115,6 +124,4 @@
             updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
     };
-
-    services.xserver.dpi = 162;
 }

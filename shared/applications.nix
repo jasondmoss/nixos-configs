@@ -48,8 +48,7 @@ let
         name = "firefox-stable";
         desktopName = "Firefox Stable";
         exec = "firefox-stable -P \"Default\" %u";
-        # icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
-        icon = "firefox";
+        icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
         mimeTypes = [
             "application/vnd.mozilla.xul+xml"
             "application/xhtml+xml"
@@ -83,8 +82,7 @@ let
         name = "thunderbird";
         desktopName = "Thunderbird";
         exec = "thunderbird -P \"Me\"";
-        # icon = "/home/me/Mega/Images/Icons/Apps/thunderbird-daily.png";
-        icon = "thunderbird";
+        icon = "/home/me/Mega/Images/Icons/Apps/thunderbird-daily.png";
         mimeTypes = [
             "message/rfc822"
             "x-scheme-handler/mailto"
@@ -160,7 +158,6 @@ in {
             pciutils
             pmutils
             pngquant
-            psensor
             rar
             smartmontools
             tldr
@@ -197,6 +194,7 @@ in {
             vulkan-validation-layers
             xdg-desktop-portal
             xdg-utils
+            xorg.libxcb
 
             python312Full
             python312Packages.pyasyncore
@@ -287,6 +285,7 @@ in {
             filezilla
             google-chrome
             megasync
+            megatools
             microsoft-edge
             protonvpn-gui
             thunderbirdPackages.thunderbird-128
@@ -361,6 +360,8 @@ in {
             qtstyleplugin-kvantum
             qtsvg
             qttools
+            wayland
+            wayland-protocols
             wrapQtAppsHook
             xdg-desktop-portal-kde
 
@@ -453,6 +454,9 @@ ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
 
             #-- Wavebox Beta
             (pkgs.callPackage ../custom/wavebox/default.nix {})
+
+            #-- Megasync
+            # (pkgs.callPackage ../custom/megasync/default.nix {})
 
         ]);
 

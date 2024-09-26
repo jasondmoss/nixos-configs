@@ -77,6 +77,7 @@ local {
         udev.enable = true;
         devmon.enable = true;
         sysstat.enable = true;
+        pcscd.enable = true;
 
         locate = {
             enable = true;
@@ -210,11 +211,13 @@ session.cookie_samesite = "Strict"
             askPassword = pkgs.lib.mkForce "${pkgs.ksshaskpass.out}/bin/ksshaskpass";
         };
 
-        # steam = {
-        #     enable = true;
-        #     remotePlay.openFirewall = true;
-        #     dedicatedServer.openFirewall = true;
-        # };
+        gnupg.agent = {
+            enable = true;
+            pinentryPackage = pkgs.pinentry-qt;
+            #enableSSHSupport = true;
+            #enableExtraSocket = true;
+            #enableBrowserSocket = true;
+        };
 
         git = {
             enable = true;
@@ -351,11 +354,15 @@ session.cookie_samesite = "Strict"
             XCURSOR_THEME = "ComixCursors";
             DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
-            QT_QPA_PLATFORMTHEME = "qt6ct";
+            #QT_QPA_PLATFORM = "wayland;xcb";
+            #QT_QPA_PLATFORMTHEME = "qt6ct";
             QT_SCALE_FACTOR = "1";
             QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+            QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
             PLASMA_USE_QT_SCALING = "1";
             KWIN_TRIPLE_BUFFER = "1";
+
+            ELECTRON_OZONE_PLATFORM_HINT = "wayland";
         };
     };
 }

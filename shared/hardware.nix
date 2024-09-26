@@ -31,13 +31,14 @@
             modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            open = true;
+            open = false;
 
             powerManagement = {
                 enable = false;
                 finegrained = false;
             };
 
+            # package = config.boot.kernelPackages.nvidiaPackages.stable;
             # package = config.boot.kernelPackages.nvidiaPackages.latest;
             # package = config.boot.kernelPackages.nvidiaPackages.beta;
             package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;

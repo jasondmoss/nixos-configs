@@ -14,6 +14,7 @@
             cuetools
             easytag
             haruna
+            mkvtoolnix
         ]) ++ (with pkgs; [
             #-- Anytype
             # (pkgs.callPackage ../../custom/anytype/default.nix {})
