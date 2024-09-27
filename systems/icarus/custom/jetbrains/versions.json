@@ -2,11 +2,11 @@
     "linux": {
         "phpstorm": {
             "update-channel": "PhpStorm RELEASE",
-            "version": "2024.2.2",
-            "build_number": "242.22855.33",
+            "version": "2024.2.3",
+            "build_number": "242.23339.16",
             "url-template": "https://download.jetbrains.com/webide/PhpStorm-{build_number}.tar.gz",
-            "url": "https://download.jetbrains.com/webide/PhpStorm-242.22855.33.tar.gz",
-            "sha256": "sha256-xpwfh1BZPNOM1uf5Zbrew5byVToI7RF6oPlOBYgzRhg="
+            "url": "https://download.jetbrains.com/webide/PhpStorm-2024.2.3.tar.gz",
+            "sha256": "sha256-izsboZxNXwzB1ndb/1jTgxNBTq51l2ypmRUQLAI2juo="
         }
     }
 }
