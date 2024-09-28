@@ -353,6 +353,7 @@ in {
             modemmanager-qt
             networkmanager-qt
             okular
+            partitionmanager
             plasma-browser-integration
             plasma-integration
             plasma-wayland-protocols
