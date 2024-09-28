@@ -70,14 +70,23 @@ local {
 
         gnome = {
             at-spi2-core.enable = true;
+            core-shell.enable = false;
         };
 
         dbus.enable = true;
-        gvfs.enable = true;
-        udev.enable = true;
         devmon.enable = true;
-        sysstat.enable = true;
+        gvfs.enable = true;
         pcscd.enable = true;
+        shairport-sync.enable = false;
+        sysstat.enable = true;
+        udev.enable = true;
+
+        printing = {
+            browsing = false;
+            # browsed.enable = false;
+            cups-pdf.enable = false;
+            startWhenNeeded = false;
+        };
 
         locate = {
             enable = true;
@@ -214,9 +223,6 @@ session.cookie_samesite = "Strict"
         gnupg.agent = {
             enable = true;
             pinentryPackage = pkgs.pinentry-qt;
-            #enableSSHSupport = true;
-            #enableExtraSocket = true;
-            #enableBrowserSocket = true;
         };
 
         git = {
@@ -251,10 +257,14 @@ session.cookie_samesite = "Strict"
 
     networking = {
         enableIPv6 = true;
+        useDHCP = lib.mkDefault true;
 
         firewall = {
+            enable = true;
             allowPing = true;
+
             allowedTCPPorts = [ 22 80 443 1025 1143 33728 ];
+            allowedUDPPorts = [];
         };
 
         networkmanager = {

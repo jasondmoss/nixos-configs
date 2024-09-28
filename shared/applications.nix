@@ -360,6 +360,7 @@ in {
             qtstyleplugin-kvantum
             qtsvg
             qttools
+            taglib
             wayland
             wayland-protocols
             wrapQtAppsHook

@@ -5,7 +5,7 @@
             #-- EDITORS
             blender
             geeqie
-            # steam
+            steam
             tor-browser-bundle-bin
 
             #-- MULTIMEDIA
@@ -15,6 +15,9 @@
             easytag
             haruna
             mkvtoolnix
+            taglib-sharp
+            taglib_extras
+            # vlc
         ]) ++ (with pkgs; [
             #-- Anytype
             # (pkgs.callPackage ../../custom/anytype/default.nix {})

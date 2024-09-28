@@ -1,0 +1,12 @@
+{
+    "linux": {
+        "phpstorm": {
+            "update-channel": "PhpStorm RELEASE",
+            "version": "2024.3",
+            "build_number": "243.16718.38",
+            "url-template": "https://download.jetbrains.com/webide/PhpStorm-{build_number}.tar.gz",
+            "url": "https://download.jetbrains.com/webide/PhpStorm-243.16718.38.tar.gz",
+            "sha256": "sha256-SLqtr/RInYShJ9EDAwxiAw/5l18q1oEQ7ft5/akBf+o="
+        }
+    }
+}

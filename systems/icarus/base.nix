@@ -20,12 +20,12 @@
     networking.hostName = "icarus";
 
     services = {
-        printing.enable = true;
+        printing.enable = false;
 
         avahi = {
-            enable = true;
-            nssmdns4 = true;
-            openFirewall = true;
+            enable = false;
+            # nssmdns4 = true;
+            # openFirewall = true;
         };
 
         xserver.dpi = 96;

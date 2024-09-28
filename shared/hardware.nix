@@ -3,15 +3,15 @@
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-    networking = {
-        useDHCP = lib.mkDefault true;
+    # networking = {
+    #     useDHCP = lib.mkDefault true;
 
-        firewall = {
-            enable = true;
-            allowedTCPPorts = [];
-            allowedUDPPorts = [];
-        };
-    };
+    #     firewall = {
+    #         enable = true;
+    #         # allowedTCPPorts = [];
+    #         # allowedUDPPorts = [];
+    #     };
+    # };
 
     hardware = {
         graphics = {
@@ -46,7 +46,14 @@
 
         nvidia-container-toolkit.enable = true;
 
-        pulseaudio.enable = false;
+        pulseaudio = {
+            enable = false;
+
+            zeroconf = {
+                publish.enable = false;
+                discovery.enable = false;
+            };
+        };
     };
 
     virtualisation.docker = {
