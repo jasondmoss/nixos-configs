@@ -3,16 +3,6 @@
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-    # networking = {
-    #     useDHCP = lib.mkDefault true;
-
-    #     firewall = {
-    #         enable = true;
-    #         # allowedTCPPorts = [];
-    #         # allowedUDPPorts = [];
-    #     };
-    # };
-
     hardware = {
         graphics = {
             enable = true;
@@ -28,7 +18,7 @@
 
         nvidia = {
             forceFullCompositionPipeline = true;
-            modesetting.enable = true;
+            #modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
             open = false;

@@ -16,9 +16,9 @@
         kernelParams = [
             "amd_iommu=on"
             "mem_sleep_default=deep"
-            "nvidia-drm.fbdev=1"
             "nvidia_drm.fbdev=1"
             "nvidia_drm.modeset=1"
+            "initcall_blacklist=simpledrm_platform_driver_init"
         ];
 
         initrd = {
@@ -40,7 +40,7 @@
             "NVreg_UsePageAttributeTable=1"
             "NVreg_EnablePCIeGen3=1"
             "NVreg_PreserveVideoMemoryAllocations=1"
-            #"NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
 
         blacklistedKernelModules = [
