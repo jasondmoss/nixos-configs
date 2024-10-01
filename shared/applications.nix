@@ -106,6 +106,14 @@ in {
                 };
             };
 
+            allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+                "nvidia-x11"
+                "nvidia-settings"
+                "nvidia-persistenced"
+                "nvidia-vaapi-driver"
+                "vaapiVdpau"
+            ];
+
             permittedInsecurePackages = [
                 "openssl-1.1.1w"
             ];
@@ -156,6 +164,7 @@ in {
             openvpn
             optipng
             pciutils
+            pcre2
             pmutils
             pngquant
             rar
@@ -250,7 +259,6 @@ in {
             gcolor3
             gegl
             gimp
-            github-desktop
             inkscape
             libreoffice-qt6-fresh
             nomacs
@@ -296,7 +304,6 @@ in {
             bitwarden
             conky
             libportal
-            rarcrack
             ulauncher
             wezterm
 
@@ -440,6 +447,9 @@ ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
 
             #-- Zen Browser
             # (pkgs.callPackage ../custom/zen-browser/default.nix {})
+
+            #-- Conky
+            # (pkgs.callPackage ../custom/conky/default.nix {})
 
             #-- GIMP Development
             # (pkgs.callPackage ../custom/gegl-devel/default.nix {})

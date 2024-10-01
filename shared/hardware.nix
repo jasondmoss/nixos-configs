@@ -11,17 +11,17 @@
             extraPackages = with pkgs; [
                 intel-media-driver
                 libvdpau-va-gl
-                nvidia-vaapi-driver
-                vaapiVdpau
+                # nvidia-vaapi-driver
+                # vaapiVdpau
             ];
         };
 
         nvidia = {
             forceFullCompositionPipeline = true;
-            #modesetting.enable = true;
+            modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            open = false;
+            # open = false;
 
             powerManagement = {
                 enable = false;
@@ -31,7 +31,7 @@
             # package = config.boot.kernelPackages.nvidiaPackages.stable;
             # package = config.boot.kernelPackages.nvidiaPackages.latest;
             # package = config.boot.kernelPackages.nvidiaPackages.beta;
-            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+            # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
         };
 
         nvidia-container-toolkit.enable = true;
