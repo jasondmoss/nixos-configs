@@ -1,8 +1,8 @@
 { config, lib, pkgs, modulesPath, ... }:
 {
     boot = {
-        kernelPackages = pkgs.linuxPackages_latest;
-        # kernelPackages = pkgs.linuxPackages_xanmod_latest;
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+        # kernelPackages = pkgs.linuxPackages_latest;
 
         kernelParams = [
             # "amd_iommu=on"
@@ -43,7 +43,7 @@
             "NVreg_UsePageAttributeTable=1"
             "NVreg_EnablePCIeGen3=1"
             "NVreg_PreserveVideoMemoryAllocations=1"
-            #"NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
 
         blacklistedKernelModules = [
@@ -87,7 +87,7 @@
 
         nvidia = {
             package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-            open = false;
+            # open = false;
 
             prime = {
                 offload.enable = true;
