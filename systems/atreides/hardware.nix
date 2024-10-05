@@ -126,4 +126,8 @@
             updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
     };
+
+    virtualisation = {
+        virtualbox.host.enable = true;
+    };
 }

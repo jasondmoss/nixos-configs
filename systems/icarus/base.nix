@@ -10,9 +10,6 @@
 
         ../../shared/applications.nix
         ./applications.nix
-
-        # JetBrains PHPStorm Beta
-        custom/jetbrains/default.nix
     ];
 
     time.timeZone = "America/Toronto";

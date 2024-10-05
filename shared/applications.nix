@@ -119,10 +119,12 @@ in {
             ];
         };
 
-        # Mozilla Firefox Nightly overlay.
         overlays = [
+            # Mozilla Firefox Nightly overlays.
             (import ../overlays/nixpkgs-mozilla/lib-overlay.nix)
             (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
+            # JetBrains EAP overlays.
+            (import ../overlays/jetbrains/default.nix)
         ];
     };
 
@@ -240,7 +242,7 @@ in {
             nodejs
             perl
             php83
-            php84
+            # php84
             phpunit
             pre-commit
             rustc
@@ -264,6 +266,7 @@ in {
             libreoffice-qt6-fresh
             nomacs
             nano
+            phpstorm # Custom overlay.
             sublime4-dev
 
             #-- MULTIMEDIA
@@ -396,26 +399,26 @@ in {
             zip
             zlib
 
-        ]) ++ (with pkgs.php84Extensions; [
+        # ]) ++ (with pkgs.php84Extensions; [
 
-            #-- PHP 8.4
-            bz2
-            curl
-            fileinfo
-            gd
-            imagick
-            intl
-            mbstring
-            mysqlnd
-            pdo
-            pdo_dblib
-            pdo_mysql
-            pdo_odbc
-            tidy
-            xml
-            xsl
-            zip
-            zlib
+            # #-- PHP 8.4
+            # bz2
+            # curl
+            # fileinfo
+            # gd
+            # imagick
+            # intl
+            # mbstring
+            # mysqlnd
+            # pdo
+            # pdo_dblib
+            # pdo_mysql
+            # pdo_odbc
+            # tidy
+            # xml
+            # xsl
+            # zip
+            # zlib
 
         ]) ++ (with pkgs; [
 
@@ -446,9 +449,6 @@ ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
             #-- Thunderbird -- Desktop Entry
             thunderbirdDesktopItem
 
-            #-- Zen Browser
-            # (pkgs.callPackage ../custom/zen-browser/default.nix {})
-
             #-- Conky
             # (pkgs.callPackage ../custom/conky/default.nix {})
 
@@ -457,19 +457,13 @@ ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
             # (pkgs.callPackage ../custom/gimp-devel/default.nix {})
 
             #-- Klassy KDE Theme
-            (pkgs.callPackage ../custom/klassy/default.nix {})
+            (pkgs.callPackage ../custom/klassy {})
 
             #-- Strawberry Music Player
-            (pkgs.callPackage ../custom/strawberry/default.nix {})
-
-            #-- Ulauncher Beta
-            # (pkgs.callPackage ../custom/ulauncher/default.nix {})
+            (pkgs.callPackage ../custom/strawberry {})
 
             #-- Wavebox Beta
-            (pkgs.callPackage ../custom/wavebox/default.nix {})
-
-            #-- Megasync
-            # (pkgs.callPackage ../custom/megasync/default.nix {})
+            (pkgs.callPackage ../custom/wavebox {})
 
         ]);
 

@@ -4,6 +4,7 @@
         ../../custom/nvidia
     ];
 
+
     nixpkgs = {
         config = {
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
@@ -30,13 +31,13 @@
             mkvtoolnix
             taglib-sharp
             taglib_extras
-            virtualbox
+            # virtualbox
         ]) ++ (with pkgs; [
             #-- Anytype
-            (pkgs.callPackage ../../custom/anytype/default.nix {})
+            (pkgs.callPackage ../../custom/anytype {})
 
             #-- Standard Notes
-            (pkgs.callPackage ../../custom/standardnotes/default.nix {})
+            (pkgs.callPackage ../../custom/standardnotes {})
         ]);
     };
 }
