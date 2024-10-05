@@ -1,15 +1,15 @@
 {
-    config,
-    lib,
-    stdenv,
-    fetchFromGitHub,
-    pkg-config,
-    cmake,
-    glib,
-    libXinerama,
-    catch2,
+    config, lib, stdenv, fetchFromGitHub, pkg-config, cmake, expat, imlib2,
+    # dependencies
+    glib, libXinerama, catch2,
+
+    # lib.optional features without extra dependencies
     mpdSupport ? true,
-    ibmSupport ? true,
+    ibmSupport ? true, # IBM/Lenovo notebooks
+
+    # lib.optional features with extra dependencies
+
+    # ouch, this is ugly, but this gives the man page
     docsSupport ? true,
     docbook2x,
     libxslt ? null,
@@ -23,15 +23,12 @@
     freetype,
     xorg,
     waylandSupport ? true,
-    pango,
-    wayland,
-    wayland-protocols,
-    wayland-scanner,
+    pango, wayland, wayland-protocols, wayland-scanner,
     xdamageSupport ? x11Support,
     libXdamage ? null,
     doubleBufferSupport ? x11Support,
     imlib2Support ? x11Support,
-    imlib2 ? null,
+    mlib2 ? null,
     luaSupport ? true,
     lua ? null,
     luaImlib2Support ? luaSupport && imlib2Support,
@@ -52,55 +49,23 @@
     journalSupport ? true,
     systemd ? null,
     libxml2 ? null
-    # imlib2, lua, imlib2Support, toluapp, cairo,
 }:
-assert docsSupport -> docbook2x != null
-    && libxslt != null
-    && man != null
-    && less != null
-    && docbook_xsl != null
-    && docbook_xml_dtd_44 != null;
 
+assert docsSupport -> docbook2x != null && libxslt != null && man != null && less != null && docbook_xsl != null && docbook_xml_dtd_44 != null;
 assert ncursesSupport -> ncurses != null;
-
-assert xdamageSupport -> x11Support
-    && libXdamage != null;
-
-# assert imlib2Support -> x11Support
-#     && imlib2 != null;
-
-# assert luaSupport -> lua != null;
-
-# assert luaImlib2Support -> luaSupport
-#     && imlib2Support
-#     && toluapp != null;
-
-# assert luaCairoSupport -> luaSupport
-#     && toluapp != null
-#     && cairo != null;
-
-# assert luaCairoSupport || luaImlib2Support
-#     -> lua.luaversion == "5.4";
-
-# assert luaCairoSupport -> lua.luaversion == "5.4";
-
-# assert luaImlib2Support -> lua.luaversion == "5.4";
-
+assert xdamageSupport -> x11Support && libXdamage != null;
+assert imlib2Support -> x11Support && imlib2 != null;
+assert luaSupport -> lua != null;
+assert luaImlib2Support -> luaSupport && imlib2Support && toluapp != null;
+assert luaCairoSupport -> luaSupport && toluapp != null && cairo   != null;
+#assert luaCairoSupport || luaImlib2Support -> lua.luaversion == "5.2";
 assert wirelessSupport -> wirelesstools != null;
-
 assert nvidiaSupport -> libXNVCtrl != null;
-
 assert pulseSupport -> libpulseaudio != null;
-
 assert curlSupport -> curl != null;
-
-assert rssSupport -> curlSupport
-    && libxml2 != null;
-
+assert rssSupport -> curlSupport && libxml2 != null;
 assert weatherMetarSupport -> curlSupport;
-assert weatherXoapSupport -> curlSupport
-    && libxml2 != null;
-
+assert weatherXoapSupport -> curlSupport && libxml2 != null;
 assert journalSupport -> systemd != null;
 
 stdenv.mkDerivation rec {
@@ -111,20 +76,18 @@ stdenv.mkDerivation rec {
         owner = "brndnmtthws";
         repo = "conky";
         rev = "v${version}";
-        hash = "sha256-S7zrAJygaQ9ecp4LgOELCiUhwJv/VIn8Z4R5ANf2X/0=";
+        hash = "sha256-L8YSbdk+qQl17L4IRajFD/AEWRXb2w7xH9sM9qPGrQo=";
     };
 
     postPatch = lib.optionalString docsSupport ''
 substituteInPlace cmake/Conky.cmake --replace "# set(RELEASE true)" "set(RELEASE true)"
-
 cp ${catch2}/include/catch2/catch.hpp tests/catch2/catch.hpp
     '' + lib.optionalString waylandSupport ''
 substituteInPlace src/CMakeLists.txt --replace 'COMMAND ''${Wayland_SCANNER}' 'COMMAND wayland-scanner'
     '';
 
     env = {
-        # For some reason -Werror is on by default, causing the project to
-        # fail compilation.
+        # For some reason -Werror is on by default, causing the project to fail compilation.
         NIX_CFLAGS_COMPILE = "-Wno-error";
         NIX_LDFLAGS = "-lgcc_s";
     };
@@ -134,16 +97,14 @@ substituteInPlace src/CMakeLists.txt --replace 'COMMAND ''${Wayland_SCANNER}' 'C
             docbook2x
             docbook_xsl
             docbook_xml_dtd_44
-            libxslt
-            man
-            less
+            libxslt man less
         ]
         ++ lib.optional waylandSupport wayland-scanner
         ++ lib.optional luaImlib2Support toluapp
         ++ lib.optional luaCairoSupport toluapp;
 
     buildInputs = [ glib libXinerama ]
-        ++ lib.optional ncursesSupport ncurses
+        ++ lib.optional  ncursesSupport ncurses
         ++ lib.optionals x11Support [
             freetype
             xorg.libICE
@@ -157,18 +118,18 @@ substituteInPlace src/CMakeLists.txt --replace 'COMMAND ''${Wayland_SCANNER}' 'C
             wayland
             wayland-protocols
         ]
-        ++ lib.optional xdamageSupport libXdamage
-        ++ lib.optional imlib2Support imlib2
-        ++ lib.optional luaSupport lua
-        ++ lib.optional luaImlib2Support imlib2
-        ++ lib.optional luaCairoSupport cairo
-        ++ lib.optional wirelessSupport wirelesstools
-        ++ lib.optional curlSupport curl
-        ++ lib.optional rssSupport libxml2
-        ++ lib.optional weatherXoapSupport libxml2
-        ++ lib.optional nvidiaSupport libXNVCtrl
-        ++ lib.optional pulseSupport libpulseaudio
-        ++ lib.optional journalSupport systemd;
+        ++ lib.optional  xdamageSupport libXdamage
+        ++ lib.optional  imlib2Support imlib2
+        ++ lib.optional  luaSupport lua
+        ++ lib.optional  luaImlib2Support imlib2
+        ++ lib.optional  luaCairoSupport cairo
+        ++ lib.optional  wirelessSupport wirelesstools
+        ++ lib.optional  curlSupport curl
+        ++ lib.optional  rssSupport libxml2
+        ++ lib.optional  weatherXoapSupport libxml2
+        ++ lib.optional  nvidiaSupport libXNVCtrl
+        ++ lib.optional  pulseSupport libpulseaudio
+        ++ lib.optional  journalSupport systemd;
 
     cmakeFlags = []
         ++ lib.optional docsSupport "-DMAINTAINER_MODE=ON"

@@ -1,12 +1,12 @@
 { lib, fetchurl, appimageTools, makeWrapper }:
 let
     pname = "anytype";
-    version = "0.42.4";
+    version = "0.42.29-beta";
     name = "Anytype-${version}";
     src = fetchurl {
         url = "https://github.com/anyproto/anytype-ts/releases/download/v${version}/${name}.AppImage";
         name = "Anytype-${version}.AppImage";
-        hash = "sha256-SFLjjr+L7eTqaZ2teug7mzXhIU+eVebBqrE4q5aasLk=";
+        hash = "sha256-DyGe8mzpR8RdPY5OXGXZC9gTJrTNu5Z5fZyT3IB2vNg=";
     };
     appimageContents = appimageTools.extractType2 { inherit name src; };
 in appimageTools.wrapType2 {

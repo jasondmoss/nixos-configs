@@ -19,7 +19,6 @@
             #-- EDITORS
             blender
             geeqie
-            # steam
             tor-browser-bundle-bin
 
             #-- MULTIMEDIA
@@ -31,10 +30,10 @@
             mkvtoolnix
             taglib-sharp
             taglib_extras
-            # vlc
+            virtualbox
         ]) ++ (with pkgs; [
             #-- Anytype
-            # (pkgs.callPackage ../../custom/anytype/default.nix {})
+            (pkgs.callPackage ../../custom/anytype/default.nix {})
 
             #-- Standard Notes
             (pkgs.callPackage ../../custom/standardnotes/default.nix {})

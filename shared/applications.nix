@@ -137,6 +137,7 @@ in {
             coreutils-full
             curl
             dwz
+            expat
             expect
             flex
             fontconfig

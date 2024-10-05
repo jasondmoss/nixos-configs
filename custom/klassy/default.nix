@@ -1,13 +1,14 @@
 { lib, stdenv, fetchFromGitHub, kdePackages, cmake, qt6 }:
 stdenv.mkDerivation rec {
     pname = "klassy";
-    version = "plasma6.0";
+    version = "master";
+    # version = "plasma6.0";
 
     src = fetchFromGitHub {
         owner = "paulmcauley";
         repo = "klassy";
         rev = version;
-        hash = "sha256-KZo7W8+v4WcgLs5bN1ShX7lQ5MTNA6kqcAhS+YILB4I=";
+        hash = "sha256-5OzQ71/6fYaxNla/LMlVnGxtWDfe+gxhR/S4U/6rP2M=";
     };
 
     buildInputs = [
@@ -37,6 +38,14 @@ stdenv.mkDerivation rec {
         description = "A highly customizable binary Window Decoration and Application Style plugin for recent versions of the KDE Plasma desktop";
         homepage = "https://github.com/paulmcauley/klassy";
         changelog = "https://github.com/paulmcauley/klassy/releases/tag/${version}";
-        license = with lib.licenses; [ bsd3 cc0 fdl12Plus gpl2Only gpl2Plus gpl3Only mit ];
+        license = with lib.licenses; [
+            bsd3
+            cc0
+            fdl12Plus
+            gpl2Only
+            gpl2Plus
+            gpl3Only
+            mit
+        ];
     };
 }

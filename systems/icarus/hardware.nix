@@ -1,8 +1,8 @@
 { config, lib, pkgs, modulesPath, ... }:
 {
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
-        # kernelPackages = pkgs.linuxPackages_latest;
+        kernelPackages = pkgs.linuxPackages_latest;
+        # kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
         kernelParams = [
             # "amd_iommu=on"
