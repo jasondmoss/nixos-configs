@@ -1,97 +1,6 @@
-{ config, lib, pkgs, ... }:
-let
-    # Firefox Nightly desktop file.
-    firefoxNightlyDesktopItem = pkgs.makeDesktopItem rec {
-        type = "Application";
-        terminal = false;
-        name = "firefox-nightly";
-        desktopName = "Firefox Nightly";
-        exec = "firefox-nightly -P \"Nightly\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
-        mimeTypes = [
-            "application/pdf"
-            "application/rdf+xml"
-            "application/rss+xml"
-            "application/xhtml+xml"
-            "application/xhtml_xml"
-            "application/xml"
-            "image/gif"
-            "image/jpeg"
-            "image/png"
-            "image/webp"
-            "text/html"
-            "text/xml"
-            "x-scheme-handler/http"
-            "x-scheme-handler/https"
-        ];
-        categories = [ "Network" "WebBrowser" ];
-        actions = {
-            NewWindow = {
-                name = "Open a New Window";
-                exec = "firefox-nightly -P \"Nightly\" --new-window %u";
-            };
-            NewPrivateWindow = {
-                name = "Open a New Private Window";
-                exec = "firefox-nightly -P \"Nightly\" --private-window %u";
-            };
-            ProfileSelect = {
-                name = "Select a Profile";
-                exec = "firefox-nightly --ProfileManager";
-            };
-        };
-    };
+{ config, lib, pkgs, ... }: {
 
-    # Firefox Stable desktop file.
-    firefoxStableDesktopItem = pkgs.makeDesktopItem rec {
-        type = "Application";
-        terminal = false;
-        name = "firefox-stable";
-        desktopName = "Firefox Stable";
-        exec = "firefox-stable -P \"Default\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
-        mimeTypes = [
-            "application/vnd.mozilla.xul+xml"
-            "application/xhtml+xml"
-            "text/html"
-            "text/xml"
-            "x-scheme-handler/ftp"
-            "x-scheme-handler/http"
-            "x-scheme-handler/https"
-        ];
-        categories = [ "Network" "WebBrowser" ];
-        actions = {
-            NewWindow = {
-                name = "Open a New Window";
-                exec = "firefox-stable -P \"Default\" --new-window %u";
-            };
-            NewPrivateWindow = {
-                name = "Open a New Private Window";
-                exec = "firefox-stable -P \"Default\" --private-window %u";
-            };
-            ProfileSelect = {
-                name = "Select a Profile";
-                exec = "firefox-stable --ProfileManager";
-            };
-        };
-    };
-
-    # Thunderbird desktop file.
-    thunderbirdDesktopItem = pkgs.makeDesktopItem rec {
-        type = "Application";
-        terminal = false;
-        name = "thunderbird";
-        desktopName = "Thunderbird";
-        exec = "thunderbird -P \"Me\"";
-        icon = "/home/me/Mega/Images/Icons/Apps/thunderbird-daily.png";
-        mimeTypes = [
-            "message/rfc822"
-            "x-scheme-handler/mailto"
-        ];
-        startupNotify = true;
-        categories = [ "Application" "Network" "Email" ];
-    };
-in {
-
+    # Setup.
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -133,11 +42,10 @@ in {
         ];
     };
 
-    #-- CORE
+    #-- Core Packages.
     environment = {
         systemPackages = (with pkgs; [
 
-            #-- CORE
             aha
             babl
             clinfo
@@ -426,33 +334,6 @@ in {
 
         ]) ++ (with pkgs; [
 
-            #-- CUSTOM PACKAGE BUILDS.
-
-            #-- Firefox Stable -- Rename executable
-            (pkgs.runCommand "latest.firefox-bin" {
-                preferLocalBuild = true;
-            } ''
-mkdir -p $out/bin
-ln -s ${latest.firefox-bin}/bin/firefox $out/bin/firefox-stable
-            '')
-
-            #-- Firefox Stable -- Desktop Entry
-            firefoxStableDesktopItem
-
-            #-- Firefox Nightly (nixpkgs-mozilla) -- Rename executable
-            (pkgs.runCommand "latest.firefox-nightly-bin" {
-                preferLocalBuild = true;
-            } ''
-mkdir -p $out/bin
-ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
-            '')
-
-            #-- Firefox Nightly -- Desktop Entry
-            firefoxNightlyDesktopItem
-
-            #-- Thunderbird -- Desktop Entry
-            thunderbirdDesktopItem
-
             #-- Conky
             # (pkgs.callPackage ../packages/conky/default.nix {})
 
@@ -472,5 +353,12 @@ ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
         ]);
 
     };
+
+    # Desktop Entries.
+    imports = [
+        ./desktop-entries/firefox-nightly.nix
+        ./desktop-entries/firefox-stable.nix
+        ./desktop-entries/thunderbird.nix
+    ];
 
 }
