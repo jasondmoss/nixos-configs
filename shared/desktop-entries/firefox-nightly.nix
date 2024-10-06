@@ -52,7 +52,7 @@ mkdir -p $out/bin
 ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
             '')
 
-            #-- Create desktop Entry.
+            #-- Create desktop entry.
             firefoxNightlyDesktopItem
 
         ]);

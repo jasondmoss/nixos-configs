@@ -18,7 +18,7 @@ in {
     environment = {
         systemPackages = (with pkgs; [
 
-            #-- Create desktop Entry
+            #-- Create desktop entry.
             thunderbirdDesktopItem
 
         ]);

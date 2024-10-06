@@ -2,6 +2,7 @@
 
     imports = [
         ../../packages/nvidia
+        ../../shared/desktop-entries/mkvtoolnix.nix
     ];
 
     nixpkgs = {
