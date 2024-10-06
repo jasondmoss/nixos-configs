@@ -4,7 +4,9 @@
     libpthreadstubs, libtasn1, ninja, pcre, protobuf, sqlite, taglib, libebur128,
     libgpod, libidn2, libsepol, p11-kit, libpulseaudio, libselinux, util-linux,
     libvlc, gst_all_1, glib-networking, kdsingleapplication,
-    qtx11extras ? null, withGstreamer ? true, withVlc ? true
+    qtx11extras ? null,
+    withGstreamer ? true,
+    withVlc ? true
 }:
 let
     inherit (lib) optionals;

@@ -1,30 +1,21 @@
-{ config, lib, pkgs, modulesPath, ... }:
-{
-    boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
-        #  kernelPackages = pkgs.linuxPackages_latest;
+{ config, lib, pkgs, modulesPath, ... }: {
 
-        #kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_10.override {
-        #    argsOverride = rec {
-        #        src = pkgs.fetchurl {
-        #            url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
-        #            sha256 = "sha256-5ofnNbXrnvttZ7QkM8k/yRGBBqmVUU8GJlKHO16Am80=";
-        #        };
-        #        version = "6.10.10";
-        #        modDirVersion = "6.10.10";
-        #    };
-        #});
+    boot = {
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;  # Works
+        # kernelPackages = pkgs.linuxPackages_latest;         # Not working.
 
         kernelParams = [
             "amd_iommu=on"
             "mem_sleep_default=deep"
-            "nvidia_drm.fbdev=1"
-            "nvidia_drm.modeset=1"
-            "initcall_blacklist=simpledrm_platform_driver_init"
+            # "initcall_blacklist=simpledrm_platform_driver_init"
         ];
 
         initrd = {
             availableKernelModules = [
+                "nvidia"
+                "nvidia_modeset"
+                "nvidia_uvm"
+                "nvidia_drm"
                 "nvme"
                 "xhci_pci"
                 "ahci"
@@ -38,16 +29,9 @@
             "kvm-amd"
         ];
 
-        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
-            "NVreg_UsePageAttributeTable=1"
-            "NVreg_EnablePCIeGen3=1"
-            "NVreg_PreserveVideoMemoryAllocations=1"
-            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
-        ];
-
-        blacklistedKernelModules = [
-            "nouveau"
-        ];
+        # blacklistedKernelModules = [
+        #     "nouveau"
+        # ];
 
         extraModulePackages = [];
 
@@ -125,9 +109,20 @@
 
             updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
+
+        nvidia = {
+            open = true;
+            nvidiaPersistenced = true;
+
+            powerManagement = {
+                enable = true;
+                finegrained = false;
+            };
+        };
     };
 
     virtualisation = {
         virtualbox.host.enable = true;
     };
+
 }

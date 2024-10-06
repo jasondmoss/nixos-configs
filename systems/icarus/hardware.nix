@@ -1,19 +1,22 @@
-{ config, lib, pkgs, modulesPath, ... }:
-{
+{ config, lib, pkgs, modulesPath, ... }: {
+
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
-        # kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
         kernelParams = [
             # "amd_iommu=on"
             # "i915.modeset=0"
             "mem_sleep_default=deep"
+            "nvidia_drm.modeset=1"
             "nvidia_drm.fbdev=1"
-            "nvidia-drm.modeset=1"
         ];
 
         initrd = {
             availableKernelModules = [
+                "nvidia"
+                "nvidia_modeset"
+                "nvidia_uvm"
+                "nvidia_drm"
                 "vmd"
                 "xhci_pci"
                 "ahci"
@@ -87,15 +90,22 @@
 
         nvidia = {
             package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-            # open = false;
+            open = true;
+            nvidiaPersistenced = true;
 
             prime = {
                 offload.enable = true;
                 intelBusId = "PCI:0:2:0";
                 nvidiaBusId = "PCI:1:0:0";
             };
+
+            powerManagement = {
+                enable = true;
+                finegrained = true;
+            };
         };
     };
 
     services.xserver.dpi = 96;
+
 }

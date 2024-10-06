@@ -1,7 +1,4 @@
-self:
-pkgs:
-with pkgs;
-{
+self: pkgs: with pkgs; {
 
     # phpstorm = jetbrains.phpstorm.overrideDerivation (attrs: rec {
     phpstorm = jetbrains.phpstorm.overrideAttrs (oldAttrs: {

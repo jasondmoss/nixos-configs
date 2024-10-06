@@ -1,5 +1,5 @@
-{ config, options, pkgs, ... }:
-{
+{ config, options, pkgs, ... }: {
+
     system.stateVersion = "24.05";
 
     imports = [
@@ -9,11 +9,12 @@
         ../../shared/configuration.nix
         ./configuration.nix
 
-        ../../shared/applications.nix
-        ./applications.nix
+        ../../shared/packages.nix
+        ./packages.nix
     ];
 
     time.timeZone = "America/Toronto";
 
     networking.hostName = "atreides";
+
 }

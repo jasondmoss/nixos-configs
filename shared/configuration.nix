@@ -3,6 +3,7 @@ let
     theme = import ./theme.nix;
     localAddress = "127.0.0.1";
 in {
+
     nix = {
         package = pkgs.nixVersions.latest;
 
@@ -83,7 +84,6 @@ local {
 
         printing = {
             browsing = false;
-            # browsed.enable = false;
             cups-pdf.enable = false;
             startWhenNeeded = false;
         };
@@ -167,7 +167,7 @@ Option "TripleBuffer" "on"
             phpOptions = ''
 display_errors = On
 display_startup_errors = On
-allow_url_fopen = on
+allow_url_fopen = On
 memory_limit = 2048M
 post_max_size = 2048M
 upload_max_filesize = 2048M
@@ -205,6 +205,11 @@ session.cookie_samesite = "Strict"
         ollama = {
             enable = true;
             acceleration = "cuda";
+
+            loadModels = [
+                "codestral"
+                "yi-coder"
+            ];
         };
     };
 
@@ -332,20 +337,41 @@ session.cookie_samesite = "Strict"
 
     environment = {
         variables = {
-            VDPAU_DRIVER = "va_gl";
-            LIBVA_DRIVER_NAME = "nvidia";
-            GBM_BACKEND = "nvidia-drm";
-            __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-            WLR_NO_HARDWARE_CURSORS = "1";
-            MOZ_DISABLE_RDD_SANDBOX = "1";
-            NVD_BACKEND = "direct";
-            EGL_PLATFORM = "wayland";
             __GL_GSYNC_ALLOWED = "1";
-            WLR_DRM_NO_ATOMIC = "1";
+            __GL_VRR_ALLOWED = "0";
+            __GL_THREADED_OPTIMIZATION = "1";
+            __GL_SHADER_CACHE = "1";
+            __GLX_VENDOR_LIBRARY_NAME = "nvidia";
             _JAVA_AWT_WM_NONREPARENTING = "1";
-            SDL_VIDEODRIVER = "wayland";
+            DISABLE_QT5_COMPAT = "1";
+            EGL_PLATFORM = "wayland";
+            ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+            GBM_BACKEND = "nvidia-drm";
+            GBM_BACKENDS_PATH = "/run/opengl-driver/lib/gbm";
+            LIBVA_DRIVER_NAME = "nvidia";
+            MOZ_DISABLE_RDD_SANDBOX = "1";
             MOZ_ENABLE_WAYLAND = "1";
             NIXOS_OZONE_WL = "1";
+            NVD_BACKEND = "direct";
+            SDL_VIDEODRIVER = "wayland";
+            VDPAU_DRIVER = "va_gl";
+            WLR_BACKEND = "vulkan";
+            WLR_DRM_DEVICES = "/dev/dri/card0";
+            WLR_DRM_NO_ATOMIC = "1";
+            WLR_NO_HARDWARE_CURSORS = "1";
+
+            # QT_QPA_PLATFORM = "wayland;xcb";  # Breaks Megasync.
+            # QT_QPA_PLATFORMTHEME = "qt6ct";   # Breaks Megasync.
+
+            QT_SCALE_FACTOR = "1";
+            QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+            QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
+            QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+            PLASMA_USE_QT_SCALING = "1";
+
+            KWIN_TRIPLE_BUFFER = "1";
+
+            XDG_SESSION_TYPE = "wayland";
 
             GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
                 pkgs.gst_all_1.gst-editing-services
@@ -364,15 +390,7 @@ session.cookie_samesite = "Strict"
             XCURSOR_THEME = "ComixCursors";
             DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
-            #QT_QPA_PLATFORM = "wayland;xcb";
-            #QT_QPA_PLATFORMTHEME = "qt6ct";
-            QT_SCALE_FACTOR = "1";
-            QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-            QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
-            PLASMA_USE_QT_SCALING = "1";
-            KWIN_TRIPLE_BUFFER = "1";
-
-            ELECTRON_OZONE_PLATFORM_HINT = "wayland";
         };
     };
+
 }

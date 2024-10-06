@@ -91,6 +91,7 @@ let
         categories = [ "Application" "Network" "Email" ];
     };
 in {
+
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -107,11 +108,15 @@ in {
             };
 
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+                "libvdpau-va-gl"
                 "nvidia-x11"
                 "nvidia-settings"
                 "nvidia-persistenced"
                 "nvidia-vaapi-driver"
                 "vaapiVdpau"
+                "vulkan-loader"
+                "vulkan-tool"
+                "vulkan-validation-layers"
             ];
 
             permittedInsecurePackages = [
@@ -202,8 +207,8 @@ in {
             virtualgl
             wayland-utils
             wmctrl
-            vulkan-tools
-            vulkan-validation-layers
+            # vulkan-tools
+            # vulkan-validation-layers
             xdg-desktop-portal
             xdg-utils
             xorg.libxcb
@@ -279,7 +284,6 @@ in {
             isoimagewriter
             lame
             libcue
-            libdrm
             mac
             mkcue
             mpg123
@@ -450,20 +454,20 @@ ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
             thunderbirdDesktopItem
 
             #-- Conky
-            # (pkgs.callPackage ../custom/conky/default.nix {})
+            # (pkgs.callPackage ../packages/conky/default.nix {})
 
             #-- GIMP Development
-            # (pkgs.callPackage ../custom/gegl-devel/default.nix {})
-            # (pkgs.callPackage ../custom/gimp-devel/default.nix {})
+            # (pkgs.callPackage ../packages/gegl-devel/default.nix {})
+            # (pkgs.callPackage ../packages/gimp-devel/default.nix {})
 
             #-- Klassy KDE Theme
-            (pkgs.callPackage ../custom/klassy {})
+            (pkgs.callPackage ../packages/klassy {})
 
             #-- Strawberry Music Player
-            (pkgs.callPackage ../custom/strawberry {})
+            (pkgs.callPackage ../packages/strawberry {})
 
             #-- Wavebox Beta
-            (pkgs.callPackage ../custom/wavebox {})
+            (pkgs.callPackage ../packages/wavebox {})
 
         ]);
 

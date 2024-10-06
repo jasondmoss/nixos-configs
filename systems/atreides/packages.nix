@@ -1,9 +1,8 @@
-{ config, lib, pkgs, ... }:
-{
-    imports = [
-        ../../custom/nvidia
-    ];
+{ config, lib, pkgs, ... }: {
 
+    imports = [
+        ../../packages/nvidia
+    ];
 
     nixpkgs = {
         config = {
@@ -17,9 +16,13 @@
 
     environment = {
         systemPackages = (with pkgs; [
+
             #-- EDITORS
             blender
-            geeqie
+            notes
+            # standardnotes
+
+            # -- INTERNET
             tor-browser-bundle-bin
 
             #-- MULTIMEDIA
@@ -31,13 +34,13 @@
             mkvtoolnix
             taglib-sharp
             taglib_extras
-            # virtualbox
-        ]) ++ (with pkgs; [
-            #-- Anytype
-            (pkgs.callPackage ../../custom/anytype {})
 
-            #-- Standard Notes
-            (pkgs.callPackage ../../custom/standardnotes {})
+        ]) ++ (with pkgs; [
+
+            #-- Anytype
+            (pkgs.callPackage ../../packages/anytype {})
+
         ]);
     };
+
 }
