@@ -16,16 +16,4 @@
 
     networking.hostName = "icarus";
 
-    services = {
-        printing.enable = false;
-
-        avahi = {
-            enable = false;
-            # nssmdns4 = true;
-            # openFirewall = true;
-        };
-
-        xserver.dpi = 96;
-    };
-
 }
