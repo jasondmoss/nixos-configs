@@ -10,16 +10,16 @@
             # openFirewall = true;
         };
 
-        samba = {
-            enable = true;
-            securityType = "user";
-            openFirewall = true;
-        };
+        # samba = {
+        #     enable = true;
+        #     securityType = "user";
+        #     openFirewall = true;
+        # };
 
-        samba-wsdd = {
-            enable = true;
-            openFirewall = true;
-        };
+        # samba-wsdd = {
+        #     enable = true;
+        #     openFirewall = true;
+        # };
     };
 
 }
