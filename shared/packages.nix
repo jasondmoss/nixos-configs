@@ -223,6 +223,25 @@
             ulauncher
             wezterm
 
+
+            #-- CUSTOM PACKAGES
+
+            # Conky
+            # (pkgs.callPackage ../packages/conky/default.nix {})
+
+            # GIMP Development
+            # (pkgs.callPackage ../packages/gegl-devel/default.nix {})
+            # (pkgs.callPackage ../packages/gimp-devel/default.nix {})
+
+            # Klassy KDE Theme
+            (pkgs.callPackage ../packages/klassy {})
+
+            # Strawberry Music Player
+            (pkgs.callPackage ../packages/strawberry {})
+
+            # Wavebox Beta
+            (pkgs.callPackage ../packages/wavebox {})
+
         ]) ++ (with pkgs.kdePackages; [
 
             #-- KDE
@@ -332,23 +351,23 @@
             # zip
             # zlib
 
-        ]) ++ (with pkgs; [
-
-            #-- Conky
-            # (pkgs.callPackage ../packages/conky/default.nix {})
-
-            #-- GIMP Development
-            # (pkgs.callPackage ../packages/gegl-devel/default.nix {})
-            # (pkgs.callPackage ../packages/gimp-devel/default.nix {})
-
-            #-- Klassy KDE Theme
-            # (pkgs.callPackage ../packages/klassy {})
-
-            #-- Strawberry Music Player
-            (pkgs.callPackage ../packages/strawberry {})
-
-            #-- Wavebox Beta
-            (pkgs.callPackage ../packages/wavebox {})
+#        ]) ++ (with pkgs; [
+#
+#            #-- Conky
+#            # (pkgs.callPackage ../packages/conky/default.nix {})
+#
+#            #-- GIMP Development
+#            # (pkgs.callPackage ../packages/gegl-devel/default.nix {})
+#            # (pkgs.callPackage ../packages/gimp-devel/default.nix {})
+#
+#            #-- Klassy KDE Theme
+#            (pkgs.callPackage ../packages/klassy {})
+#
+#            #-- Strawberry Music Player
+#            (pkgs.callPackage ../packages/strawberry {})
+#
+#            #-- Wavebox Beta
+#            (pkgs.callPackage ../packages/wavebox {})
 
         ]);
 

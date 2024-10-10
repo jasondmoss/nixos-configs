@@ -1,7 +1,7 @@
 { config, lib, pkgs, modulesPath, ... }: {
 
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;  # Works
+        kernelPackages = pkgs.linuxPackages_xanmod;  # Works
         # kernelPackages = pkgs.linuxPackages_latest;         # Not working.
 
         kernelParams = [

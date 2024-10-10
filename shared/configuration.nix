@@ -387,9 +387,9 @@ upload_max_filesize = 2048M
 
             XCURSOR_THEME = "ComixCursors";
 
-            GDK_DPI_SCALE = "0.5";
-            GDK_SCALE = "2";
-            GDK_USE_XFT = "1";
+            # GDK_DPI_SCALE = "0.5";
+            # GDK_SCALE = "2";
+            # GDK_USE_XFT = "1";
 
             GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
                 pkgs.gst_all_1.gst-editing-services
