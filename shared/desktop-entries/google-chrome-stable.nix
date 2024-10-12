@@ -1,13 +1,12 @@
 { pkgs, ... }:
 let
-    # Firefox Nightly desktop file.
-    firefoxNightlyDesktopItem = pkgs.makeDesktopItem rec {
+    googleChromeDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
-        name = "firefox-nightly";
-        desktopName = "Firefox Nightly";
-        exec = "firefox-nightly -P \"Nightly\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
+        name = "google-chrome-stable";
+        desktopName = "Google Chrome (Stable)";
+        exec = "google-chrome-stable --use-gl=desktop --enable-features=VaapiVideoDecoder %U";
+        icon = "/home/me/Mega/Images/Icons/Apps/google-chrome.png";
         mimeTypes = [
             "application/pdf"
             "application/rdf+xml"
@@ -24,21 +23,17 @@ let
             "x-scheme-handler/http"
             "x-scheme-handler/https"
         ];
+        startupNotify = true;
         categories = [ "Network" "WebBrowser" ];
         actions = {
             NewWindow = {
                 name = "Open a New Window";
-                exec = "firefox-nightly -P \"Nightly\" --new-window %u";
+                exec = "google-chrome-stable --use-gl=desktop --enable-features=VaapiVideoDecoder --new-window %U";
             };
 
             NewPrivateWindow = {
                 name = "Open a New Private Window";
-                exec = "firefox-nightly -P \"Nightly\" --private-window %u";
-            };
-
-            ProfileSelect = {
-                name = "Select a Profile";
-                exec = "firefox-nightly --ProfileManager";
+                exec = "google-chrome-stable --use-gl=desktop --enable-features=VaapiVideoDecoder --incognito %U";
             };
         };
     };
@@ -46,16 +41,8 @@ in {
     environment = {
         systemPackages = (with pkgs; [
 
-            #-- Rename executable.
-            (pkgs.runCommand "latest.firefox-nightly-bin" {
-                preferLocalBuild = true;
-            } ''
-mkdir -p $out/bin
-ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
-            '')
-
             #-- Create desktop entry.
-            firefoxNightlyDesktopItem
+            googleChromeDesktopItem
 
         ]);
     };

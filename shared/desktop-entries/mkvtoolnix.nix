@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 let
     mkvToolNixDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";

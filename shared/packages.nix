@@ -382,6 +382,7 @@
         ./desktop-entries/firefox-nightly.nix
         ./desktop-entries/firefox-stable.nix
         ./desktop-entries/thunderbird.nix
+        ./desktop-entries/google-chrome-stable.nix
     ];
 
 }
