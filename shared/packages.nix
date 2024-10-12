@@ -17,12 +17,12 @@
             };
 
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-                "libvdpau-va-gl"
+                # "libvdpau-va-gl"
                 "nvidia-x11"
                 "nvidia-settings"
                 "nvidia-persistenced"
                 "nvidia-vaapi-driver"
-                "vaapiVdpau"
+                # "vaapiVdpau"
                 "vulkan-loader"
                 "vulkan-tool"
                 "vulkan-validation-layers"
@@ -222,6 +222,10 @@
             libportal
             ulauncher
             wezterm
+
+            (chromium.override {
+                enableWideVine = true;
+            })
 
 
             #-- CUSTOM PACKAGES

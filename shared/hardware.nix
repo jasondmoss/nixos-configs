@@ -15,7 +15,7 @@
         };
 
         nvidia = {
-            forceFullCompositionPipeline = false;
+            forceFullCompositionPipeline = true;
             nvidiaSettings = true;
             gsp.enable = true;
         };
