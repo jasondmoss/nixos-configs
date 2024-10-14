@@ -1,5 +1,4 @@
-{ config, options, lib, pkgs, ... }: {
-
+{
     services = {
         xserver.dpi = 96;
         printing.enable = false;
@@ -21,5 +20,4 @@
         #     openFirewall = true;
         # };
     };
-
 }

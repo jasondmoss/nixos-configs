@@ -1,11 +1,8 @@
-{ config, lib, pkgs, modulesPath, ... }: {
-
+{ config, lib, pkgs, ... }: {
     boot = {
         kernelPackages = pkgs.linuxPackages_latest;
 
         kernelParams = [
-            # "amd_iommu=on"
-            # "i915.modeset=0"
             "mem_sleep_default=deep"
             "nvidia_drm.modeset=1"
             "nvidia_drm.fbdev=1"
@@ -107,5 +104,4 @@
     };
 
     services.xserver.dpi = 96;
-
 }

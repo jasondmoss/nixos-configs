@@ -1,5 +1,4 @@
-{ config, options, pkgs, ... }: {
-
+{
     system.stateVersion = "24.05";
 
     imports = [
@@ -15,5 +14,4 @@
     time.timeZone = "America/Toronto";
 
     networking.hostName = "icarus";
-
 }

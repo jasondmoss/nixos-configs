@@ -1,5 +1,4 @@
-{ config, options, lib, pkgs, ... }: {
-
+{
     services = {
         xserver.dpi = 162;
     };
@@ -11,5 +10,4 @@
             dedicatedServer.openFirewall = true;
         };
     };
-
 }

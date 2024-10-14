@@ -1,5 +1,4 @@
-{ config, lib, pkgs, ... }: {
-
+{ pkgs, ... }: {
     imports = [
         ../../packages/nvidia
         ../../shared/desktop-entries/mkvtoolnix.nix
@@ -36,12 +35,9 @@
             taglib-sharp
             taglib_extras
 
-        ]) ++ (with pkgs; [
-
             #-- Anytype
             (pkgs.callPackage ../../packages/anytype {})
 
         ]);
     };
-
 }

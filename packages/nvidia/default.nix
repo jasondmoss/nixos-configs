@@ -1,4 +1,4 @@
-{ pkgs, flake-inputs, config, lib, ... }: {
+{ config, lib, ... }: {
 
     imports = [
         ./vaapi.nix

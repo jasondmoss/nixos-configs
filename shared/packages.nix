@@ -1,5 +1,4 @@
-{ config, lib, pkgs, ... }: {
-
+{ lib, pkgs, ... }: {
     # Setup.
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
@@ -17,12 +16,10 @@
             };
 
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-                # "libvdpau-va-gl"
                 "nvidia-x11"
                 "nvidia-settings"
                 "nvidia-persistenced"
                 "nvidia-vaapi-driver"
-                # "vaapiVdpau"
                 "vulkan-loader"
                 "vulkan-tool"
                 "vulkan-validation-layers"
@@ -188,7 +185,6 @@
             ffmpegthumbnailer
             flac
             flacon
-            fooyin
             isoimagewriter
             lame
             libcue
@@ -198,6 +194,7 @@
             mpv
             opusTools
             pavucontrol
+            qmmp
             shntool
             sox
             speechd
@@ -231,11 +228,11 @@
             #-- CUSTOM PACKAGES
 
             # Conky
-            # (pkgs.callPackage ../packages/conky/default.nix {})
+            # (pkgs.callPackage ../packages/conky {})
 
             # GIMP Development
-            # (pkgs.callPackage ../packages/gegl-devel/default.nix {})
-            # (pkgs.callPackage ../packages/gimp-devel/default.nix {})
+            # (pkgs.callPackage ../packages/gegl-devel {})
+            # (pkgs.callPackage ../packages/gimp-devel {})
 
             # Klassy KDE Theme
             (pkgs.callPackage ../packages/klassy {})
@@ -355,24 +352,6 @@
             # zip
             # zlib
 
-#        ]) ++ (with pkgs; [
-#
-#            #-- Conky
-#            # (pkgs.callPackage ../packages/conky/default.nix {})
-#
-#            #-- GIMP Development
-#            # (pkgs.callPackage ../packages/gegl-devel/default.nix {})
-#            # (pkgs.callPackage ../packages/gimp-devel/default.nix {})
-#
-#            #-- Klassy KDE Theme
-#            (pkgs.callPackage ../packages/klassy {})
-#
-#            #-- Strawberry Music Player
-#            (pkgs.callPackage ../packages/strawberry {})
-#
-#            #-- Wavebox Beta
-#            (pkgs.callPackage ../packages/wavebox {})
-
         ]);
 
     };
@@ -384,5 +363,4 @@
         ./desktop-entries/thunderbird.nix
         ./desktop-entries/google-chrome-stable.nix
     ];
-
 }

@@ -1,7 +1,6 @@
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
     theme = import ./theme.nix;
-    localAddress = "127.0.0.1";
 in {
 
     nix = {

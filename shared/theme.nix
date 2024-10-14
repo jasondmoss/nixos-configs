@@ -1,5 +1,4 @@
 rec {
-
     # Text color.
     foreground = "#f8f8f2";
     # Darker background for wallpaper, terminal, etc.
@@ -47,5 +46,4 @@ rec {
         bright.cyan
         bright.white
     ];
-
 }

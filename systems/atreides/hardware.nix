@@ -1,5 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }: {
-
+{ config, lib, pkgs, ... }: {
     boot = {
         kernelPackages = pkgs.linuxPackages_xanmod;  # Works
         # kernelPackages = pkgs.linuxPackages_latest;         # Not working.
@@ -124,5 +123,4 @@
     virtualisation = {
         virtualbox.host.enable = true;
     };
-
 }
