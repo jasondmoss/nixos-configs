@@ -5,39 +5,12 @@ self: pkgs: with pkgs; {
         version = "2024.2.4";
         build = "242.23726.19";
         src = fetchurl {
-            url = "https://download.jetbrains.com/webide/PhpStorm-2024.2.3.tar.gz";
-            sha256 = "sha256-izsboZxNXwzB1ndb/1jTgxNBTq51l2ypmRUQLAI2juo=";
+            url = "https://download.jetbrains.com/webide/PhpStorm-242.23726.19.tar.gz";
+            sha256 = "sha256-V6Z7+6M1M/cWFM2p1yAp+9RHJ+hWS23YomhAQdZvteA=";
         };
 
-        # version = "2024.3";
-        # build = "243.18137.7";
-        # src = fetchurl {
-        #     url = "https://download.jetbrains.com/webide/PhpStorm-243.18137.7.tar.gz";
-        #     sha256 = "sha256-A0cs23Vs3hgusGinJQCbkcFrxiUMNfxACh6Qeh/UDRg=";
-        # };
-
-        name = "phpstorm-2024.2.3";
+        name = "phpstorm-2024.2.4";
         wmClass = "jetbrains";
-
-
-        # nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [
-        #     pkgs.libGL
-        #     pkgs.xorg
-        #     pkgs.fontconfig
-        # ];
-
-        # buildInputs = oldAttrs.buildInputs ++ (with self; [
-        #     libGL
-        #     xorg
-        #     fontconfig
-        # ]);
-
-        # buildInputs = attrs.buildInputs ++ (with self; [
-        #     libGL
-        #     xorg
-        #     fontconfig
-        # ]);
-        # extraBinPathPackages = with self; [ libGL xorg fontconfig ];
 
         vmopts = ''
             -server
