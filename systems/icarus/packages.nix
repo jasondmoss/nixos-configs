@@ -4,7 +4,7 @@
 
             # cups
             # kdePackages.print-manager
-            samba4Full
+            # samba4Full
 
         ]);
     };

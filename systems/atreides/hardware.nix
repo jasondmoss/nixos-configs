@@ -1,12 +1,11 @@
 { config, lib, pkgs, ... }: {
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod;  # Works
-        # kernelPackages = pkgs.linuxPackages_latest;         # Not working.
+        # kernelPackages = pkgs.linuxPackages_latest;
+        kernelPackages = pkgs.linuxPackages_xanmod_lastest;
 
         kernelParams = [
             "amd_iommu=on"
             "mem_sleep_default=deep"
-            # "initcall_blacklist=simpledrm_platform_driver_init"
         ];
 
         initrd = {
@@ -28,9 +27,9 @@
             "kvm-amd"
         ];
 
-        # blacklistedKernelModules = [
-        #     "nouveau"
-        # ];
+        blacklistedKernelModules = [
+            "nouveau"
+        ];
 
         extraModulePackages = [];
 
@@ -110,6 +109,9 @@
         };
 
         nvidia = {
+            # For now, only this driver works with kernel 6.11+
+            package = config.boot.kernelPackages.nvidiaPackages.stable;
+            ###
             open = true;
             nvidiaPersistenced = true;
 

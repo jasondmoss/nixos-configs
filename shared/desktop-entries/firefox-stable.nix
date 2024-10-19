@@ -1,7 +1,5 @@
 { pkgs, ... }:
 let
-
-    # Firefox Stable desktop file.
     firefoxStableDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
@@ -34,7 +32,6 @@ let
             };
         };
     };
-
 in {
     environment = {
         systemPackages = (with pkgs; [

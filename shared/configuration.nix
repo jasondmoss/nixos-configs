@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs,   options, ... }:
 let
     theme = import ./theme.nix;
 in {
@@ -48,6 +48,45 @@ in {
         font = "Lat2-Terminus16";
         keyMap = "us";
         colors = theme.colors16;
+    };
+
+    programs = {
+        bash.completion.enable = true;
+        dconf.enable = true;
+        kdeconnect.enable = true;
+        mtr.enable = true;
+        xwayland.enable = true;
+
+        ssh = {
+            startAgent = true;
+            askPassword = pkgs.lib.mkForce "${pkgs.ksshaskpass.out}/bin/ksshaskpass";
+        };
+
+        gnupg.agent = {
+            enable = true;
+            pinentryPackage = pkgs.pinentry-qt;
+        };
+
+        git = {
+            enable = true;
+
+            config = {
+                user.name = "jasondmoss";
+                user.email = "jason@jdmlabs.com";
+                credential.helper = "cache --timeout=86400";
+            };
+
+            lfs.enable = true;
+        };
+
+        neovim = {
+            enable = true;
+            defaultEditor = true;
+            viAlias = true;
+            vimAlias = true;
+            withNodeJs = true;
+            withPython3 = true;
+        };
     };
 
     services = {
@@ -100,7 +139,7 @@ local {
             settings = {
                 PasswordAuthentication = true;
                 PermitRootLogin = "no";
-                KbdInteractiveAuthentication = true;
+                KbdInteractiveAuthentication = false;
             };
         };
 
@@ -118,8 +157,10 @@ local {
                 settings = {
                     clear_password = true;
                     clock = "%c";
-                    animation = "matrix";
-                    animation_timeout_sec = "20";
+                    # animation = "matrix";
+                    animation = "none";
+                    # animation_timeout_sec = "20";
+                    input_len = "64";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
                 };
             };
@@ -131,22 +172,6 @@ local {
             plasma6 = {
                enable = true;
                enableQt5Integration = false;
-            };
-        };
-
-        xserver = {
-            enable = true;
-            videoDrivers = [ "nvidia" ];
-
-            screenSection = ''
-Option "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-Option "AllowIndirectGLXProtocol" "off"
-Option "TripleBuffer" "on"
-            '';
-
-            xkb = {
-                layout = "us";
-                variant = "";
             };
         };
 
@@ -162,6 +187,11 @@ Option "TripleBuffer" "on"
                 extensions = ({ enabled, all }: enabled);
                 extraConfig = "memory_limit = 2048M";
             };
+
+            # phpPackage = pkgs.php84.buildEnv {
+            #     extensions = ({ enabled }: enabled);
+            #     extraConfig = "memory_limit = 2048M";
+            # };
 
             phpOptions = ''
 allow_url_fopen = On
@@ -212,45 +242,6 @@ upload_max_filesize = 2048M
         };
     };
 
-    programs = {
-        bash.completion.enable = true;
-        dconf.enable = true;
-        kdeconnect.enable = true;
-        mtr.enable = true;
-        xwayland.enable = true;
-
-        ssh = {
-            startAgent = true;
-            askPassword = pkgs.lib.mkForce "${pkgs.ksshaskpass.out}/bin/ksshaskpass";
-        };
-
-        gnupg.agent = {
-            enable = true;
-            pinentryPackage = pkgs.pinentry-qt;
-        };
-
-        git = {
-            enable = true;
-
-            config = {
-                user.name = "jasondmoss";
-                user.email = "jason@jdmlabs.com";
-                credential.helper = "cache --timeout=86400";
-            };
-
-            lfs.enable = true;
-        };
-
-        neovim = {
-            enable = true;
-            defaultEditor = true;
-            viAlias = true;
-            vimAlias = true;
-            withNodeJs = true;
-            withPython3 = true;
-        };
-    };
-
     xdg.portal = {
         enable = true;
 
@@ -281,14 +272,19 @@ upload_max_filesize = 2048M
         rtkit.enable = true;
         polkit.enable = true;
 
-        pam.services = {
-            "ly" = {
-                enableKwallet = true;
+        pam = {
+            sshAgentAuth = {
+                enable = true;
             };
 
-            kwallet = {
-                name = "kwallet";
-                enableKwallet = true;
+            services = {
+                kwallet = {
+                    kwallet.enable = true;
+                };
+
+                ly = {
+                    kwallet.enable = true;
+                };
             };
         };
 
@@ -297,6 +293,8 @@ upload_max_filesize = 2048M
             wheelNeedsPassword = false;
             extraConfig = ''
                 Defaults:me !authenticate
+                # Keep SSH_AUTH_SOCK so that pam_ssh_agent_auth.so can do its magic.
+                Defaults env_keep+=SSH_AUTH_SOCK
             '';
         };
     };
@@ -305,6 +303,10 @@ upload_max_filesize = 2048M
         enable = true;
         man.enable = true;
         dev.enable = true;
+    };
+
+    systemd = {
+        extraConfig = "DefaultTimeoutStopSec=10s";
     };
 
     users.users = {
@@ -328,10 +330,6 @@ upload_max_filesize = 2048M
                 "wwwrun"
             ];
         };
-    };
-
-    systemd = {
-        extraConfig = "DefaultTimeoutStopSec=10s";
     };
 
     environment = {
@@ -375,6 +373,8 @@ upload_max_filesize = 2048M
             MOZ_DISABLE_RDD_SANDBOX = "1";
             MOZ_ENABLE_WAYLAND = "1";
             MOZ_X11_EGL = "1";
+
+            SSH_ASKPASS_REQUIRE = "prefer";
 
             XDG_BIN_HOME = "/home/me/.local/bin";
             XDG_CACHE_HOME = "/home/me/.cache";

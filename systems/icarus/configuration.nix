@@ -1,13 +1,13 @@
 {
     services = {
         xserver.dpi = 96;
-        printing.enable = false;
+        # printing.enable = false;
 
-        avahi = {
-            enable = false;
-            # nssmdns4 = true;
-            # openFirewall = true;
-        };
+        # avahi = {
+        #     enable = false;
+        #     # nssmdns4 = true;
+        #     # openFirewall = true;
+        # };
 
         # samba = {
         #     enable = true;

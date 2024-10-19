@@ -119,10 +119,10 @@
             xorg.libxcb
 
             python312Full
-            python312Packages.pyasyncore
-            python312Packages.gyp
-            python312Packages.pyqt6
-            python312Packages.pytz
+            #python312Packages.pyasyncore
+            #python312Packages.gyp
+            #python312Packages.pyqt6
+            #python312Packages.pytz
 
             #-- DESKTOP
             ly
@@ -147,6 +147,7 @@
             gdb
             git
             go
+            jetbrains.gateway
             libunwind
             lua
             nodejs
@@ -177,7 +178,7 @@
             nomacs
             nano
             phpstorm # Custom overlay.
-            sublime4-dev
+            sublime4
 
             #-- MULTIMEDIA
             faac
@@ -214,7 +215,6 @@
 
             #-- MISCELLANEOUS / UTILITIES
             alacritty
-            bitwarden
             conky
             libportal
             ulauncher
@@ -226,6 +226,9 @@
 
 
             #-- CUSTOM PACKAGES
+
+            #-- Anytype
+            (pkgs.callPackage ../packages/anytype {})
 
             # Conky
             # (pkgs.callPackage ../packages/conky {})

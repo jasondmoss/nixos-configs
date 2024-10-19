@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }: {
     boot = {
-        kernelPackages = pkgs.linuxPackages_latest;
+        # kernelPackages = pkgs.linuxPackages_latest;
+        kernelPackages = pkgs.linuxPackages_xanmod_lastest;
 
         kernelParams = [
             "mem_sleep_default=deep"
@@ -102,6 +103,4 @@
             };
         };
     };
-
-    services.xserver.dpi = 96;
 }
