@@ -238,7 +238,7 @@
             # (pkgs.callPackage ../packages/gimp-devel {})
 
             # Klassy KDE Theme
-            (pkgs.callPackage ../packages/klassy {})
+#            (pkgs.callPackage ../packages/klassy {})
 
             # Strawberry Music Player
             (pkgs.callPackage ../packages/strawberry {})
