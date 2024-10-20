@@ -34,6 +34,8 @@
             mkvtoolnix
             taglib-sharp
             taglib_extras
+            vlc
+            kdePackages.phonon-vlc
 
         ]);
     };
