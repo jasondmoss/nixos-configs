@@ -379,6 +379,7 @@ upload_max_filesize = 2048M
             MOZ_ENABLE_WAYLAND = "1";
             MOZ_X11_EGL = "1";
 
+            SSH_ASKPASS = lib.mkForce "/run/current-system/sw/bin/ksshaskpass";
             SSH_ASKPASS_REQUIRE = "prefer";
 
             XDG_BIN_HOME = "/home/me/.local/bin";

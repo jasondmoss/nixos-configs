@@ -193,6 +193,7 @@
             mkcue
             mpg123
             mpv
+            mpvScripts.thumbfast
             opusTools
             pavucontrol
             qmmp
@@ -263,6 +264,7 @@
             ark
             dolphin
             dolphin-plugins
+            ffmpegthumbs
             frameworkintegration
             kate
             karchive
@@ -274,7 +276,9 @@
             kde-cli-tools
             kdeconnect-kde
             kdecoration
+            kdegraphics-thumbnailers
             kdeplasma-addons
+            kdesdk-thumbnailers
             kglobalaccel
             kglobalacceld
             kguiaddons
