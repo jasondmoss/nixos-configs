@@ -34,10 +34,15 @@ in {
         };
 
         packages = with pkgs; [
-            corefonts
+            dotcolon-fonts
             freefont_ttf
+            google-fonts
             jetbrains-mono
+            liberation_ttf
             nerdfonts
+            paratype-pt-sans
+            paratype-pt-mono
+            profont
             terminus_font
             unifont
         ];
