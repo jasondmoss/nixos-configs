@@ -214,6 +214,7 @@
             megasync
             megatools
             microsoft-edge
+            opera
             protonvpn-gui
             thunderbirdPackages.thunderbird-128
             zoom-us

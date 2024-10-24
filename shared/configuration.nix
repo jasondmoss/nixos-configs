@@ -124,6 +124,7 @@ local {
         shairport-sync.enable = false;
         sysstat.enable = true;
         udev.enable = true;
+        gpm.enable = true;
 
         printing = {
             browsing = false;
