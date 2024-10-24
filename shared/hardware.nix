@@ -16,11 +16,11 @@
         nvidia = {
             forceFullCompositionPipeline = true;
             nvidiaSettings = true;
-            datacenter.enable = true;
+            datacenter.enable = false;
             gsp.enable = true;
         };
 
-        nvidia-container-toolkit.enable = true;
+        # nvidia-container-toolkit.enable = true;
 
         pulseaudio = {
             enable = false;
