@@ -16,6 +16,7 @@
         nvidia = {
             forceFullCompositionPipeline = true;
             nvidiaSettings = true;
+            datacenter.enable = true;
             gsp.enable = true;
         };
 

@@ -148,6 +148,7 @@
             git
             go
             jetbrains.gateway
+            jetbrains.jdk
             libunwind
             lua
             nodejs
@@ -158,6 +159,7 @@
             pre-commit
             rustc
             seer
+            superhtml
             yarn
 
             #-- SECURITY
