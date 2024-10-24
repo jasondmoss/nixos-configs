@@ -16,7 +16,7 @@
             };
 
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-                "nvidia-x11"
+                # "nvidia-x11"
                 "nvidia-settings"
                 "nvidia-persistenced"
                 "nvidia-vaapi-driver"
@@ -98,6 +98,7 @@
             egl-wayland
             eglexternalplatform
             glxinfo
+            gpm
             imagemagick
             jpegoptim
             jq
@@ -125,8 +126,9 @@
             #python312Packages.pytz
 
             #-- DESKTOP
-            ly
+            comixcursors
             gtk4
+            ly
 
             #-- DEVELOPMENT
             bison
