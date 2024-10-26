@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: {
     boot = {
-        # kernelPackages = pkgs.linuxPackages_latest;
+        #kernelPackages = pkgs.linuxPackages_latest;
         kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
         kernelParams = [
@@ -11,6 +11,10 @@
 
         initrd = {
             availableKernelModules = [
+                #"nvidia"
+                #"nvidia_modeset"
+                #"nvidia_uvm"
+                #"nvidia_drm"
                 "vmd"
                 "xhci_pci"
                 "ahci"
@@ -18,10 +22,6 @@
                 "usbhid"
                 "usb_storage"
                 "sd_mod"
-                # "nvidia"
-                # "nvidia_modeset"
-                # "nvidia_uvm"
-                # "nvidia_drm"
             ];
 
             kernelModules = [
@@ -47,9 +47,9 @@
             "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
 
-        # blacklistedKernelModules = [
-        #     "nouveau"
-        # ];
+        #blacklistedKernelModules = [
+        #    "nouveau"
+        #];
 
         extraModulePackages = [];
 
@@ -87,8 +87,10 @@
         };
 
         nvidia = {
-            # package = config.boot.kernelPackages.nvidiaPackages.stable;
-            package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+            #package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+            # For now, only this driver works with kernel 6.11+
+            package = config.boot.kernelPackages.nvidiaPackages.stable;
+
             open = true;
             nvidiaPersistenced = true;
 

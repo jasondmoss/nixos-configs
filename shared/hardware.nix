@@ -1,5 +1,6 @@
-{ lib, pkgs, modulesPath, ... }: {
+{ lib, pkgs, modulesPath, inputs, ... }: {
     imports = [
+        <nixos-hardware/common/gpu/nvidia/turing>
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
@@ -13,14 +14,12 @@
             ];
         };
 
-        nvidia = {
-            forceFullCompositionPipeline = true;
-            nvidiaSettings = true;
-            datacenter.enable = false;
-            gsp.enable = true;
-        };
-
-        # nvidia-container-toolkit.enable = true;
+        #nvidia = {
+        #    forceFullCompositionPipeline = true;
+        #    nvidiaSettings = true;
+        #    datacenter.enable = false;
+        #    gsp.enable = true;
+        #};
 
         pulseaudio = {
             enable = false;

@@ -112,19 +112,13 @@ local {
             '';
         };
 
-        gnome = {
-            at-spi2-core.enable = true;
-            core-shell.enable = false;
-        };
-
         dbus.enable = true;
         devmon.enable = true;
-        gvfs.enable = true;
+        gpm.enable = true;
         pcscd.enable = true;
-        shairport-sync.enable = false;
         sysstat.enable = true;
         udev.enable = true;
-        gpm.enable = true;
+        xserver.enable = true;
 
         printing = {
             browsing = false;
@@ -163,9 +157,9 @@ local {
                 settings = {
                     clear_password = true;
                     clock = "%c";
-                    # animation = "matrix";
+                    #animation = "matrix";
                     animation = "none";
-                    # animation_timeout_sec = "20";
+                    #animation_timeout_sec = "20";
                     input_len = "64";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
                 };
@@ -194,10 +188,10 @@ local {
                 extraConfig = "memory_limit = 2048M";
             };
 
-            # phpPackage = pkgs.php84.buildEnv {
-            #     extensions = ({ enabled }: enabled);
-            #     extraConfig = "memory_limit = 2048M";
-            # };
+            #phpPackage = pkgs.php84.buildEnv {
+            #    extensions = ({ enabled }: enabled);
+            #    extraConfig = "memory_limit = 2048M";
+            #};
 
             phpOptions = ''
 allow_url_fopen = On
@@ -363,8 +357,8 @@ upload_max_filesize = 2048M
             WLR_DRM_NO_ATOMIC = "1";
             WLR_NO_HARDWARE_CURSORS = "1";
 
-            # QT_QPA_PLATFORM = "wayland;xcb";  # Breaks Megasync.
-            # QT_QPA_PLATFORMTHEME = "qt6ct";   # Breaks Megasync.
+            #QT_QPA_PLATFORM = "wayland;xcb";  # Breaks Megasync.
+            #QT_QPA_PLATFORMTHEME = "qt6ct";   # Breaks Megasync.
 
             QT_AUTO_SCREEN_SCALE_FACTOR = "1";
             QT_SCALE_FACTOR = "1";
@@ -393,9 +387,9 @@ upload_max_filesize = 2048M
 
             XCURSOR_THEME = "ComixCursors";
 
-            # GDK_DPI_SCALE = "0.5";
-            # GDK_SCALE = "2";
-            # GDK_USE_XFT = "1";
+            #GDK_DPI_SCALE = "0.5";
+            #GDK_SCALE = "2";
+            #GDK_USE_XFT = "1";
 
             GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
                 pkgs.gst_all_1.gst-editing-services

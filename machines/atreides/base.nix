@@ -2,14 +2,14 @@
     system.stateVersion = "24.05";
 
     imports = [
-        ../../shared/hardware.nix
         ./hardware.nix
+        ../../shared/hardware.nix
 
         ../../shared/configuration.nix
         ./configuration.nix
 
-        ../../shared/packages.nix
         ./packages.nix
+        ../../shared/packages.nix
     ];
 
     time.timeZone = "America/Toronto";

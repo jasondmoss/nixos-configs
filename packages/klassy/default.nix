@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
         owner = "paulmcauley";
         repo = "klassy";
         rev = version;
-        # hash = "sha256-vNqxivXgwZOa06q0mL0tdWXkoC/1Z9yZ5JX8NyxCpQE="; # plasma6
-        hash = "sha256-Crh3QOOZSl/+cZvlH/ODaFHd2nPYyr4/z4H5Mon0v4Y="; # master
+        #hash = "sha256-vNqxivXgwZOa06q0mL0tdWXkoC/1Z9yZ5JX8NyxCpQE="; # plasma6
+        hash = "sha256-Hg9JbnLntVTCvYjMzaeo18y4VUt+5/yC9T0b3Rthvfs="; # master
     };
 
     buildInputs = [

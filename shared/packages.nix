@@ -15,15 +15,16 @@
                 };
             };
 
-            allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-                # "nvidia-x11"
-                "nvidia-settings"
-                "nvidia-persistenced"
-                "nvidia-vaapi-driver"
-                "vulkan-loader"
-                "vulkan-tool"
-                "vulkan-validation-layers"
-            ];
+            #allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+            #    "nvidia-x11"
+            #    "nvidia-settings"
+            #    "nvidia-persistenced"
+            #    "nvidia-vaapi-driver"
+            #    "vulkan-headers"
+            #    "vulkan-loader"
+            #    "vulkan-tool"
+            #    "vulkan-validation-layers"
+            #];
 
             permittedInsecurePackages = [
                 "openssl-1.1.1w"
@@ -102,19 +103,22 @@
             imagemagick
             jpegoptim
             jq
-            libdrm
             libGL
+            libdrm
             libglvnd
             libva
             libva-utils
             libva1
             mesa
+            nvidia-vaapi-driver
             nvtopPackages.full
             virtualgl
+            vulkan-headers
+            vulkan-loader
+            vulkan-tools
+            vulkan-validation-layers
             wayland-utils
             wmctrl
-            # vulkan-tools
-            # vulkan-validation-layers
             xdg-desktop-portal
             xdg-utils
             xorg.libxcb
@@ -151,12 +155,13 @@
             go
             jetbrains.gateway
             jetbrains.jdk
+            jetbrains.writerside
             libunwind
             lua
             nodejs
             perl
             php83
-            # php84
+            #php84
             phpunit
             pre-commit
             rustc
@@ -209,6 +214,7 @@
 
             #-- INTERNET
             brave
+            dillo
             filezilla
             google-chrome
             megasync
@@ -237,11 +243,11 @@
             (pkgs.callPackage ../packages/anytype {})
 
             # Conky
-            # (pkgs.callPackage ../packages/conky {})
+            #(pkgs.callPackage ../packages/conky {})
 
             # GIMP Development
-            # (pkgs.callPackage ../packages/gegl-devel {})
-            # (pkgs.callPackage ../packages/gimp-devel {})
+            #(pkgs.callPackage ../packages/gegl-devel {})
+            #(pkgs.callPackage ../packages/gimp-devel {})
 
             # Klassy KDE Theme
             (pkgs.callPackage ../packages/klassy {})
@@ -346,23 +352,23 @@
         # ]) ++ (with pkgs.php84Extensions; [
 
             # #-- PHP 8.4
-            # bz2
-            # curl
-            # fileinfo
-            # gd
-            # imagick
-            # intl
-            # mbstring
-            # mysqlnd
-            # pdo
-            # pdo_dblib
-            # pdo_mysql
-            # pdo_odbc
-            # tidy
-            # xml
-            # xsl
-            # zip
-            # zlib
+            #bz2
+            #curl
+            #fileinfo
+            #gd
+            #imagick
+            #intl
+            #mbstring
+            #mysqlnd
+            #pdo
+            #pdo_dblib
+            #pdo_mysql
+            #pdo_odbc
+            #tidy
+            #xml
+            #xsl
+            #zip
+            #zlib
 
         ]);
 

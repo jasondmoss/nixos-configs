@@ -1,6 +1,5 @@
 { pkgs, ... }:
 let
-    # Firefox Nightly desktop file.
     firefoxNightlyDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
