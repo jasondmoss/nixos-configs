@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: {
+
     boot = {
-        #kernelPackages = pkgs.linuxPackages_latest;
         kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
         kernelParams = [
@@ -11,10 +11,10 @@
 
         initrd = {
             availableKernelModules = [
-                #"nvidia"
-                #"nvidia_modeset"
-                #"nvidia_uvm"
-                #"nvidia_drm"
+                "nvidia"
+                "nvidia_modeset"
+                "nvidia_uvm"
+                "nvidia_drm"
                 "vmd"
                 "xhci_pci"
                 "ahci"
@@ -26,6 +26,7 @@
 
             kernelModules = [
                 "dm-snapshot"
+                "kvm-intel"
             ];
 
             luks.devices = {
@@ -36,10 +37,6 @@
             };
         };
 
-        kernelModules = [
-            "kvm-intel"
-        ];
-
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
             "NVreg_UsePageAttributeTable=1"
             "NVreg_EnablePCIeGen3=1"
@@ -47,9 +44,9 @@
             "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
 
-        #blacklistedKernelModules = [
-        #    "nouveau"
-        #];
+        blacklistedKernelModules = [
+            "nouveau"
+        ];
 
         extraModulePackages = [];
 
@@ -63,6 +60,34 @@
         };
 
         swraid.enable = false;
+    };
+
+    hardware = {
+        cpu.intel = {
+            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+        };
+
+        nvidia = {
+            # For now, only this driver works with kernel 6.11+
+            package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+            prime = {
+                offload = {
+                    enable = false;
+                    enableOffloadCmd = false;
+                };
+
+                sync.enable = true;
+                nvidiaBusId = "PCI:1:0:0";
+                intelBusId = "PCI:0:2:0";
+                #nvidiaBusId = "PCI:0:2:0";
+                #intelBusId = "PCI:1:0:0";
+            };
+        };
+    };
+
+    virtualisation = {
+        virtualbox.host.enable = true;
     };
 
     fileSystems."/" = {
@@ -81,29 +106,4 @@
         }
     ];
 
-    hardware = {
-        cpu.intel = {
-            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-        };
-
-        nvidia = {
-            #package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-            # For now, only this driver works with kernel 6.11+
-            package = config.boot.kernelPackages.nvidiaPackages.stable;
-
-            open = true;
-            nvidiaPersistenced = true;
-
-            prime = {
-                offload.enable = true;
-                intelBusId = "PCI:0:2:0";
-                nvidiaBusId = "PCI:1:0:0";
-            };
-
-            powerManagement = {
-                enable = true;
-                finegrained = true;
-            };
-        };
-    };
 }

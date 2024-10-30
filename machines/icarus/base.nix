@@ -9,7 +9,7 @@
         ./configuration.nix
 
         ../../shared/packages.nix
-        # ./packages.nix
+        ./packages.nix
     ];
 
     time.timeZone = "America/Toronto";

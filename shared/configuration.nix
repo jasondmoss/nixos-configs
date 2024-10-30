@@ -118,7 +118,11 @@ local {
         pcscd.enable = true;
         sysstat.enable = true;
         udev.enable = true;
-        xserver.enable = true;
+
+        xserver = {
+            enable = true;
+            videoDrivers = [ "nvidia" ];
+        };
 
         printing = {
             browsing = false;
@@ -158,8 +162,8 @@ local {
                     clear_password = true;
                     clock = "%c";
                     #animation = "matrix";
-                    animation = "none";
                     #animation_timeout_sec = "20";
+                    animation = "none";
                     input_len = "64";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
                 };

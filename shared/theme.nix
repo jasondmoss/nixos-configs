@@ -1,8 +1,10 @@
 rec {
     # Text color.
     foreground = "#f8f8f2";
+
     # Darker background for wallpaper, terminal, etc.
     background = "#1d1f23";
+
     # Background for primary editing areas in text editors etc.
     backgroundSecondary = "#21252b";
 

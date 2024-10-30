@@ -14,12 +14,25 @@
             ];
         };
 
-        #nvidia = {
-        #    forceFullCompositionPipeline = true;
-        #    nvidiaSettings = true;
-        #    datacenter.enable = false;
-        #    gsp.enable = true;
-        #};
+        nvidia = {
+            open = true;
+            forceFullCompositionPipeline = true;
+            modesetting.enable = true;
+            nvidiaPersistenced = true;
+            nvidiaSettings = true;
+            datacenter.enable = false;
+            gsp.enable = true;
+
+            powerManagement = {
+                enable = false;
+                finegrained = false;
+            };
+
+            vaapi = {
+                enable = true;
+                firefox.enable = true;
+            };
+        };
 
         pulseaudio = {
             enable = false;

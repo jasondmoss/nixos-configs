@@ -1,7 +1,6 @@
 { pkgs, ... }: {
+
     imports = [
-#        ../../packages/nvidia/default.nix
-        ../../packages/nvidia/vaapi.nix
         ../../shared/desktop-entries/mkvtoolnix.nix
     ];
 
@@ -38,4 +37,5 @@
         vlc
 
     ]);
+
 }

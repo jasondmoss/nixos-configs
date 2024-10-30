@@ -1,18 +1,19 @@
 { config, lib, pkgs, ... }: {
+
     boot = {
         #kernelPackages = pkgs.linuxPackages;
-        #kernelPackages = pkgs.linuxPackages_latest;
+        kernelPackages = pkgs.linuxPackages_latest;
         #kernelPackages = pkgs.linuxPackages_xanmod_latest;
-        kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_10.override {
-            argsOverride = rec {
-                src = pkgs.fetchurl {
-                    url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
-                    sha256 = "sha256-5ofnNbXrnvttZ7QkM8k/yRGBBqmVUU8GJlKHO16Am80=";
-                };
-                version = "6.10.10";
-                modDirVersion = "6.10.10";
-            };
-        });
+        #kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_10.override {
+        #    argsOverride = rec {
+        #        src = pkgs.fetchurl {
+        #            url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
+        #            sha256 = "sha256-5ofnNbXrnvttZ7QkM8k/yRGBBqmVUU8GJlKHO16Am80=";
+        #        };
+        #        version = "6.10.10";
+        #        modDirVersion = "6.10.10";
+        #    };
+        #});
 
         kernelParams = [
             "amd_iommu=on"
@@ -41,11 +42,11 @@
                 "usb_storage"
                 "sd_mod"
             ];
-        };
 
-        kernelModules = [
-            "kvm-amd"
-        ];
+            kernelModules = [
+                "kvm-amd"
+            ];
+        };
 
         blacklistedKernelModules = [
             "nouveau"
@@ -70,8 +71,6 @@
         swraid.enable = false;
     };
 
-    swapDevices = [];
-
     hardware = {
         cpu.amd = {
             ryzen-smu.enable = true;
@@ -88,7 +87,7 @@
 
         nvidia = {
             # For now, only this driver works with kernel 6.11+
-            #package = config.boot.kernelPackages.nvidiaPackages.stable;
+            package = config.boot.kernelPackages.nvidiaPackages.stable;
             ###
 
             #package = config.boot.kernelPackages.nvidiaPackages.beta;
@@ -103,30 +102,13 @@
             #};
 
             # New feature branch.
-            package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-                version = "560.35.03";
-                sha256_64bit = "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
-                openSha256 = "sha256-/32Zf0dKrofTmPZ3Ratw4vDM7B+OgpC4p7s+RHUjCrg=";
-                settingsSha256 = "sha256-kQsvDgnxis9ANFmwIwB7HX5MkIAcpEEAHc8IBOLdXvk=";
-                persistencedSha256 = "sha256-E2J2wYYyRu7Kc3MMZz/8ZIemcZg68rkzvqEwFAL3fFs=";
-            };
-
-            open = true;
-            forceFullCompositionPipeline = true;
-            nvidiaPersistenced = true;
-            nvidiaSettings = true;
-            datacenter.enable = false;
-            gsp.enable = true;
-
-            powerManagement = {
-                enable = false;
-                finegrained = false;
-            };
-
-            vaapi = {
-                enable = true;
-                firefox.enable = true;
-            };
+            #package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+            #    version = "560.35.03";
+            #    sha256_64bit = "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
+            #    openSha256 = "sha256-/32Zf0dKrofTmPZ3Ratw4vDM7B+OgpC4p7s+RHUjCrg=";
+            #    settingsSha256 = "sha256-kQsvDgnxis9ANFmwIwB7HX5MkIAcpEEAHc8IBOLdXvk=";
+            #    persistencedSha256 = "sha256-E2J2wYYyRu7Kc3MMZz/8ZIemcZg68rkzvqEwFAL3fFs=";
+            #};
         };
     };
 
@@ -175,4 +157,7 @@
         device = "/dev/disk/by-uuid/3430-092D";
         fsType = "vfat";
     };
+
+    swapDevices = [];
+
 }

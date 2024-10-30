@@ -1,4 +1,15 @@
 { lib, pkgs, ... }: {
+
+    imports = [
+        ../packages/nvidia/vaapi.nix
+
+        # Desktop Entries.
+        ./desktop-entries/firefox-nightly.nix
+        ./desktop-entries/firefox-stable.nix
+        ./desktop-entries/thunderbird.nix
+        ./desktop-entries/google-chrome-stable.nix
+    ];
+
     # Setup.
     nixpkgs = {
         hostPlatform = lib.mkDefault "x86_64-linux";
@@ -15,16 +26,16 @@
                 };
             };
 
-            #allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-            #    "nvidia-x11"
-            #    "nvidia-settings"
-            #    "nvidia-persistenced"
-            #    "nvidia-vaapi-driver"
-            #    "vulkan-headers"
-            #    "vulkan-loader"
-            #    "vulkan-tool"
-            #    "vulkan-validation-layers"
-            #];
+            allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+                "nvidia-x11"
+                "nvidia-settings"
+                "nvidia-persistenced"
+                "nvidia-vaapi-driver"
+                "vulkan-headers"
+                "vulkan-loader"
+                "vulkan-tool"
+                "vulkan-validation-layers"
+            ];
 
             permittedInsecurePackages = [
                 "openssl-1.1.1w"
@@ -35,6 +46,7 @@
             # Mozilla Firefox Nightly overlays.
             (import ../overlays/nixpkgs-mozilla/lib-overlay.nix)
             (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
+
             # JetBrains EAP overlays.
             (import ../overlays/jetbrains/default.nix)
         ];
@@ -81,6 +93,7 @@
             pcre2
             pmutils
             pngquant
+            python312Full
             rar
             smartmontools
             tldr
@@ -122,12 +135,6 @@
             xdg-desktop-portal
             xdg-utils
             xorg.libxcb
-
-            python312Full
-            #python312Packages.pyasyncore
-            #python312Packages.gyp
-            #python312Packages.pyqt6
-            #python312Packages.pytz
 
             #-- DESKTOP
             comixcursors
@@ -374,11 +381,4 @@
 
     };
 
-    # Desktop Entries.
-    imports = [
-        ./desktop-entries/firefox-nightly.nix
-        ./desktop-entries/firefox-stable.nix
-        ./desktop-entries/thunderbird.nix
-        ./desktop-entries/google-chrome-stable.nix
-    ];
 }
