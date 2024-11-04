@@ -17,7 +17,7 @@
     environment.systemPackages = (with pkgs; [
 
         #-- EDITORS
-        blender
+        #blender
         notes
         #standardnotes
 

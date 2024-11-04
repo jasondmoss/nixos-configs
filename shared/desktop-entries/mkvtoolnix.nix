@@ -19,12 +19,10 @@ let
         categories = [ "AudioVideo" "AudioVideoEditing" ];
     };
 in {
-    environment = {
-        systemPackages = (with pkgs; [
+    environment.systemPackages = (with pkgs; [
 
-            #-- Create desktop entry.
-            mkvToolNixDesktopItem
+        #-- Create desktop entry.
+        mkvToolNixDesktopItem
 
-        ]);
-    };
+    ]);
 }

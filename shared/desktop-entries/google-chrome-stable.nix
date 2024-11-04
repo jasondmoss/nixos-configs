@@ -38,12 +38,10 @@ let
         };
     };
 in {
-    environment = {
-        systemPackages = (with pkgs; [
+    environment.systemPackages = (with pkgs; [
 
-            #-- Create desktop entry.
-            googleChromeDesktopItem
+        #-- Create desktop entry.
+        googleChromeDesktopItem
 
-        ]);
-    };
+    ]);
 }

@@ -7,7 +7,7 @@
         ./desktop-entries/firefox-nightly.nix
         ./desktop-entries/firefox-stable.nix
         ./desktop-entries/thunderbird.nix
-        ./desktop-entries/google-chrome-stable.nix
+        #./desktop-entries/google-chrome-stable.nix
     ];
 
     # Setup.
@@ -15,7 +15,7 @@
         hostPlatform = lib.mkDefault "x86_64-linux";
 
         config = {
-            allowBroken = false;
+            allowBroken = true;     # For 'php-packages'
             allowUnfree = true;
 
             packageOverrides = pkgs: {
@@ -43,12 +43,18 @@
         };
 
         overlays = [
-            # Mozilla Firefox Nightly overlays.
-            (import ../overlays/nixpkgs-mozilla/lib-overlay.nix)
-            (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
+            (final: prev: {
+                _7zz = prev._7zz.override {
+                    useUasm = true;
+                };
+            })
 
             # JetBrains EAP overlays.
             (import ../overlays/jetbrains/default.nix)
+
+            # Mozilla Firefox Nightly overlays.
+            (import ../overlays/nixpkgs-mozilla/lib-overlay.nix)
+            (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
         ];
     };
 
@@ -223,13 +229,11 @@
             brave
             dillo
             filezilla
-            google-chrome
             megasync
             megatools
             microsoft-edge
             opera
             protonvpn-gui
-            thunderbirdPackages.thunderbird-128
             zoom-us
 
             #-- MISCELLANEOUS / UTILITIES
@@ -239,8 +243,24 @@
             ulauncher
             wezterm
 
+            (google-chrome.override {
+                commandLineArgs = [
+                    "--use-gl=desktop"
+                    "--enable-features=VaapiVideoDecodeLinuxGL"
+                    "--ignore-gpu-blocklist"
+                    "--enable-zero-copy"
+                ];
+            })
+
             (chromium.override {
                 enableWideVine = true;
+
+                commandLineArgs = [
+                    "--use-gl=desktop"
+                    "--enable-features=VaapiVideoDecodeLinuxGL"
+                    "--ignore-gpu-blocklist"
+                    "--enable-zero-copy"
+                ];
             })
 
 
@@ -286,7 +306,7 @@
             frameworkintegration
             kate
             karchive
-            kbreakout
+            #kbreakout
             kcalc
             kcmutils
             kconfigwidgets

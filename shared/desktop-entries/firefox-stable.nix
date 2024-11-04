@@ -33,20 +33,18 @@ let
         };
     };
 in {
-    environment = {
-        systemPackages = (with pkgs; [
+    environment.systemPackages = (with pkgs; [
 
-            #-- Firefox Stable -- Rename executable
-            (pkgs.runCommand "latest.firefox-bin" {
-                preferLocalBuild = true;
-            } ''
+        #-- Firefox Stable -- Rename executable
+        (pkgs.runCommand "latest.firefox-bin" {
+            preferLocalBuild = true;
+        } ''
 mkdir -p $out/bin
 ln -s ${latest.firefox-bin}/bin/firefox $out/bin/firefox-stable
-            '')
+        '')
 
-            #-- Create desktop entry.
-            firefoxStableDesktopItem
+        #-- Create desktop entry.
+        firefoxStableDesktopItem
 
-        ]);
-    };
+    ]);
 }

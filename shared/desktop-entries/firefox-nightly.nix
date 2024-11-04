@@ -42,20 +42,18 @@ let
         };
     };
 in {
-    environment = {
-        systemPackages = (with pkgs; [
+    environment.systemPackages = (with pkgs; [
 
-            #-- Rename executable.
-            (pkgs.runCommand "latest.firefox-nightly-bin" {
-                preferLocalBuild = true;
-            } ''
+        #-- Rename executable.
+        (pkgs.runCommand "latest.firefox-nightly-bin" {
+            preferLocalBuild = true;
+        } ''
 mkdir -p $out/bin
 ln -s ${latest.firefox-nightly-bin}/bin/firefox-nightly $out/bin/firefox-nightly
-            '')
+        '')
 
-            #-- Create desktop entry.
-            firefoxNightlyDesktopItem
+        #-- Create desktop entry.
+        firefoxNightlyDesktopItem
 
-        ]);
-    };
+    ]);
 }

@@ -12,15 +12,13 @@ let
             "x-scheme-handler/mailto"
         ];
         startupNotify = true;
-        categories = [ "Application" "Network" "Email" ];
+        categories = [ "Network" "Email" ];
     };
 in {
-    environment = {
-        systemPackages = (with pkgs; [
+    environment.systemPackages = (with pkgs; [
 
-            #-- Create desktop entry.
-            thunderbirdDesktopItem
+        #-- Create desktop entry.
+        thunderbirdDesktopItem
 
-        ]);
-    };
+    ]);
 }

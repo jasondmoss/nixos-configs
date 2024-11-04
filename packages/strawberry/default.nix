@@ -18,7 +18,7 @@ let
         owner = "jonaski";
         repo = pname;
         rev = version;
-        hash = "sha256-KUkJTpYnjnjGMi6q/n8weTYIRE12SHhE2KRKFei6Gkw=";
+        hash = "sha256-QjGHvmfdxC9LP+uckDkBuSyDF6zPmepktWSOxgn6N6o=";
     };
 
     meta = with lib; {
