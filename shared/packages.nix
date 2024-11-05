@@ -234,6 +234,7 @@
             microsoft-edge
             opera
             protonvpn-gui
+            thunderbird-unwrapped
             zoom-us
 
             #-- MISCELLANEOUS / UTILITIES
