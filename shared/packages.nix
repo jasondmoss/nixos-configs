@@ -143,7 +143,6 @@
             xorg.libxcb
 
             #-- DESKTOP
-            comixcursors
             gtk4
             ly
 
@@ -200,6 +199,7 @@
             nomacs
             nano
             phpstorm # Custom overlay.
+            semantik
             sublime4
 
             #-- MULTIMEDIA
@@ -227,7 +227,6 @@
 
             #-- INTERNET
             brave
-            dillo
             filezilla
             megasync
             megatools
@@ -237,8 +236,12 @@
             thunderbird-unwrapped
             zoom-us
 
+            #-- THEMING
+            comixcursors
+            materia-kde-theme
+            sweet-nova
+
             #-- MISCELLANEOUS / UTILITIES
-            alacritty
             conky
             libportal
             ulauncher
@@ -301,15 +304,18 @@
             akonadi-notes
             akonadi-search
             ark
+            baloo
+            baloo-widgets
             dolphin
             dolphin-plugins
             ffmpegthumbs
             frameworkintegration
+            kajongg
             kate
             karchive
-            #kbreakout
             kcalc
             kcmutils
+            kcolorpicker
             kconfigwidgets
             kcoreaddons
             kde-cli-tools
@@ -329,8 +335,6 @@
             kio-fuse
             kio-gdrive
             kio-zeroconf
-            kirigami
-            kirigami-addons
             ksshaskpass
             ksvg
             ktorrent
@@ -344,17 +348,25 @@
             okular
             partitionmanager
             plasma-browser-integration
+            plasma-desktop
+            plasma-disks
             plasma-integration
             plasma-wayland-protocols
-            plymouth-kcm
-            qtstyleplugin-kvantum
+            plasma-workspace
+            #plymouth-kcm
             qtsvg
             qttools
             taglib
             wayland
             wayland-protocols
+            wayqt
             wrapQtAppsHook
             xdg-desktop-portal-kde
+
+            breeze
+            breeze-icons
+            qtstyleplugin-kvantum
+            sierra-breeze-enhanced
 
         ]) ++ (with pkgs.php83Extensions; [
 
