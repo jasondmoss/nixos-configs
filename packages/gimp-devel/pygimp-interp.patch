@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+<title>~fd/nix-configs (5ca0ef7c17ac7394576c95028244bf3d777bdc39): pkgs/gimp-devel/pygimp-interp.patch - sourcehut git</title>
+
+    
+    <link rel="icon" type="image/svg+xml" href="/static/logo.svg" />
+    <link rel="icon" type="image/png" href="/static/logo.png" sizes="any" />
+    
+    
+    <link rel="stylesheet" href="/static/main.min.d91d8272.css">
+    
+    
+    
+    
+
+<style>
+pre {
+  tab-size: 8
+}
+</style>
+
+
+
+<meta name="vcs" content="git">
+
+
+
+<meta name="vcs:clone" content="https://git.sr.ht/~fd/nix-configs">
+
+<meta name="vcs:clone" content="git@git.sr.ht:~fd/nix-configs">
+
+
+
+<meta name="forge:summary" content="https://git.sr.ht/~fd/nix-configs">
+<meta name="forge:dir" content="https://git.sr.ht/~fd/nix-configs/tree/{ref}/{path}">
+<meta name="forge:file" content="https://git.sr.ht/~fd/nix-configs/tree/{ref}/{path}">
+<meta name="forge:rawfile" content="https://git.sr.ht/~fd/nix-configs/blob/{ref}/{path}">
+<meta name="forge:line" content="https://git.sr.ht/~fd/nix-configs/tree/{ref}/{path}#L{line}">
+
+<meta name="go-import" content="git.sr.ht/~fd/nix-configs git https://git.sr.ht/~fd/nix-configs">
+
+  </head>
+  <body>
+    
+    
+    
+    
+<nav class="navbar navbar-light navbar-expand-sm">
+  
+<span class="navbar-brand">
+  <span class="icon icon-circle " aria-hidden="true"><svg width="22" height="22" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"/></svg>
+</span>
+  <a href="https://sr.ht">
+    sourcehut
+  </a>
+</span>
+
+<ul class="navbar-nav">
+  
+</ul>
+<div class="login">
+  
+  <span class="navbar-text">
+    
+    <a href="https://meta.sr.ht/oauth/authorize?client_id=25ff6e5ce60d7345&amp;scopes=profile,keys,b99a95de3e69c958/jobs:write&amp;state=%2F~fd%2Fnix-configs%2Ftree%2F5ca0ef7c17ac7394576c95028244bf3d777bdc39%2Fitem%2Fpkgs%2Fgimp-devel%2Fpygimp-interp.patch%3F" rel="nofollow">Log in</a>
+    &mdash;
+    <a href="https://meta.sr.ht">Register</a>
+    
+  </span>
+  
+</div>
+</nav>
+
+    
+<div class="header-tabbed">
+  
+  <div class="container-fluid">
+  
+    
+    
+    <h2>
+      <a href="/~fd/"
+      >~fd</a>/<wbr>nix-configs
+    </h2>
+    <ul class="nav nav-tabs">
+      
+      <li class="nav-item">
+        
+    <a
+      class="nav-link "
+      href="/~fd/nix-configs">summary</a>
+    
+      </li>
+      <li class="nav-item">
+        
+    <a
+      class="nav-link active"
+      href="/~fd/nix-configs/tree">tree</a>
+    
+      </li>
+      <li class="nav-item">
+        
+    <a
+      class="nav-link "
+      href="/~fd/nix-configs/log">log</a>
+    
+      </li>
+      <li class="nav-item">
+        
+    <a
+      class="nav-link "
+      href="/~fd/nix-configs/refs">refs</a>
+    
+      </li>
+      
+      
+      
+    </ul>
+  </div>
+
+</div>
+
+<div class="header-extension mb-0">
+  <div class="blob container-fluid">
+    <span>
+      
+
+<span class="mr-3">
+  <span class="text-muted">ref:</span> 5ca0ef7c17ac7394576c95028244bf3d777bdc39
+</span>
+
+
+<a href="/~fd/nix-configs/tree/5ca0ef7c17ac7394576c95028244bf3d777bdc39"
+>nix-configs</a>/<a
+    href="/~fd/nix-configs/tree/5ca0ef7c17ac7394576c95028244bf3d777bdc39/item/pkgs"
+  >pkgs</a>/<a
+    href="/~fd/nix-configs/tree/5ca0ef7c17ac7394576c95028244bf3d777bdc39/item/pkgs/gimp-devel"
+  >gimp-devel</a>/pygimp-interp.patch
+
+
+
+  
+  
+  <span class="text-muted ml-3">
+    <span title="100644">
+      -rw-r--r--
+    </span>
+  </span>
+
+  
+    <span class="text-muted ml-3">
+      <span title="266 bytes">
+        266 bytes
+      </span>
+    </span>
+  
+
+
+
+<div class="blob-nav ml-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active"
+         href="/~fd/nix-configs/tree/5ca0ef7c17ac7394576c95028244bf3d777bdc39/item/pkgs/gimp-devel/pygimp-interp.patch">View</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link "
+         href="/~fd/nix-configs/log/5ca0ef7c17ac7394576c95028244bf3d777bdc39/item/pkgs/gimp-devel/pygimp-interp.patch">Log</a>
+    </li>
+
+    
+      
+        <li class="nav-item">
+          <a class="nav-link "
+             href="/~fd/nix-configs/blame/5ca0ef7c17ac7394576c95028244bf3d777bdc39/pkgs/gimp-devel/pygimp-interp.patch">Blame</a>
+        </li>
+      
+
+      <li class="nav-item">
+        <a class="nav-link" rel="noopener noreferrer nofollow"
+           href="/~fd/nix-configs/blob/5ca0ef7c17ac7394576c95028244bf3d777bdc39/pkgs/gimp-devel/pygimp-interp.patch">View raw</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-link"href="/~fd/nix-configs/tree/5ca0ef7c17ac7394576c95028244bf3d777bdc39/item/pkgs/gimp-devel/pygimp-interp.patch">Permalink</a>
+    </li>
+  </ul>
+</div>
+
+    </span>
+    
+    <div class="commit">
+      <a
+        href="/~fd/nix-configs/commit/5ca0ef7c17ac7394576c95028244bf3d777bdc39"
+      >5ca0ef7c</a> &mdash;
+      
+      
+      <a href="/~fd/">Ersei Saggi</a>
+      
+      Update Gimp to 3.0.0-RC1
+      <span class="text-muted">
+        <span title="2024-11-06 22:34:03 UTC">10 days ago</span>
+      </span>
+    </div>
+    <div class="clearfix"></div>
+    
+  </div>
+</div>
+
+
+<div class="container-fluid code-viewport">
+
+  
+  <div class="row mr-0">
+    
+    
+    <div class="col-md-12 code-view">
+      
+      <pre class="ruler"><span>                                                                                </span></pre>
+      
+      <pre class="lines"><a href="#L1" id="L1">1
+</a><a href="#L2" id="L2">2
+</a><a href="#L3" id="L3">3
+</a><a href="#L4" id="L4">4
+</a><a href="#L5" id="L5">5
+</a><a href="#L6" id="L6">6
+</a><a href="#L7" id="L7">7
+</a><a href="#L8" id="L8">8
+</a></pre>
+      
+      <div class="highlight"><pre><span></span><span class="gd">--- a/plug-ins/python/pygimp.interp.in</span>
+<span class="gi">+++ b/plug-ins/python/pygimp.interp.in</span>
+<span class="gu">@@ -2,4 +2,4 @@</span>
+<span class="w"> </span>python3=@PYTHON_PATH@python.exe
+<span class="w"> </span>/usr/bin/python=@PYTHON_PATH@python.exe
+<span class="w"> </span>/usr/bin/python3=@PYTHON_PATH@python.exe
+<span class="gi">+:Python:E::py::@PYTHON_PATH@:</span>
+<span class="gd">-:Python:E::py::python3:</span>
+</pre></div>
+
+    </div>
+    
+    
+</div>
+
+
+    
+    
+<script src="/static/linelight.js"></script>
+
+  </body>
+</html>
