@@ -277,7 +277,7 @@
 
         #-- GIMP Development
         babl gegl
-        (pkgs.callPackage ../packages/gimp-devel {})
+        #(pkgs.callPackage ../packages/gimp-devel {})
 
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})
