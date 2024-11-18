@@ -12,14 +12,6 @@
         full
         qt6ct
         accounts-qt
-        akonadi
-        akonadi-calendar
-        akonadi-calendar-tools
-        akonadi-contacts
-        akonadi-import-wizard
-        akonadi-mime
-        akonadi-notes
-        akonadi-search
         ark
         baloo
         baloo-widgets
@@ -79,6 +71,26 @@
         wayqt
         wrapQtAppsHook
         xdg-desktop-portal-kde
+
+        akonadi
+        akonadi-calendar
+        akonadi-calendar-tools
+        akonadi-contacts
+        akonadi-import-wizard
+        akonadi-mime
+        akonadi-notes
+        akonadi-search
+        calendarsupport
+        kdepim-addons
+        kdepim-runtime
+        kontact
+        kmail
+        kmail-account-wizard
+        kmailtransport
+        libkdepim
+        pim-data-exporter
+        pim-sieve-editor
+        pimcommon
 
         breeze
         breeze-icons

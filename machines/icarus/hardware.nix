@@ -69,7 +69,8 @@
 
         nvidia = {
             # For now, only this driver works with kernel 6.11+
-            package = config.boot.kernelPackages.nvidiaPackages.stable;
+            #package = config.boot.kernelPackages.nvidiaPackages.stable;
+            package = config.boot.kernelPackages.nvidiaPackages.beta;
 
             prime = {
                 offload = {

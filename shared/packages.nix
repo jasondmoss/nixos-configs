@@ -206,8 +206,8 @@
         #-- MULTIMEDIA
         faac
         ffmpeg-full
-        ffmpeg_4-full
-        ffmpeg_6-full
+        #ffmpeg_4-full
+        #ffmpeg_6-full
         ffmpegthumbnailer
         flac
         flacon
@@ -277,7 +277,7 @@
 
         #-- GIMP Development
         babl gegl
-        #(pkgs.callPackage ../packages/gimp-devel {})
+        (pkgs.callPackage ../packages/gimp-devel {})
 
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})
@@ -290,9 +290,9 @@
     imports = [
         ../packages/vaapi.nix
         ../packages/php83.nix
-        ../packages/php84.nix
+        #../packages/php84.nix
         ../packages/kdedesktop.nix
-        ../packages/gimp.nix
+        #../packages/gimp.nix
 
         # Desktop Entries.
         ./desktop-entries/firefox-nightly.nix
