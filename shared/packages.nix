@@ -33,28 +33,6 @@
         };
 
         overlays = [
-            (final: prev: {
-                #_7zz = prev._7zz.override {
-                #    useUasm = true;
-                #};
-
-                babl = prev.babl.overrideAttrs (oldAttrs: {
-                    version = "0.1.110";
-                    src = final.fetchurl {
-                        url = "https://download.gimp.org/pub/babl/0.1/babl-0.1.110.tar.xz";
-                        hash = "sha256-v0e+dUDWJ1OJ9mQx7wMGTfU3YxXiQ9C6tEjGqnE/V0M=";
-                    };
-                });
-
-                gegl = prev.gegl.overrideAttrs (oldAttrs: {
-                    version = "0.4.50";
-                    src = final.fetchurl {
-                        url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.50.tar.xz";
-                        hash = "sha256-YISWmwbuhspxFCEzdz8n4T8C5aaiLCz85FLsqt23kME=";
-                    };
-                });
-            })
-
             # JetBrains EAP overlays.
             (import ../overlays/jetbrains/default.nix)
 
@@ -196,18 +174,16 @@
         figma-linux
         gcolor3
         inkscape
-        libreoffice-qt6-fresh
+        libreoffice-qt6-fresh-unwrapped
         nomacs
         nano
-        phpstorm # Custom overlay.
+        phpstorm    # Custom overlay.
         semantik
         sublime4
 
         #-- MULTIMEDIA
         faac
         ffmpeg-full
-        #ffmpeg_4-full
-        #ffmpeg_6-full
         ffmpegthumbnailer
         flac
         flacon
@@ -275,10 +251,6 @@
         #-- Anytype
         (pkgs.callPackage ../packages/anytype {})
 
-        #-- GIMP Development
-        babl gegl
-        (pkgs.callPackage ../packages/gimp-devel {})
-
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})
 
@@ -292,7 +264,7 @@
         ../packages/php83.nix
         #../packages/php84.nix
         ../packages/kdedesktop.nix
-        #../packages/gimp.nix
+        ../packages/gimp.nix
 
         # Desktop Entries.
         ./desktop-entries/firefox-nightly.nix

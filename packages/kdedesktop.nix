@@ -31,6 +31,7 @@
         kdeconnect-kde
         kdecoration
         kdegraphics-thumbnailers
+        kdenlive
         kdeplasma-addons
         kdesdk-thumbnailers
         kglobalaccel
