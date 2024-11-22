@@ -19,6 +19,7 @@
         dolphin-plugins
         ffmpegthumbs
         frameworkintegration
+        itinerary
         kajongg
         kate
         karchive
@@ -45,6 +46,7 @@
         kio-fuse
         kio-gdrive
         kio-zeroconf
+        kitinerary
         ksshaskpass
         ksvg
         ktorrent

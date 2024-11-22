@@ -28,6 +28,7 @@
             ];
 
             permittedInsecurePackages = [
+                "olm-3.2.16"
                 "openssl-1.1.1w"
             ];
         };
@@ -174,7 +175,9 @@
         figma-linux
         gcolor3
         inkscape
-        libreoffice-qt6-fresh-unwrapped
+        libreoffice-qt6
+        #libreoffice-qt6-fresh
+        #libreoffice-qt6-fresh-unwrapped
         nomacs
         nano
         phpstorm    # Custom overlay.
