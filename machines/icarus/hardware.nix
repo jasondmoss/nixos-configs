@@ -68,8 +68,6 @@
         };
 
         nvidia = {
-            # For now, only this driver works with kernel 6.11+
-            #package = config.boot.kernelPackages.nvidiaPackages.stable;
             package = config.boot.kernelPackages.nvidiaPackages.beta;
 
             prime = {
@@ -81,8 +79,6 @@
                 sync.enable = true;
                 nvidiaBusId = "PCI:1:0:0";
                 intelBusId = "PCI:0:2:0";
-                #nvidiaBusId = "PCI:0:2:0";
-                #intelBusId = "PCI:1:0:0";
             };
         };
     };

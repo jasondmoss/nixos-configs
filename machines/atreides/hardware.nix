@@ -2,7 +2,6 @@
 
     boot = {
         kernelPackages = pkgs.linuxPackages_xanmod_latest;
-        # kernelPackages = pkgs.linuxPackages_latest;
         #kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_10.override {
         #    argsOverride = rec {
         #        src = pkgs.fetchurl {
@@ -86,21 +85,7 @@
         };
 
         nvidia = {
-            # For now, only this driver works with kernel 6.11+
-            #package = config.boot.kernelPackages.nvidiaPackages.stable;
             package = config.boot.kernelPackages.nvidiaPackages.beta;
-            ###
-
-            #package = config.boot.kernelPackages.nvidiaPackages.beta;
-
-            # Beta branch.
-            #package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-            #    version = "565.57.01";
-            #    sha256_64bit = "sha256-buvpTlheOF6IBPWnQVLfQUiHv4GcwhvZW3Ks0PsYLHo=";
-            #    openSha256 = "sha256-hdszsACWNqkCh8G4VBNitDT85gk9gJe1BlQ8LdrYIkg=";
-            #    settingsSha256 = "sha256-hdszsACWNqkCh8G4VBNitDT85gk9gJe1BlQ8LdrYIkg=";
-            #    persistencedSha256 = "sha256-H7uEe34LdmUFcMcS6bz7sbpYhg9zPCb/5AmZZFTx1QA=";
-            #};
 
             # New feature branch.
             #package = config.boot.kernelPackages.nvidiaPackages.mkDriver {

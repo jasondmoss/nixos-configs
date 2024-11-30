@@ -34,17 +34,6 @@
         };
 
         overlays = [
-            #(final: prev: {
-            #    # Update Ollama to the latest.
-            #    ollama = prev.ollama.overrideAttrs (oldAttrs: {
-            #        version = "0.4.3";
-            #        src = final.fetchurl {
-            #            url = "https://github.com/ollama/ollama/releases/download/v0.4.3/ollama-linux-amd64.tgz";
-            #            hash = "sha256-rHIoVLiQE5uaLWcV+VGjqu+M/rxXuxr2Wc5O1pJ9AmA=";
-            #        };
-            #    });
-            #})
-
             # JetBrains EAP overlays.
             (import ../overlays/jetbrains/default.nix)
 
@@ -186,11 +175,12 @@
         figma-linux
         gcolor3
         inkscape
-        libreoffice-qt6
-        #libreoffice-qt6-fresh
+        #libreoffice-qt6
+        libreoffice-qt6-fresh
         #libreoffice-qt6-fresh-unwrapped
-        nomacs
         nano
+        nomacs
+        notes
         phpstorm    # Custom overlay.
         semantik
         sublime4
@@ -233,7 +223,7 @@
         comixcursors
         sweet-nova
 
-        #-- MISCELLANEOUS / UTILITIES
+        #-- MISCELLANEOUS
         conky
         libportal
         ulauncher

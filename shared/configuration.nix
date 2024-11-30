@@ -39,7 +39,6 @@ in {
             google-fonts
             jetbrains-mono
             liberation_ttf
-            nerdfonts
             paratype-pt-sans
             paratype-pt-mono
             profont

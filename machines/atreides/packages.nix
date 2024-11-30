@@ -16,9 +16,6 @@
 
     environment.systemPackages = (with pkgs; [
 
-        #-- EDITORS
-        notes
-
         # -- INTERNET
         tor-browser-bundle-bin
 
