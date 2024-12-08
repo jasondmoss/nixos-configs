@@ -18,7 +18,7 @@ let
         owner = "jonaski";
         repo = pname;
         rev = version;
-        hash = "sha256-PeHede1U0U5H2rI2GZqu1y9FD9Nt5adJkM/mBzvQu+U=";
+        hash = "sha256-C6eXQijLQfx8dufMfT5FxtY5NERDRrf+IBwmEF3UJuc=";
     };
 
     meta = with lib; {
@@ -92,9 +92,9 @@ substituteInPlace src/context/contextalbum.cpp --replace pictures/strawberry.png
     '';
 
     postInstall = lib.optionalString withGstreamer ''
-        qtWrapperArgs+=(
-            --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0"
-            --prefix GIO_EXTRA_MODULES : "${glib-networking.out}/lib/gio/modules"
-        )
+qtWrapperArgs+=(
+    --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0"
+    --prefix GIO_EXTRA_MODULES : "${glib-networking.out}/lib/gio/modules"
+)
     '';
 }

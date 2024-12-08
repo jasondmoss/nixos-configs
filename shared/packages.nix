@@ -175,9 +175,7 @@
         figma-linux
         gcolor3
         inkscape
-        #libreoffice-qt6
         libreoffice-qt6-fresh
-        #libreoffice-qt6-fresh-unwrapped
         nano
         nomacs
         notes
@@ -253,20 +251,19 @@
         #-- CUSTOM PACKAGES
 
         #-- Anytype
-        (pkgs.callPackage ../packages/anytype {})
+        (pkgs.callPackage ../packages/anytype.nix {})
 
         # Strawberry Music Player
-        (pkgs.callPackage ../packages/strawberry {})
+        (pkgs.callPackage ../packages/strawberry.nix {})
 
         # Wavebox Beta
-        (pkgs.callPackage ../packages/wavebox {})
+        (pkgs.callPackage ../packages/wavebox.nix {})
 
     ]);
 
     imports = [
         ../packages/vaapi.nix
-        ../packages/php83.nix
-        #../packages/php84.nix
+        ../packages/php.nix
         ../packages/kdedesktop.nix
         ../packages/gimp.nix
 

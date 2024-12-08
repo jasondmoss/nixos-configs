@@ -2,16 +2,6 @@
 
     boot = {
         kernelPackages = pkgs.linuxPackages_xanmod_latest;
-        #kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_10.override {
-        #    argsOverride = rec {
-        #        src = pkgs.fetchurl {
-        #            url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
-        #            sha256 = "sha256-5ofnNbXrnvttZ7QkM8k/yRGBBqmVUU8GJlKHO16Am80=";
-        #        };
-        #        version = "6.10.10";
-        #        modDirVersion = "6.10.10";
-        #    };
-        #});
 
         kernelParams = [
             "amd_iommu=on"

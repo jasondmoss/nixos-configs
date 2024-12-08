@@ -27,6 +27,7 @@ in {
         fontconfig = {
             enable = true;
             antialias = true;
+
             hinting = {
                 enable = true;
                 style = "slight";
@@ -186,19 +187,23 @@ local {
             extraModules = [ "http2" ];
             enablePHP = true;
 
-            phpPackage = pkgs.php83.buildEnv {
-                extensions = ({ enabled, all }: enabled);
-                extraConfig = "memory_limit = 2048M";
-            };
+#            phpPackage = pkgs.php83.buildEnv {
+#                extensions = ({ enabled, all }: enabled);
+#                extraConfig = ''
+#memory_limit = 2048M
+#                '';
+#            };
 
-            #phpPackage = pkgs.php84.buildEnv {
-            #    extensions = ({ enabled }: enabled);
-            #    extraConfig = "memory_limit = 2048M";
-            #};
+            phpPackage = pkgs.php84.buildEnv {
+                extensions = ({ enabled, all }: enabled);
+                extraConfig = ''
+memory_limit = 2048M
+                '';
+            };
 
             phpOptions = ''
 allow_url_fopen = On
-allow_url_include = On;
+allow_url_include = On
 display_errors = On
 display_startup_errors = On
 max_execution_time = 10000
@@ -207,7 +212,6 @@ mbstring.http_input = pass
 mbstring.http_output = pass
 mbstring.internal_encoding = pass
 memory_limit = 2048M
-memory_limit = 2048M;
 post_max_size = 2048M
 session.cookie_samesite = "Strict"
 upload_max_filesize = 2048M
@@ -295,9 +299,9 @@ upload_max_filesize = 2048M
             enable = true;
             wheelNeedsPassword = false;
             extraConfig = ''
-                Defaults:me !authenticate
-                # Keep SSH_AUTH_SOCK so that pam_ssh_agent_auth.so can do its magic.
-                Defaults env_keep+=SSH_AUTH_SOCK
+Defaults:me !authenticate
+# Keep SSH_AUTH_SOCK so that pam_ssh_agent_auth.so can do its magic.
+Defaults env_keep+=SSH_AUTH_SOCK
             '';
         };
     };

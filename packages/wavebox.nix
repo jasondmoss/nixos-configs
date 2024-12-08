@@ -5,12 +5,12 @@
 with lib;
 let
     bits = "x86_64";
-    version = "10.131.15-3";
+    version = "10.131.16-3";
     tarball = "Wavebox_${version}.tar.gz";
 
     src = fetchurl {
         url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-        sha256 = "sha256-50n3kW4+cdLcOy6IMvicoSJQIiciLV+yZWnW08ZWgLY=";
+        sha256 = "sha256-MtVE+kWi2cdCslOlz9hea9B3afE0votkABuMtht5U3o=";
     };
 
     desktopItem = makeDesktopItem rec {
@@ -64,17 +64,16 @@ in stdenv.mkDerivation rec {
     runtimeDependencies = [ (getLib udev) libnotify gtk4 ];
 
     installPhase = ''
-        mkdir -p $out/bin $out/opt/wavebox
-        cp -r * $out/opt/wavebox
+mkdir -p $out/bin $out/opt/wavebox
+cp -r * $out/opt/wavebox
 
-        # provide desktop item and icon
-        mkdir -p $out/share/applications $out/share/icons/hicolor/128x128/apps
-        ln -s ${desktopItem}/share/applications/* $out/share/applications
-        ln -s $out/opt/wavebox/product_logo_128.png $out/share/icons/hicolor/128x128/apps/wavebox.png
+# provide desktop item and icon
+mkdir -p $out/share/applications $out/share/icons/hicolor/128x128/apps
+ln -s ${desktopItem}/share/applications/* $out/share/applications
+ln -s $out/opt/wavebox/product_logo_128.png $out/share/icons/hicolor/128x128/apps/wavebox.png
     '';
 
     postFixup = ''
-        makeWrapper $out/opt/wavebox/wavebox-launcher $out/bin/wavebox \
-        --prefix PATH : ${xdg-utils}/bin
+makeWrapper $out/opt/wavebox/wavebox-launcher $out/bin/wavebox --prefix PATH : ${xdg-utils}/bin
     '';
 }
