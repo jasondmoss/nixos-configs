@@ -48,6 +48,7 @@
 
         aha
         babl
+        bluez
         clinfo
         coreutils-full
         curl
@@ -212,6 +213,7 @@
         megasync
         megatools
         microsoft-edge
+        nyxt
         opera
         protonvpn-gui
         thunderbird-unwrapped
@@ -264,7 +266,8 @@
     imports = [
         ../packages/vaapi.nix
         ../packages/php.nix
-        ../packages/kdedesktop.nix
+        ../packages/kde-desktop.nix
+        ../packages/gnome-desktop.nix
         ../packages/gimp.nix
 
         # Desktop Entries.

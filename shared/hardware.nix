@@ -34,14 +34,26 @@
             };
         };
 
-        pulseaudio = {
-            enable = false;
+        bluetooth = {
+            enable = true;
 
-            zeroconf = {
-                publish.enable = false;
-                discovery.enable = false;
+            settings = {
+                General = {
+                    Experimental = "true";
+                };
             };
         };
+
+        #pulseaudio = {
+        #    enable = false;
+        #
+        #    zeroconf = {
+        #        publish.enable = false;
+        #        discovery.enable = false;
+        #    };
+        #};
+
+        keyboard.qmk.enable = true;
     };
 
     virtualisation.docker = {

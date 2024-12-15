@@ -1,3 +1,7 @@
+################################################################################
+##                                ATREIDES                                    ##
+################################################################################
+
 { config, lib, pkgs, ... }: {
 
     boot = {
@@ -97,10 +101,61 @@
         fsType = "vfat";
     };
 
-    swapDevices = [
-        {
-            device = "/dev/disk/by-uuid/8a9e0e21-ada8-4830-9836-3f9d678ac477";
-        }
+    swapDevices = [{
+        device = "/dev/disk/by-uuid/8a9e0e21-ada8-4830-9836-3f9d678ac477";
+    }];
+
+    system.stateVersion = "24.05";
+    time.timeZone = "America/Toronto";
+    networking.hostName = "icarus";
+
+    services = {
+        power-profiles-daemon.enable = false;
+        printing.enable = true;
+
+        avahi = {
+            enable = true;
+            nssmdns4 = true;
+            openFirewall = true;
+        };
+
+        tlp = {
+            enable = true;
+            settings = {
+                CPU_SCALING_GOVERNOR_ON_AC = "performance";
+                CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+                CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+                CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+
+                CPU_MIN_PERF_ON_AC = 0;
+                CPU_MAX_PERF_ON_AC = 100;
+                CPU_MIN_PERF_ON_BAT = 0;
+                CPU_MAX_PERF_ON_BAT = 20;
+
+                START_CHARGE_THRESH_BAT0 = 40;
+                STOP_CHARGE_THRESH_BAT0 = 80;
+            };
+        };
+
+        xserver.dpi = 96;
+    };
+
+    #environment.systemPackages = (with pkgs; [
+    #
+    #]);
+
+
+    #
+    # Shared configurations.
+    #
+    imports = [
+        ../shared/hardware.nix
+        ../shared/configuration.nix
+        ../shared/packages.nix
+        ../shared/desktop-entries/mkvtoolnix.nix
     ];
 
 }
+
+# <> #

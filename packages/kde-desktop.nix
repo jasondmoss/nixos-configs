@@ -4,17 +4,18 @@
         # Klassy KDE Theme
         (pkgs.callPackage ./kde-klassy.nix {})
 
+        kphotoalbum
         materia-kde-theme
 
     ]) ++ (with pkgs.kdePackages; [
 
-        #-- KDE
         full
         qt6ct
         accounts-qt
         ark
         baloo
         baloo-widgets
+        bluedevil
         dolphin
         dolphin-plugins
         ffmpegthumbs
@@ -65,7 +66,6 @@
         plasma-integration
         plasma-wayland-protocols
         plasma-workspace
-        #plymouth-kcm
         qtsvg
         qttools
         taglib

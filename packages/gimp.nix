@@ -23,7 +23,6 @@
 
         babl
         gegl
-        #gimp
 
         #-- GIMP Development
         (pkgs.callPackage ./gimp-devel {})

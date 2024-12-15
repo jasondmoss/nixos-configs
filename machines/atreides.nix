@@ -1,3 +1,7 @@
+################################################################################
+##                                ATREIDES                                    ##
+################################################################################
+
 { config, lib, pkgs, ... }: {
 
     boot = {
@@ -136,4 +140,57 @@
 
     swapDevices = [];
 
+    services = {
+        xserver.dpi = 162;
+    };
+
+    programs = {
+        steam = {
+            enable = true;
+            remotePlay.openFirewall = true;
+            dedicatedServer.openFirewall = true;
+        };
+    };
+
+    system.stateVersion = "24.05";
+    time.timeZone = "America/Toronto";
+    networking.hostName = "atreides";
+
+    nixpkgs = {
+        config = {
+            allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+                "steam"
+                "steam-run"
+                "steam-original"
+            ];
+        };
+    };
+
+    environment.systemPackages = (with pkgs; [
+        audacity
+        audible-cli
+        cuetools
+        easytag
+        haruna
+        kdePackages.phonon-vlc
+        mkvtoolnix
+        taglib-sharp
+        taglib_extras
+        tor-browser-bundle-bin
+        vlc
+    ]);
+
+
+    #
+    # Shared configurations.
+    #
+    imports = [
+        ../shared/hardware.nix
+        ../shared/configuration.nix
+        ../shared/packages.nix
+        ../shared/desktop-entries/mkvtoolnix.nix
+    ];
+
 }
+
+# <> #

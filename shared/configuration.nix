@@ -117,7 +117,11 @@ local {
         gpm.enable = true;
         pcscd.enable = true;
         sysstat.enable = true;
-        udev.enable = true;
+        udev = {
+            enable = true;
+
+            packages = [ pkgs.via ];
+        };
 
         xserver = {
             enable = true;
@@ -149,9 +153,14 @@ local {
 
         pipewire = {
             enable = true;
-            alsa.enable = true;
-            alsa.support32Bit = true;
+            audio.enable = true;
+            jack.enable = true;
             pulse.enable = true;
+
+            alsa = {
+                enable = true;
+                support32Bit = true;
+            };
         };
 
         displayManager = {
