@@ -207,19 +207,19 @@
         vorbis-tools
         wavpack
 
-        #-- INTERNET
-        #brave
+        #-- NETWORK
         filezilla
         megasync
         megatools
         microsoft-edge
-        #nyxt
+        ngrok
+        nyxt
         opera
         protonvpn-gui
         thunderbird-unwrapped
         zoom-us
 
-        #-- THEMING
+        #-- THEME
         comixcursors
         sweet-nova
 
