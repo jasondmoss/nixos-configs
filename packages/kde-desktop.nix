@@ -24,6 +24,7 @@
         kajongg
         kate
         karchive
+        kbreakout
         kcalc
         kcmutils
         kcolorpicker
@@ -81,7 +82,6 @@
         akonadi-contacts
         akonadi-import-wizard
         akonadi-mime
-        akonadi-notes
         akonadi-search
         calendarsupport
         kdepim-addons

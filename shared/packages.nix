@@ -128,7 +128,7 @@
         xorg.libxcb
 
         #-- DESKTOP
-        gtk4
+        #gtk4
         ly
 
         #-- DEVELOPMENT
@@ -174,7 +174,7 @@
 
         #-- EDITORS
         figma-linux
-        gcolor3
+        #gcolor3
         inkscape
         libreoffice-qt6-fresh
         nano
@@ -200,7 +200,7 @@
         mpvScripts.thumbfast
         opusTools
         pavucontrol
-        qmmp
+        #qmmp
         shntool
         sox
         speechd
@@ -208,12 +208,12 @@
         wavpack
 
         #-- INTERNET
-        brave
+        #brave
         filezilla
         megasync
         megatools
         microsoft-edge
-        nyxt
+        #nyxt
         opera
         protonvpn-gui
         thunderbird-unwrapped
@@ -267,7 +267,7 @@
         ../packages/vaapi.nix
         ../packages/php.nix
         ../packages/kde-desktop.nix
-        ../packages/gnome-desktop.nix
+        #../packages/gnome-desktop.nix
         ../packages/gimp.nix
 
         # Desktop Entries.

@@ -142,6 +142,12 @@
 
     services = {
         xserver.dpi = 162;
+
+        printing = {
+            browsing = false;
+            cups-pdf.enable = false;
+            startWhenNeeded = false;
+        };
     };
 
     programs = {

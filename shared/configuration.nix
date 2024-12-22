@@ -57,7 +57,6 @@ in {
 
     programs = {
         bash.completion.enable = true;
-        dconf.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;
         xwayland.enable = true;
@@ -95,6 +94,12 @@ in {
     };
 
     services = {
+        dbus.enable = true;
+        devmon.enable = true;
+        gpm.enable = true;
+        pcscd.enable = true;
+        sysstat.enable = true;
+
         coredns = {
             enable = true;
             config = ''
@@ -112,11 +117,6 @@ local {
             '';
         };
 
-        dbus.enable = true;
-        devmon.enable = true;
-        gpm.enable = true;
-        pcscd.enable = true;
-        sysstat.enable = true;
         udev = {
             enable = true;
 
@@ -126,12 +126,6 @@ local {
         xserver = {
             enable = true;
             videoDrivers = [ "nvidia" ];
-        };
-
-        printing = {
-            browsing = false;
-            cups-pdf.enable = false;
-            startWhenNeeded = false;
         };
 
         locate = {
@@ -357,6 +351,7 @@ Defaults env_keep+=SSH_AUTH_SOCK
             __GL_VRR_ALLOWED = "0";
             __GLX_VENDOR_LIBRARY_NAME = "nvidia";
             _JAVA_AWT_WM_NONREPARENTING = "1";
+            __NV_DISABLE_EXPLICIT_SYNC = "1";
 
             DISABLE_QT5_COMPAT = "1";
             EGL_PLATFORM = "wayland";
@@ -385,6 +380,12 @@ Defaults env_keep+=SSH_AUTH_SOCK
 
             KWIN_TRIPLE_BUFFER = "1";
 
+            #GDK_DPI_SCALE = "0.5";
+            #GDK_SCALE = "2";
+            #GDK_USE_XFT = "1";
+
+            GSK_RENDERER = "gl";
+
             MOZ_DISABLE_GMP_SANDBOX = "1";
             MOZ_DISABLE_RDD_SANDBOX = "1";
             MOZ_ENABLE_WAYLAND = "1";
@@ -402,10 +403,6 @@ Defaults env_keep+=SSH_AUTH_SOCK
             XDG_MENU_PREFIX = "kde-";
 
             XCURSOR_THEME = "ComixCursors";
-
-            #GDK_DPI_SCALE = "0.5";
-            #GDK_SCALE = "2";
-            #GDK_USE_XFT = "1";
 
             GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
                 pkgs.gst_all_1.gst-editing-services

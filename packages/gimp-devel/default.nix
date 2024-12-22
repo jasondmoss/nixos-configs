@@ -31,66 +31,17 @@ in stdenv.mkDerivation (finalAttrs: {
     ];
 
     nativeBuildInputs = [
-        aalib
-        alsa-lib
-        appstream
-        bashInteractive
-        findutils
-        ghostscript
-        gi-docgen
-        isocodes
-        libarchive
-        libheif
-        libiff
-        libilbm
-        libjxl
-        libmng
-        libwebp
-        libxslt
-        meson
-        ninja
-        perl538
-        pkg-config
-        vala
-        wrapGAppsHook
-        xvfb-run
+        aalib alsa-lib appstream bashInteractive findutils ghostscript gi-docgen
+        isocodes libarchive libheif libiff libilbm libjxl libmng libwebp libxslt
+        meson ninja perl538 pkg-config vala wrapGAppsHook xvfb-run
     ];
 
     buildInputs = [
-        aalib
-        appstream-glib
-        babl
-        cairo
-        cfitsio
-        desktop-file-utils
-        gdk-pixbuf
-        gegl
-        gexiv2
-        ghostscript
-        gjs
-        glib
-        glib-networking
-        gobject-introspection
-        gtk3
-        lcms
-        libgudev
-        libheif
-        libjxl
-        libmng
-        libmypaint
-        librsvg
-        libwebp
-        libwmf
-        lua
-        mypaint-brushes1
-        openexr
-        poppler
-        poppler_data
-        python
-        qoi
-        shared-mime-info
-        xorg.libXmu
-        xorg.libXpm
+        aalib appstream-glib babl cairo cfitsio desktop-file-utils gdk-pixbuf
+        gegl gexiv2 ghostscript gjs glib glib-networking gobject-introspection
+        gtk3 lcms libgudev libheif libjxl libmng libmypaint librsvg libwebp
+        libwmf lua mypaint-brushes1 openexr poppler poppler_data python qoi
+        shared-mime-info xorg.libXmu xorg.libXpm
     ];
 
     preConfigure = ''

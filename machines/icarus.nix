@@ -106,12 +106,13 @@
     }];
 
     system.stateVersion = "24.05";
-    time.timeZone = "America/Toronto";
+    time.timeZone = "America/Halifax";
     networking.hostName = "icarus";
 
     services = {
         power-profiles-daemon.enable = false;
         printing.enable = true;
+        xserver.dpi = 96;
 
         avahi = {
             enable = true;
@@ -138,12 +139,15 @@
             };
         };
 
-        xserver.dpi = 96;
+        printing = {
+            browsing = true;
+            cups-pdf.enable = true;
+            startWhenNeeded = true;
+        };
+
     };
 
-    #environment.systemPackages = (with pkgs; [
-    #
-    #]);
+    #environment.systemPackages = (with pkgs; []);
 
 
     #
