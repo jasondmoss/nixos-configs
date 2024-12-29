@@ -1,11 +1,46 @@
 ################################################################################
-##                                ATREIDES                                    ##
+##                              ·: ATREIDES :·                                ##
 ################################################################################
 
 { config, lib, pkgs, ... }: {
-
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+        loader = {
+            grub.enable = false;
+
+            systemd-boot = {
+                enable = true;
+                memtest86.enable = true;
+                consoleMode = "auto";
+            };
+
+            efi = {
+                efiSysMountPoint = "/boot/efi";
+                canTouchEfiVariables = true;
+            };
+        };
+
+        kernelModules = [
+            "kvm-amd"
+        ];
+
+        initrd = {
+            kernelModules = [
+                "i2c-nvidia_gpu"
+                "nvidia"
+                "nvidia_drm"
+                "nvidia_modeset"
+                "nvidia_uvm"
+            ];
+
+            availableKernelModules = [
+                "ahci"
+                "nvme"
+                "sd_mod"
+                "usb_storage"
+                "usbhid"
+                "xhci_pci"
+            ];
+        };
 
         kernelParams = [
             "amd_iommu=on"
@@ -21,44 +56,14 @@
             "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
 
-        initrd = {
-            availableKernelModules = [
-                "nvme"
-                "xhci_pci"
-                "ahci"
-                "usbhid"
-                "usb_storage"
-                "sd_mod"
-            ];
+        blacklistedKernelModules = [ "nouveau" ];
 
-            kernelModules = [
-                "nvidia"
-                "nvidia_modeset"
-                "nvidia_uvm"
-                "nvidia_drm"
-                "i2c-nvidia_gpu"
-                "kvm-amd"
-            ];
-        };
+        #extraModulePackages = [];
 
-        blacklistedKernelModules = [
-            "nouveau"
-        ];
-
-        extraModulePackages = [];
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
         kernel.sysctl = {
             "fs.inotify.max_user_watches" = 2140000000;
-        };
-
-        loader = {
-            systemd-boot.enable = true;
-            grub.enable = false;
-
-            efi = {
-                efiSysMountPoint = "/boot/efi";
-                canTouchEfiVariables = true;
-            };
         };
 
         swraid.enable = false;
@@ -194,9 +199,8 @@
         ../shared/hardware.nix
         ../shared/configuration.nix
         ../shared/packages.nix
-        ../shared/desktop-entries/mkvtoolnix.nix
+        ../packages/desktop-entries/mkvtoolnix.nix
     ];
-
 }
 
 # <> #

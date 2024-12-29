@@ -56,10 +56,11 @@ in {
     };
 
     programs = {
-        bash.completion.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;
         xwayland.enable = true;
+
+        bash.completion.enable = true;
 
         ssh = {
             startAgent = true;
@@ -239,6 +240,21 @@ upload_max_filesize = 2048M
                     };
                 }
             ];
+        };
+
+        ngrok = {
+            enable = true;
+
+            extraConfig = {};
+
+            extraConfigFiles = [
+                # reference to files containing `authtoken` and `api_key` secrets
+                # ngrok will merge these, together with `extraConfig`
+            ];
+
+            tunnels = {
+                # ...
+            };
         };
 
         ollama = {

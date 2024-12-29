@@ -23,9 +23,8 @@
 
         babl
         gegl
-        gimp # Stable version
-
         #(pkgs.callPackage ./gimp-devel {}) # Development version
+        gimp # Stable version
 
     ]) ++ (with pkgs.gimpPlugins; [
 

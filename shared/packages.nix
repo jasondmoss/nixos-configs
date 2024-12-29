@@ -2,6 +2,11 @@
 
     # Setup.
     nixpkgs = {
+        #hostPlatform = {
+        #    gcc.arch = "alderlake";
+        #    gcc.tune = "alderlake";
+        #    system = "x86_64-linux";
+        #};
         hostPlatform = lib.mkDefault "x86_64-linux";
 
         config = {
@@ -128,7 +133,6 @@
         xorg.libxcb
 
         #-- DESKTOP
-        #gtk4
         ly
 
         #-- DEVELOPMENT
@@ -173,8 +177,6 @@
         sniffnet
 
         #-- EDITORS
-        figma-linux
-        #gcolor3
         inkscape
         libreoffice-qt6-fresh
         nano
@@ -200,7 +202,6 @@
         mpvScripts.thumbfast
         opusTools
         pavucontrol
-        #qmmp
         shntool
         sox
         speechd
@@ -225,6 +226,9 @@
 
         #-- MISCELLANEOUS
         conky
+        kitty
+        kitty-img
+        kitty-themes
         libportal
         ulauncher
         wezterm
@@ -266,15 +270,16 @@
     imports = [
         ../packages/vaapi.nix
         ../packages/php.nix
+        ../packages/ngrok.nix
         ../packages/kde-desktop.nix
         #../packages/gnome-desktop.nix
         ../packages/gimp.nix
+        #../packages/notes.nix
 
         # Desktop Entries.
-        ./desktop-entries/firefox-nightly.nix
-        ./desktop-entries/firefox-stable.nix
-        ./desktop-entries/thunderbird.nix
-        #./desktop-entries/google-chrome-stable.nix
+        ../packages/desktop-entries/firefox-nightly.nix
+        ../packages/desktop-entries/firefox-stable.nix
+        ../packages/desktop-entries/thunderbird.nix
     ];
 
 }

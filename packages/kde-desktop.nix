@@ -27,6 +27,7 @@
         kbreakout
         kcalc
         kcmutils
+        kcolorchooser
         kcolorpicker
         kconfigwidgets
         kcoreaddons

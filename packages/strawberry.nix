@@ -18,7 +18,7 @@ let
         owner = "jonaski";
         repo = pname;
         rev = version;
-        hash = "sha256-C6eXQijLQfx8dufMfT5FxtY5NERDRrf+IBwmEF3UJuc=";
+        hash = "sha256-wLC4xL1Dxgwoi6rt33/rpgzErADoU7MKlmvUdkF6Z0s=";
     };
 
     meta = with lib; {
@@ -26,8 +26,8 @@ let
         homepage = "https://www.strawberrymusicplayer.org/";
         changelog = "https://raw.githubusercontent.com/jonaski/strawberry/${version}/Changelog";
         license = licenses.gpl3Only;
-        maintainers = with maintainers; [ peterhoeg ];
         # upstream says darwin should work but they lack maintainers as of 0.6.6
+        maintainers = with maintainers; [ peterhoeg ];
         platforms = platforms.linux;
     };
 in stdenv.mkDerivation rec {

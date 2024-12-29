@@ -1,36 +1,35 @@
 ################################################################################
-##                                ATREIDES                                    ##
+##                              ·: ICARUS :·                                  ##
 ################################################################################
 
 { config, lib, pkgs, ... }: {
-
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+        loader = {
+            systemd-boot.enable = true;
+            efi.canTouchEfiVariables = true;
+        };
 
-        kernelParams = [
-            "mem_sleep_default=deep"
-            "nvidia_drm.modeset=1"
-            "nvidia_drm.fbdev=1"
+        kernelModules = [
+            "kvm-intel"
         ];
 
         initrd = {
-            availableKernelModules = [
-                "nvidia"
-                "nvidia_modeset"
-                "nvidia_uvm"
-                "nvidia_drm"
-                "vmd"
-                "xhci_pci"
-                "ahci"
-                "nvme"
-                "usbhid"
-                "usb_storage"
-                "sd_mod"
-            ];
-
             kernelModules = [
                 "dm-snapshot"
-                "kvm-intel"
+                "nvidia"
+                "nvidia_drm"
+                "nvidia_modeset"
+                "nvidia_uvm"
+            ];
+
+            availableKernelModules = [
+                "ahci"
+                "nvme"
+                "sd_mod"
+                "usb_storage"
+                "usbhid"
+                "vmd"
+                "xhci_pci"
             ];
 
             luks.devices = {
@@ -41,6 +40,13 @@
             };
         };
 
+        kernelParams = [
+            "intel_iommu=on"
+            "mem_sleep_default=deep"
+            "nvidia_drm.fbdev=1"
+            "nvidia_drm.modeset=1"
+        ];
+
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
             "NVreg_UsePageAttributeTable=1"
             "NVreg_EnablePCIeGen3=1"
@@ -48,19 +54,14 @@
             "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
 
-        blacklistedKernelModules = [
-            "nouveau"
-        ];
+        blacklistedKernelModules = [ "nouveau" ];
 
-        extraModulePackages = [];
+        #extraModulePackages = [];
+
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
         kernel.sysctl = {
             "fs.inotify.max_user_watches" = 2140000000;
-        };
-
-        loader = {
-            systemd-boot.enable = true;
-            efi.canTouchEfiVariables = true;
         };
 
         swraid.enable = false;
@@ -68,6 +69,10 @@
 
     hardware = {
         cpu.intel = {
+            sgx.provision = {
+                enable = true;
+            };
+
             updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
 
@@ -144,7 +149,6 @@
             cups-pdf.enable = true;
             startWhenNeeded = true;
         };
-
     };
 
     #environment.systemPackages = (with pkgs; []);
@@ -159,7 +163,6 @@
         ../shared/packages.nix
         ../shared/desktop-entries/mkvtoolnix.nix
     ];
-
 }
 
 # <> #
