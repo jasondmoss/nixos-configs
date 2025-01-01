@@ -7,7 +7,8 @@ in {
         package = pkgs.nixVersions.latest;
 
         settings = {
-            trusted-users = [ "root" "@wheel" ];
+            trusted-users = [ "root" "me" "@wheel" ];
+            allowed-users = [ "root" "me" "@wheel" ];
             experimental-features = "nix-command flakes";
             auto-optimise-store = true;
             max-jobs = "auto";
@@ -248,8 +249,7 @@ upload_max_filesize = 2048M
             extraConfig = {};
 
             extraConfigFiles = [
-                # reference to files containing `authtoken` and `api_key` secrets
-                # ngrok will merge these, together with `extraConfig`
+                "/home/me/.config/ngrok/ngrok.yml"
             ];
 
             tunnels = {

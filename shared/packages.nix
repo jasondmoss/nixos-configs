@@ -2,12 +2,7 @@
 
     # Setup.
     nixpkgs = {
-        #hostPlatform = {
-        #    gcc.arch = "alderlake";
-        #    gcc.tune = "alderlake";
-        #    system = "x86_64-linux";
-        #};
-        hostPlatform = lib.mkDefault "x86_64-linux";
+        #hostPlatform = lib.mkDefault "x86_64-linux";
 
         config = {
             allowBroken = true;     # For 'php-packages'
@@ -191,7 +186,6 @@
         ffmpeg-full
         ffmpegthumbnailer
         flac
-        flacon
         isoimagewriter
         lame
         libcue
@@ -209,12 +203,13 @@
         wavpack
 
         #-- NETWORK
+        chawan   # Terminal browser
         filezilla
         megasync
         megatools
         microsoft-edge
         ngrok
-        nyxt
+        #nyxt
         opera
         protonvpn-gui
         thunderbird-unwrapped
@@ -273,7 +268,7 @@
         ../packages/ngrok.nix
         ../packages/kde-desktop.nix
         #../packages/gnome-desktop.nix
-        ../packages/gimp.nix
+        #../packages/gimp.nix
         #../packages/notes.nix
 
         # Desktop Entries.

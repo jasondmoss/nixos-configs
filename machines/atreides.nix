@@ -3,9 +3,21 @@
 ################################################################################
 
 { config, lib, pkgs, ... }: {
+    nix.settings.system-features = [
+        "benchmark"
+        "big-parallel"
+        "kvm"
+        "nixos-test"
+        "gccarch-znver2"
+    ];
+
     boot = {
+        consoleLogLevel = 0;
+
         loader = {
             grub.enable = false;
+            timeout = 0;
+            #verbose = false;
 
             systemd-boot = {
                 enable = true;
@@ -14,9 +26,20 @@
             };
 
             efi = {
-                efiSysMountPoint = "/boot/efi";
                 canTouchEfiVariables = true;
+                efiSysMountPoint = "/boot/efi";
             };
+        };
+
+        plymouth = {
+            enable = true;
+            theme = "breeze";
+
+            #themePackages = with pkgs; [
+            #    (adi1090x-plymouth-themes.override {
+            #        selected_themes = [ "rings" ];
+            #    })
+            #];
         };
 
         kernelModules = [
@@ -24,6 +47,8 @@
         ];
 
         initrd = {
+            systemd.enable = true;
+
             kernelModules = [
                 "i2c-nvidia_gpu"
                 "nvidia"
@@ -44,16 +69,24 @@
 
         kernelParams = [
             "amd_iommu=on"
+            "amd_pstate=active"
+            "boot.shell_on_fail"
+            "loglevel=3"
             "mem_sleep_default=deep"
             "nvidia-drm.fbdev=1"
             "nvidia-drm.modeset=1"
+            "quiet"
+            "rd.systemd.show_status=false"
+            "rd.udev.log_level=3"
+            "splash"
+            "udev.log_priority=3"
         ];
 
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
-            "NVreg_UsePageAttributeTable=1"
             "NVreg_EnablePCIeGen3=1"
             "NVreg_PreserveVideoMemoryAllocations=1"
             "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+            "NVreg_UsePageAttributeTable=1"
         ];
 
         blacklistedKernelModules = [ "nouveau" ];
@@ -146,12 +179,23 @@
     swapDevices = [];
 
     services = {
+        power-profiles-daemon.enable = false;
         xserver.dpi = 162;
+
+        tlp = {
+            enable = true;
+            settings = {
+                CPU_SCALING_GOVERNOR_ON_AC = "performance";
+                CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+                CPU_MIN_PERF_ON_AC = 0;
+                CPU_MAX_PERF_ON_AC = 100;
+            };
+        };
 
         printing = {
             browsing = false;
-            cups-pdf.enable = false;
-            startWhenNeeded = false;
+            cups-pdf.enable = true;
+            startWhenNeeded = true;
         };
     };
 
@@ -168,13 +212,18 @@
     networking.hostName = "atreides";
 
     nixpkgs = {
-        config = {
-            allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-                "steam"
-                "steam-run"
-                "steam-original"
-            ];
+        hostPlatform = {
+            gcc.arch = "znver2";
+            gcc.tune = "znver2";
+            system = "x86_64-linux";
         };
+        #hostPlatform = lib.mkDefault "x86_64-linux";
+
+        config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+            "steam"
+            "steam-run"
+            "steam-original"
+        ];
     };
 
     environment.systemPackages = (with pkgs; [
@@ -182,6 +231,7 @@
         audible-cli
         cuetools
         easytag
+        #flacon
         haruna
         kdePackages.phonon-vlc
         mkvtoolnix

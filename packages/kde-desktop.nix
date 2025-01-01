@@ -2,7 +2,7 @@
     environment.systemPackages = (with pkgs; [
 
         # Klassy KDE Theme
-        (pkgs.callPackage ./kde-klassy.nix {})
+        #(pkgs.callPackage ./kde-klassy.nix {})
 
         kphotoalbum
         materia-kde-theme

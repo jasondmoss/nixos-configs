@@ -2,15 +2,15 @@
 stdenv.mkDerivation rec {
 
     pname = "klassy";
-    version = "master";
-    #version = "plasma6.0";
+    #version = "master";
+    version = "plasma6.0";
 
     src = fetchFromGitHub {
         owner = "paulmcauley";
         repo = "klassy";
         rev = version;
-        hash = "sha256-Hg9JbnLntVTCvYjMzaeo18y4VUt+5/yC9T0b3Rthvfs="; # master
-        #hash = "sha256-vNqxivXgwZOa06q0mL0tdWXkoC/1Z9yZ5JX8NyxCpQE="; # plasma6
+        #hash = "sha256-Hg9JbnLntVTCvYjMzaeo18y4VUt+5/yC9T0b3Rthvfs="; # master
+        hash = "sha256-vNqxivXgwZOa06q0mL0tdWXkoC/1Z9yZ5JX8NyxCpQE="; # plasma6
     };
 
     buildInputs = [

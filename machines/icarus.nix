@@ -1,5 +1,7 @@
 ################################################################################
-##                              ·: ICARUS :·                                  ##
+ ##																			 ##
+ ##                             ·: ICARUS :·                                 ##
+ ##																			 ##
 ################################################################################
 
 { config, lib, pkgs, ... }: {
@@ -32,11 +34,9 @@
                 "xhci_pci"
             ];
 
-            luks.devices = {
-                crypted = {
-                    device = "/dev/disk/by-uuid/5e02c30a-d26f-41fb-ba83-b9f2e3b39b5e";
-                    preLVM = true;
-                };
+            luks.devices.crypted = {
+                device = "/dev/disk/by-uuid/5e02c30a-d26f-41fb-ba83-b9f2e3b39b5e";
+                preLVM = true;
             };
         };
 
@@ -110,10 +110,6 @@
         device = "/dev/disk/by-uuid/8a9e0e21-ada8-4830-9836-3f9d678ac477";
     }];
 
-    system.stateVersion = "24.05";
-    time.timeZone = "America/Halifax";
-    networking.hostName = "icarus";
-
     services = {
         power-profiles-daemon.enable = false;
         printing.enable = true;
@@ -151,8 +147,22 @@
         };
     };
 
-    #environment.systemPackages = (with pkgs; []);
+    system.stateVersion = "24.05";
+    time.timeZone = "America/Halifax";
+    networking.hostName = "icarus";
 
+    nixpkgs = {
+        hostPlatform = {
+            gcc.arch = "alderlake";
+            gcc.tune = "alderlake";
+            system = "x86_64-linux";
+        };
+        #hostPlatform = lib.mkDefault "x86_64-linux";
+    };
+
+    environment.systemPackages = (with pkgs; [
+        #
+    ]);
 
     #
     # Shared configurations.
@@ -161,7 +171,6 @@
         ../shared/hardware.nix
         ../shared/configuration.nix
         ../shared/packages.nix
-        ../shared/desktop-entries/mkvtoolnix.nix
     ];
 }
 

@@ -64,7 +64,8 @@ Use this for sensitive configuration that shouldn't go into the nixos configurat
             group = "ngrok";
         };
 
-        systemd.services.ngrok = let
+        systemd.services.ngrok =
+        let
             ngrokConfig = pkgs.writeTextFile {
                 name = "ngrok-config";
                 text = toJSON ({
@@ -75,25 +76,25 @@ Use this for sensitive configuration that shouldn't go into the nixos configurat
             };
 
             startArg = if length (attrNames cfg.tunnels) > 0 then "--all" else "--none";
-            extraConfigs = concatStringsSep " " (map (file: "--config ${file}") cfg.extraConfigFiles);
+            #extraConfigs = concatStringsSep " " (map (file: "--config ${file}") cfg.extraConfigFiles);
+            extraConfigs = concatStringsSep "" (map (file: ",${file}") cfg.extraConfigFiles);
+        in {
+            description = "The ngrok agent.";
+            wantedBy = [ "multi-user.target" ];
+            after = [ "network.target" ];
 
-            in {
-                description = "The ngrok agent.";
-                wantedBy = [ "multi-user.target" ];
-                after = [ "network.target" ];
+            unitConfig = {
+                StartLimitInterval = "5s";
+                StartLimitBurst = "10s";
+            };
 
-                unitConfig = {
-                    StartLimitInterval = "5s";
-                    StartLimitBurst = "10s";
-                };
-
-                serviceConfig = {
-                    ExecStart = "${pkgs.ngrok}/bin/ngrok --config ${ngrokConfig} ${extraConfigs} start ${startArg}";
-                    Restart = "always";
-                    RestartSec = "15";
-                    User = "ngrok";
-                    Group = "ngrok";
-                };
+            serviceConfig = {
+                ExecStart = "${pkgs.ngrok}/bin/ngrok --config ${ngrokConfig}${extraConfigs} start ${startArg}";
+                Restart = "always";
+                RestartSec = "15";
+                User = "ngrok";
+                Group = "ngrok";
             };
         };
+    };
 }
