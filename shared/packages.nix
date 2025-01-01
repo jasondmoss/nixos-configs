@@ -265,7 +265,7 @@
     imports = [
         ../packages/vaapi.nix
         ../packages/php.nix
-        ../packages/ngrok.nix
+        #../packages/ngrok.nix
         ../packages/kde-desktop.nix
         #../packages/gnome-desktop.nix
         #../packages/gimp.nix

@@ -11,6 +11,17 @@
             efi.canTouchEfiVariables = true;
         };
 
+        plymouth = {
+            enable = true;
+            theme = "breeze";
+
+            #themePackages = with pkgs; [
+            #    (adi1090x-plymouth-themes.override {
+            #        selected_themes = [ "rings" ];
+            #    })
+            #];
+        };
+
         kernelModules = [
             "kvm-intel"
         ];
@@ -41,10 +52,17 @@
         };
 
         kernelParams = [
+            "boot.shell_on_fail"
             "intel_iommu=on"
+            "loglevel=3"
             "mem_sleep_default=deep"
-            "nvidia_drm.fbdev=1"
-            "nvidia_drm.modeset=1"
+            "nvidia-drm.fbdev=1"
+            "nvidia-drm.modeset=1"
+            "quiet"
+            "rd.systemd.show_status=false"
+            "rd.udev.log_level=3"
+            "splash"
+            "udev.log_priority=3"
         ];
 
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
@@ -151,18 +169,13 @@
     time.timeZone = "America/Halifax";
     networking.hostName = "icarus";
 
-    nixpkgs = {
-        hostPlatform = {
-            gcc.arch = "alderlake";
-            gcc.tune = "alderlake";
-            system = "x86_64-linux";
-        };
-        #hostPlatform = lib.mkDefault "x86_64-linux";
+    nixpkgs.hostPlatform = {
+        #gcc.arch = "alderlake";
+        #gcc.tune = "alderlake";
+        system = "x86_64-linux";
     };
 
-    environment.systemPackages = (with pkgs; [
-        #
-    ]);
+    #environment.systemPackages = (with pkgs; []);
 
     #
     # Shared configurations.

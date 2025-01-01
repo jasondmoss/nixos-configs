@@ -44,15 +44,6 @@
             };
         };
 
-        #pulseaudio = {
-        #    enable = false;
-        #
-        #    zeroconf = {
-        #        publish.enable = false;
-        #        discovery.enable = false;
-        #    };
-        #};
-
         keyboard.qmk.enable = true;
     };
 

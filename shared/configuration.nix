@@ -243,19 +243,19 @@ upload_max_filesize = 2048M
             ];
         };
 
-        ngrok = {
-            enable = true;
+        #ngrok = {
+        #    enable = true;
 
-            extraConfig = {};
+        #    extraConfig = {};
 
-            extraConfigFiles = [
-                "/home/me/.config/ngrok/ngrok.yml"
-            ];
+        #    extraConfigFiles = [
+        #        "/home/me/.config/ngrok/ngrok.yml"
+        #    ];
 
-            tunnels = {
-                # ...
-            };
-        };
+        #    tunnels = {
+        #        # ...
+        #    };
+        #};
 
         ollama = {
             enable = true;
