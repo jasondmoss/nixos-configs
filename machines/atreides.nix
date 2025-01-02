@@ -1,5 +1,7 @@
 ################################################################################
-##                              ·: ATREIDES :·                                ##
+ ##                                                                          ##
+ ##                             ·: ATREIDES :·                               ##
+ ##                                                                          ##
 ################################################################################
 
 { config, lib, pkgs, ... }: {
@@ -17,7 +19,6 @@
         loader = {
             grub.enable = false;
             timeout = 0;
-            #verbose = false;
 
             systemd-boot = {
                 enable = true;
@@ -29,17 +30,6 @@
                 canTouchEfiVariables = true;
                 efiSysMountPoint = "/boot/efi";
             };
-        };
-
-        plymouth = {
-            enable = true;
-            theme = "breeze";
-
-            #themePackages = with pkgs; [
-            #    (adi1090x-plymouth-themes.override {
-            #        selected_themes = [ "rings" ];
-            #    })
-            #];
         };
 
         kernelModules = [
@@ -70,16 +60,8 @@
         kernelParams = [
             "amd_iommu=on"
             "amd_pstate=active"
-            "boot.shell_on_fail"
-            "loglevel=3"
-            "mem_sleep_default=deep"
             "nvidia-drm.fbdev=1"
             "nvidia-drm.modeset=1"
-            "quiet"
-            "rd.systemd.show_status=false"
-            "rd.udev.log_level=3"
-            "splash"
-            "udev.log_priority=3"
         ];
 
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [

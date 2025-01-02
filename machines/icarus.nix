@@ -1,30 +1,25 @@
 ################################################################################
- ##																			 ##
+ ##                                                                          ##
  ##                             ·: ICARUS :·                                 ##
- ##																			 ##
+ ##                                                                          ##
 ################################################################################
 
 { config, lib, pkgs, ... }: {
+    nix.settings.system-features = [
+        "benchmark"
+        "big-parallel"
+        "kvm"
+        "nixos-test"
+        "gccarch-alderlake"
+    ];
+
     boot = {
         loader = {
             systemd-boot.enable = true;
             efi.canTouchEfiVariables = true;
         };
 
-        plymouth = {
-            enable = true;
-            theme = "breeze";
-
-            #themePackages = with pkgs; [
-            #    (adi1090x-plymouth-themes.override {
-            #        selected_themes = [ "rings" ];
-            #    })
-            #];
-        };
-
-        kernelModules = [
-            "kvm-intel"
-        ];
+        kernelModules = [ "kvm-intel" ];
 
         initrd = {
             kernelModules = [
@@ -52,24 +47,17 @@
         };
 
         kernelParams = [
-            "boot.shell_on_fail"
             "intel_iommu=on"
-            "loglevel=3"
             "mem_sleep_default=deep"
             "nvidia-drm.fbdev=1"
             "nvidia-drm.modeset=1"
-            "quiet"
-            "rd.systemd.show_status=false"
-            "rd.udev.log_level=3"
-            "splash"
-            "udev.log_priority=3"
         ];
 
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
-            "NVreg_UsePageAttributeTable=1"
             "NVreg_EnablePCIeGen3=1"
             "NVreg_PreserveVideoMemoryAllocations=1"
             "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+            "NVreg_UsePageAttributeTable=1"
         ];
 
         blacklistedKernelModules = [ "nouveau" ];
