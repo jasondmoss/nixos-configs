@@ -268,7 +268,7 @@
         #../packages/ngrok.nix
         ../packages/kde-desktop.nix
         #../packages/gnome-desktop.nix
-        #../packages/gimp.nix
+        ../packages/gimp.nix
         #../packages/notes.nix
 
         # Desktop Entries.

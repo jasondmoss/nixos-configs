@@ -10,28 +10,29 @@
             });
 
             gegl = prev.gegl.overrideAttrs (oldAttrs: {
-                version = "0.4.50";
+                version = "0.4.52";
                 src = final.fetchurl {
-                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.50.tar.xz";
-                    hash = "sha256-YISWmwbuhspxFCEzdz8n4T8C5aaiLCz85FLsqt23kME=";
+                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.52.tar.xz";
+                    hash = "sha256-yiEqD8PgRIxQWMUcpqDTD9+wKXHyHyiCDaK0kBOWAAo=";
                 };
             });
         })
     ];
 
     environment.systemPackages = (with pkgs; [
-
         babl
         gegl
-        #(pkgs.callPackage ./gimp-devel {}) # Development version
-        gimp # Stable version
 
+        # Stable version
+        gimp
+
+        # Development version (currently RC2)
+        #(pkgs.callPackage ./gimp-devel {})
     ]) ++ (with pkgs.gimpPlugins; [
-
-        bimp
+        #bimp
         exposureBlend
         fourier
-        gap
+        #gap
         gimplensfun
         gmic
         lightning
@@ -39,6 +40,5 @@
         resynthesizer
         texturize
         waveletSharpen
-
     ]);
 }

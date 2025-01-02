@@ -2,7 +2,7 @@
     environment.systemPackages = (with pkgs; [
 
         # Klassy KDE Theme
-        #(pkgs.callPackage ./kde-klassy.nix {})
+        (pkgs.callPackage ./kde-klassy.nix {})
 
         kphotoalbum
         materia-kde-theme
@@ -24,6 +24,7 @@
         kajongg
         kate
         karchive
+        karousel
         kbreakout
         kcalc
         kcmutils

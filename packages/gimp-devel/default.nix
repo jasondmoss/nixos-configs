@@ -5,30 +5,28 @@
     gtk3, isocodes, lcms, lib, libarchive, libgudev, libheif, libiff, libilbm,
     libjxl, libmng, libmypaint, librsvg, libwebp, libwmf, libxslt, lua, luajit,
     meson, mypaint-brushes1, ninja, openexr, perl538, pkg-config, poppler,
-    poppler_data, python, python3, qoi, shared-mime-info, stdenv, vala,
-    wrapGAppsHook, xorg, xvfb-run
+    poppler_data, python3, qoi, shared-mime-info, stdenv, vala, wrapGAppsHook,
+    xorg, xvfb-run
 }:
 let
     python = python3.withPackages (pp: [ pp.pygobject3 ]);
     lua = luajit.withPackages (ps: [ ps.lgi ]);
 in stdenv.mkDerivation (finalAttrs: {
     pname = "gimp";
-    version = "3.0.0-RC1";
+    version = "3.0.0-RC2";
 
-    outputs = [
-        "out"
-        "dev"
-    ];
+    outputs = [ "out" "dev" ];
 
     src = fetchurl {
         url = "http://download.gimp.org/pub/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}.tar.xz";
-        hash = "sha256-s9CyZMXjjnifqvNBcAM5fzJAAUxZx/QX+co705xf+2Y=";
+        hash = "sha256-9NL5bfGAzlVD+LKzVwe5vxFFnwD3Jspz2i9AbWhtnbc=";
     };
 
-    patches = [
-        ./meson-gtls.patch
-        ./pygimp-interp.patch
-    ];
+    # Not required for RC2 release.
+    #patches = [
+    #    ./meson-gtls.patch
+    #    ./pygimp-interp.patch
+    #];
 
     nativeBuildInputs = [
         aalib alsa-lib appstream bashInteractive findutils ghostscript gi-docgen

@@ -1,16 +1,22 @@
 { lib, stdenv, fetchFromGitHub, kdePackages, cmake, qt6 }:
 stdenv.mkDerivation rec {
-
     pname = "klassy";
     #version = "master";
-    version = "plasma6.0";
+    version = "plasma6.2";
+
+    #src = fetchFromGitHub {
+    #    owner = "paulmcauley";
+    #    repo = "klassy";
+    #    rev = version;
+    #    #hash = "sha256-Hg9JbnLntVTCvYjMzaeo18y4VUt+5/yC9T0b3Rthvfs="; # master
+    #    hash = "sha256-B7nQVok/3uCskGykqEoaZcpzpIk15tT7qDPG3qCbn4Q="; # plasma6.2
+    #};
 
     src = fetchFromGitHub {
-        owner = "paulmcauley";
+        owner = "jasondmoss";
         repo = "klassy";
         rev = version;
-        #hash = "sha256-Hg9JbnLntVTCvYjMzaeo18y4VUt+5/yC9T0b3Rthvfs="; # master
-        hash = "sha256-vNqxivXgwZOa06q0mL0tdWXkoC/1Z9yZ5JX8NyxCpQE="; # plasma6
+        hash = "sha256-eTT95ck9M+kfTuWn4mV/x0mxQLvZYXJ89JXaCcm0jYg=";
     };
 
     buildInputs = [
@@ -42,5 +48,4 @@ stdenv.mkDerivation rec {
         changelog = "https://github.com/paulmcauley/klassy/releases/tag/${version}";
         license = with lib.licenses; [ bsd3 cc0 fdl12Plus gpl2Only gpl2Plus gpl3Only mit ];
     };
-
 }

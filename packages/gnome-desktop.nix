@@ -9,16 +9,16 @@
     };
 
     environment = {
-        #gnome.excludePackages = (with pkgs; [
-        #    gnome-tour
+        gnome.excludePackages = (with pkgs; [
+            gnome-tour
         #]) ++ (with pkgs.gnome; [
         #]) ++ (with pkgs.gnomeExtensions; [
-        #]);
+        ]);
 
         systemPackages = (with pkgs; [
 
             adwaita-icon-theme
-            gnome-boxes
+            #gnome-boxes
             gnome-browser-connector
             gnome-control-center
             gnome-shell
