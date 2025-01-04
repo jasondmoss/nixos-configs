@@ -13,17 +13,43 @@
         "gccarch-alderlake"
     ];
 
+    fileSystems."/" = {
+        device = "/dev/disk/by-uuid/5e7a3096-5275-4bb2-973d-b00b032438a6";
+        fsType = "ext4";
+    };
+
+    fileSystems."/boot" = {
+        device = "/dev/disk/by-uuid/C775-BC84";
+        fsType = "vfat";
+    };
+
+    swapDevices = [{
+        device ="/swapfile";
+        size = 16 * 1024;  # 16GB
+    }];
+
     boot = {
         loader = {
-            systemd-boot.enable = true;
-            efi.canTouchEfiVariables = true;
+            grub.enable = false;
+
+            systemd-boot = {
+                enable = true;
+                memtest86.enable = true;
+                consoleMode = "auto";
+            };
+
+            efi = {
+                canTouchEfiVariables = true;
+                #efiSysMountPoint = "/boot/efi";
+            };
         };
 
-        kernelModules = [ "kvm-intel" ];
-
         initrd = {
+            systemd.enable = true;
+
             kernelModules = [
                 "dm-snapshot"
+                "i2c-nvidia_gpu"
                 "nvidia"
                 "nvidia_drm"
                 "nvidia_modeset"
@@ -46,6 +72,12 @@
             };
         };
 
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+
+        kernelModules = [
+            "kvm-intel"
+        ];
+
         kernelParams = [
             "intel_iommu=on"
             "mem_sleep_default=deep"
@@ -60,11 +92,9 @@
             "NVreg_UsePageAttributeTable=1"
         ];
 
-        blacklistedKernelModules = [ "nouveau" ];
-
-        #extraModulePackages = [];
-
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+        blacklistedKernelModules = [
+            "nouveau"
+        ];
 
         kernel.sysctl = {
             "fs.inotify.max_user_watches" = 2140000000;
@@ -97,24 +127,6 @@
             };
         };
     };
-
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
-
-    fileSystems."/" = {
-        device = "/dev/disk/by-uuid/5e7a3096-5275-4bb2-973d-b00b032438a6";
-        fsType = "ext4";
-    };
-
-    fileSystems."/boot" = {
-        device = "/dev/disk/by-uuid/C775-BC84";
-        fsType = "vfat";
-    };
-
-    swapDevices = [{
-        device = "/dev/disk/by-uuid/8a9e0e21-ada8-4830-9836-3f9d678ac477";
-    }];
 
     services = {
         power-profiles-daemon.enable = false;
@@ -157,13 +169,25 @@
     time.timeZone = "America/Halifax";
     networking.hostName = "icarus";
 
-    nixpkgs.hostPlatform = {
-        #gcc.arch = "alderlake";
-        #gcc.tune = "alderlake";
-        system = "x86_64-linux";
+    nixpkgs = {
+        hostPlatform = {
+            #gcc.arch = "alderlake";
+            #gcc.tune = "alderlake";
+            system = "x86_64-linux";
+        };
+
+        buildPlatform = {
+            #gcc.arch = "alderlake";
+            #gcc.tune = "alderlake";
+            system = "x86_64-linux";
+        };
     };
 
     #environment.systemPackages = (with pkgs; []);
+
+    virtualisation = {
+        virtualbox.host.enable = true;
+    };
 
     #
     # Shared configurations.

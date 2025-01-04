@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-
     programs = {
         dconf.enable = true;
     };
@@ -10,22 +9,26 @@
 
     environment = {
         gnome.excludePackages = (with pkgs; [
+            gnome-calculator
+            gnome-calendar
+            gnome-console
+            gnome-contacts
+            gnome-maps
+            gnome-music
             gnome-tour
-        #]) ++ (with pkgs.gnome; [
-        #]) ++ (with pkgs.gnomeExtensions; [
+            gnome-weather
         ]);
 
         systemPackages = (with pkgs; [
-
             adwaita-icon-theme
             #gnome-boxes
-            gnome-browser-connector
-            gnome-control-center
-            gnome-shell
-            gnome-tweaks
+            #gnome-browser-connector
+            #gnome-control-center
+            #gnome-shell
+            #gnome-tweaks
+            gtk4
             nautilus
-            nautilus-open-any-terminal
-
+            #nautilus-open-any-terminal
         ]);
     };
 }

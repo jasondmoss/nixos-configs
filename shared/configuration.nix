@@ -177,11 +177,9 @@ local {
             defaultSession = "plasma";
         };
 
-        desktopManager = {
-            plasma6 = {
-               enable = true;
-               enableQt5Integration = false;
-            };
+        desktopManager.plasma6 = {
+           enable = true;
+           enableQt5Integration = false;
         };
 
         httpd = {
@@ -219,6 +217,7 @@ mbstring.internal_encoding = pass
 memory_limit = 2048M
 post_max_size = 2048M
 session.cookie_samesite = "Strict"
+short_open_tag = Off
 upload_max_filesize = 2048M
             '';
         };
@@ -243,19 +242,19 @@ upload_max_filesize = 2048M
             ];
         };
 
-        #ngrok = {
-        #    enable = true;
-
-        #    extraConfig = {};
-
-        #    extraConfigFiles = [
-        #        "/home/me/.config/ngrok/ngrok.yml"
-        #    ];
-
-        #    tunnels = {
-        #        # ...
-        #    };
-        #};
+#        ngrok = {
+#            enable = true;
+#
+#            extraConfig = {};
+#
+#            extraConfigFiles = [
+#                "/home/me/.config/ngrok/ngrok.yml"
+#            ];
+#
+#            tunnels = {
+#                # ...
+#            };
+#        };
 
         ollama = {
             enable = true;

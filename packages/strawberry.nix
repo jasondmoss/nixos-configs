@@ -18,8 +18,7 @@ let
         owner = "jonaski";
         repo = pname;
         rev = version;
-        hash = "sha256-lmUQSG6JYGU0qQ9G1vuf8Ethp5t30mG20r67bV+dUCw=";  # Icarus
-        #hash = "sha256-wLC4xL1Dxgwoi6rt33/rpgzErADoU7MKlmvUdkF6Z0s=";  # Atreides
+        hash = "sha256-lmUQSG6JYGU0qQ9G1vuf8Ethp5t30mG20r67bV+dUCw=";
     };
 
     meta = with lib; {

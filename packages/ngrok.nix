@@ -1,8 +1,40 @@
-{ lib, pkgs, config, ... }:
-with lib;
-with builtins;
+#{ pkgs, config, ... }:
+#let
+#    ngrok = builtins.fetchGit {
+#        url = "https://github.com/ngrok/ngrok-nix";
+#        rev = "c56189898f263153a2a16775ea2b871084a4efb0";
+#    };
+#in {
+#    nixpkgs.config.allowUnfree = true;
+#
+#    imports = [
+#        "${ngrok}/nixos.nix"
+#    ];
+#
+#    services.ngrok = {
+#        enable = true;
+#
+#        extraConfig = { };
+#
+#        extraConfigFiles = [
+#          # reference to files containing `authtoken` and `api_key` secrets
+#          # ngrok will merge these, together with `extraConfig`
+#          "/home/me/.config/ngrok/ngrok.yml"
+#        ];
+#
+#        tunnels = {
+#          # ...
+#        };
+#    };
+#}
+{ lib, pkgs, config, ... }: with lib; with builtins;
 let
     cfg = config.services.ngrok;
+
+    ngrok = builtins.fetchGit {
+        url = "https://github.com/ngrok/ngrok-nix";
+        rev = "c56189898f263153a2a16775ea2b871084a4efb0";
+    };
 in {
     options = {
         services.ngrok = {
@@ -95,6 +127,24 @@ Use this for sensitive configuration that shouldn't go into the nixos configurat
                 User = "ngrok";
                 Group = "ngrok";
             };
+        };
+    };
+
+    imports = [
+        "${ngrok}/nixos.nix"
+    ];
+
+    services.ngrok = {
+        enable = true;
+
+        extraConfig = { };
+
+        extraConfigFiles = [
+            "/home/me/.config/ngrok/ngrok.yml"
+        ];
+
+        tunnels = {
+          # ...
         };
     };
 }

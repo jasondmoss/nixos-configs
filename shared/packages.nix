@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }: {
+{ pkgs, ... }: {
 
     # Setup.
     nixpkgs = {
@@ -208,7 +208,7 @@
         megasync
         megatools
         microsoft-edge
-        ngrok
+        #ngrok
         #nyxt
         opera
         protonvpn-gui
@@ -263,13 +263,12 @@
     ]);
 
     imports = [
-        ../packages/vaapi.nix
-        ../packages/php.nix
-        #../packages/ngrok.nix
-        ../packages/kde-desktop.nix
-        #../packages/gnome-desktop.nix
         ../packages/gimp.nix
-        #../packages/notes.nix
+        ../packages/gnome-desktop.nix
+        ../packages/kde-desktop.nix
+        #../packages/ngrok.nix
+        ../packages/php.nix
+        ../packages/vaapi.nix
 
         # Desktop Entries.
         ../packages/desktop-entries/firefox-nightly.nix

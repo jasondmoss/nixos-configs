@@ -13,109 +13,6 @@
         "gccarch-znver2"
     ];
 
-    boot = {
-        consoleLogLevel = 0;
-
-        loader = {
-            grub.enable = false;
-            timeout = 0;
-
-            systemd-boot = {
-                enable = true;
-                memtest86.enable = true;
-                consoleMode = "auto";
-            };
-
-            efi = {
-                canTouchEfiVariables = true;
-                efiSysMountPoint = "/boot/efi";
-            };
-        };
-
-        kernelModules = [
-            "kvm-amd"
-        ];
-
-        initrd = {
-            systemd.enable = true;
-
-            kernelModules = [
-                "i2c-nvidia_gpu"
-                "nvidia"
-                "nvidia_drm"
-                "nvidia_modeset"
-                "nvidia_uvm"
-            ];
-
-            availableKernelModules = [
-                "ahci"
-                "nvme"
-                "sd_mod"
-                "usb_storage"
-                "usbhid"
-                "xhci_pci"
-            ];
-        };
-
-        kernelParams = [
-            "amd_iommu=on"
-            "amd_pstate=active"
-            "nvidia-drm.fbdev=1"
-            "nvidia-drm.modeset=1"
-        ];
-
-        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
-            "NVreg_EnablePCIeGen3=1"
-            "NVreg_PreserveVideoMemoryAllocations=1"
-            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
-            "NVreg_UsePageAttributeTable=1"
-        ];
-
-        blacklistedKernelModules = [ "nouveau" ];
-
-        #extraModulePackages = [];
-
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
-
-        kernel.sysctl = {
-            "fs.inotify.max_user_watches" = 2140000000;
-        };
-
-        swraid.enable = false;
-    };
-
-    hardware = {
-        cpu.amd = {
-            ryzen-smu.enable = true;
-
-            sev = {
-                enable = true;
-                mode = "0660";
-                group = "sev";
-                user = "root";
-            };
-
-            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-        };
-
-        nvidia = {
-            package = config.boot.kernelPackages.nvidiaPackages.beta;
-
-            # New feature branch.
-            #package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-            #    version = "560.35.03";
-            #    sha256_64bit = "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
-            #    openSha256 = "sha256-/32Zf0dKrofTmPZ3Ratw4vDM7B+OgpC4p7s+RHUjCrg=";
-            #    settingsSha256 = "sha256-kQsvDgnxis9ANFmwIwB7HX5MkIAcpEEAHc8IBOLdXvk=";
-            #    persistencedSha256 = "sha256-E2J2wYYyRu7Kc3MMZz/8ZIemcZg68rkzvqEwFAL3fFs=";
-            #};
-        };
-    };
-
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
-
     fileSystems."/" = {
         device = "/dev/disk/by-uuid/f3e63afc-6602-4f46-845d-bd6d5bc6afe3";
         fsType = "ext4";
@@ -158,7 +55,106 @@
         fsType = "vfat";
     };
 
-    swapDevices = [];
+    swapDevices = [{
+        device = "/swapfile";
+        size = 16 * 1024;  # 16GB
+    }];
+
+    boot = {
+        loader = {
+            grub.enable = false;
+
+            systemd-boot = {
+                enable = true;
+                memtest86.enable = true;
+                consoleMode = "auto";
+            };
+
+            efi = {
+                canTouchEfiVariables = true;
+                efiSysMountPoint = "/boot/efi";
+            };
+        };
+
+        initrd = {
+            systemd.enable = true;
+
+            kernelModules = [
+                "i2c-nvidia_gpu"
+                "nvidia"
+                "nvidia_drm"
+                "nvidia_modeset"
+                "nvidia_uvm"
+            ];
+
+            availableKernelModules = [
+                "ahci"
+                "nvme"
+                "sd_mod"
+                "usb_storage"
+                "usbhid"
+                "xhci_pci"
+            ];
+        };
+
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+
+        kernelModules = [
+            "kvm-amd"
+        ];
+
+        kernelParams = [
+            "amd_iommu=on"
+            "amd_pstate=active"
+            "nvidia-drm.fbdev=1"
+            "nvidia-drm.modeset=1"
+        ];
+
+        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
+            "NVreg_EnablePCIeGen3=1"
+            "NVreg_PreserveVideoMemoryAllocations=1"
+            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+            "NVreg_UsePageAttributeTable=1"
+        ];
+
+        blacklistedKernelModules = [
+            "nouveau"
+        ];
+
+        kernel.sysctl = {
+            "fs.inotify.max_user_watches" = 2140000000;
+        };
+
+        swraid.enable = false;
+    };
+
+    hardware = {
+        cpu.amd = {
+            ryzen-smu.enable = true;
+
+            sev = {
+                enable = true;
+                mode = "0660";
+                group = "sev";
+                user = "root";
+            };
+
+            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+        };
+
+        nvidia = {
+            package = config.boot.kernelPackages.nvidiaPackages.beta;
+
+            # New feature branch.
+            #package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+            #    version = "560.35.03";
+            #    sha256_64bit = "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
+            #    openSha256 = "sha256-/32Zf0dKrofTmPZ3Ratw4vDM7B+OgpC4p7s+RHUjCrg=";
+            #    settingsSha256 = "sha256-kQsvDgnxis9ANFmwIwB7HX5MkIAcpEEAHc8IBOLdXvk=";
+            #    persistencedSha256 = "sha256-E2J2wYYyRu7Kc3MMZz/8ZIemcZg68rkzvqEwFAL3fFs=";
+            #};
+        };
+    };
 
     services = {
         power-profiles-daemon.enable = false;
@@ -200,6 +196,12 @@
             system = "x86_64-linux";
         };
 
+        buildPlatform = {
+            #gcc.arch = "znver2";
+            #gcc.tune = "znver2";
+            system = "x86_64-linux";
+        };
+
         config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
             "steam"
             "steam-run"
@@ -221,6 +223,10 @@
         tor-browser-bundle-bin
         vlc
     ]);
+
+    virtualisation = {
+        virtualbox.host.enable = true;
+    };
 
 
     #

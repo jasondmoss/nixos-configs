@@ -6,9 +6,7 @@
 
         kphotoalbum
         materia-kde-theme
-
     ]) ++ (with pkgs.kdePackages; [
-
         full
         qt6ct
         accounts-qt
@@ -101,6 +99,5 @@
         breeze-icons
         qtstyleplugin-kvantum
         sierra-breeze-enhanced
-
     ]);
 }

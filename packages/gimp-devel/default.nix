@@ -3,7 +3,7 @@
     cfitsio, desktop-file-utils, fetchurl, findutils, gdk-pixbuf, gegl, gexiv2,
     ghostscript, gi-docgen, gjs, glib, glib-networking, gobject-introspection,
     gtk3, isocodes, lcms, lib, libarchive, libgudev, libheif, libiff, libilbm,
-    libjxl, libmng, libmypaint, librsvg, libwebp, libwmf, libxslt, lua, luajit,
+    libjxl, libmng, libmypaint, librsvg, libwebp, libwmf, libxslt, luajit,
     meson, mypaint-brushes1, ninja, openexr, perl538, pkg-config, poppler,
     poppler_data, python3, qoi, shared-mime-info, stdenv, vala, wrapGAppsHook,
     xorg, xvfb-run
@@ -13,16 +13,36 @@ let
     lua = luajit.withPackages (ps: [ ps.lgi ]);
 in stdenv.mkDerivation (finalAttrs: {
     pname = "gimp";
-    version = "3.0.0-RC2";
+    #version = "3.0.0-RC2";
+    version = "master";
 
     outputs = [ "out" "dev" ];
 
-    src = fetchurl {
-        url = "http://download.gimp.org/pub/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}.tar.xz";
-        hash = "sha256-9NL5bfGAzlVD+LKzVwe5vxFFnwD3Jspz2i9AbWhtnbc=";
+    src = fetchgit {
+        name = "gimp";
+
+        src = {
+            url = "https://gitlab.gnome.org/GNOME/gimp.git";
+
+            sparseCheckout = [ "gimp" ];
+
+            hash = "";
+        };
     };
 
-    # Not required for RC2 release.
+    #src = fetchurl {
+    #    url = "http://download.gimp.org/pub/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}.tar.xz";
+    #    hash = "sha256-9NL5bfGAzlVD+LKzVwe5vxFFnwD3Jspz2i9AbWhtnbc=";
+    #};
+
+    # src = fetchFromGitHub {
+    #    owner = "GNOME";
+    #    repo = "gimp";
+    #    rev = version;
+    #    hash = "";
+    # };
+
+    # Fixed in RC2 release.
     #patches = [
     #    ./meson-gtls.patch
     #    ./pygimp-interp.patch
