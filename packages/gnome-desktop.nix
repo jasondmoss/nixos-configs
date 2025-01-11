@@ -21,6 +21,8 @@
 
         systemPackages = (with pkgs; [
             adwaita-icon-theme
+            libadwaita
+            morewaita-icon-theme
             #gnome-boxes
             #gnome-browser-connector
             #gnome-control-center

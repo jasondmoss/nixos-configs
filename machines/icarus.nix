@@ -166,7 +166,7 @@
     };
 
     system.stateVersion = "24.05";
-    time.timeZone = "America/Halifax";
+    time.timeZone = "America/Toronto";
     networking.hostName = "icarus";
 
     nixpkgs = {

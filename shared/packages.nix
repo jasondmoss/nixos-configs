@@ -221,6 +221,7 @@
 
         #-- MISCELLANEOUS
         conky
+        ghostty
         kitty
         kitty-img
         kitty-themes

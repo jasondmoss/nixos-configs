@@ -190,6 +190,7 @@ local {
             extraModules = [ "http2" ];
             enablePHP = true;
 
+            # PHP 8.3
 #            phpPackage = pkgs.php83.buildEnv {
 #                extensions = ({ enabled, all }: enabled);
 #                extraConfig = ''
@@ -197,10 +198,15 @@ local {
 #                '';
 #            };
 
+            # PHP 8.4
             phpPackage = pkgs.php84.buildEnv {
-                extensions = ({ enabled, all }: enabled);
+                extensions = ({ enabled, all }: enabled ++ (with all; [
+                    xdebug
+                ]));
+
                 extraConfig = ''
-memory_limit = 2048M
+memory_limit=2048M
+xdebug.mode=debug
                 '';
             };
 
