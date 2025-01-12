@@ -13,22 +13,35 @@
         "gccarch-alderlake"
     ];
 
-    fileSystems."/" = {
-        device = "/dev/disk/by-uuid/5e7a3096-5275-4bb2-973d-b00b032438a6";
-        fsType = "ext4";
-    };
-
-    fileSystems."/boot" = {
-        device = "/dev/disk/by-uuid/C775-BC84";
-        fsType = "vfat";
-    };
-
-    swapDevices = [{
-        device ="/swapfile";
-        size = 16 * 1024;  # 16GB
-    }];
-
     boot = {
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+
+        kernelModules = [
+            "kvm-intel"
+        ];
+
+        kernelParams = [
+            "intel_iommu=on"
+            "mem_sleep_default=deep"
+            "nvidia-drm.fbdev=1"
+            "nvidia-drm.modeset=1"
+        ];
+
+        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
+            "NVreg_EnablePCIeGen3=1"
+            "NVreg_PreserveVideoMemoryAllocations=1"
+            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+            "NVreg_UsePageAttributeTable=1"
+        ];
+
+        blacklistedKernelModules = [
+            "nouveau"
+        ];
+
+        kernel.sysctl = {
+            "fs.inotify.max_user_watches" = 2140000000;
+        };
+
         loader = {
             grub.enable = false;
 
@@ -72,36 +85,23 @@
             };
         };
 
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
-
-        kernelModules = [
-            "kvm-intel"
-        ];
-
-        kernelParams = [
-            "intel_iommu=on"
-            "mem_sleep_default=deep"
-            "nvidia-drm.fbdev=1"
-            "nvidia-drm.modeset=1"
-        ];
-
-        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
-            "NVreg_EnablePCIeGen3=1"
-            "NVreg_PreserveVideoMemoryAllocations=1"
-            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
-            "NVreg_UsePageAttributeTable=1"
-        ];
-
-        blacklistedKernelModules = [
-            "nouveau"
-        ];
-
-        kernel.sysctl = {
-            "fs.inotify.max_user_watches" = 2140000000;
-        };
-
         swraid.enable = false;
     };
+
+    fileSystems."/" = {
+        device = "/dev/disk/by-uuid/5e7a3096-5275-4bb2-973d-b00b032438a6";
+        fsType = "ext4";
+    };
+
+    fileSystems."/boot" = {
+        device = "/dev/disk/by-uuid/C775-BC84";
+        fsType = "vfat";
+    };
+
+    swapDevices = [{
+        device ="/swapfile";
+        size = 16 * 1024;  # 16GB
+    }];
 
     hardware = {
         cpu.intel = {

@@ -371,8 +371,8 @@ Defaults env_keep+=SSH_AUTH_SOCK
             __GL_THREADED_OPTIMIZATION = "1";
             __GL_VRR_ALLOWED = "0";
             __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-            _JAVA_AWT_WM_NONREPARENTING = "1";
             __NV_DISABLE_EXPLICIT_SYNC = "1";
+            _JAVA_AWT_WM_NONREPARENTING = "1";
 
             DISABLE_QT5_COMPAT = "1";
             EGL_PLATFORM = "wayland";
@@ -401,11 +401,8 @@ Defaults env_keep+=SSH_AUTH_SOCK
 
             KWIN_TRIPLE_BUFFER = "1";
 
-            #GDK_DPI_SCALE = "0.5";
-            #GDK_SCALE = "2";
-            #GDK_USE_XFT = "1";
-
-            GSK_RENDERER = "gl";
+            #GSK_RENDERER = "gl";
+            GSK_RENDERER = "ngl";
 
             MOZ_DISABLE_GMP_SANDBOX = "1";
             MOZ_DISABLE_RDD_SANDBOX = "1";

@@ -2,8 +2,6 @@
 
     # Setup.
     nixpkgs = {
-        #hostPlatform = lib.mkDefault "x86_64-linux";
-
         config = {
             allowBroken = true;     # For 'php-packages'
             allowUnfree = true;
@@ -45,7 +43,6 @@
 
     #-- Core Packages.
     environment.systemPackages = (with pkgs; [
-
         aha
         babl
         bluez
@@ -209,7 +206,7 @@
         megatools
         microsoft-edge
         #ngrok
-        #nyxt
+        nyxt
         opera
         protonvpn-gui
         thunderbird-unwrapped
@@ -260,7 +257,6 @@
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox.nix {})
-
     ]);
 
     imports = [

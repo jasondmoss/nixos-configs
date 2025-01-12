@@ -13,6 +13,74 @@
         "gccarch-znver2"
     ];
 
+    boot = {
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+
+        initrd = {
+            systemd.enable = true;
+
+            kernelModules = [
+                "i2c-nvidia_gpu"
+                "nvidia"
+                "nvidia_drm"
+                "nvidia_modeset"
+                "nvidia_uvm"
+            ];
+
+            availableKernelModules = [
+                "ahci"
+                "nvme"
+                "sd_mod"
+                "usb_storage"
+                "usbhid"
+                "xhci_pci"
+            ];
+        };
+
+        kernelModules = [
+            "kvm-amd"
+        ];
+
+        kernelParams = [
+            "amd_iommu=on"
+            "amd_pstate=active"
+            "nvidia-drm.fbdev=1"
+            "nvidia-drm.modeset=1"
+        ];
+
+        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
+            "NVreg_EnablePCIeGen3=1"
+            "NVreg_PreserveVideoMemoryAllocations=1"
+            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
+            "NVreg_UsePageAttributeTable=1"
+        ];
+
+        blacklistedKernelModules = [
+            "nouveau"
+        ];
+
+        kernel.sysctl = {
+            "fs.inotify.max_user_watches" = 2140000000;
+        };
+
+        loader = {
+            grub.enable = false;
+
+            systemd-boot = {
+                enable = true;
+                memtest86.enable = true;
+                consoleMode = "auto";
+            };
+
+            efi = {
+                canTouchEfiVariables = true;
+                efiSysMountPoint = "/boot/efi";
+            };
+        };
+
+        swraid.enable = false;
+    };
+
     fileSystems."/" = {
         device = "/dev/disk/by-uuid/f3e63afc-6602-4f46-845d-bd6d5bc6afe3";
         fsType = "ext4";
@@ -59,74 +127,6 @@
         device = "/swapfile";
         size = 16 * 1024;  # 16GB
     }];
-
-    boot = {
-        loader = {
-            grub.enable = false;
-
-            systemd-boot = {
-                enable = true;
-                memtest86.enable = true;
-                consoleMode = "auto";
-            };
-
-            efi = {
-                canTouchEfiVariables = true;
-                efiSysMountPoint = "/boot/efi";
-            };
-        };
-
-        initrd = {
-            systemd.enable = true;
-
-            kernelModules = [
-                "i2c-nvidia_gpu"
-                "nvidia"
-                "nvidia_drm"
-                "nvidia_modeset"
-                "nvidia_uvm"
-            ];
-
-            availableKernelModules = [
-                "ahci"
-                "nvme"
-                "sd_mod"
-                "usb_storage"
-                "usbhid"
-                "xhci_pci"
-            ];
-        };
-
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
-
-        kernelModules = [
-            "kvm-amd"
-        ];
-
-        kernelParams = [
-            "amd_iommu=on"
-            "amd_pstate=active"
-            "nvidia-drm.fbdev=1"
-            "nvidia-drm.modeset=1"
-        ];
-
-        extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
-            "NVreg_EnablePCIeGen3=1"
-            "NVreg_PreserveVideoMemoryAllocations=1"
-            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
-            "NVreg_UsePageAttributeTable=1"
-        ];
-
-        blacklistedKernelModules = [
-            "nouveau"
-        ];
-
-        kernel.sysctl = {
-            "fs.inotify.max_user_watches" = 2140000000;
-        };
-
-        swraid.enable = false;
-    };
 
     hardware = {
         cpu.amd = {
@@ -214,7 +214,7 @@
         audible-cli
         cuetools
         easytag
-        #flacon
+        flacon
         haruna
         kdePackages.phonon-vlc
         mkvtoolnix
