@@ -1,14 +1,14 @@
 self: pkgs: with pkgs; {
 
     phpstorm = jetbrains.phpstorm.overrideAttrs (oldAttrs: {
-        version = "2024.3.1";
-        build = "243.22562.233";
+        version = "2024.3.2";
+        build = "243.23654.115";
         src = fetchurl {
-            url = "https://download.jetbrains.com/webide/PhpStorm-2024.3.1.1.tar.gz";
-            sha256 = "sha256-i7kJtjIvKW1ORCZSI8/8omSeQ0TRIztnD3UcWy165pg=";
+            url = "https://download.jetbrains.com/webide/PhpStorm-2024.3.2.tar.gz";
+            sha256 = "sha256-ki8R+He2bRgV1UQLSJFCEmnS0jURLi+mJwthCW2zbC8=";
         };
 
-        name = "phpstorm-2024.3.1";
+        name = "phpstorm-2024.3.2";
         wmClass = "jetbrains";
 
         vmopts = ''

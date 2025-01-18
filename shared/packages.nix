@@ -173,6 +173,7 @@
         libreoffice-qt6-fresh
         nano
         nomacs
+        notepad-next
         notes
         phpstorm    # Custom overlay.
         semantik
