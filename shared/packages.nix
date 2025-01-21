@@ -41,8 +41,9 @@
         ];
     };
 
-    #-- Core Packages.
+    #--  Core Packages.
     environment.systemPackages = (with pkgs; [
+        #--  BASE
         aha
         babl
         bluez
@@ -96,7 +97,7 @@
         xfsprogs
         zip
 
-        #-- GRAPHICS
+        #--  GRAPHICS
         egl-wayland
         eglexternalplatform
         glxinfo
@@ -124,10 +125,10 @@
         xdg-utils
         xorg.libxcb
 
-        #-- DESKTOP
+        #--  DESKTOP
         ly
 
-        #-- DEVELOPMENT
+        #--  DEVELOPMENT
         bison
         bisoncpp
         bun
@@ -160,7 +161,7 @@
         superhtml
         yarn
 
-        #-- SECURITY
+        #--  SECURITY
         certbot
         chkrootkit
         encfs
@@ -168,23 +169,24 @@
         mkcert
         sniffnet
 
-        #-- EDITORS
+        #--  EDITORS
         inkscape
         libreoffice-qt6-fresh
         nano
         nomacs
-        notepad-next
         notes
         phpstorm    # Custom overlay.
         semantik
         sublime4
 
-        #-- MULTIMEDIA
+        #--  MULTIMEDIA
+        #aaxtomp3
         faac
         ffmpeg-full
         ffmpegthumbnailer
         flac
         isoimagewriter
+        kodi-wayland
         lame
         libcue
         mac
@@ -200,29 +202,29 @@
         vorbis-tools
         wavpack
 
-        #-- NETWORK
-        chawan   # Terminal browser
+        #--  NETWORK
         filezilla
         megasync
         megatools
         microsoft-edge
         #ngrok
-        nyxt
+        #nyxt
         opera
         protonvpn-gui
         thunderbird-unwrapped
         zoom-us
 
-        #-- THEME
+        #--  THEME
         comixcursors
-        sweet-nova
+        #sweet-nova
 
-        #-- MISCELLANEOUS
+        #--  MISCELLANEOUS
         conky
+        diskscan
         ghostty
-        kitty
-        kitty-img
-        kitty-themes
+        #kitty
+        #kitty-img
+        #kitty-themes
         libportal
         ulauncher
         wezterm
@@ -248,9 +250,9 @@
         })
 
 
-        #-- CUSTOM PACKAGES
+        #--  CUSTOM PACKAGES
 
-        #-- Anytype
+        #--  Anytype
         (pkgs.callPackage ../packages/anytype.nix {})
 
         # Strawberry Music Player

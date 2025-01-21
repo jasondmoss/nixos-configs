@@ -1,6 +1,5 @@
 { pkgs, ... }: {
     environment.systemPackages = (with pkgs; [
-
         # Klassy KDE Theme
         (pkgs.callPackage ./kde-klassy.nix {})
 
@@ -24,7 +23,7 @@
         kajongg
         kate
         karchive
-        karousel
+        #karousel
         kbreakout
         kcalc
         kcmutils
