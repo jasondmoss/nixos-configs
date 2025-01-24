@@ -12,6 +12,11 @@
         "nixos-test"
         "gccarch-znver2"
     ];
+    
+    #system.stateVersion = "24.05";
+    system.stateVersion = "25.05";
+    time.timeZone = "America/Toronto";
+    networking.hostName = "atreides";
 
     boot = {
         kernelPackages = pkgs.linuxPackages_xanmod_latest;
@@ -191,10 +196,6 @@
             dedicatedServer.openFirewall = true;
         };
     };
-
-    system.stateVersion = "24.05";
-    time.timeZone = "America/Toronto";
-    networking.hostName = "atreides";
 
     nixpkgs = {
         hostPlatform = {

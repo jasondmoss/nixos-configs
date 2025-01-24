@@ -12,9 +12,42 @@
         "nixos-test"
         "gccarch-alderlake"
     ];
+    
+    #system.stateVersion = "24.05";
+    system.stateVersion = "25.05";
+    time.timeZone = "America/Toronto";
+    networking.hostName = "icarus";
 
     boot = {
         kernelPackages = pkgs.linuxPackages_xanmod_latest;
+
+        initrd = {
+            systemd.enable = true;
+
+            kernelModules = [
+                "dm-snapshot"
+                "i2c-nvidia_gpu"
+                "nvidia"
+                "nvidia_drm"
+                "nvidia_modeset"
+                "nvidia_uvm"
+            ];
+
+            availableKernelModules = [
+                "ahci"
+                "nvme"
+                "sd_mod"
+                "usb_storage"
+                "usbhid"
+                "vmd"
+                "xhci_pci"
+            ];
+
+            luks.devices.crypted = {
+                device = "/dev/disk/by-uuid/5e02c30a-d26f-41fb-ba83-b9f2e3b39b5e";
+                preLVM = true;
+            };
+        };
 
         kernelModules = [
             "kvm-intel"
@@ -54,34 +87,6 @@
             efi = {
                 canTouchEfiVariables = true;
                 #efiSysMountPoint = "/boot/efi";
-            };
-        };
-
-        initrd = {
-            systemd.enable = true;
-
-            kernelModules = [
-                "dm-snapshot"
-                "i2c-nvidia_gpu"
-                "nvidia"
-                "nvidia_drm"
-                "nvidia_modeset"
-                "nvidia_uvm"
-            ];
-
-            availableKernelModules = [
-                "ahci"
-                "nvme"
-                "sd_mod"
-                "usb_storage"
-                "usbhid"
-                "vmd"
-                "xhci_pci"
-            ];
-
-            luks.devices.crypted = {
-                device = "/dev/disk/by-uuid/5e02c30a-d26f-41fb-ba83-b9f2e3b39b5e";
-                preLVM = true;
             };
         };
 
@@ -165,9 +170,7 @@
         };
     };
 
-    system.stateVersion = "24.05";
-    time.timeZone = "America/Toronto";
-    networking.hostName = "icarus";
+    #programs = {};
 
     nixpkgs = {
         hostPlatform = {
