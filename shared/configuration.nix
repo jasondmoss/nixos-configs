@@ -90,7 +90,7 @@ in {
             defaultEditor = true;
             viAlias = true;
             vimAlias = true;
-            withNodeJs = true;
+            #withNodeJs = true;
             withPython3 = true;
         };
     };
@@ -134,7 +134,6 @@ local {
             enable = true;
             package = pkgs.mlocate;
             interval = "hourly";
-            localuser = null;
         };
 
         openssh = {
@@ -248,6 +247,7 @@ upload_max_filesize = 2048M
             ];
         };
 
+        # Service not working correctly
 #        ngrok = {
 #            enable = true;
 #
@@ -267,10 +267,14 @@ upload_max_filesize = 2048M
             acceleration = "cuda";
 
             loadModels = [
+                "llama3.3"
                 "codestral"
-                "yi-coder"
             ];
         };
+
+        #open-webui = {
+        #    enable = true;
+        #};
     };
 
     xdg.portal = {

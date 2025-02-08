@@ -12,8 +12,7 @@
         "nixos-test"
         "gccarch-alderlake"
     ];
-    
-    #system.stateVersion = "24.05";
+
     system.stateVersion = "25.05";
     time.timeZone = "America/Toronto";
     networking.hostName = "icarus";
@@ -86,7 +85,6 @@
 
             efi = {
                 canTouchEfiVariables = true;
-                #efiSysMountPoint = "/boot/efi";
             };
         };
 

@@ -20,7 +20,7 @@
         ffmpegthumbs
         frameworkintegration
         itinerary
-        kajongg
+        #kajongg
         kate
         karchive
         #karousel
