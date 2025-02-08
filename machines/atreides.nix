@@ -12,8 +12,7 @@
         "nixos-test"
         "gccarch-znver2"
     ];
-    
-    #system.stateVersion = "24.05";
+
     system.stateVersion = "25.05";
     time.timeZone = "America/Toronto";
     networking.hostName = "atreides";
@@ -124,11 +123,11 @@
         fsType = "ext4";
     };
 
-    # fileSystems."/home/me/Videos/Television" = {
-    #     # []
-    #     device = "/dev/disk/by-uuid/";
-    #     fsType = "ext4";
-    # };
+     fileSystems."/home/me/Videos/Television" = {
+         # [sdd]
+         device = "/dev/disk/by-uuid/a7007b9d-f315-4dec-83cd-ef883729e3c0";
+         fsType = "ext4";
+     };
 
     fileSystems."/boot/efi" = {
         device = "/dev/disk/by-uuid/3430-092D";
@@ -221,11 +220,13 @@
         audacity
         audible-cli
         cuetools
+        darktable
         easytag
         flacon
         haruna
         kdePackages.phonon-vlc
         mkvtoolnix
+        shotcut
         taglib-sharp
         taglib_extras
         tor-browser-bundle-bin
