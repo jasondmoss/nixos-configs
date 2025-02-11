@@ -281,7 +281,11 @@ upload_max_filesize = 2048M
         enable = true;
 
         config = {
-            common.default = "*";
+            common.default = [
+                "gtk"
+                "gnome"
+                "gnome-keyring"
+            ];
         };
     };
 

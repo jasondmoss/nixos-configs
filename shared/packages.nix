@@ -212,7 +212,7 @@
         opera
         protonvpn-gui
         thunderbird-unwrapped
-        zoom-us
+        # zoom-us # No screen sharing in Wayland
 
         #--  THEME
         comixcursors
@@ -256,7 +256,8 @@
         (pkgs.callPackage ../packages/anytype.nix {})
 
         # Strawberry Music Player
-        (pkgs.callPackage ../packages/strawberry.nix {})
+        strawberry
+        #(pkgs.callPackage ../packages/strawberry.nix {})
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox.nix {})

@@ -18,7 +18,7 @@ let
         owner = "jonaski";
         repo = pname;
         rev = version;
-        hash = "sha256-JJybRqYJRpGaL2Q42URe6kzNy63HYjOVh0HRE+cxcL8=";
+        hash = "sha256-ubXNgFGvHp9KvM+tDMplJnOgt7yaD3bRbj8sI/k0QgA=";
     };
 
     meta = with lib; {
@@ -26,7 +26,7 @@ let
         homepage = "https://www.strawberrymusicplayer.org/";
         changelog = "https://raw.githubusercontent.com/jonaski/strawberry/${version}/Changelog";
         license = licenses.gpl3Only;
-        # upstream says darwin should work but they lack maintainers as of 0.6.6
+        # Upstream says darwin should work but they lack maintainers as of 0.6.6
         maintainers = with maintainers; [ peterhoeg ];
         platforms = platforms.linux;
     };
