@@ -1,12 +1,35 @@
 {
-    lib, stdenv, fetchFromGitHub, cmake, pkg-config, qt6, alsa-lib, boost,
-    chromaprint, fftw, gnutls, libcdio, libmtp, libXdmcp, libpthreadstubs,
-    libtasn1, ninja, pcre, protobuf, sqlite, taglib, libebur128, libgpod,
-    libidn2, libsepol, p11-kit, libpulseaudio, libselinux, util-linux, libvlc,
-    gst_all_1, glib-networking, kdsingleapplication,
-    qtx11extras ? null,
-    withGstreamer ? true,
-    withVlc ? true
+    alsa-lib,
+    boost,
+    chromaprint,
+    cmake,
+    fetchFromGitHub,
+    fftw,
+    glib-networking,
+    gnutls,
+    gst_all_1,
+    kdsingleapplication,
+    lib,
+    libXdmcp,
+    libcdio,
+    libebur128,
+    libgpod,
+    libidn2,
+    libmtp,
+    libpthreadstubs,
+    libpulseaudio,
+    libselinux,
+    libsepol,
+    libtasn1,
+    ninja,
+    nix-update-script,
+    p11-kit,
+    pkg-config,
+    qt6,
+    sqlite,
+    stdenv,
+    taglib,
+    util-linux
 }:
 let
     inherit (lib) optionals;
@@ -18,7 +41,7 @@ let
         owner = "jonaski";
         repo = pname;
         rev = version;
-        hash = "sha256-ubXNgFGvHp9KvM+tDMplJnOgt7yaD3bRbj8sI/k0QgA=";
+        hash = "sha256-D+SGrC/Mss+7BaN+dC8zcxjS4k4UKD6ny7XYB2xNwsE=";
     };
 
     meta = with lib; {
@@ -26,9 +49,9 @@ let
         homepage = "https://www.strawberrymusicplayer.org/";
         changelog = "https://raw.githubusercontent.com/jonaski/strawberry/${version}/Changelog";
         license = licenses.gpl3Only;
-        # Upstream says darwin should work but they lack maintainers as of 0.6.6
         maintainers = with maintainers; [ peterhoeg ];
         platforms = platforms.linux;
+        mainProgram = "strawberry";
     };
 in stdenv.mkDerivation rec {
     pname = "strawberry";
@@ -49,34 +72,32 @@ substituteInPlace src/context/contextalbum.cpp --replace pictures/strawberry.png
         fftw
         gnutls
         kdsingleapplication
+        libXdmcp
         libcdio
         libebur128
         libidn2
         libmtp
         libpthreadstubs
         libtasn1
-        libXdmcp
-        pcre
-        protobuf
+        qt6.qtbase
         sqlite
         taglib
-        qt6.qtbase
-        qtx11extras
-    ] ++ optionals stdenv.isLinux [
+    ] ++ optionals stdenv.hostPlatform.isLinux [
         libgpod
         libpulseaudio
         libselinux
         libsepol
         p11-kit
-    ] ++ optionals withGstreamer (with gst_all_1; [
+    ] ++ (with gst_all_1; [
         glib-networking
-        gstreamer
         gst-libav
+        gst-plugins-bad
         gst-plugins-base
         gst-plugins-good
-        gst-plugins-bad
         gst-plugins-ugly
-    ]) ++ lib.optional withVlc libvlc;
+        gstreamer
+    ]);
+
 
     nativeBuildInputs = [
         cmake
@@ -84,17 +105,16 @@ substituteInPlace src/context/contextalbum.cpp --replace pictures/strawberry.png
         pkg-config
         qt6.qttools
         qt6.wrapQtAppsHook
-    ] ++ optionals stdenv.isLinux [
+    ] ++ optionals stdenv.hostPlatform.isLinux [
         util-linux
     ];
 
-    preCheck = ''
-    '';
-
-    postInstall = lib.optionalString withGstreamer ''
+    postInstall = ''
 qtWrapperArgs+=(
     --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0"
     --prefix GIO_EXTRA_MODULES : "${glib-networking.out}/lib/gio/modules"
 )
     '';
+
+    passthru.updateScript = nix-update-script { };
 }

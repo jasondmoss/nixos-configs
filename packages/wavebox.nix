@@ -5,12 +5,12 @@
 with lib;
 let
     bits = "x86_64";
-    version = "10.133.3-3";
+    version = "10.133.4-3";
     tarball = "Wavebox_${version}.tar.gz";
 
     src = fetchurl {
         url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-        sha256 = "sha256-qGDKPI/HdcSBStzafwe9qjYDUsFI2kjkrVNNuXja0fs=";
+        sha256 = "sha256-kfsjHsl8pmvZSvfKLfrbFxIuwluAgEkKazG4e32K4hs=s";
     };
 
     desktopItem = makeDesktopItem rec {

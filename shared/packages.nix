@@ -208,7 +208,7 @@
         megatools
         microsoft-edge
         #ngrok
-        #nyxt
+        nyxt
         opera
         protonvpn-gui
         thunderbird-unwrapped
@@ -216,15 +216,12 @@
 
         #--  THEME
         comixcursors
-        #sweet-nova
 
         #--  MISCELLANEOUS
+        aichat
         conky
         diskscan
         ghostty
-        #kitty
-        #kitty-img
-        #kitty-themes
         libportal
         ulauncher
         wezterm

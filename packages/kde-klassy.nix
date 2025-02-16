@@ -1,22 +1,21 @@
 { lib, stdenv, fetchFromGitHub, kdePackages, cmake, qt6 }:
 stdenv.mkDerivation rec {
     pname = "klassy";
-    #version = "master";
-    version = "plasma6.2";
-
+    #version = "plasma6.2";
     #src = fetchFromGitHub {
-    #    owner = "paulmcauley";
+    #    owner = "jasondmoss";
     #    repo = "klassy";
     #    rev = version;
-    #    #hash = "sha256-Hg9JbnLntVTCvYjMzaeo18y4VUt+5/yC9T0b3Rthvfs="; # master
-    #    hash = "sha256-B7nQVok/3uCskGykqEoaZcpzpIk15tT7qDPG3qCbn4Q="; # plasma6.2
+    #    hash = "sha256-eTT95ck9M+kfTuWn4mV/x0mxQLvZYXJ89JXaCcm0jYg=";
     #};
 
+    # Temporary
+    version = "plasma6.3";
     src = fetchFromGitHub {
-        owner = "jasondmoss";
-        repo = "klassy";
+        owner = "ivan-cukic";
+        repo = "wip-klassy";
         rev = version;
-        hash = "sha256-eTT95ck9M+kfTuWn4mV/x0mxQLvZYXJ89JXaCcm0jYg=";
+        hash = "sha256-9IZhO8a8URTYPv6/bf7r3incfN1o2jBd2+mLVptNRYo=";
     };
 
     buildInputs = [

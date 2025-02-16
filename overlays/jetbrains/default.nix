@@ -1,14 +1,13 @@
 self: pkgs: with pkgs; {
-
     phpstorm = jetbrains.phpstorm.overrideAttrs (oldAttrs: {
-        version = "2024.3.2.1";
+        version = "2024.3.3";
         build = "243.23654.168";
         src = fetchurl {
-            url = "https://download.jetbrains.com/webide/PhpStorm-2024.3.2.1.tar.gz";
-            sha256 = "sha256-1vfnxgZZ+0IV2jKsfa6uUgKoa7sulxljCB7kpW5XloU=";
+            url = "https://download.jetbrains.com/webide/PhpStorm-2024.3.3.tar.gz";
+            sha256 = "sha256-J0AB/A5ijtm1SW8k2hHT6X8HsP4/RTAyNcN9EkEhoUo=";
         };
 
-        name = "phpstorm-2024.3.2.1";
+        name = "phpstorm-2024.3.3";
         wmClass = "jetbrains";
         vmopts = ''
 -server
@@ -16,5 +15,4 @@ self: pkgs: with pkgs; {
 -Xmx4096m
         '';
     });
-
 }

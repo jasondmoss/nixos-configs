@@ -20,10 +20,8 @@
         ffmpegthumbs
         frameworkintegration
         itinerary
-        #kajongg
         kate
         karchive
-        #karousel
         kbreakout
         kcalc
         kcmutils
@@ -99,6 +97,6 @@
         breeze
         breeze-icons
         qtstyleplugin-kvantum
-        sierra-breeze-enhanced
+        #sierra-breeze-enhanced
     ]);
 }

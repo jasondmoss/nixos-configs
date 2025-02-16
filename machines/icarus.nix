@@ -190,6 +190,7 @@
         virtualbox.host.enable = true;
     };
 
+
     #
     # Shared configurations.
     #
