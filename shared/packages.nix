@@ -207,12 +207,12 @@
         megasync
         megatools
         microsoft-edge
-        #ngrok
+        ngrok
         nyxt
         opera
         protonvpn-gui
         thunderbird-unwrapped
-        # zoom-us # No screen sharing in Wayland
+        #zoom-us # No screen sharing in Wayland
 
         #--  THEME
         comixcursors

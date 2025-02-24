@@ -1,6 +1,6 @@
 { pkgs, ... }: {
     environment.systemPackages = (with pkgs; [
-        # Klassy KDE Theme
+        # Klassy KDE theme engine
         (pkgs.callPackage ./kde-klassy.nix {})
 
         adwaita-qt6

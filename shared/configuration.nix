@@ -65,7 +65,7 @@ in {
 
         ssh = {
             startAgent = true;
-            askPassword = pkgs.lib.mkForce "${pkgs.ksshaskpass.out}/bin/ksshaskpass";
+            askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass.out}/bin/ksshaskpass";
         };
 
         gnupg.agent = {
@@ -90,7 +90,7 @@ in {
             defaultEditor = true;
             viAlias = true;
             vimAlias = true;
-            #withNodeJs = true;
+            withNodeJs = true;
             withPython3 = true;
         };
     };
@@ -189,14 +189,6 @@ local {
             extraModules = [ "http2" ];
             enablePHP = true;
 
-            # PHP 8.3
-#            phpPackage = pkgs.php83.buildEnv {
-#                extensions = ({ enabled, all }: enabled);
-#                extraConfig = ''
-#memory_limit = 2048M
-#                '';
-#            };
-
             # PHP 8.4
             phpPackage = pkgs.php84.buildEnv {
                 extensions = ({ enabled, all }: enabled ++ (with all; [
@@ -272,9 +264,9 @@ upload_max_filesize = 2048M
             ];
         };
 
-        #open-webui = {
-        #    enable = true;
-        #};
+        open-webui = {
+            enable = true;
+        };
     };
 
     xdg.portal = {
