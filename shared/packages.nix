@@ -36,8 +36,8 @@
             (import ../overlays/jetbrains/default.nix)
 
             # Mozilla Firefox Nightly overlays.
-            (import ../overlays/nixpkgs-mozilla/lib-overlay.nix)
-            (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
+            (import ../overlays/mozilla/lib-overlay.nix)
+            (import ../overlays/mozilla/firefox-overlay.nix)
         ];
     };
 
@@ -204,6 +204,8 @@
 
         #--  NETWORK
         filezilla
+        #firefox-devedition
+        firefox-devedition-unwrapped
         megasync
         megatools
         microsoft-edge
@@ -225,6 +227,10 @@
         libportal
         ulauncher
         wezterm
+
+        # (pkgs.runCommand "latest.firefox-nightly-bin")
+
+        # (pkgs.runCommand "latest.firefox-bin")
 
         (google-chrome.override {
             commandLineArgs = [
