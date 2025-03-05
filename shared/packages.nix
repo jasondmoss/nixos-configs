@@ -33,16 +33,20 @@
 
         overlays = [
             # JetBrains EAP overlays.
-            (import ../overlays/jetbrains/default.nix)
+            (import ../packages/jetbrains/default.nix)
 
             # Mozilla Firefox Nightly overlays.
-            (import ../overlays/mozilla/lib-overlay.nix)
-            (import ../overlays/mozilla/firefox-overlay.nix)
+#            (import (builtins.fetchurl {
+#                url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/lib-overlay.nix";
+#            }))
+            (import (builtins.fetchurl {
+                url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
+            }))
         ];
     };
 
     #--  Core Packages.
-    environment.systemPackages = (with pkgs; [
+    environment.systemPackages = with pkgs; [
         #--  BASE
         aha
         babl
@@ -204,8 +208,10 @@
 
         #--  NETWORK
         filezilla
-        #firefox-devedition
-        firefox-devedition-unwrapped
+        firefox-unwrapped
+        floorp-unwrapped
+        #latest.firefox-nightly-bin.unwrapped
+        librewolf-unwrapped
         megasync
         megatools
         microsoft-edge
@@ -227,10 +233,6 @@
         libportal
         ulauncher
         wezterm
-
-        # (pkgs.runCommand "latest.firefox-nightly-bin")
-
-        # (pkgs.runCommand "latest.firefox-bin")
 
         (google-chrome.override {
             commandLineArgs = [
@@ -264,7 +266,7 @@
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox.nix {})
-    ]);
+    ];
 
     imports = [
         ../packages/gimp.nix
@@ -275,8 +277,8 @@
         ../packages/vaapi.nix
 
         # Desktop Entries.
-        ../packages/desktop-entries/firefox-nightly.nix
-        ../packages/desktop-entries/firefox-stable.nix
+        #../packages/desktop-entries/firefox-nightly.nix
+        #../packages/desktop-entries/firefox-stable.nix
         ../packages/desktop-entries/thunderbird.nix
     ];
 

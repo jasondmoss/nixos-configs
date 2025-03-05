@@ -14,7 +14,7 @@
         ark
         baloo
         baloo-widgets
-        bluedevil
+        #bluedevil
         dolphin
         dolphin-plugins
         ffmpegthumbs
