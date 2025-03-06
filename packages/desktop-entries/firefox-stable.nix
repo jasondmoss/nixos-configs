@@ -36,11 +36,11 @@ in {
     environment.systemPackages = (with pkgs; [
 
         #-- Firefox Stable -- Rename executable
-        (pkgs.runCommand "latest.firefox-bin" {
+        (pkgs.runCommand "firefox-bin" {
             preferLocalBuild = true;
         } ''
 mkdir -p $out/bin
-ln -s ${latest.firefox-bin}/bin/firefox $out/bin/firefox-stable
+ln -s ${firefox-bin}/bin/firefox $out/bin/firefox-stable
         '')
 
         #-- Create desktop entry.
