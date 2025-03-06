@@ -32,16 +32,10 @@
         };
 
         overlays = [
-            # JetBrains EAP overlays.
-            (import ../packages/jetbrains/default.nix)
-
-            # Mozilla Firefox Nightly overlays.
-            #(import (builtins.fetchurl {
-            #    url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/lib-overlay.nix";
-            #}))
-            #(import (builtins.fetchurl {
-            #    url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
-            #}))
+            (import ../packages/jetbrains)
+            (import (builtins.fetchurl {
+                url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
+            }))
         ];
     };
 
@@ -208,10 +202,7 @@
 
         #--  NETWORK
         filezilla
-
-        #firefox-unwrapped
         #floorp-unwrapped
-        #floorp
         #librewolf-unwrapped
         librewolf-bin
 
@@ -261,28 +252,26 @@
         #--  CUSTOM PACKAGES
 
         #--  Anytype
-        (pkgs.callPackage ../packages/anytype.nix {})
+        (pkgs.callPackage ../packages/anytype {})
 
         # Strawberry Music Player
         strawberry
-        #(pkgs.callPackage ../packages/strawberry.nix {})
+        #(pkgs.callPackage ../packages/strawberry {})
 
         # Wavebox Beta
-        (pkgs.callPackage ../packages/wavebox.nix {})
+        (pkgs.callPackage ../packages/wavebox {})
     ];
 
     imports = [
-        ../packages/gimp.nix
-        ../packages/gnome-desktop.nix
-        ../packages/kde-desktop.nix
-        #../packages/ngrok.nix
-        ../packages/php.nix
-        ../packages/vaapi.nix
-
-        # Desktop Entries.
-        #../packages/desktop-entries/firefox-nightly.nix
-        ../packages/desktop-entries/firefox-stable.nix
-        ../packages/desktop-entries/thunderbird.nix
+        ../packages/firefox-nightly
+        ../packages/firefox-stable
+        ../packages/gimp
+        ../packages/gnome-desktop
+        ../packages/kde-desktop
+        #../packages/ngrok
+        ../packages/php
+        ../packages/thunderbird
+        ../packages/vaapi
     ];
 
 }

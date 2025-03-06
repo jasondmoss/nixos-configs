@@ -223,9 +223,9 @@
         darktable
         easytag
         flacon
+        floorp
         haruna
         kdePackages.phonon-vlc
-        mkvtoolnix
         shotcut
         taglib-sharp
         taglib_extras
@@ -245,7 +245,8 @@
         ../shared/hardware.nix
         ../shared/configuration.nix
         ../shared/packages.nix
-        ../packages/desktop-entries/mkvtoolnix.nix
+
+        ../packages/mkvtoolnix
     ];
 }
 

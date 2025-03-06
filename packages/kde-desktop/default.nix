@@ -1,7 +1,7 @@
 { pkgs, ... }: {
     environment.systemPackages = (with pkgs; [
         # Klassy KDE theme engine
-        (pkgs.callPackage ./kde-klassy.nix {})
+        (pkgs.callPackage ../kde-klassy {})
 
         adwaita-qt6
         kphotoalbum

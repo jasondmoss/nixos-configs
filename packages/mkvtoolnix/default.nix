@@ -20,9 +20,12 @@ let
     };
 in {
     environment.systemPackages = (with pkgs; [
+        (pkgs.runCommand "mkvtoolnix" {} ''
+mkdir -p $out/bin
+ln -s ${mkvtoolnix}/bin/mkvtoolnix $out/bin/mkvtoolnix
+        '')
 
         #-- Create desktop entry.
         mkvToolNixDesktopItem
-
     ]);
 }

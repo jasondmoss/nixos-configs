@@ -45,7 +45,7 @@ in {
     environment.systemPackages = (with pkgs; [
 
         #-- Rename executable.
-        (pkgs.runCommand "latest.firefox-nightly-bin.unwrapped" {
+        (pkgs.runCommand "latest.firefox-nightly-bin" {
             preferLocalBuild = true;
         } ''
 mkdir -p $out/bin
