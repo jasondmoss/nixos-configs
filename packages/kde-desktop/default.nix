@@ -1,5 +1,7 @@
 { pkgs, ... }: {
     environment.systemPackages = (with pkgs; [
+        # Darkly KDE theme engine
+        (pkgs.callPackage ../kde-darkly {})
         # Klassy KDE theme engine
         (pkgs.callPackage ../kde-klassy {})
 
@@ -14,7 +16,7 @@
         ark
         baloo
         baloo-widgets
-        #bluedevil
+        bluedevil
         dolphin
         dolphin-plugins
         ffmpegthumbs
@@ -25,8 +27,6 @@
         kbreakout
         kcalc
         kcmutils
-        kcolorchooser
-        kcolorpicker
         kconfigwidgets
         kcoreaddons
         kde-cli-tools
@@ -83,20 +83,9 @@
         akonadi-mime
         akonadi-search
         calendarsupport
-        kdepim-addons
-        kdepim-runtime
-        kontact
-        kmail
-        kmail-account-wizard
-        kmailtransport
-        libkdepim
-        pim-data-exporter
-        pim-sieve-editor
-        pimcommon
 
         breeze
         breeze-icons
         qtstyleplugin-kvantum
-        #sierra-breeze-enhanced
     ]);
 }

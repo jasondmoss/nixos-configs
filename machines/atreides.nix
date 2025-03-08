@@ -24,7 +24,6 @@
             systemd.enable = true;
 
             kernelModules = [
-                "i2c-nvidia_gpu"
                 "nvidia"
                 "nvidia_drm"
                 "nvidia_modeset"
@@ -61,6 +60,7 @@
 
         blacklistedKernelModules = [
             "nouveau"
+            "i2c-nvidia_gpu"
         ];
 
         kernel.sysctl = {

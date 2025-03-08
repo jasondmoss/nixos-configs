@@ -1,68 +1,29 @@
 {
-    alsa-lib,
-    boost,
-    chromaprint,
-    cmake,
-    fetchFromGitHub,
-    fftw,
-    glib-networking,
-    gnutls,
-    gst_all_1,
-    kdsingleapplication,
-    lib,
-    libXdmcp,
-    libcdio,
-    libebur128,
-    libgpod,
-    libidn2,
-    libmtp,
-    libpthreadstubs,
-    libpulseaudio,
-    libselinux,
-    libsepol,
-    libtasn1,
-    ninja,
-    nix-update-script,
-    p11-kit,
-    pkg-config,
-    qt6,
-    sqlite,
-    stdenv,
-    taglib,
-    util-linux
+    alsa-lib, boost, chromaprint, cmake, fetchFromGitHub, fftw, glib-networking,
+    gnutls, gst_all_1, kdsingleapplication, lib, libXdmcp, libcdio, libebur128,
+    libgpod, libidn2, libmtp, libpthreadstubs, libpulseaudio, libselinux,
+    libsepol, libtasn1, ninja, nix-update-script, p11-kit, pkg-config, qt6,
+    sqlite, stdenv, taglib, util-linux
 }:
+
 let
     inherit (lib) optionals;
-
+in stdenv.mkDerivation rec {
     pname = "strawberry";
     version = "master";
 
     src = fetchFromGitHub {
-        owner = "jonaski";
+        owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
         hash = "sha256-3lfxRsQeMjvsLjboFlSsC7gOoCpu6UZjVrzg777My/w=";
     };
 
-    meta = with lib; {
-        description = "Music player and music collection organizer";
-        homepage = "https://www.strawberrymusicplayer.org/";
-        changelog = "https://raw.githubusercontent.com/jonaski/strawberry/${version}/Changelog";
-        license = licenses.gpl3Only;
-        maintainers = with maintainers; [ peterhoeg ];
-        platforms = platforms.linux;
-        mainProgram = "strawberry";
-    };
-in stdenv.mkDerivation rec {
-    pname = "strawberry";
-    inherit version;
-    inherit meta;
-    inherit src;
-
     # The big strawberry shown in the context menu is *very* much in your face,
-    # so use the grey version instead
+    # so use the grey version instead.
     postPatch = ''
-substituteInPlace src/context/contextalbum.cpp --replace pictures/strawberry.png pictures/strawberry-grey.png
+substituteInPlace src/context/contextalbum.cpp \
+    --replace pictures/strawberry.png pictures/strawberry-grey.png
     '';
 
     buildInputs = [
@@ -98,7 +59,6 @@ substituteInPlace src/context/contextalbum.cpp --replace pictures/strawberry.png
         gstreamer
     ]);
 
-
     nativeBuildInputs = [
         cmake
         ninja
@@ -117,4 +77,14 @@ qtWrapperArgs+=(
     '';
 
     passthru.updateScript = nix-update-script { };
+
+    meta = with lib; {
+        description = "Music player and music collection organizer";
+        homepage = "https://www.strawberrymusicplayer.org/";
+        changelog = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry/${version}/Changelog";
+        license = licenses.gpl3Only;
+        maintainers = with maintainers; [ peterhoeg ];
+        platforms = platforms.linux;
+        mainProgram = "strawberry";
+    };
 }

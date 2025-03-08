@@ -389,19 +389,17 @@ Defaults env_keep+=SSH_AUTH_SOCK
             WLR_DRM_NO_ATOMIC = "1";
             WLR_NO_HARDWARE_CURSORS = "1";
 
-            #QT_QPA_PLATFORM = "wayland;xcb";  # Breaks Megasync.
-            #QT_QPA_PLATFORMTHEME = "qt6ct";   # Breaks Megasync.
-
             QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+            QT_QPA_PLATFORM = "wayland;xcb";
+            QT_QPA_PLATFORMTHEME = "qt6ct";
             QT_SCALE_FACTOR = "1";
             QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
             QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
 
-            PLASMA_USE_QT_SCALING = "1";
-
             KWIN_TRIPLE_BUFFER = "1";
 
-            #GSK_RENDERER = "gl";
+            PLASMA_USE_QT_SCALING = "1";
+
             GSK_RENDERER = "ngl";
 
             MOZ_DISABLE_GMP_SANDBOX = "1";

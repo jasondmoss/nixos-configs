@@ -21,14 +21,16 @@
 
         systemPackages = (with pkgs; [
             adwaita-icon-theme
-            libadwaita
-            morewaita-icon-theme
+            #gcolor3
+            gpick
             #gnome-boxes
             #gnome-browser-connector
             #gnome-control-center
             #gnome-shell
             #gnome-tweaks
             gtk4
+            libadwaita
+            morewaita-icon-theme
             nautilus
             #nautilus-open-any-terminal
         ]);

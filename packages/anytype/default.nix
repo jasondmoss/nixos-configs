@@ -1,22 +1,26 @@
 { lib, fetchurl, appimageTools, makeWrapper, commandLineArgs ? "" }:
 let
     pname = "anytype";
-    version = "0.45.2-alpha";
+    version = "0.45.4-alpha";
     name = "Anytype-${version}";
     src = fetchurl {
         url = "https://github.com/anyproto/anytype-ts/releases/download/v${version}/${name}.AppImage";
-        hash = "sha256-kNtx1SOA0UZf+uHWS2AZifA5JWA+KZf0q7nCLeuSobM=";
+        hash = "sha256-Edslye0dep1bM6jPMJZL5yW5MHX/2gnwT6F498z88SU=";
     };
 
     appimageContents = appimageTools.extractType2 { inherit pname version src; };
 in appimageTools.wrapType2 {
-      inherit pname version src;
+    inherit pname version src;
 
-      nativeBuildInputs = [ makeWrapper ];
+    nativeBuildInputs = [
+        makeWrapper
+    ];
 
-      extraPkgs = pkgs: [ pkgs.libsecret ];
+    extraPkgs = pkgs: [
+        pkgs.libsecret
+    ];
 
-      extraInstallCommands = ''
+    extraInstallCommands = ''
 wrapProgram $out/bin/${pname} \
     --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}}" \
     --add-flags ${lib.escapeShellArg commandLineArgs}

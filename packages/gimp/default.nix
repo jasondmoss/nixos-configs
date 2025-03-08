@@ -10,10 +10,10 @@
             });
 
             gegl = prev.gegl.overrideAttrs (oldAttrs: {
-                version = "0.4.52";
+                version = "0.4.54";
                 src = final.fetchurl {
-                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.52.tar.xz";
-                    hash = "sha256-yiEqD8PgRIxQWMUcpqDTD9+wKXHyHyiCDaK0kBOWAAo=";
+                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.54.tar.xz";
+                    hash = "sha256-NaNC8IxrQ3mt7iy1dI/E4wfP3PJBfAuxfWymVD8jix4=";
                 };
             });
         })
@@ -25,7 +25,6 @@
 
         # Stable version
         gimp
-
         # Development version (currently RC2)
         #(pkgs.callPackage ./gimp-devel {})
     ]) ++ (with pkgs.gimpPlugins; [
