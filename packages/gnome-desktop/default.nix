@@ -22,6 +22,7 @@
         systemPackages = (with pkgs; [
             adwaita-icon-theme
             #gcolor3
+            glib-networking
             gpick
             #gnome-boxes
             #gnome-browser-connector

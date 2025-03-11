@@ -25,8 +25,9 @@
 
         # Stable version
         gimp
+
         # Development version (currently RC2)
-        #(pkgs.callPackage ./gimp-devel {})
+        #(pkgs.callPackage ../gimp-devel {})
     ]) ++ (with pkgs.gimpPlugins; [
         #bimp
         exposureBlend

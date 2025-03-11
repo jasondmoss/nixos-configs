@@ -13,27 +13,26 @@ let
     lua = luajit.withPackages (ps: [ ps.lgi ]);
 in stdenv.mkDerivation (finalAttrs: {
     pname = "gimp";
-    #version = "3.0.0-RC2";
-    version = "master";
+    version = "3_0_0_RC3";
+    #version = "master";
+    #https://download.gimp.org/pub/gimp/v3.0/gimp-3.0.0-RC3.tar.xz
 
     outputs = [ "out" "dev" ];
 
-    src = fetchgit {
-        name = "gimp";
+#    src = fetchgit {
+#        name = "gimp";
+#
+#        src = {
+#            url = "https://gitlab.gnome.org/GNOME/gimp.git";
+#            sparseCheckout = [ "gimp" ];
+#            hash = "";
+#        };
+#    };
 
-        src = {
-            url = "https://gitlab.gnome.org/GNOME/gimp.git";
-
-            sparseCheckout = [ "gimp" ];
-
-            hash = "";
-        };
+    src = fetchurl {
+        url = "https://download.gimp.org/pub/gimp/v3.0/gimp-3.0.0-RC3.tar.xz";
+        hash = "sha256-YftSfPItCTo/NQGIR5arq9PDDdfw41Tb3AQb7w9+OOw=";
     };
-
-    #src = fetchurl {
-    #    url = "http://download.gimp.org/pub/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}.tar.xz";
-    #    hash = "sha256-9NL5bfGAzlVD+LKzVwe5vxFFnwD3Jspz2i9AbWhtnbc=";
-    #};
 
     # src = fetchFromGitHub {
     #    owner = "GNOME";

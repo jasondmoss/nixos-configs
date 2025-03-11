@@ -263,13 +263,13 @@
     ];
 
     imports = [
-        ../packages/firefox-nightly
-        ../packages/firefox-stable
-        ../packages/gimp
+        ../packages/php
+        #../packages/ngrok
         ../packages/gnome-desktop
         ../packages/kde-desktop
-        #../packages/ngrok
-        ../packages/php
+        ../packages/gimp
+        ../packages/firefox-nightly
+        ../packages/firefox-stable
         ../packages/thunderbird
         ../packages/vaapi
     ];
