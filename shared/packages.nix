@@ -202,10 +202,6 @@
 
         #--  NETWORK
         filezilla
-        #floorp-unwrapped
-        #librewolf-unwrapped
-        librewolf-bin
-
         megasync
         megatools
         microsoft-edge

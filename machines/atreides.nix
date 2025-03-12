@@ -223,9 +223,10 @@
         darktable
         easytag
         flacon
-        floorp
+        floorp-unwrapped
         haruna
         kdePackages.phonon-vlc
+        librewolf-unwrapped
         shotcut
         taglib-sharp
         taglib_extras
