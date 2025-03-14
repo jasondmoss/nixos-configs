@@ -153,18 +153,7 @@
             updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
 
-        nvidia = {
-            package = config.boot.kernelPackages.nvidiaPackages.beta;
-
-            # New feature branch.
-            #package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-            #    version = "560.35.03";
-            #    sha256_64bit = "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
-            #    openSha256 = "sha256-/32Zf0dKrofTmPZ3Ratw4vDM7B+OgpC4p7s+RHUjCrg=";
-            #    settingsSha256 = "sha256-kQsvDgnxis9ANFmwIwB7HX5MkIAcpEEAHc8IBOLdXvk=";
-            #    persistencedSha256 = "sha256-E2J2wYYyRu7Kc3MMZz/8ZIemcZg68rkzvqEwFAL3fFs=";
-            #};
-        };
+        nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
 
     services = {
@@ -226,7 +215,8 @@
         floorp-unwrapped
         haruna
         kdePackages.phonon-vlc
-        librewolf-unwrapped
+        librewolf
+        mkvtoolnix
         shotcut
         taglib-sharp
         taglib_extras
@@ -247,7 +237,7 @@
         ../shared/configuration.nix
         ../shared/packages.nix
 
-        ../packages/mkvtoolnix
+        #../packages/mkvtoolnix
     ];
 }
 
