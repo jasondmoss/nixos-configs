@@ -209,8 +209,7 @@
         nyxt
         opera
         protonvpn-gui
-        thunderbird-unwrapped
-        #zoom-us # No screen sharing in Wayland
+        thunderbird-latest
 
         #--  THEME
         comixcursors
