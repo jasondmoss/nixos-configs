@@ -209,7 +209,6 @@
         nyxt
         opera
         protonvpn-gui
-        thunderbird-latest
 
         #--  THEME
         comixcursors
@@ -250,8 +249,7 @@
         (pkgs.callPackage ../packages/anytype {})
 
         # Strawberry Music Player
-        strawberry
-        #(pkgs.callPackage ../packages/strawberry {})
+        (pkgs.callPackage ../packages/strawberry {})
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox {})
@@ -259,7 +257,7 @@
 
     imports = [
         ../packages/php
-        #../packages/ngrok
+        ../packages/ngrok
         ../packages/gnome-desktop
         ../packages/kde-desktop
         ../packages/gimp

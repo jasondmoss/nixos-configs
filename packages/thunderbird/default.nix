@@ -16,9 +16,9 @@ let
     };
 in {
     environment.systemPackages = (with pkgs; [
+        thunderbird-latest
 
         #-- Create desktop entry.
         thunderbirdDesktopItem
-
     ]);
 }
