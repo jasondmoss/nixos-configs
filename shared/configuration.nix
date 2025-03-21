@@ -259,8 +259,11 @@ upload_max_filesize = 2048M
             acceleration = "cuda";
 
             loadModels = [
+                #"codestral"
+                "gemma3"
                 "llama3.3"
-                "codestral"
+                "phi-4"
+                "qwen2.5-coder"
             ];
         };
 
