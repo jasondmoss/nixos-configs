@@ -212,7 +212,7 @@
         darktable
         easytag
         flacon
-        floorp-unwrapped
+        #floorp-unwrapped
         haruna
         kdePackages.phonon-vlc
         librewolf

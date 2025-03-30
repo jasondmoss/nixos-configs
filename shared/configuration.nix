@@ -239,27 +239,11 @@ upload_max_filesize = 2048M
             ];
         };
 
-        # Service not working correctly
-#        ngrok = {
-#            enable = true;
-#
-#            extraConfig = {};
-#
-#            extraConfigFiles = [
-#                "/home/me/.config/ngrok/ngrok.yml"
-#            ];
-#
-#            tunnels = {
-#                # ...
-#            };
-#        };
-
         ollama = {
             enable = true;
             acceleration = "cuda";
 
             loadModels = [
-                #"codestral"
                 "gemma3"
                 "llama3.3"
                 "phi-4"

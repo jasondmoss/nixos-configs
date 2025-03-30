@@ -257,12 +257,13 @@
 
     imports = [
         ../packages/php
-        ../packages/ngrok
+        #../packages/ngrok
         ../packages/gnome-desktop
         ../packages/kde-desktop
         ../packages/gimp
         ../packages/firefox-nightly
         ../packages/firefox-stable
+        ../packages/floorp
         ../packages/thunderbird
         ../packages/vaapi
     ];
