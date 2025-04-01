@@ -202,6 +202,7 @@
 
         #--  NETWORK
         filezilla
+        librewolf
         megasync
         megatools
         microsoft-edge

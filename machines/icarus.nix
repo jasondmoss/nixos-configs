@@ -184,10 +184,7 @@
         };
     };
 
-    environment.systemPackages = (with pkgs; [
-        floorp
-        librewolf-bin
-    ]);
+    #environment.systemPackages = (with pkgs; []);
 
     virtualisation = {
         virtualbox.host.enable = true;
