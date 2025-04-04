@@ -185,6 +185,7 @@
         flac
         isoimagewriter
         kodi-wayland
+        koreader
         lame
         libcue
         mac
