@@ -95,6 +95,14 @@
         xfsprogs
         zip
 
+        #--  SECURITY
+        certbot
+        chkrootkit
+        encfs
+        lynis
+        mkcert
+        sniffnet
+
         #--  GRAPHICS
         egl-wayland
         eglexternalplatform
@@ -159,14 +167,6 @@
         superhtml
         yarn
 
-        #--  SECURITY
-        certbot
-        chkrootkit
-        encfs
-        lynis
-        mkcert
-        sniffnet
-
         #--  EDITORS
         inkscape
         libreoffice-qt6-fresh
@@ -220,6 +220,7 @@
         conky
         diskscan
         ghostty
+        kdocker
         libportal
         ulauncher
         wezterm
