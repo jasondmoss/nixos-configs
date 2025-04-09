@@ -220,8 +220,8 @@
         conky
         diskscan
         ghostty
-        kdocker
         libportal
+        tana
         ulauncher
         wezterm
 
