@@ -6,7 +6,7 @@ stdenv.mkDerivation rec {
         owner = "Bali10050";
         repo = "Darkly";
         rev = version;
-        hash = "sha256-o31KOeFwrI7XjiMGQ74E2K6uTyPy+iSk94Gxj+0purc=";
+        hash = "sha256-0Z91+x5ChjEBqXzbbv6oGzVjuLXvIb8S8493c9vNBJI=";
     };
 
     buildInputs = [

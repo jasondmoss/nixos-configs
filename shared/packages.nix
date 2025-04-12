@@ -255,7 +255,6 @@
 
         # LadyBird
         #(pkgs.callPackage ../packages/ladybird {})
-        ladybird
 
         # Strawberry Music Player
         #(pkgs.callPackage ../packages/strawberry {})

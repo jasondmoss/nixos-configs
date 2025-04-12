@@ -1,11 +1,11 @@
 { lib, fetchurl, appimageTools, makeWrapper, commandLineArgs ? "" }:
 let
     pname = "anytype";
-    version = "0.45.40-alpha";
+    version = "0.45.47-beta";
     name = "Anytype-${version}";
     src = fetchurl {
         url = "https://github.com/anyproto/anytype-ts/releases/download/v${version}/${name}.AppImage";
-        hash = "sha256-nLbHrYsSpk10pb4+c89WTL7z3seVDa2mP7JO2yNN3rk=";
+        hash = "sha256-tVVrd8rGgL9ipAUCA472n66yQCnb8epKm9FNJx+5Ifc=";
     };
 
     appimageContents = appimageTools.extractType2 { inherit pname version src; };
@@ -21,15 +21,15 @@ in appimageTools.wrapType2 {
     ];
 
     extraInstallCommands = ''
-wrapProgram $out/bin/${pname} \
-    --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}}" \
-    --add-flags ${lib.escapeShellArg commandLineArgs}
+wrapProgram $out/bin/${pname}\
+ --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}}"\
+ --add-flags ${lib.escapeShellArg commandLineArgs}
 install -m 444 -D ${appimageContents}/anytype.desktop -t $out/share/applications
-substituteInPlace $out/share/applications/anytype.desktop \
-    --replace 'Exec=AppRun' 'Exec=${pname}'
+substituteInPlace $out/share/applications/anytype.desktop\
+ --replace 'Exec=AppRun' 'Exec=${pname}'
 for size in 16 32 64 128 256 512 1024; do
-    install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/''${size}x''${size}/apps/anytype.png \
-        $out/share/icons/hicolor/''${size}x''${size}/apps/anytype.png
+    install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/''${size}x''${size}/apps/anytype.png\
+ $out/share/icons/hicolor/''${size}x''${size}/apps/anytype.png
 done
     '';
 
