@@ -34,7 +34,7 @@
         overlays = [
             (import ../packages/jetbrains)
             (import (builtins.fetchurl {
-                url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
+               url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
             }))
         ];
     };
@@ -131,6 +131,8 @@
         xdg-utils
         xorg.libxcb
 
+        inkscape
+
         #--  DESKTOP
         ly
 
@@ -153,9 +155,6 @@
         gdb
         git
         go
-        jetbrains.gateway
-        jetbrains.jdk
-        jetbrains.writerside
         libunwind
         lua
         nodejs
@@ -167,15 +166,19 @@
         superhtml
         yarn
 
-        #--  EDITORS
-        inkscape
-        libreoffice-qt6-fresh
+        jetbrains.gateway
+        jetbrains.jdk
+        jetbrains.writerside
         nano
+        phpstorm    # Custom overlay.
+        sublime4
+
+        #--  OFFICE/ADMIN
+        libreoffice-qt6-fresh
         nomacs
         notes
-        phpstorm    # Custom overlay.
         semantik
-        sublime4
+        typst
 
         #--  MULTIMEDIA
         #aaxtomp3
@@ -210,18 +213,17 @@
         ngrok
         nyxt
         opera
+        polypane
         protonvpn-gui
 
         #--  THEME
         comixcursors
 
         #--  MISCELLANEOUS
-        aichat
         conky
         diskscan
         ghostty
         libportal
-        tana
         ulauncher
         wezterm
 
@@ -251,8 +253,13 @@
         #--  Anytype
         (pkgs.callPackage ../packages/anytype {})
 
+        # LadyBird
+        #(pkgs.callPackage ../packages/ladybird {})
+        ladybird
+
         # Strawberry Music Player
-        (pkgs.callPackage ../packages/strawberry {})
+        #(pkgs.callPackage ../packages/strawberry {})
+        strawberry
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox {})
@@ -264,7 +271,7 @@
         ../packages/gnome-desktop
         ../packages/kde-desktop
         ../packages/gimp
-        ../packages/firefox-nightly
+        #../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/floorp
         ../packages/thunderbird
