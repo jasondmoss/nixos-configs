@@ -3,7 +3,7 @@
     gnutls, gst_all_1, kdsingleapplication, lib, libXdmcp, libcdio, libebur128,
     libgpod, libidn2, libmtp, libpthreadstubs, libpulseaudio, libselinux,
     libsepol, libtasn1, ninja, nix-update-script, p11-kit, pkg-config, qt6,
-    sparsehash, sqlite, stdenv, taglib, util-linux
+    rapidjson, sparsehash, sqlite, stdenv, taglib, util-linux
 }:
 
 let
@@ -16,7 +16,7 @@ in stdenv.mkDerivation rec {
         owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
-        hash = "sha256-x84a9JRJKXjDtvgNUWtiHtSCyKSX3cLMuru+Vr2kbe4=";
+        hash = "sha256-DpYue8epxKPePT06U8857PR/xkM6I6RuajHQbhqlRr8=";
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,
@@ -41,6 +41,7 @@ substituteInPlace src/context/contextalbum.cpp \
         libpthreadstubs
         libtasn1
         qt6.qtbase
+        rapidjson
         sparsehash
         sqlite
         taglib

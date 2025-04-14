@@ -254,11 +254,11 @@
         (pkgs.callPackage ../packages/anytype {})
 
         # LadyBird
-        #(pkgs.callPackage ../packages/ladybird {})
+        (pkgs.callPackage ../packages/ladybird {})
 
         # Strawberry Music Player
-        #(pkgs.callPackage ../packages/strawberry {})
-        strawberry
+        (pkgs.callPackage ../packages/strawberry {})
+        #strawberry
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox {})
@@ -270,7 +270,7 @@
         ../packages/gnome-desktop
         ../packages/kde-desktop
         ../packages/gimp
-        #../packages/firefox-nightly
+        ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/floorp
         ../packages/thunderbird
