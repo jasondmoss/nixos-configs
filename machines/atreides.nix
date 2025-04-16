@@ -215,6 +215,7 @@
         haruna
         kdePackages.phonon-vlc
         mkvtoolnix
+        rawtherapee
         shotcut
         taglib-sharp
         taglib_extras

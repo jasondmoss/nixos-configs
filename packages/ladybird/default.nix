@@ -31,9 +31,9 @@ in
             owner = "LadybirdBrowser";
             repo = "ladybird";
             rev = "c5d0af54d0dea8e5019c4ac72e1a491160a2242d";
-            #rev = "master";
-#            hash = "sha256-Q1Pyt9c2trYMgkGX395xmIgBPvy2WMPMxRmSO70hvsk=";
             hash = "sha256-AsTe23LJbFHMtTCzJz1nWmlH8LvLreB39DciHysOF2w=";
+            #rev = "master";
+            #hash = "sha256-F0RZ5VuBw2y0b3LyGbdFEP5LChKnvd2c9PDooC9ali4=";
         };
 
         postPatch = ''
