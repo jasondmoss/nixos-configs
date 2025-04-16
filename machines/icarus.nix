@@ -106,6 +106,8 @@
         size = 16 * 1024;  # 16GB
     }];
 
+    console.font = "Lat2-Terminus16";
+
     hardware = {
         cpu.intel = {
             sgx.provision = {

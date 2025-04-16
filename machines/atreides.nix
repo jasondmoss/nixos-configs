@@ -156,6 +156,8 @@
         nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
 
+    console.font = null;
+
     services = {
         power-profiles-daemon.enable = false;
         xserver.dpi = 162;
