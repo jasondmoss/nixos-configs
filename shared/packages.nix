@@ -69,6 +69,7 @@
         lm_sensors
         lsd
         lshw
+        moreutils
         nix-du
         nix-index
         nix-prefetch-git
