@@ -179,6 +179,7 @@
         nomacs
         notes
         semantik
+        standardnotes
         typst
 
         #--  MULTIMEDIA
