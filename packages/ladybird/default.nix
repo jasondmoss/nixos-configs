@@ -1,5 +1,5 @@
 {
-    config, pkgs, lib, stdenv, fetchFromGitHub, fetchurl, cacert, unicode-emoji,
+    lib, stdenv, fetchFromGitHub, fetchurl, cacert, unicode-emoji,
     unicode-character-database, cmake, ninja, pkg-config, curl, libavif, libGL,
     libjxl, libpulseaudio, libwebp, libxcrypt, openssl, python3, qt6Packages,
     woff2, ffmpeg, fontconfig, simdutf, skia, nixosTests, unstableGitUpdater,
@@ -19,21 +19,20 @@
         url = "https://raw.githubusercontent.com/publicsuffix/list/${public_suffix_commit}/public_suffix_list.dat";
         hash = "sha256-0szHUz1T0MXOQ9tcXoKY2F/bI3s7hsYCjURqywZsf1w=";
     };
-    # Note: The cacert version is synthetic and must match the version in the package's CMake
     cacert_version = "2023-12-12";
 in
     stdenv.mkDerivation (finalAttrs: {
         pname = "ladybird";
-        #version = "master";
-        version = "0-unstable-2025-03-02";
+#        version = "master";
+        version = "0-unstable-2025-03-27";
 
         src = fetchFromGitHub {
             owner = "LadybirdBrowser";
             repo = "ladybird";
-            rev = "c5d0af54d0dea8e5019c4ac72e1a491160a2242d";
-            hash = "sha256-AsTe23LJbFHMtTCzJz1nWmlH8LvLreB39DciHysOF2w=";
-            #rev = "master";
-            #hash = "sha256-F0RZ5VuBw2y0b3LyGbdFEP5LChKnvd2c9PDooC9ali4=";
+            rev = "5ea45da15f5ac956db1cfe0aad74b570f7e88339";
+            hash = "sha256-wODm5O15jwnyxvkHVCQBptwoC97tTD0KzwYqGPdY520=";
+#            rev = "master";
+#            hash = "sha256-mL196a5dOxTHHZMKAlT35sLVhYrkXfn+BYB4wGsXUPY=";
         };
 
         postPatch = ''

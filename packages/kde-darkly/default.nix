@@ -1,4 +1,6 @@
-{ lib, stdenv, fetchFromGitHub, kdePackages, cmake, qt6 }:
+{
+    lib, stdenv, fetchFromGitHub, kdePackages, cmake, qt6
+}:
 stdenv.mkDerivation rec {
     pname = "darkly";
     version = "main";

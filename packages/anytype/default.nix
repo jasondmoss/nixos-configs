@@ -1,11 +1,13 @@
-{ lib, fetchurl, appimageTools, makeWrapper, commandLineArgs ? "" }:
+{
+    lib, fetchurl, appimageTools, makeWrapper, commandLineArgs ? ""
+}:
 let
     pname = "anytype";
-    version = "0.45.47-beta";
+    version = "0.46.5-alpha";
     name = "Anytype-${version}";
     src = fetchurl {
         url = "https://github.com/anyproto/anytype-ts/releases/download/v${version}/${name}.AppImage";
-        hash = "sha256-tVVrd8rGgL9ipAUCA472n66yQCnb8epKm9FNJx+5Ifc=";
+        hash = "sha256-4VxZFNaMRMUXu83ufzx4EV/YZLV57JizUwnJLIGLkII=";
     };
 
     appimageContents = appimageTools.extractType2 { inherit pname version src; };
@@ -26,7 +28,7 @@ wrapProgram $out/bin/${pname}\
  --add-flags ${lib.escapeShellArg commandLineArgs}
 install -m 444 -D ${appimageContents}/anytype.desktop -t $out/share/applications
 substituteInPlace $out/share/applications/anytype.desktop\
- --replace 'Exec=AppRun' 'Exec=${pname}'
+ --replace 'Exec=AppRun' 'Exec=${pname} --use-gl=desktop --enable-features=VaapiVideoDecodeLinuxGL --ignore-gpu-blocklist --enable-zero-copy'
 for size in 16 32 64 128 256 512 1024; do
     install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/''${size}x''${size}/apps/anytype.png\
  $out/share/icons/hicolor/''${size}x''${size}/apps/anytype.png
@@ -42,3 +44,4 @@ done
         platforms = [ "x86_64-linux" ];
     };
 }
+# --replace 'Exec=AppRun' 'Exec=${pname}'

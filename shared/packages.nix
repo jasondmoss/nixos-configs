@@ -211,7 +211,6 @@
         librewolf
         megasync
         megatools
-        microsoft-edge
         ngrok
         nyxt
         opera
@@ -229,6 +228,17 @@
         ulauncher
         wezterm
 
+        (chromium.override {
+            enableWideVine = true;
+
+            commandLineArgs = [
+                "--use-gl=desktop"
+                "--enable-features=VaapiVideoDecodeLinuxGL"
+                "--ignore-gpu-blocklist"
+                "--enable-zero-copy"
+            ];
+        })
+
         (google-chrome.override {
             commandLineArgs = [
                 "--use-gl=desktop"
@@ -238,9 +248,7 @@
             ];
         })
 
-        (chromium.override {
-            enableWideVine = true;
-
+        (microsoft-edge.override {
             commandLineArgs = [
                 "--use-gl=desktop"
                 "--enable-features=VaapiVideoDecodeLinuxGL"
@@ -253,7 +261,10 @@
         #--  CUSTOM PACKAGES
 
         #--  Anytype
-        (pkgs.callPackage ../packages/anytype {})
+#        (pkgs.callPackage ../packages/anytype {})
+
+        #--  Capacities
+#        (pkgs.callPackage ../packages/capacities {})
 
         # LadyBird
         (pkgs.callPackage ../packages/ladybird {})

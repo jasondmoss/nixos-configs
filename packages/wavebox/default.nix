@@ -5,12 +5,12 @@
 with lib;
 let
     bits = "x86_64";
-    version = "10.135.15-3";
+    version = "10.135.17-3";
     tarball = "Wavebox_${version}.tar.gz";
 
     src = fetchurl {
         url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-        sha256 = "sha256-6vVfgv6qp1k4nySzje72xTWDGMjqTw3ZRyVCPkAB9wM=";
+        sha256 = "sha256-VodUdkgz9juRhg905SU1/XZUriwlk+EMi2sANp1DRCs=";
     };
 
     desktopItem = makeDesktopItem rec {
@@ -39,7 +39,11 @@ in stdenv.mkDerivation rec {
     inherit src;
 
     # Ignore missing QT5 dependencies.
-    autoPatchelfIgnoreMissingDeps = [ "libQt5Widgets.so.5" "libQt5Gui.so.5" "libQt5Core.so.5" ];
+    autoPatchelfIgnoreMissingDeps = [
+        "libQt5Widgets.so.5"
+        "libQt5Gui.so.5"
+        "libQt5Core.so.5"
+    ];
     dontPatchELF = true;
 
     nativeBuildInputs = [ autoPatchelfHook makeWrapper qt6.wrapQtAppsHook ];
