@@ -225,6 +225,10 @@
         diskscan
         ghostty
         libportal
+        pandoc
+        p7zip
+        p7zip-rar
+        peazip
         ulauncher
         wezterm
 
@@ -286,7 +290,7 @@
         ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/floorp
-        ../packages/thunderbird
+        #../packages/thunderbird
         ../packages/vaapi
     ];
 
