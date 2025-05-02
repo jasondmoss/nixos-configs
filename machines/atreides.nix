@@ -98,13 +98,6 @@
         options = [ "compress=lzo" ];
     };
 
-    # [sdb1]
-    fileSystems."/home/me/Games" = {
-        device = "/dev/disk/by-uuid/2cf8ca9d-43ab-4ef5-99ff-0a909e765c5e";
-        fsType = "btrfs";
-        options = [ "compress=lzo" ];
-    };
-
     # [sdb2]
     fileSystems."/home/me/Mega" = {
         device = "/dev/disk/by-uuid/ccee2c99-427f-40f1-ad72-af6c81be4379";
@@ -115,6 +108,13 @@
     fileSystems."/home/me/Music" = {
         device = "/dev/disk/by-uuid/bf9410ed-bf55-4341-97f5-5576f80ce071";
         fsType = "ext4";
+    };
+
+    # [sdb1]
+    fileSystems."/home/me/Repository" = {
+        device = "/dev/disk/by-uuid/2cf8ca9d-43ab-4ef5-99ff-0a909e765c5e";
+        fsType = "btrfs";
+        options = [ "compress=lzo" ];
     };
 
     # [sda1]
