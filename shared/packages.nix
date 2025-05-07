@@ -265,10 +265,10 @@
         #--  CUSTOM PACKAGES
 
         #--  Anytype
-#        (pkgs.callPackage ../packages/anytype {})
+        (pkgs.callPackage ../packages/anytype {})
 
         #--  Capacities
-#        (pkgs.callPackage ../packages/capacities {})
+        (pkgs.callPackage ../packages/capacities {})
 
         # LadyBird
         (pkgs.callPackage ../packages/ladybird {})

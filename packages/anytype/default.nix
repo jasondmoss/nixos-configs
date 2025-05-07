@@ -3,11 +3,11 @@
 }:
 let
     pname = "anytype";
-    version = "0.46.5-alpha";
+    version = "0.46.11-alpha";
     name = "Anytype-${version}";
     src = fetchurl {
         url = "https://github.com/anyproto/anytype-ts/releases/download/v${version}/${name}.AppImage";
-        hash = "sha256-4VxZFNaMRMUXu83ufzx4EV/YZLV57JizUwnJLIGLkII=";
+        hash = "sha256-FoLpLJc416ccrn7mDyZh7iWY1+2Wb9aeeRsmilZAjWw=";
     };
 
     appimageContents = appimageTools.extractType2 { inherit pname version src; };
@@ -44,4 +44,3 @@ done
         platforms = [ "x86_64-linux" ];
     };
 }
-# --replace 'Exec=AppRun' 'Exec=${pname}'

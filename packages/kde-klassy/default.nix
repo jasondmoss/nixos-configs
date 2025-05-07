@@ -3,22 +3,22 @@
 }:
 stdenv.mkDerivation rec {
     pname = "klassy";
-    #version = "plasma6.2";
-    #src = fetchFromGitHub {
-    #    owner = "jasondmoss";
-    #    repo = "klassy";
-    #    rev = version;
-    #    hash = "sha256-eTT95ck9M+kfTuWn4mV/x0mxQLvZYXJ89JXaCcm0jYg=";
-    #};
+    version = "master";
+    src = fetchFromGitHub {
+        owner = "paulmcauley";
+        repo = "klassy";
+        rev = version;
+        hash = "sha256-PYa5nguTj8IypUAXmoYgeehZ1/GwZsZgcekmTcuWT7s=";
+    };
 
     # Temporary
-    version = "plasma6.3";
-    src = fetchFromGitHub {
-        owner = "ivan-cukic";
-        repo = "wip-klassy";
-        rev = version;
-        hash = "sha256-9IZhO8a8URTYPv6/bf7r3incfN1o2jBd2+mLVptNRYo=";
-    };
+#    version = "plasma6.3";
+#    src = fetchFromGitHub {
+#        owner = "ivan-cukic";
+#        repo = "wip-klassy";
+#        rev = version;
+#        hash = "sha256-9IZhO8a8URTYPv6/bf7r3incfN1o2jBd2+mLVptNRYo=";
+#    };
 
     buildInputs = [
         kdePackages.frameworkintegration
