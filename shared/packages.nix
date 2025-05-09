@@ -183,7 +183,7 @@
         typst
 
         #--  MULTIMEDIA
-        #aaxtomp3
+#        aaxtomp3
         faac
         ffmpeg-full
         ffmpegthumbnailer
@@ -275,7 +275,7 @@
 
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})
-        #strawberry
+#        strawberry
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox {})
@@ -283,14 +283,14 @@
 
     imports = [
         ../packages/php
-        #../packages/ngrok
+#        ../packages/ngrok
         ../packages/gnome-desktop
         ../packages/kde-desktop
         ../packages/gimp
         ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/floorp
-        #../packages/thunderbird
+#        ../packages/thunderbird
         ../packages/vaapi
     ];
 
