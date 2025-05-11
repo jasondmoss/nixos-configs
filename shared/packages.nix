@@ -166,6 +166,7 @@
         seer
         superhtml
         yarn
+        zed-editor
 
         jetbrains.gateway
         jetbrains.jdk
