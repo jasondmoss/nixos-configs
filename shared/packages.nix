@@ -166,7 +166,6 @@
         seer
         superhtml
         yarn
-        zed-editor
 
         jetbrains.gateway
         jetbrains.jdk
@@ -225,6 +224,7 @@
         conky
         diskscan
         ghostty
+        kitty
         libportal
         pandoc
         p7zip
