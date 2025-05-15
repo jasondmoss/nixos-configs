@@ -52,7 +52,6 @@ in {
     console = {
         earlySetup = true;
         #font = null;
-        #font = "Lat2-Terminus16";
         keyMap = "us";
         colors = theme.colors16;
     };

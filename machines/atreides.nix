@@ -157,7 +157,7 @@
         nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
 
-    console.font = null;
+    console.font = "alt-8x16.gz";
 
     services = {
         power-profiles-daemon.enable = false;
