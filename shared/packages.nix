@@ -32,10 +32,14 @@
         };
 
         overlays = [
-            (import ../packages/jetbrains)
+            # Conky
+            (import ../packages/conky)
+            # Firefox Nightly
             (import (builtins.fetchurl {
                url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
             }))
+            # PhpStorm
+            (import ../packages/jetbrains)
         ];
     };
 
@@ -105,6 +109,7 @@
         sniffnet
 
         #--  GRAPHICS
+        cairo
         egl-wayland
         eglexternalplatform
         glxinfo
@@ -133,9 +138,6 @@
         xorg.libxcb
 
         inkscape
-
-        #--  DESKTOP
-        ly
 
         #--  DEVELOPMENT
         bison
@@ -217,11 +219,15 @@
         polypane
         protonvpn-gui
 
+        #--  DESKTOP
+        conky
+        ly
+        ulauncher
+
         #--  THEME
         comixcursors
 
         #--  MISCELLANEOUS
-        conky
         diskscan
         ghostty
         kitty
@@ -230,7 +236,6 @@
         p7zip
         p7zip-rar
         peazip
-        ulauncher
         wezterm
 
         (chromium.override {
@@ -266,10 +271,10 @@
         #--  CUSTOM PACKAGES
 
         #--  Anytype
-        (pkgs.callPackage ../packages/anytype {})
+#        (pkgs.callPackage ../packages/anytype {})
 
         #--  Capacities
-        (pkgs.callPackage ../packages/capacities {})
+#        (pkgs.callPackage ../packages/capacities {})
 
         # LadyBird
         (pkgs.callPackage ../packages/ladybird {})
@@ -283,14 +288,15 @@
     ];
 
     imports = [
-        ../packages/php
-#        ../packages/ngrok
-        ../packages/gnome-desktop
-        ../packages/kde-desktop
-        ../packages/gimp
+#        ../packages/conky
         ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/floorp
+        ../packages/gimp
+        ../packages/gnome-desktop
+        ../packages/kde-desktop
+#        ../packages/ngrok
+        ../packages/php
 #        ../packages/thunderbird
         ../packages/vaapi
     ];
