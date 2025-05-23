@@ -33,7 +33,7 @@
 
         overlays = [
             # Conky
-            (import ../packages/conky)
+#            (import ../packages/conky)
             # Firefox Nightly
             (import (builtins.fetchurl {
                url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
@@ -289,7 +289,6 @@
     ];
 
     imports = [
-#        ../packages/conky
         ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/floorp

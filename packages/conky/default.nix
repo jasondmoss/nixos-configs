@@ -33,7 +33,7 @@ self: pkgs: with pkgs; {
         cmakeFlags = old.cmakeFlags ++ [
             "-DMAINTAINER_MODE=OFF"
             "-DBUILD_WAYLAND=ON"
-            "-DBUILD_HTTP=OFF"
+            "-DBUILD_HTTP=ON"
         ];
     });
 }

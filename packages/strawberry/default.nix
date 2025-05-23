@@ -16,14 +16,14 @@ in stdenv.mkDerivation rec {
         owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
-        hash = "sha256-1F/t0fZtf7/gqtbL1weOUh0J9iZv7CQkoQJ/LRyIcU4=";
+        hash = "sha256-dL/jrcFMtAGRO1W9R2OF7E0I06uBUDWkY07Sh8FdX+Y=";
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,
     # so use the grey version instead.
     postPatch = ''
 substituteInPlace src/context/contextalbum.cpp \
-    --replace pictures/strawberry.png pictures/strawberry-grey.png
+ --replace pictures/strawberry.png pictures/strawberry-grey.png
     '';
 
     buildInputs = [
