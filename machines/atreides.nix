@@ -217,13 +217,16 @@
         flacon
         haruna
         kdePackages.phonon-vlc
-        mkvtoolnix
         rawtherapee
         shotcut
         taglib-sharp
         taglib_extras
         tor-browser-bundle-bin
         vlc
+
+        # MKVToolNix
+        (pkgs.callPackage ../packages/mkvtoolnix {})
+#        mkvtoolnix
     ]);
 
     virtualisation = {

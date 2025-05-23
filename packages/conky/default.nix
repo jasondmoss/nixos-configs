@@ -9,8 +9,11 @@ self: pkgs: with pkgs; {
 #            rev = "v1.22.1";
 #            sha256 = "sha256-tEJQWZBaiX/bONPZEuGcvbGidktcvxUZtLvcGjz71Lk=";
             rev = "main";
-            sha256 = "sha256-jisOcWvNjNMd++WpOStMAhBVWzb75v3ByA0An0zJacY=";
+            sha256 = "sha256-lwYfltqKh60hf4k8tYIrOMT5FS5G7GLF3fLLV5FbI5I=";
         };
+
+        # Remove patches.
+        patches = [ ];
 
         nativeBuildInputs = old.nativeBuildInputs ++ [
             pkgs.cairo
@@ -30,7 +33,7 @@ self: pkgs: with pkgs; {
         cmakeFlags = old.cmakeFlags ++ [
             "-DMAINTAINER_MODE=OFF"
             "-DBUILD_WAYLAND=ON"
-            "-DBUILD_HTTP=ON"
+            "-DBUILD_HTTP=OFF"
         ];
     });
 }

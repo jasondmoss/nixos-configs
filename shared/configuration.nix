@@ -15,9 +15,7 @@ in {
         };
     };
 
-    i18n = {
-        defaultLocale = "en_CA.utf8";
-    };
+    i18n.defaultLocale = "en_CA.UTF-8";
 
     fonts = {
         fontDir = {

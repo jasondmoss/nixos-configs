@@ -68,7 +68,6 @@
         killall
         libxfs
         libxml2
-        links2
         linuxquota
         lm_sensors
         lsd
@@ -185,7 +184,6 @@
         typst
 
         #--  MULTIMEDIA
-#        aaxtomp3
         faac
         ffmpeg-full
         ffmpegthumbnailer
@@ -211,6 +209,7 @@
         #--  NETWORK
         filezilla
         librewolf
+        links2
         megasync
         megatools
         ngrok
@@ -235,7 +234,7 @@
         pandoc
         p7zip
         p7zip-rar
-        peazip
+#        peazip
         wezterm
 
         (chromium.override {
@@ -258,14 +257,14 @@
             ];
         })
 
-        (microsoft-edge.override {
-            commandLineArgs = [
-                "--use-gl=desktop"
-                "--enable-features=VaapiVideoDecodeLinuxGL"
-                "--ignore-gpu-blocklist"
-                "--enable-zero-copy"
-            ];
-        })
+#        (microsoft-edge.override {
+#            commandLineArgs = [
+#                "--use-gl=desktop"
+#                "--enable-features=VaapiVideoDecodeLinuxGL"
+#                "--ignore-gpu-blocklist"
+#                "--enable-zero-copy"
+#            ];
+#        })
 
 
         #--  CUSTOM PACKAGES
@@ -277,11 +276,13 @@
 #        (pkgs.callPackage ../packages/capacities {})
 
         # LadyBird
-        (pkgs.callPackage ../packages/ladybird {})
+#        (pkgs.callPackage ../packages/ladybird {})
 
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})
-#        strawberry
+
+        # Vivaldi Browser
+        (pkgs.callPackage ../packages/vivaldi {})
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox {})
