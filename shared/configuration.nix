@@ -3,6 +3,8 @@ let
     theme = import ./theme.nix;
 in {
 
+    system.rebuild.enableNg  = true;
+
     nix = {
         package = pkgs.nixVersions.latest;
 

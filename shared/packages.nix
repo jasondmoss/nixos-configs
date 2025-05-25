@@ -43,8 +43,10 @@
         ];
     };
 
-    #--  Core Packages.
     environment.systemPackages = with pkgs; [
+        #--  NIXOS
+        nixos-rebuild-ng
+
         #--  BASE
         aha
         babl
