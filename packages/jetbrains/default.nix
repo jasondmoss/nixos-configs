@@ -1,13 +1,13 @@
 #self: pkgs: with pkgs; {
 #    phpstorm = jetbrains.phpstorm.overrideAttrs (oldAttrs: {
-#        version = "2025.2.EAP";
-#        build = "252.13776.56";
+#        version = "2025.2";
+#        build = "252.16512.27";
 #        src = fetchurl {
-#            url = "https://download.jetbrains.com/webide/PhpStorm-252.13776.56.tar.gz";
-#            sha256 = "sha256-EIe7ARrORtwbM6w8UnRRf7eZDumMeJeeHftE39zkzhw=";
+#            url = "https://download.jetbrains.com/webide/PhpStorm-252.16512.27.tar.gz";
+#            sha256 = "sha256-RrMeyC9Zoe/BDmjlmE8mPM2DhNWTvtxIIHyJ3kebHWs=";
 #        };
 #
-#        name = "phpstorm-2025.2.EAP";
+#        name = "phpstorm-2025.2.EAP-2";
 #        wmClass = "jetbrains";
 #        vmopts = ''
 #-server
