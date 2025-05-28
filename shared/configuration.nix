@@ -93,6 +93,11 @@ in {
             withNodeJs = true;
             withPython3 = true;
         };
+
+        firefox.policies.SearchEngines = {
+            Default = "DuckDuckGo";
+            Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
+        };
     };
 
     services = {
