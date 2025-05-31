@@ -159,6 +159,14 @@
 
     console.font = "alt-8x16.gz";
 
+    programs = {
+        steam = {
+            enable = true;
+            remotePlay.openFirewall = true;
+            dedicatedServer.openFirewall = true;
+        };
+    };
+
     services = {
         power-profiles-daemon.enable = false;
         xserver.dpi = 162;
@@ -178,15 +186,32 @@
             cups-pdf.enable = true;
             startWhenNeeded = true;
         };
-    };
 
-    programs = {
-        steam = {
+        navidrome = {
             enable = true;
-            remotePlay.openFirewall = true;
-            dedicatedServer.openFirewall = true;
+            openFirewall = true;
+            user = "navidrome";
+
+            settings = {
+                Address = "0.0.0.0";
+                Port = 4533;
+                EnableSharing = true;
+
+                MusicFolder = "/home/me/Mega/Media/Music";
+                CacheFolder = "/home/me/Mega/System/Configurations/navidrome/cache";
+                DataFolder = "/home/me/Mega/System/Configurations/navidrome/data";
+                FFmpegPath = "/run/current-system/sw/bin/ffmpeg";
+
+                CoverArtPriority = "cover.jpg";
+                EnableStarRating = true;
+                Jukebox.Enabled = true;
+                Jukebox.AdminOnly = false;
+            };
         };
     };
+
+#    systemd.services.navidrome.serviceConfig.ProtectHome = "tmpfs";
+     systemd.services.navidrome.serviceConfig.ProtectHome = lib.mkForce false;
 
     nixpkgs = {
         hostPlatform = {
@@ -215,23 +240,22 @@
         darktable
         easytag
         flacon
-        haruna
         kdePackages.phonon-vlc
         rawtherapee
         shotcut
         taglib-sharp
         taglib_extras
         tor-browser-bundle-bin
-        vlc
+#        vlc
 
         # MKVToolNix
         (pkgs.callPackage ../packages/mkvtoolnix {})
 #        mkvtoolnix
     ]);
 
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
+#    virtualisation = {
+#        virtualbox.host.enable = true;
+#    };
 
 
     #
@@ -241,8 +265,6 @@
         ../shared/hardware.nix
         ../shared/configuration.nix
         ../shared/packages.nix
-
-        #../packages/mkvtoolnix
     ];
 }
 

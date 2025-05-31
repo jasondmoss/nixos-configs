@@ -170,9 +170,9 @@
         superhtml
         yarn
 
-        jetbrains.gateway
+#        jetbrains.gateway
         jetbrains.jdk
-        jetbrains.writerside
+#        jetbrains.writerside
         nano
         phpstorm    # Custom overlay.
         sublime4
@@ -210,14 +210,14 @@
 
         #--  NETWORK
         filezilla
-        librewolf
+#        librewolf
         links2
         megasync
         megatools
         ngrok
         nyxt
-        opera
-        polypane
+#        opera
+#        polypane
         protonvpn-gui
 
         #--  DESKTOP
@@ -231,7 +231,7 @@
         #--  MISCELLANEOUS
         diskscan
         ghostty
-        kitty
+#        kitty
         libportal
         pandoc
         p7zip
@@ -239,25 +239,25 @@
 #        peazip
         wezterm
 
-        (chromium.override {
-            enableWideVine = true;
-
-            commandLineArgs = [
-                "--use-gl=desktop"
-                "--enable-features=VaapiVideoDecodeLinuxGL"
-                "--ignore-gpu-blocklist"
-                "--enable-zero-copy"
-            ];
-        })
-
-        (google-chrome.override {
-            commandLineArgs = [
-                "--use-gl=desktop"
-                "--enable-features=VaapiVideoDecodeLinuxGL"
-                "--ignore-gpu-blocklist"
-                "--enable-zero-copy"
-            ];
-        })
+#        (chromium.override {
+#            enableWideVine = true;
+#
+#            commandLineArgs = [
+#                "--use-gl=desktop"
+#                "--enable-features=VaapiVideoDecodeLinuxGL"
+#                "--ignore-gpu-blocklist"
+#                "--enable-zero-copy"
+#            ];
+#        })
+#
+#        (google-chrome.override {
+#            commandLineArgs = [
+#                "--use-gl=desktop"
+#                "--enable-features=VaapiVideoDecodeLinuxGL"
+#                "--ignore-gpu-blocklist"
+#                "--enable-zero-copy"
+#            ];
+#        })
 
 #        (microsoft-edge.override {
 #            commandLineArgs = [
@@ -293,7 +293,7 @@
     imports = [
         ../packages/firefox-nightly
         ../packages/firefox-stable
-        ../packages/floorp
+#        ../packages/floorp
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop

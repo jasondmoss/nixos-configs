@@ -188,9 +188,9 @@
 
     #environment.systemPackages = (with pkgs; []);
 
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
+#    virtualisation = {
+#        virtualbox.host.enable = true;
+#    };
 
 
     #

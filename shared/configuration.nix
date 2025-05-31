@@ -348,6 +348,7 @@ Defaults env_keep+=SSH_AUTH_SOCK
                 "docker"
                 "mlocate"
                 "mysql"
+                "navidrome"
                 "networkmanager"
                 "power"
                 "video"
