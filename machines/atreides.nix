@@ -246,7 +246,7 @@
         taglib-sharp
         taglib_extras
         tor-browser-bundle-bin
-#        vlc
+        vlc
 
         # MKVToolNix
         (pkgs.callPackage ../packages/mkvtoolnix {})
