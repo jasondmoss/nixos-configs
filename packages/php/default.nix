@@ -12,6 +12,7 @@
         intl
         mbstring
         mysqlnd
+        openssl
         pdo
         pdo_dblib
         pdo_mysql
