@@ -116,6 +116,7 @@
         glxinfo
         gpm
         imagemagick
+        iro
         jpegoptim
         jq
         libGL

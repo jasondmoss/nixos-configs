@@ -258,9 +258,9 @@ upload_max_filesize = 2048M
             ];
         };
 
-#        open-webui = {
-#            enable = true;
-#        };
+        open-webui = {
+            enable = true;
+        };
     };
 
     xdg.portal = {
