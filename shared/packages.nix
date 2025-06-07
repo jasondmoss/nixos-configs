@@ -279,7 +279,7 @@
 #        (pkgs.callPackage ../packages/capacities {})
 
         # LadyBird
-#        (pkgs.callPackage ../packages/ladybird {})
+        (pkgs.callPackage ../packages/ladybird {})
 
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})
