@@ -210,6 +210,8 @@
         wavpack
 
         #--  NETWORK
+        chromium
+        element-desktop
         filezilla
 #        librewolf
         links2
@@ -240,17 +242,16 @@
 #        peazip
         wezterm
 
-#        (chromium.override {
-#            enableWideVine = true;
-#
-#            commandLineArgs = [
-#                "--use-gl=desktop"
-#                "--enable-features=VaapiVideoDecodeLinuxGL"
-#                "--ignore-gpu-blocklist"
-#                "--enable-zero-copy"
-#            ];
-#        })
-#
+        (chromium.override {
+            enableWideVine = true;
+            commandLineArgs = [
+                "--use-gl=desktop"
+                "--enable-features=VaapiVideoDecodeLinuxGL"
+                "--ignore-gpu-blocklist"
+                "--enable-zero-copy"
+            ];
+        })
+
 #        (google-chrome.override {
 #            commandLineArgs = [
 #                "--use-gl=desktop"
@@ -273,10 +274,10 @@
         #--  CUSTOM PACKAGES
 
         #--  Anytype
-#        (pkgs.callPackage ../packages/anytype {})
+        (pkgs.callPackage ../packages/anytype {})
 
         #--  Capacities
-#        (pkgs.callPackage ../packages/capacities {})
+        (pkgs.callPackage ../packages/capacities {})
 
         # LadyBird
         (pkgs.callPackage ../packages/ladybird {})

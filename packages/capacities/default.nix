@@ -3,11 +3,11 @@
 }:
 let
     pname = "capacities";
-    version = "1.47.2";
+    version = "1.48.9";
     name = "Capacities-${version}";
     src = fetchurl {
         url = "https://capacities-desktop-app.fra1.cdn.digitaloceanspaces.com/${name}.AppImage";
-        hash = "sha256-2WwGk2FP2z4DkRiM/HcwcMV/MfzY11ZpddhQnzfUrBI=";
+        hash = "sha256-+Qe44F0YMOPGAJlWAKyYQm/3vCqToG+sNwy/qSLPdvs=";
     };
 
     appimageContents = appimageTools.extractType2 { inherit pname version src; };

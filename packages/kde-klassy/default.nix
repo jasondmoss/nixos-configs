@@ -4,6 +4,7 @@
 stdenv.mkDerivation rec {
     pname = "klassy";
     version = "master";
+
     src = fetchFromGitHub {
         owner = "paulmcauley";
         repo = "klassy";
