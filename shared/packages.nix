@@ -217,7 +217,7 @@
         links2
         megasync
         megatools
-        ngrok
+#        ngrok
         nyxt
 #        opera
 #        polypane
@@ -245,7 +245,7 @@
         (chromium.override {
             enableWideVine = true;
             commandLineArgs = [
-                "--use-gl=desktop"
+#                "--use-gl=desktop"
                 "--enable-features=VaapiVideoDecodeLinuxGL"
                 "--ignore-gpu-blocklist"
                 "--enable-zero-copy"
@@ -299,7 +299,7 @@
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
-#        ../packages/ngrok
+        ../packages/ngrok
         ../packages/php
 #        ../packages/thunderbird
         ../packages/vaapi

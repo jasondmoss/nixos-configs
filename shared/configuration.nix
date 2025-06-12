@@ -246,6 +246,13 @@ upload_max_filesize = 2048M
             ];
         };
 
+        n8n = {
+            enable = true;
+#            openFirewall = true;
+#            webhookUrl = "";
+#            settings = {};
+        };
+
         ollama = {
             enable = true;
             acceleration = "cuda";
