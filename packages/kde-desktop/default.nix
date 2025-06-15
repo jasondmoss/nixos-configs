@@ -1,6 +1,7 @@
 { pkgs, ... }: {
     environment = {
         plasma6.excludePackages = (with pkgs.kdePackages; [
+            drkonqi
             elisa
             itinerary
         ]);
@@ -57,6 +58,7 @@
             ksshaskpass
             ksvg
             ktorrent
+            ktrip
             kwallet
             kwallet-pam
             kwayland
