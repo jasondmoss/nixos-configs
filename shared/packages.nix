@@ -45,6 +45,7 @@
 
     environment.systemPackages = with pkgs; [
         #--  NIXOS
+        nixos-info
         nixos-rebuild-ng
 
         #--  BASE
@@ -211,7 +212,6 @@
 
         #--  NETWORK
         chromium
-        element-desktop
         filezilla
 #        librewolf
         links2
@@ -219,7 +219,6 @@
         megatools
 #        ngrok
         nyxt
-#        opera
 #        polypane
         protonvpn-gui
 
@@ -237,9 +236,10 @@
 #        kitty
         libportal
         pandoc
-        p7zip
+#        p7zip
         p7zip-rar
 #        peazip
+        systemctl-tui
         wezterm
 
         (chromium.override {
@@ -274,7 +274,7 @@
         #--  CUSTOM PACKAGES
 
         #--  Anytype
-        (pkgs.callPackage ../packages/anytype {})
+#        (pkgs.callPackage ../packages/anytype {})
 
         #--  Capacities
         (pkgs.callPackage ../packages/capacities {})
