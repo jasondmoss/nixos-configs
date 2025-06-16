@@ -45,7 +45,7 @@
 
     environment.systemPackages = with pkgs; [
         #--  NIXOS
-        nixos-info
+        nixos-icons
         nixos-rebuild-ng
 
         #--  BASE
