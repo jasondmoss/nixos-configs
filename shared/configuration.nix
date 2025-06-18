@@ -64,7 +64,7 @@ in {
         bash.completion.enable = true;
 
         ssh = {
-            startAgent = true;
+#            startAgent = true;
             askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass.out}/bin/ksshaskpass";
         };
 
