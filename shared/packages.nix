@@ -293,8 +293,8 @@
     ];
 
     imports = [
-        ../packages/firefox-nightly
-        ../packages/firefox-stable
+#        ../packages/firefox-nightly
+#        ../packages/firefox-stable
 #        ../packages/floorp
         ../packages/gimp
         ../packages/gnome-desktop
