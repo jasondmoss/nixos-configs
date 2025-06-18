@@ -94,10 +94,14 @@ in {
             withPython3 = true;
         };
 
-        firefox.policies.SearchEngines = {
-            Default = "DuckDuckGo";
-            Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
-        };
+#        firefox = {
+#            enable = true;
+#            package = pkgs.latest.firefox-nightly-bin;
+#            policies.SearchEngines = {
+#                Default = "DuckDuckGo";
+#                Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
+#            };
+#        };
     };
 
     services = {
