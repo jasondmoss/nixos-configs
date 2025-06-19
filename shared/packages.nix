@@ -213,6 +213,8 @@
         #--  NETWORK
 #        chromium
         filezilla
+        firefox
+#        latest.firefox-nightly-bin
         librewolf
         links2
         megasync
@@ -233,6 +235,7 @@
         diskscan
         ghostty
         libportal
+        mozlz4a
         pandoc
 #        p7zip
         p7zip-rar
