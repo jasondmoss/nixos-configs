@@ -174,9 +174,7 @@
         superhtml
         yarn
 
-#        jetbrains.gateway
         jetbrains.jdk
-#        jetbrains.writerside
         nano
         phpstorm    # Custom overlay.
         sublime4
@@ -213,15 +211,14 @@
         wavpack
 
         #--  NETWORK
-        chromium
+#        chromium
         filezilla
-#        librewolf
+        librewolf
         links2
         megasync
         megatools
 #        ngrok
         nyxt
-#        polypane
         protonvpn-gui
 
         #--  DESKTOP
@@ -235,7 +232,6 @@
         #--  MISCELLANEOUS
         diskscan
         ghostty
-#        kitty
         libportal
         pandoc
 #        p7zip
@@ -244,15 +240,15 @@
         systemctl-tui
         wezterm
 
-        (chromium.override {
-            enableWideVine = true;
-            commandLineArgs = [
-#                "--use-gl=desktop"
-                "--enable-features=VaapiVideoDecodeLinuxGL"
-                "--ignore-gpu-blocklist"
-                "--enable-zero-copy"
-            ];
-        })
+#        (chromium.override {
+#            enableWideVine = true;
+#            commandLineArgs = [
+##                "--use-gl=desktop"
+#                "--enable-features=VaapiVideoDecodeLinuxGL"
+#                "--ignore-gpu-blocklist"
+#                "--enable-zero-copy"
+#            ];
+#        })
 
 #        (google-chrome.override {
 #            commandLineArgs = [

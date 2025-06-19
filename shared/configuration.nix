@@ -272,12 +272,12 @@ local {
             ];
         };
 
-#        n8n = {
-#            enable = true;
-##            openFirewall = true;
-##            webhookUrl = "";
-##            settings = {};
-#        };
+        n8n = {
+            enable = true;
+#            openFirewall = true;
+#            webhookUrl = "";
+#            settings = {};
+        };
 
 #        ollama = {
 #            enable = true;
