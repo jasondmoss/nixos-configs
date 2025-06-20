@@ -211,7 +211,6 @@
         wavpack
 
         #--  NETWORK
-#        chromium
         filezilla
         firefox
 #        latest.firefox-nightly-bin
@@ -220,7 +219,7 @@
         megasync
         megatools
 #        ngrok
-        nyxt
+#        nyxt
         protonvpn-gui
 
         #--  DESKTOP
@@ -295,7 +294,7 @@
 
     imports = [
 #        ../packages/firefox-nightly
-#        ../packages/firefox-stable
+#        ../pa`ckages/firefox-stable
 #        ../packages/floorp
         ../packages/gimp
         ../packages/gnome-desktop
