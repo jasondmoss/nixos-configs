@@ -162,8 +162,11 @@ local {
         xserver = {
             enable = true;
             videoDrivers = [ "nvidia" ];
-
             upscaleDefaultCursor = true;
+
+            displayManager.sessionCommands = ''
+(sleep 20; /run/current-system/sw/bin/megasync) &
+            '';
         };
 
         locate = {
@@ -279,21 +282,21 @@ local {
 #            settings = {};
         };
 
-#        ollama = {
-#            enable = true;
-#            acceleration = "cuda";
-#
-#            loadModels = [
-#                "gemma3"
-#                "llama3.3"
-#                "phi-4"
-#                "qwen2.5-coder"
-#            ];
-#        };
+        ollama = {
+            enable = true;
+            acceleration = "cuda";
 
-#        open-webui = {
-#            enable = true;
-#        };
+            loadModels = [
+                "gemma3"
+                "llama3.3"
+                "phi-4"
+                "qwen2.5-coder"
+            ];
+        };
+
+        open-webui = {
+            enable = true;
+        };
     };
 
     xdg.portal = {

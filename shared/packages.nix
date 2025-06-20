@@ -299,6 +299,7 @@
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
+#        ../packages/ly
 #        ../packages/ngrok
         ../packages/php
 #        ../packages/thunderbird
