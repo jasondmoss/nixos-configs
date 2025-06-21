@@ -58,6 +58,7 @@
         coreutils-full
         curl
         dwz
+        exfatprogs
         expat
         expect
         flex
@@ -240,35 +241,8 @@
         p7zip-rar
 #        peazip
         systemctl-tui
+        trilium-next-desktop
         wezterm
-
-#        (chromium.override {
-#            enableWideVine = true;
-#            commandLineArgs = [
-##                "--use-gl=desktop"
-#                "--enable-features=VaapiVideoDecodeLinuxGL"
-#                "--ignore-gpu-blocklist"
-#                "--enable-zero-copy"
-#            ];
-#        })
-
-#        (google-chrome.override {
-#            commandLineArgs = [
-#                "--use-gl=desktop"
-#                "--enable-features=VaapiVideoDecodeLinuxGL"
-#                "--ignore-gpu-blocklist"
-#                "--enable-zero-copy"
-#            ];
-#        })
-
-#        (microsoft-edge.override {
-#            commandLineArgs = [
-#                "--use-gl=desktop"
-#                "--enable-features=VaapiVideoDecodeLinuxGL"
-#                "--ignore-gpu-blocklist"
-#                "--enable-zero-copy"
-#            ];
-#        })
 
 
         #--  CUSTOM PACKAGES
@@ -294,12 +268,11 @@
 
     imports = [
 #        ../packages/firefox-nightly
-#        ../pa`ckages/firefox-stable
+#        ../packages/firefox-stable
 #        ../packages/floorp
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
-#        ../packages/ly
 #        ../packages/ngrok
         ../packages/php
 #        ../packages/thunderbird

@@ -164,11 +164,13 @@ local {
             videoDrivers = [ "nvidia" ];
             upscaleDefaultCursor = true;
 
+#            displayManager.sessionCommands = "(sleep 10s;/run/current-system/sw/bin/megasync) &\n";
             displayManager.sessionCommands = ''
-(sleep:10; /run/current-system/sw/bin/megasync) &\n
-(sleep 30; /run/current-system/sw/bin/notes) &\n
+(sleep 10s;/run/current-system/sw/bin/megasync) &
+(sleep 1m;/run/current-system/sw/bin/notes) &
             '';
         };
+
 
         locate = {
             enable = true;
@@ -276,28 +278,28 @@ local {
             ];
         };
 
-        n8n = {
-            enable = true;
+#        n8n = {
+#            enable = true;
 #            openFirewall = true;
 #            webhookUrl = "";
 #            settings = {};
-        };
+#        };
 
-        ollama = {
-            enable = true;
-            acceleration = "cuda";
+#        ollama = {
+#            enable = true;
+#            acceleration = "cuda";
+#
+#            loadModels = [
+#                "gemma3"
+#                "llama3.3"
+#                "phi-4"
+#                "qwen2.5-coder"
+#            ];
+#        };
 
-            loadModels = [
-                "gemma3"
-                "llama3.3"
-                "phi-4"
-                "qwen2.5-coder"
-            ];
-        };
-
-        open-webui = {
-            enable = true;
-        };
+#        open-webui = {
+#            enable = true;
+#        };
     };
 
     xdg.portal = {
