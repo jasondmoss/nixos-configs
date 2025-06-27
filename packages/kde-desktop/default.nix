@@ -81,7 +81,6 @@
             wayland-protocols
             wayqt
             wrapQtAppsHook
-            xdg-desktop-portal-kde
 
             akonadi
             akonadi-calendar

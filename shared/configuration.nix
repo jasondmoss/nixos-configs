@@ -94,14 +94,20 @@ in {
             withPython3 = true;
         };
 
-#        firefox = {
-#            enable = true;
+        firefox = {
+            enable = true;
 #            package = pkgs.latest.firefox-nightly-bin;
-#            policies.SearchEngines = {
-#                Default = "DuckDuckGo";
-#                Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
-#            };
-#        };
+            package = (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override {
+                pipewireSupport = true;
+            }) {});
+            policies.SearchEngines = {
+                Default = "DuckDuckGo";
+                Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
+            };
+            preferences = {
+                "widget.use-xdg-desktop-portal.file-picker" = 1;
+            };
+        };
     };
 
     services = {
@@ -164,7 +170,6 @@ local {
             videoDrivers = [ "nvidia" ];
             upscaleDefaultCursor = true;
 
-#            displayManager.sessionCommands = "(sleep 10s;/run/current-system/sw/bin/megasync) &\n";
             displayManager.sessionCommands = ''
 (sleep 10s;/run/current-system/sw/bin/megasync) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
@@ -203,7 +208,7 @@ local {
         displayManager = {
             ly = {
                 enable = true;
-
+                x11Support = false;
                 settings = {
                     clear_password = true;
                     clock = "%c";
@@ -229,35 +234,6 @@ local {
             user = "me";
             group = "users";
             extraModules = [ "http2" ];
-
-            # PHP 8.4
-#            phpPackage = pkgs.php84.buildEnv {
-#                extensions = ({ enabled, all }: enabled ++ (with all; [
-#                    xdebug
-#                ]));
-#
-#                extraConfig = ''
-#memory_limit=2048M
-#xdebug.mode=debug
-#                '';
-#            };
-#
-#            phpOptions = ''
-#allow_url_fopen = On
-#allow_url_include = On
-#display_errors = On
-#display_startup_errors = On
-#max_execution_time = 10000
-#max_input_time = 3000
-#mbstring.http_input = pass
-#mbstring.http_output = pass
-#mbstring.internal_encoding = pass
-#memory_limit = 2048M
-#post_max_size = 2048M
-#session.cookie_samesite = "Strict"
-#short_open_tag = Off
-#upload_max_filesize = 2048M
-#            '';
         };
 
         mysql = {
@@ -304,14 +280,19 @@ local {
 
     xdg.portal = {
         enable = true;
-
+        xdgOpenUsePortal = true;
         config = {
-            common.default = [
-                "gtk"
-                "gnome"
-                "gnome-keyring"
-            ];
+            kde.default = [ "kde" "gtk" "gnome" ];
+            kde."org.freedesktop.portal.FileChooser" = [ "kde" ];
+            kde."org.freedesktop.portal.OpenURI" = [ "kde" ];
         };
+        extraPortals = with pkgs; [
+            xdg-desktop-portal
+#            xdg-desktop-portal-gtk
+            xdg-desktop-portal-termfilechooser
+#            xdg-desktop-portal-wlr
+            kdePackages.xdg-desktop-portal-kde
+        ];
     };
 
     networking = {

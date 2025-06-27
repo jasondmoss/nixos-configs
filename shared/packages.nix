@@ -31,7 +31,18 @@
             ];
         };
 
-        overlays = [
+        overlays =
+        let
+            # Change this to a rev sha to pin
+            moz-rev = "master";
+            moz-url = builtins.fetchTarball {
+                url = "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";
+            };
+            nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
+        in [
+            nightlyOverlay
+        ] ++ [
+
             # Conky
 #            (import ../packages/conky)
 
@@ -139,7 +150,6 @@
         vulkan-validation-layers
         wayland-utils
         wmctrl
-        xdg-desktop-portal
         xdg-utils
         xorg.libxcb
 
@@ -213,14 +223,11 @@
 
         #--  NETWORK
         filezilla
-        firefox
-#        latest.firefox-nightly-bin
-        librewolf
         links2
         megasync
         megatools
 #        ngrok
-#        nyxt
+        nyxt
         protonvpn-gui
 
         #--  DESKTOP
@@ -247,9 +254,6 @@
 
         #--  CUSTOM PACKAGES
 
-        #--  Anytype
-#        (pkgs.callPackage ../packages/anytype {})
-
         #--  Capacities
         (pkgs.callPackage ../packages/capacities {})
 
@@ -269,13 +273,11 @@
     imports = [
 #        ../packages/firefox-nightly
 #        ../packages/firefox-stable
-#        ../packages/floorp
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
 #        ../packages/ngrok
         ../packages/php
-#        ../packages/thunderbird
         ../packages/vaapi
     ];
 
