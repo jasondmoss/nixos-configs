@@ -210,8 +210,11 @@
         };
     };
 
-#    systemd.services.navidrome.serviceConfig.ProtectHome = "tmpfs";
-     systemd.services.navidrome.serviceConfig.ProtectHome = lib.mkForce false;
+#    security.pki.certificateFiles = [
+#        "/home/me/.lando/certs/LandoCA.crt"
+#    ];
+
+    systemd.services.navidrome.serviceConfig.ProtectHome = lib.mkForce false;
 
     nixpkgs = {
         hostPlatform = {

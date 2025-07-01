@@ -223,6 +223,7 @@
 
         #--  NETWORK
         filezilla
+        google-chrome
         links2
         megasync
         megatools
