@@ -446,7 +446,6 @@ Defaults env_keep+=SSH_AUTH_SOCK
             ];
 
             DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
-            GEMINI_API_KEY = "AIzaSyAL9fw5Vg6T5HzRMLnqcYK2QVssxIRJiYU";
         };
     };
 
