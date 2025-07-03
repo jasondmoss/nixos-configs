@@ -4,7 +4,7 @@
     libXScrnSaver, libXcomposite, libXdamage, libXtst, libXrandr, alsa-lib,
     dbus, cups, libexif, ffmpeg, systemd, libva, libGL, freetype, fontconfig,
     libXft, libXrender, libxcb, expat, libuuid, libxml2, glib, gtk3, pango,
-    gdk-pixbuf, cairo, atk, at-spi2-atk, at-spi2-core, qt5, libdrm, libgbm,
+    gdk-pixbuf, cairo, atk, at-spi2-atk, at-spi2-core, qt6, libdrm, libgbm,
     vulkan-loader, nss, nspr, patchelf, makeWrapper, wayland, pipewire,
     isSnapshot ? false,
     proprietaryCodecs ? false,
@@ -19,14 +19,12 @@
 }:
 
 let
-#    branch = if isSnapshot then "snapshot" else "stable";
-#    vivaldiName = if isSnapshot then "vivaldi-snapshot" else "vivaldi";
     branch = "snapshot";
     vivaldiName = "vivaldi-snapshot";
 in
 stdenv.mkDerivation rec {
     pname = "vivaldi";
-    version = "7.5.3731.3";
+    version = "7.5.3735.34";
 
     suffix = {
         aarch64-linux = "arm64";
@@ -38,8 +36,7 @@ stdenv.mkDerivation rec {
         # https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_7.5.3725.3-1_amd64.deb
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            aarch64-linux = "sha256-w1/wWP3lZUQ5tBvv6XOCkoR1OCoByURBEvaaemsY19U=";
-            x86_64-linux = "sha256-n2T5k8yCoX/SOIoJGt3pYdInZkTFmCDMboBqvkQsKrA=";
+            x86_64-linux = "sha256-MBkiEMgMwicajTT7ozFaq4KAR73oitQoXHb30amHciI=";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };
@@ -52,7 +49,7 @@ tar -xvf data.tar.xz
     nativeBuildInputs = [
         patchelf
         makeWrapper
-        qt5.wrapQtAppsHook
+        qt6.wrapQtAppsHook
     ];
 
     dontWrapQtApps = true;
@@ -91,8 +88,8 @@ tar -xvf data.tar.xz
             ffmpeg
             systemd
             libva
-            qt5.qtbase
-            qt5.qtwayland
+            qt6.qtbase
+            qt6.qtwayland
             freetype
             fontconfig
             libXrender
@@ -132,7 +129,7 @@ for f in chrome_crashpad_handler vivaldi-bin vivaldi-sandbox ; do
  opt/${vivaldiName}/$f
 done
 
-for f in libGLESv2.so libqt5_shim.so ; do
+for f in libGLESv2.so libqt6_shim.so ; do
     patchelf --set-rpath "${libPath}" opt/${vivaldiName}/$f
 done
         ''

@@ -210,10 +210,6 @@
         };
     };
 
-#    security.pki.certificateFiles = [
-#        "/home/me/.lando/certs/LandoCA.crt"
-#    ];
-
     systemd.services.navidrome.serviceConfig.ProtectHome = lib.mkForce false;
 
     nixpkgs = {
@@ -236,30 +232,31 @@
         ];
     };
 
-    environment.systemPackages = (with pkgs; [
-        audacity
-        audible-cli
-        cuetools
-        darktable
-        easytag
-        flacon
-        kdePackages.phonon-vlc
-        rawtherapee
-        shotcut
-        taglib-sharp
-        taglib_extras
-        tor-browser-bundle-bin
-        vlc
+    environment = {
+        systemPackages = (with pkgs; [
+            audacity
+            audible-cli
+            cuetools
+            darktable
+            easytag
+            flacon
+            kdePackages.phonon-vlc
+            rawtherapee
+            shotcut
+            taglib-sharp
+            taglib_extras
+            tor-browser-bundle-bin
+            vlc
 
-        # MKVToolNix
-        (pkgs.callPackage ../packages/mkvtoolnix {})
-#        mkvtoolnix
-    ]);
+            # MKVToolNix
+            (pkgs.callPackage ../packages/mkvtoolnix {})
+    #        mkvtoolnix
+        ]);
 
-#    virtualisation = {
-#        virtualbox.host.enable = true;
-#    };
-
+        variables = {
+            GEMINI_API_KEY = "$(${pkgs.coreutils}/bin/cat /home/me/.config/gemini/api.key)";
+        };
+    };
 
     #
     # Shared configurations.

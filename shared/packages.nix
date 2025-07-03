@@ -128,9 +128,11 @@
         cairo
         egl-wayland
         eglexternalplatform
+        figma-linux
         glxinfo
         gpm
         imagemagick
+        inkscape
         iro
         jpegoptim
         jq
@@ -153,7 +155,8 @@
         xdg-utils
         xorg.libxcb
 
-        inkscape
+#        nixgl.nixGLDefault
+#        nixgl.nixGLNvidia
 
         #--  DEVELOPMENT
         bison
@@ -240,6 +243,7 @@
         comixcursors
 
         #--  MISCELLANEOUS
+        _1password-gui-beta
         diskscan
         ghostty
         libportal

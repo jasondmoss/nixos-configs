@@ -380,14 +380,14 @@ Defaults env_keep+=SSH_AUTH_SOCK
 
     environment = {
         variables = {
+            _JAVA_AWT_WM_NONREPARENTING = "1";
+            __GLX_VENDOR_LIBRARY_NAME = "nvidia";
             __GL_ALLOW_UNOFFICIAL_PROTOCOL = "1";
             __GL_GSYNC_ALLOWED = "1";
             __GL_SHADER_CACHE = "1";
             __GL_THREADED_OPTIMIZATION = "1";
             __GL_VRR_ALLOWED = "0";
-            __GLX_VENDOR_LIBRARY_NAME = "nvidia";
             __NV_DISABLE_EXPLICIT_SYNC = "1";
-            _JAVA_AWT_WM_NONREPARENTING = "1";
 
             DISABLE_QT5_COMPAT = "1";
             EGL_PLATFORM = "wayland";
@@ -446,6 +446,8 @@ Defaults env_keep+=SSH_AUTH_SOCK
             ];
 
             DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
+
+#            LD_LIBRARY_PATH = "$(nix build --print-out-paths --no-link nixpkgs#libGL)/lib";
         };
     };
 
