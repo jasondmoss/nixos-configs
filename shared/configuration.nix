@@ -171,7 +171,8 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
-(sleep 10s;/run/current-system/sw/bin/megasync) &
+(/run/current-system/sw/bin/megasync) &
+(sleep 30s;/run/current-system/sw/bin/1password) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
             '';
         };
