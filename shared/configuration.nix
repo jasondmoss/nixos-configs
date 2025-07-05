@@ -60,7 +60,6 @@ in {
         kdeconnect.enable = true;
         mtr.enable = true;
         xwayland.enable = true;
-
         bash.completion.enable = true;
 
         ssh = {
@@ -96,10 +95,13 @@ in {
 
         firefox = {
             enable = true;
-#            package = pkgs.latest.firefox-nightly-bin;
-            package = (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override {
-                pipewireSupport = true;
-            }) {});
+#            package = (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override {
+#                pipewireSupport = true;
+#            }) {});
+#            package = (pkgs.wrapFirefox (pkgs.firefox-devedition) {
+#                pipewireSupport = true;
+#            });
+            package = pkgs.firefox-devedition;
             policies.SearchEngines = {
                 Default = "DuckDuckGo";
                 Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
@@ -120,26 +122,6 @@ in {
         smartd = {
             enable = true;
             autodetect = true;
-#            devices = [
-#                {
-#                    device = "/dev/disk/by-id/nvme-eui.00253856019d735e";
-#                }
-#                {
-#                    device = "/dev/disk/by-id/nvme-eui.0025385a11907ad6";
-#                }
-#                {
-#                    device = "/dev/disk/by-id/ata-WDC_WD4005FZBX-00K5WB0_VBGDTEBF";
-#                }
-#                {
-#                    device = "/dev/disk/by-id/ata-ST4000DM004-2CV104_ZFN32R92";
-#                }
-#                {
-#                    device = "/dev/disk/by-id/ata-WDC_WD4005FZBX-00K5WB0_VBGDTNRF";
-#                }
-#                {
-#                    device = "/dev/disk/by-id/ata-WDC_WD80EFPX-68C4ZN0_WD-RD03LWXE";
-#                }
-#            ];
         };
 
         coredns = {
@@ -262,21 +244,21 @@ local {
 #            settings = {};
 #        };
 
-#        ollama = {
-#            enable = true;
-#            acceleration = "cuda";
-#
-#            loadModels = [
-#                "gemma3"
-#                "llama3.3"
-#                "phi-4"
-#                "qwen2.5-coder"
-#            ];
-#        };
+        ollama = {
+            enable = true;
+            acceleration = "cuda";
 
-#        open-webui = {
-#            enable = true;
-#        };
+            loadModels = [
+                "gemma3:latest"
+                "llama4:latest"
+                "starcoder2:latest"
+                "qwen2.5-coder:latest"
+            ];
+        };
+
+        open-webui = {
+            enable = true;
+        };
     };
 
     xdg.portal = {
@@ -447,8 +429,9 @@ Defaults env_keep+=SSH_AUTH_SOCK
             ];
 
             DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
-
 #            LD_LIBRARY_PATH = "$(nix build --print-out-paths --no-link nixpkgs#libGL)/lib";
+
+            GEMINI_API_KEY = "$(${pkgs.coreutils}/bin/cat /home/me/.config/gemini/api.key)";
         };
     };
 

@@ -171,6 +171,29 @@
         power-profiles-daemon.enable = false;
         xserver.dpi = 162;
 
+#        smartd = {
+#            devices = [
+#                {
+#                    device = "/dev/disk/by-id/nvme-eui.00253856019d735e";
+#                }
+#                {
+#                    device = "/dev/disk/by-id/nvme-eui.0025385a11907ad6";
+#                }
+#                {
+#                    device = "/dev/disk/by-id/ata-WDC_WD4005FZBX-00K5WB0_VBGDTEBF";
+#                }
+#                {
+#                    device = "/dev/disk/by-id/ata-ST4000DM004-2CV104_ZFN32R92";
+#                }
+#                {
+#                    device = "/dev/disk/by-id/ata-WDC_WD4005FZBX-00K5WB0_VBGDTNRF";
+#                }
+#                {
+#                    device = "/dev/disk/by-id/ata-WDC_WD80EFPX-68C4ZN0_WD-RD03LWXE";
+#                }
+#            ];
+#        };
+
         tlp = {
             enable = true;
             settings = {
@@ -252,10 +275,6 @@
             (pkgs.callPackage ../packages/mkvtoolnix {})
     #        mkvtoolnix
         ]);
-
-        variables = {
-            GEMINI_API_KEY = "$(${pkgs.coreutils}/bin/cat /home/me/.config/gemini/api.key)";
-        };
     };
 
     #

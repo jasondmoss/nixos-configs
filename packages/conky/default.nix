@@ -4,7 +4,7 @@ self: pkgs: with pkgs; {
             owner = "brndnmtthws";
             repo = "conky";
             rev = "main";
-            sha256 = "sha256-lwYfltqKh60hf4k8tYIrOMT5FS5G7GLF3fLLV5FbI5I=";
+            sha256 = "sha256-tMnfdW1sbZkt8v6DITM2R0ZwyN+xs7VLGZDityYt38Q=";
         };
 
         # Remove patches.

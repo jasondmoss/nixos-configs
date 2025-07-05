@@ -226,6 +226,7 @@
 
         #--  NETWORK
         filezilla
+#        firefox-devedition
         google-chrome
         links2
         megasync
@@ -260,7 +261,7 @@
         #--  CUSTOM PACKAGES
 
         #--  Capacities
-        (pkgs.callPackage ../packages/capacities {})
+#        (pkgs.callPackage ../packages/capacities {})
 
         # LadyBird
 #        (pkgs.callPackage ../packages/ladybird {})
@@ -276,8 +277,6 @@
     ];
 
     imports = [
-#        ../packages/firefox-nightly
-#        ../packages/firefox-stable
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
