@@ -285,6 +285,7 @@ local {
         firewall = {
             enable = true;
             allowPing = true;
+            checkReversePath = false;
 
             allowedTCPPorts = [ 22 80 443 1025 1143 33728 ];
             allowedUDPPorts = [];
