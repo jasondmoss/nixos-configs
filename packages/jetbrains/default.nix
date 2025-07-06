@@ -16,3 +16,21 @@ self: pkgs: with pkgs; {
         '';
     });
 }
+#self: pkgs: with pkgs; {
+#    phpstorm = jetbrains.phpstorm.overrideAttrs (oldAttrs: {
+#        version = "2025.2.EAP.7";
+#        build = "252.23591.32";
+#        src = fetchurl {
+#            url = "https://download.jetbrains.com/webide/PhpStorm-252.23591.32.tar.gz";
+#            sha256 = "sha256-qsIEhe3vuPxPHgzzwjaJH/UfrY9o6l/M/me9e7F1eIo=";
+#        };
+#
+#        name = "phpstorm-2025.2.EAP";
+#        wmClass = "jetbrains";
+#        vmopts = ''
+#-server
+#-Xms4096m
+#-Xmx4096m
+#        '';
+#    });
+#}

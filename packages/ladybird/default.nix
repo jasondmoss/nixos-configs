@@ -1,9 +1,10 @@
 {
     lib, stdenv, fetchFromGitHub, fetchurl, cacert, unicode-emoji,
-    unicode-character-database, unicode-idna, publicsuffix-list, cmake, ninja,
-    pkg-config, curl, libavif, libGL, libjxl, libpulseaudio, libwebp, libxcrypt,
-    openssl, python3, qt6Packages, woff2, ffmpeg, fontconfig, simdutf, skia,
-    nixosTests, unstableGitUpdater, lcms, libtommath
+    unicode-character-database, unicode-idna, publicsuffix-list, cmake,
+    copyDesktopItems, makeDesktopItem, ninja, pkg-config, curl, lcms, libavif,
+    libGL, libjxl, libpulseaudio, libwebp, libxcrypt, openssl, python3,
+    qt6Packages, woff2, ffmpeg, fontconfig, simdutf, skia, nixosTests,
+    unstableGitUpdater, apple-sdk_14, libtommath
 }: let
     adobe-icc-profiles = fetchurl {
         url = "https://download.adobe.com/pub/adobe/iccprofiles/win/AdobeICCProfilesCS4Win_end-user.zip";
@@ -11,28 +12,28 @@
         name = "adobe-icc-profiles.zip";
     };
 
-    cacert_version = "2023-12-12";
+    cacert_version = "2025-05-20";
 in
     stdenv.mkDerivation (finalAttrs: {
         pname = "ladybird";
 #        version = "master";
-        version = "0-unstable-2025-05-24";
+        version = "0-unstable-2025-06-27";
 
         src = fetchFromGitHub {
             owner = "LadybirdBrowser";
             repo = "ladybird";
-            rev = "fbd1f771613fc6f13fcc20dcad04c7065633a2c2";
-            hash = "sha256-Gtfnq46JrzfpcapMr6Ez+5BNQ59H/Djsgp7n6QvMSUM=";
+            rev = "831ba5d6550fd9dfaf90153876ff42396f7165ac";
+            hash = "sha256-7feXPFKExjuOGbitlAkSEEzYNEZb6hGSDUZW1EJGIW8=";
 #            rev = "master";
-#            hash = "sha256-gtffZQ7GUbh3DI0lfOZAeJKejuDn0MEW1qxPscHmsEg= ";
+#            hash = "sha256-Wzv+cS3j3yzs373bcOSsxhcX2QcbamkgLUlLhQ1GE/E=";
         };
 
-        patches = [
-            # Revert https://github.com/LadybirdBrowser/ladybird/commit/51d189198d3fc61141fc367dc315c7f50492a57e
-            # This commit doesn't update the skia used by ladybird vcpkg, but it does update the skia that
-            # that cmake wants.
-            ./001-revert-fake-skia-update.patch
-        ];
+#        patches = [
+#            # Revert https://github.com/LadybirdBrowser/ladybird/commit/51d189198d3fc61141fc367dc315c7f50492a57e
+#            # This commit doesn't update the skia used by ladybird vcpkg, but it does update the skia that
+#            # that cmake wants.
+#            ./001-revert-fake-skia-update.patch
+#        ];
 
         postPatch = ''
 sed -i '/iconutil/d' UI/CMakeLists.txt
@@ -74,6 +75,7 @@ chmod +w build/Caches/AdobeICCProfiles
 
         nativeBuildInputs = [
             cmake
+            copyDesktopItems
             ninja
             pkg-config
             python3
@@ -120,7 +122,41 @@ chmod +w build/Caches/AdobeICCProfiles
         # ld: [...]/OESVertexArrayObject.cpp.o: undefined reference to symbol 'glIsVertexArrayOES'
         # ld: [...]/libGL.so.1: error adding symbols: DSO missing from command line
         # https://github.com/LadybirdBrowser/ladybird/issues/371#issuecomment-2616415434
-        env.NIX_LDFLAGS = "-lGL";
+        env.NIX_LDFLAGS = "-lGL -lfontconfig";
+
+        postInstall = ''
+for size in 48x48 128x128; do
+mkdir -p $out/share/icons/hicolor/$size/apps
+ln -s $out/share/Lagom/icons/$size/app-browser.png \
+$out/share/icons/hicolor/$size/apps/ladybird.png
+done
+        '' + lib.optionalString stdenv.hostPlatform.isDarwin ''
+mkdir -p $out/Applications $out/bin
+mv $out/bundle/Ladybird.app $out/Applications
+        '';
+
+        desktopItems = [
+            (makeDesktopItem {
+                name = "ladybird";
+                desktopName = "Ladybird";
+                exec = "Ladybird -- %U";
+                icon = "ladybird";
+                categories = [
+                    "Network"
+                    "WebBrowser"
+                ];
+                mimeTypes = [
+                    "text/html"
+                    "application/xhtml+xml"
+                    "x-scheme-handler/http"
+                    "x-scheme-handler/https"
+                ];
+                actions.new-window = {
+                    name = "New Window";
+                    exec = "Ladybird --new-window -- %U";
+                };
+            })
+        ];
 
         passthru.tests = {
             nixosTest = nixosTests.ladybird;
