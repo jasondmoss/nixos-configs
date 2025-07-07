@@ -110,6 +110,13 @@ in {
                 "widget.use-xdg-desktop-portal.file-picker" = 1;
             };
         };
+
+        _1password.enable = true;
+        _1password-gui = {
+            enable = true;
+            polkitPolicyOwners = [ "team-originoutside" ];
+#            package = pkgs._1password-gui-beta;E
+        };
     };
 
     services = {
@@ -348,6 +355,7 @@ Defaults env_keep+=SSH_AUTH_SOCK
             description = "Jason D. Moss";
 
             extraGroups = [
+                "33"
                 "audio"
                 "docker"
                 "mlocate"
@@ -363,6 +371,17 @@ Defaults env_keep+=SSH_AUTH_SOCK
     };
 
     environment = {
+        etc = {
+            "1password/custom_allowed_browsers" = {
+                text = ''
+firefox-devedition
+vivaldi-bin
+wavebox
+                '';
+                mode = "0755";
+            };
+        };
+
         variables = {
             _JAVA_AWT_WM_NONREPARENTING = "1";
             __GLX_VENDOR_LIBRARY_NAME = "nvidia";
