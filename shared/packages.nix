@@ -244,7 +244,6 @@
         comixcursors
 
         #--  MISCELLANEOUS
-#        _1password-gui-beta
         diskscan
         ghostty
         libportal

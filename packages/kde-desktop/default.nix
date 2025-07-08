@@ -77,6 +77,7 @@
             qtsvg
             qttools
             taglib
+#            transistor
             wayland
             wayland-protocols
             wayqt

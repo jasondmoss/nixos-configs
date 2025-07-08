@@ -255,6 +255,7 @@ local {
             enable = true;
             acceleration = "cuda";
 
+            # https://ollama.com/library
             loadModels = [
                 "gemma3:latest"
                 "llama4:latest"
