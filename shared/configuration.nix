@@ -160,9 +160,9 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
-(sleep 5s;/run/current-system/sw/bin/megasync) &
-(sleep 5s;/run/current-system/sw/bin/1password) &
-(sleep 1m;/run/current-system/sw/bin/notes) &
+(sleep 20s;/run/current-system/sw/bin/1password) &
+(sleep 30s;/run/current-system/sw/bin/megasync) &
+(sleep 2m;/run/current-system/sw/bin/notes) &
             '';
         };
 
@@ -279,9 +279,7 @@ local {
         };
         extraPortals = with pkgs; [
             xdg-desktop-portal
-#            xdg-desktop-portal-gtk
             xdg-desktop-portal-termfilechooser
-#            xdg-desktop-portal-wlr
             kdePackages.xdg-desktop-portal-kde
         ];
     };
