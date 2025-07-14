@@ -13,13 +13,11 @@ in {
 
     services.ngrok = {
         enable = true;
-        extraConfig = {
-            #
-        };
+        extraConfig = {};
         extraConfigFiles = [
           # reference to files containing `authtoken` and `api_key` secrets
           # ngrok will merge these, together with `extraConfig`
-          "/home/me/Mega/System/Configurations/ngrok/ngrok.yml"
+          #"/home/me/Mega/System/Configurations/ngrok/ngrok.yml"
         ];
         tunnels = {
             #

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, channel,    ... }:
 let
     theme = import ./theme.nix;
 in {
@@ -101,6 +101,7 @@ in {
 #            package = (pkgs.wrapFirefox (pkgs.firefox-devedition) {
 #                pipewireSupport = true;
 #            });
+#            package = pkgs.latest.firefox-nightly-bin;
             package = pkgs.firefox-devedition;
             policies.SearchEngines = {
                 Default = "DuckDuckGo";
@@ -160,9 +161,9 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
-(sleep 20s;/run/current-system/sw/bin/1password) &
+(sleep 10s;/run/current-system/sw/bin/1password) &
 (sleep 30s;/run/current-system/sw/bin/megasync) &
-(sleep 2m;/run/current-system/sw/bin/notes) &
+(sleep 1m;/run/current-system/sw/bin/notes) &
             '';
         };
 
@@ -448,7 +449,6 @@ wavebox
             ];
 
             DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
-#            LD_LIBRARY_PATH = "$(nix build --print-out-paths --no-link nixpkgs#libGL)/lib";
 
             GEMINI_API_KEY = "$(${pkgs.coreutils}/bin/cat /home/me/.config/gemini/api.key)";
         };

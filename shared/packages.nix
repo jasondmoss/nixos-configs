@@ -32,21 +32,23 @@
         };
 
         overlays =
-        let
-            # Change this to a rev sha to pin
-            moz-rev = "master";
-            moz-url = builtins.fetchTarball {
-                url = "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";
-            };
-            nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
-        in [
-            nightlyOverlay
-        ] ++ [
+#        let
+#            # Change this to a rev sha to pin
+#            moz-rev = "master";
+#            moz-url = builtins.fetchTarball {
+#                url = "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";
+#            };
+#            nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
+#        in [
+#            nightlyOverlay
+#        ] ++ [
+        [
 
             # Conky
 #            (import ../packages/conky)
 
             # Firefox Nightly
+#            (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 #            (import (builtins.fetchurl {
 #               url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
 #            }))
@@ -155,9 +157,6 @@
         xdg-utils
         xorg.libxcb
 
-#        nixgl.nixGLDefault
-#        nixgl.nixGLNvidia
-
         #--  DEVELOPMENT
         bison
         bisoncpp
@@ -223,15 +222,15 @@
         speechd
         vorbis-tools
         wavpack
+        xnviewmp
 
         #--  NETWORK
         filezilla
-#        firefox-devedition
         google-chrome
         links2
         megasync
         megatools
-#        ngrok
+        ngrok
         nyxt
         protonvpn-gui
 
@@ -279,7 +278,7 @@
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
-#        ../packages/ngrok
+        ../packages/ngrok
         ../packages/php
         ../packages/vaapi
     ];
