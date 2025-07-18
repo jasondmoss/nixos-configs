@@ -1,9 +1,9 @@
 {
     alsa-lib, boost, chromaprint, cmake, fetchFromGitHub, fftw, glib-networking,
     gnutls, gst_all_1, kdsingleapplication, lib, libXdmcp, libcdio, libebur128,
-    libgpod, libidn2, libmtp, libpthreadstubs, libpulseaudio, libselinux,
-    libsepol, libtasn1, ninja, nix-update-script, p11-kit, pkg-config, qt6,
-    rapidjson, sparsehash, sqlite, stdenv, taglib, util-linux
+    libidn2, libmtp, libpthreadstubs, libpulseaudio, libselinux, libsepol,
+    libtasn1, ninja, nix-update-script, p11-kit, pkg-config, qt6, rapidjson,
+    sparsehash, sqlite, stdenv, taglib, util-linux
 }:
 
 let
@@ -16,7 +16,7 @@ in stdenv.mkDerivation rec {
         owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
-        hash = "sha256-nhNgTvW36y+sndVQsgGKh3E4F3ghy9azs6fn9aIFOeU=";
+        hash = "sha256-UpJYAJzP9x9QZBeRjPpxMdwcXcZIxrTIEluYv6ovv2U=";
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,
@@ -46,7 +46,6 @@ substituteInPlace src/context/contextalbum.cpp \
         sqlite
         taglib
     ] ++ optionals stdenv.hostPlatform.isLinux [
-        libgpod
         libpulseaudio
         libselinux
         libsepol
@@ -69,6 +68,10 @@ substituteInPlace src/context/contextalbum.cpp \
         qt6.wrapQtAppsHook
     ] ++ optionals stdenv.hostPlatform.isLinux [
         util-linux
+    ];
+
+    cmakeFlags = [
+        "-DENABLE_GPOD=OFF" # `libgpod` is dead
     ];
 
     postInstall = ''

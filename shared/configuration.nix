@@ -95,13 +95,6 @@ in {
 
         firefox = {
             enable = true;
-#            package = (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override {
-#                pipewireSupport = true;
-#            }) {});
-#            package = (pkgs.wrapFirefox (pkgs.firefox-devedition) {
-#                pipewireSupport = true;
-#            });
-#            package = pkgs.latest.firefox-nightly-bin;
             package = pkgs.firefox-devedition;
             policies.SearchEngines = {
                 Default = "DuckDuckGo";
@@ -163,7 +156,7 @@ local {
             displayManager.sessionCommands = ''
 (sleep 10s;/run/current-system/sw/bin/1password) &
 (sleep 30s;/run/current-system/sw/bin/megasync) &
-(sleep 1m;/run/current-system/sw/bin/notes) &
+(sleep 2m;/run/current-system/sw/bin/notes) &
             '';
         };
 
@@ -252,22 +245,21 @@ local {
 #            settings = {};
 #        };
 
-        ollama = {
-            enable = true;
-            acceleration = "cuda";
+       ollama = {
+           enable = true;
+           acceleration = "cuda";
 
-            # https://ollama.com/library
-            loadModels = [
-                "gemma3:latest"
-                "llama4:latest"
-                "starcoder2:latest"
-                "qwen2.5-coder:latest"
-            ];
-        };
+           # https://ollama.com/library
+           loadModels = [
+               "gemma3:latest"
+               "llama4:latest"
+               "qwen2.5-coder:latest"
+           ];
+       };
 
-        open-webui = {
-            enable = true;
-        };
+       # open-webui = {
+       #     enable = true;
+       # };
     };
 
     xdg.portal = {

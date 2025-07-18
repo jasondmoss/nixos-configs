@@ -47,7 +47,7 @@ upload_max_filesize = 2048M
         mysqlnd
         openssl
         pdo
-        pdo_dblib
+#        pdo_dblib
         pdo_mysql
         pdo_odbc
         session

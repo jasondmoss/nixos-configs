@@ -10,7 +10,7 @@
             # Darkly KDE theme engine
             (pkgs.callPackage ../kde-darkly {})
             # Klassy KDE theme engine
-            (pkgs.callPackage ../kde-klassy {})
+           (pkgs.callPackage ../kde-klassy {})
 
             adwaita-qt6
             kphotoalbum

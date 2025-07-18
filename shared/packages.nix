@@ -54,7 +54,7 @@
 #            }))
 
             # PhpStorm
-            (import ../packages/jetbrains)
+#           (import ../packages/jetbrains)
         ];
     };
 
@@ -130,7 +130,6 @@
         cairo
         egl-wayland
         eglexternalplatform
-        figma-linux
         glxinfo
         gpm
         imagemagick
@@ -187,9 +186,7 @@
         superhtml
         yarn
 
-        jetbrains.jdk
         nano
-        phpstorm    # Custom overlay.
         sublime4
 
         #--  OFFICE/ADMIN
@@ -226,7 +223,7 @@
 
         #--  NETWORK
         filezilla
-        google-chrome
+#        google-chrome
         links2
         megasync
         megatools
@@ -258,11 +255,12 @@
 
         #--  CUSTOM PACKAGES
 
-        #--  Capacities
-#        (pkgs.callPackage ../packages/capacities {})
-
         # LadyBird
-        (pkgs.callPackage ../packages/ladybird {})
+#       (pkgs.callPackage ../packages/ladybird {})
+
+        # JetBrains JDK
+#        (pkgs.callPackage ../packages/jetbrains-jdk {})
+#        phpstorm    # Custom overlay.
 
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})
@@ -275,7 +273,7 @@
     ];
 
     imports = [
-        ../packages/gimp
+#        ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
         ../packages/ngrok

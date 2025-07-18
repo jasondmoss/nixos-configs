@@ -260,20 +260,19 @@
             audacity
             audible-cli
             cuetools
-            darktable
+#            darktable
             easytag
             flacon
-            kdePackages.phonon-vlc
-            rawtherapee
-            shotcut
+#            kdePackages.phonon-vlc
+#            rawtherapee
+#            shotcut
             taglib-sharp
             taglib_extras
             tor-browser-bundle-bin
-            vlc
+#            vlc
 
             # MKVToolNix
             (pkgs.callPackage ../packages/mkvtoolnix {})
-    #        mkvtoolnix
         ]);
     };
 
