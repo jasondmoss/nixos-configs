@@ -94,7 +94,7 @@
 
             breeze
             breeze-icons
-#            qtstyleplugin-kvantum
+            qtstyleplugin-kvantum
         ]);
     };
 }

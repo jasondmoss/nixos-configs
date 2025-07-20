@@ -32,29 +32,19 @@
         };
 
         overlays =
-#        let
-#            # Change this to a rev sha to pin
-#            moz-rev = "master";
-#            moz-url = builtins.fetchTarball {
-#                url = "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";
-#            };
-#            nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
-#        in [
-#            nightlyOverlay
-#        ] ++ [
-        [
-
+        let
+#             jetbrains-jdk-with-patches = pkgs.jetbrains.jdk.overrideAttrs (finalAttrs: previousAttrs: {
+#                 patches = previousAttrs.patches ++ [ ../packages/jetbrains-jdk/jetbrains-jdk-fix.patch ];
+#             });
+        in [
             # Conky
 #            (import ../packages/conky)
 
             # Firefox Nightly
-#            (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
-#            (import (builtins.fetchurl {
-#               url = "https://raw.githubusercontent.com/mozilla/nixpkgs-mozilla/refs/heads/master/firefox-overlay.nix";
-#            }))
+            (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
             # PhpStorm
-#           (import ../packages/jetbrains)
+#             (import ../packages/jetbrains)
         ];
     };
 
@@ -81,7 +71,6 @@
         gcr
         gd
         gsasl
-        htop
         inetutils
         inotify-tools
         killall
@@ -92,6 +81,7 @@
         lsd
         lshw
         moreutils
+        neohtop
         nix-du
         nix-index
         nix-prefetch-git
@@ -179,6 +169,7 @@
         lua
         nodejs
         perl
+        # phpstorm    # Custom overlay.
         phpunit
         pre-commit
         rustc
@@ -222,8 +213,8 @@
         xnviewmp
 
         #--  NETWORK
+        chromium
         filezilla
-#        google-chrome
         links2
         megasync
         megatools
@@ -258,10 +249,6 @@
         # LadyBird
 #       (pkgs.callPackage ../packages/ladybird {})
 
-        # JetBrains JDK
-#        (pkgs.callPackage ../packages/jetbrains-jdk {})
-#        phpstorm    # Custom overlay.
-
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})
 
@@ -273,7 +260,9 @@
     ];
 
     imports = [
-#        ../packages/gimp
+        ../packages/firefox-nightly
+        ../packages/firefox-stable
+        ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
         ../packages/ngrok

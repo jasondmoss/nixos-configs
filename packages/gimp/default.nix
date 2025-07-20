@@ -27,17 +27,17 @@
         gimp
 
         # Development version (currently RC2)
-        #(pkgs.callPackage ../gimp-devel {})
+#        (pkgs.callPackage ../gimp-devel {})
     ]) ++ (with pkgs.gimpPlugins; [
-        #bimp
+#        bimp
         exposureBlend
         fourier
-        #gap
+#        gap
         gimplensfun
         gmic
         lightning
         lqrPlugin
-        resynthesizer
+#        resynthesizer
         texturize
         waveletSharpen
     ]);

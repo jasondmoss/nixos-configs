@@ -94,8 +94,8 @@ in {
         };
 
         firefox = {
-            enable = true;
-            package = pkgs.firefox-devedition;
+            # enable = true;
+            # package = pkgs.firefox;
             policies.SearchEngines = {
                 Default = "DuckDuckGo";
                 Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
@@ -109,7 +109,7 @@ in {
         _1password-gui = {
             enable = true;
             polkitPolicyOwners = [ "team-originoutside" ];
-#            package = pkgs._1password-gui-beta;E
+            package = pkgs._1password-gui-beta;
         };
     };
 
