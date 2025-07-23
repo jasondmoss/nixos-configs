@@ -252,14 +252,12 @@ local {
            # https://ollama.com/library
            loadModels = [
                "gemma3:latest"
-               "llama4:latest"
-               "qwen2.5-coder:latest"
            ];
        };
 
-       # open-webui = {
-       #     enable = true;
-       # };
+       open-webui = {
+           enable = true;
+       };
     };
 
     xdg.portal = {
@@ -366,7 +364,7 @@ Defaults env_keep+=SSH_AUTH_SOCK
         etc = {
             "1password/custom_allowed_browsers" = {
                 text = ''
-firefox-devedition
+firefox-nightly
 vivaldi-bin
 wavebox
                 '';

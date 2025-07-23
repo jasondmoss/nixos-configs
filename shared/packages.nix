@@ -33,9 +33,6 @@
 
         overlays =
         let
-#             jetbrains-jdk-with-patches = pkgs.jetbrains.jdk.overrideAttrs (finalAttrs: previousAttrs: {
-#                 patches = previousAttrs.patches ++ [ ../packages/jetbrains-jdk/jetbrains-jdk-fix.patch ];
-#             });
         in [
             # Conky
 #            (import ../packages/conky)
@@ -44,7 +41,7 @@
             (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
             # PhpStorm
-#             (import ../packages/jetbrains)
+            (import ../packages/jetbrains)
         ];
     };
 
@@ -169,7 +166,6 @@
         lua
         nodejs
         perl
-        # phpstorm    # Custom overlay.
         phpunit
         pre-commit
         rustc
@@ -178,6 +174,7 @@
         yarn
 
         nano
+        # phpstorm    # Custom overlay.
         sublime4
 
         #--  OFFICE/ADMIN
@@ -213,7 +210,6 @@
         xnviewmp
 
         #--  NETWORK
-        chromium
         filezilla
         links2
         megasync
@@ -265,7 +261,7 @@
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
-        ../packages/ngrok
+#         ../packages/ngrok
         ../packages/php
         ../packages/vaapi
     ];
