@@ -40,8 +40,18 @@
             # Firefox Nightly
             (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
+
             # PhpStorm
             (import ../packages/jetbrains)
+            (final: prev: {
+                phpstorm = prev.phpstorm.overrideAttrs (old: {
+                    buildInputs = old.buildInputs ++ [
+                        pkgs.libGL
+                        pkgs.xorg.libX11
+                        pkgs.fontconfig
+                    ];
+                });
+            })
         ];
     };
 
@@ -174,7 +184,7 @@
         yarn
 
         nano
-        # phpstorm    # Custom overlay.
+        phpstorm    # Custom overlay.
         sublime4
 
         #--  OFFICE/ADMIN
