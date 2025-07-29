@@ -257,15 +257,15 @@
 
     environment = {
         systemPackages = (with pkgs; [
-            audacity
-            audible-cli
+#            audacity
+#            audible-cli
             cuetools
-#            darktable
+            darktable
             easytag
             flacon
 #            kdePackages.phonon-vlc
 #            rawtherapee
-#            shotcut
+            shotcut
             taglib-sharp
             taglib_extras
             tor-browser-bundle-bin
