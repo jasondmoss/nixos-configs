@@ -330,10 +330,6 @@ Defaults env_keep+=SSH_AUTH_SOCK
         dev.enable = true;
     };
 
-    systemd = {
-        extraConfig = "DefaultTimeoutStopSec=10s";
-    };
-
     users.users = {
         me = {
             isNormalUser = true;

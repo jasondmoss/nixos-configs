@@ -234,7 +234,7 @@
 
     environment = {
         systemPackages = (with pkgs; [
-#            audacity
+            audacity
 #            audible-cli
             cuetools
             darktable
@@ -245,6 +245,9 @@
             taglib_extras
             tor-browser-bundle-bin
 #            vlc
+
+            # LadyBird
+#            (pkgs.callPackage ../packages/ladybird {})
 
             # MKVToolNix
             (pkgs.callPackage ../packages/mkvtoolnix {})
