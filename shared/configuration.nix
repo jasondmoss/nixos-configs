@@ -93,17 +93,17 @@ in {
             withPython3 = true;
         };
 
-        firefox = {
-#            enable = true;
-#            package = pkgs.firefox;
-            policies.SearchEngines = {
-                Default = "DuckDuckGo";
-                Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
-            };
-            preferences = {
-                "widget.use-xdg-desktop-portal.file-picker" = 1;
-            };
-        };
+#         firefox = {
+#             enable = true;
+#             package = pkgs.firefox;
+#             policies.SearchEngines = {
+#                 Default = "DuckDuckGo";
+#                 Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
+#             };
+#             preferences = {
+#                 "widget.use-xdg-desktop-portal.file-picker" = 1;
+#             };
+#         };
 
         _1password.enable = true;
         _1password-gui = {
@@ -237,26 +237,19 @@ local {
             ];
         };
 
-#        n8n = {
-#            enable = true;
-#            openFirewall = true;
-#            webhookUrl = "";
-#            settings = {};
-#        };
+        ollama = {
+            enable = true;
+            acceleration = "cuda";
 
-       ollama = {
-           enable = true;
-           acceleration = "cuda";
+            # https://ollama.com/library
+            loadModels = [
+                "gemma3:latest"
+            ];
+        };
 
-           # https://ollama.com/library
-           loadModels = [
-               "gemma3:latest"
-           ];
-       };
-
-       open-webui = {
-           enable = true;
-       };
+        open-webui = {
+            enable = true;
+        };
     };
 
     xdg.portal = {

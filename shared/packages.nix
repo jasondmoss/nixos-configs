@@ -240,6 +240,8 @@
         #--  MISCELLANEOUS
         diskscan
         ghostty
+        inxi
+        librechat
         libportal
         mozlz4a
         pandoc
