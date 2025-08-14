@@ -187,27 +187,27 @@
             startWhenNeeded = true;
         };
 
-        navidrome = {
-            enable = true;
-            openFirewall = true;
-            user = "navidrome";
-
-            settings = {
-                Address = "0.0.0.0";
-                Port = 4533;
-                EnableSharing = true;
-
-                MusicFolder = "/home/me/Mega/Media/Music";
-                CacheFolder = "/home/me/Mega/System/Configurations/navidrome/cache";
-                DataFolder = "/home/me/Mega/System/Configurations/navidrome/data";
-                FFmpegPath = "/run/current-system/sw/bin/ffmpeg";
-
-                CoverArtPriority = "cover.jpg";
-                EnableStarRating = true;
-                Jukebox.Enabled = true;
-                Jukebox.AdminOnly = false;
-            };
-        };
+#        navidrome = {
+#            enable = true;
+#            openFirewall = true;
+#            user = "navidrome";
+#
+#            settings = {
+#                Address = "0.0.0.0";
+#                Port = 4533;
+#                EnableSharing = true;
+#
+#                MusicFolder = "/home/me/Mega/Media/Music";
+#                CacheFolder = "/home/me/Mega/System/Configurations/navidrome/cache";
+#                DataFolder = "/home/me/Mega/System/Configurations/navidrome/data";
+#                FFmpegPath = "/run/current-system/sw/bin/ffmpeg";
+#
+#                CoverArtPriority = "cover.jpg";
+#                EnableStarRating = true;
+#                Jukebox.Enabled = true;
+#                Jukebox.AdminOnly = false;
+#            };
+#        };
     };
 
     systemd.services.navidrome.serviceConfig.ProtectHome = lib.mkForce false;
