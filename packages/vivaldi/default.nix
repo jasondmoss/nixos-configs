@@ -11,7 +11,7 @@
     vivaldi-ffmpeg-codecs ? null,
     enableWidevine ? false,
     widevine-cdm ? null,
-    commandLineArgs ? "",
+    commandLineArgs ? "sha256-Afd/F3rpqZLbciSPIydty8RyzbHd2fvUWm3yoxw1iw8=",
     pulseSupport ? stdenv.hostPlatform.isLinux,
     libpulseaudio,
     kerberosSupport ? true,
@@ -24,7 +24,7 @@ let
 in
 stdenv.mkDerivation rec {
     pname = "vivaldi";
-    version = "7.6.3772.3";
+    version = "7.6.3780.7";
 
     suffix = {
         aarch64-linux = "arm64";
@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
         # https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_7.5.3725.3-1_amd64.deb
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            x86_64-linux = "sha256-qw3ywXJOleRatmFGA2qw93mVXJ2fwkNVaLiUQAmXaa8=";
+            x86_64-linux = "";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };
