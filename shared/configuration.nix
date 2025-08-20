@@ -154,10 +154,10 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
-(sleep 10s;/run/current-system/sw/bin/1password) &
-(sleep 30s;/run/current-system/sw/bin/megasync) &
-(sleep 2m;/run/current-system/sw/bin/notes) &
+(sleep 10s;/run/current-system/sw/bin/megasync) &
+(sleep 1m;/run/current-system/sw/bin/notes) &
             '';
+#(sleep 10s;/run/current-system/sw/bin/1password) &
         };
 
         locate = {
