@@ -11,7 +11,6 @@ in {
 
     services.ngrok = {
         enable = true;
-#        authToken = "2qZtsiVH7Q5NW3j10CaXp9RqnKx_4pVp9YJsW8PhPqHKQe5Sz";
         extraConfig = { };
         extraConfigFiles = [
             # reference to files containing `authtoken` and `api_key` secrets
