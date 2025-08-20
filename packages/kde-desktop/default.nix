@@ -1,7 +1,7 @@
 { pkgs, ... }: {
     environment = {
         plasma6.excludePackages = (with pkgs.kdePackages; [
-            drkonqi
+#            drkonqi
             elisa
             itinerary
         ]);
@@ -77,7 +77,6 @@
             qtsvg
             qttools
             taglib
-#            transistor
             wayland
             wayland-protocols
             wayqt
