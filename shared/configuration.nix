@@ -154,9 +154,9 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
+(sleep 10s;/home/me/.local/bin/megasync-wrapper.sh) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
             '';
-#(sleep 10s;/run/current-system/sw/bin/megasync) &
 #(sleep 10s;/run/current-system/sw/bin/1password) &
         };
 
