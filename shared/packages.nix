@@ -239,7 +239,6 @@
 
         #--  MISCELLANEOUS
         diskscan
-        ghostty
         inxi
         librechat
         libportal

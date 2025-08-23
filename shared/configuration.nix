@@ -154,10 +154,10 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
-(sleep 10s;/run/current-system/sw/bin/1password) &
-(sleep 10s;/run/current-system/sw/bin/megasync) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
             '';
+#(sleep 10s;/run/current-system/sw/bin/megasync) &
+#(sleep 10s;/run/current-system/sw/bin/1password) &
         };
 
         locate = {
@@ -189,18 +189,24 @@ local {
         };
 
         displayManager = {
-            ly = {
+#            ly = {
+#                enable = true;
+#                x11Support = false;
+#                settings = {
+#                    clear_password = true;
+#                    clock = "%c";
+##                    animation = "matrix";
+##                    animation_timeout_sec = "20";
+#                    animation = "none";
+#                    input_len = "64";
+#                    waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
+#                };
+#            };
+
+            sddm = {
                 enable = true;
-                x11Support = false;
-                settings = {
-                    clear_password = true;
-                    clock = "%c";
-#                    animation = "matrix";
-#                    animation_timeout_sec = "20";
-                    animation = "none";
-                    input_len = "64";
-                    waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
-                };
+                enableHidpi = true;
+                wayland.enable = true;
             };
 
             defaultSession = "plasma";
