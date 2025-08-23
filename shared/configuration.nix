@@ -393,7 +393,12 @@ wavebox
 
             QT_AUTO_SCREEN_SCALE_FACTOR = "1";
             QT_QPA_PLATFORM = "wayland;xcb";
-            QT_QPA_PLATFORMTHEME = "qt6ct";
+#            QT_QPA_PLATFORMTHEME = "qt6ct";
+            QT_QPA_PLATFORMTHEME = lib.mkForce "";
+            QT_PLUGIN_PATH = [
+                "${pkgs.qt5.qtbase}/lib/qt-5/plugins"
+                "${pkgs.qt6.qtbase}/lib/qt-6/plugins"
+            ];
             QT_SCALE_FACTOR = "1";
             QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
             QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";

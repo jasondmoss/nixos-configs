@@ -16,6 +16,8 @@
             kphotoalbum
             materia-kde-theme
             qadwaitadecorations-qt6
+        ]) ++ (with pkgs.libsForQt5; [
+            qt5ct
         ]) ++ (with pkgs.kdePackages; [
             full
             qt6ct
