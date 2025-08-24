@@ -30,6 +30,7 @@
             dolphin-plugins
             ffmpegthumbs
             frameworkintegration
+            ghostwriter
             itinerary
             kate
             karchive

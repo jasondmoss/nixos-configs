@@ -154,9 +154,9 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
-(sleep 10s;/home/me/.local/bin/megasync-wrapper.sh) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
             '';
+#(sleep 10s;/home/me/.local/bin/megasync-wrapper.sh) &
 #(sleep 10s;/run/current-system/sw/bin/1password) &
         };
 
@@ -368,12 +368,12 @@ wavebox
 
         variables = {
             _JAVA_AWT_WM_NONREPARENTING = "1";
-            __GLX_VENDOR_LIBRARY_NAME = "nvidia";
             __GL_ALLOW_UNOFFICIAL_PROTOCOL = "1";
             __GL_GSYNC_ALLOWED = "1";
             __GL_SHADER_CACHE = "1";
             __GL_THREADED_OPTIMIZATION = "1";
             __GL_VRR_ALLOWED = "0";
+            __GLX_VENDOR_LIBRARY_NAME = "nvidia";
             __NV_DISABLE_EXPLICIT_SYNC = "1";
 
             DISABLE_QT5_COMPAT = "1";
@@ -391,15 +391,19 @@ wavebox
             WLR_DRM_NO_ATOMIC = "1";
             WLR_NO_HARDWARE_CURSORS = "1";
 
-            QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+            # QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+            QT_AUTO_SCREEN_SCALE_FACTOR = "0";
             QT_QPA_PLATFORM = "wayland;xcb";
+            # QT_QPA_PLATFORM = "wayland";
+            # QT_QPA_PLATFORM = "xcb";
 #            QT_QPA_PLATFORMTHEME = "qt6ct";
             QT_QPA_PLATFORMTHEME = lib.mkForce "";
             QT_PLUGIN_PATH = [
                 "${pkgs.qt5.qtbase}/lib/qt-5/plugins"
                 "${pkgs.qt6.qtbase}/lib/qt-6/plugins"
             ];
-            QT_SCALE_FACTOR = "1";
+            # QT_SCALE_FACTOR = "1";
+            QT_SCALE_FACTOR = "0";
             QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
             QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
 
