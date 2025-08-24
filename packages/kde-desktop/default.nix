@@ -22,6 +22,7 @@
             full
             qt6ct
             accounts-qt
+            angelfish
             ark
             baloo
             baloo-widgets
