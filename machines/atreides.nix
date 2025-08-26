@@ -210,7 +210,7 @@
 #        };
     };
 
-    systemd.services.navidrome.serviceConfig.ProtectHome = lib.mkForce false;
+#    systemd.services.navidrome.serviceConfig.ProtectHome = lib.mkForce false;
 
     nixpkgs = {
         hostPlatform = {
@@ -237,7 +237,7 @@
             audacity
 #            audible-cli
             cuetools
-            darktable
+#            darktable
             easytag
             flacon
 #            kdePackages.phonon-vlc
@@ -258,9 +258,9 @@
     # Shared configurations.
     #
     imports = [
-        ../shared/hardware.nix
-        ../shared/configuration.nix
-        ../shared/packages.nix
+        ../hardware.nix
+        ../configuration.nix
+        ../packages.nix
     ];
 }
 

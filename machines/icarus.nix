@@ -197,9 +197,9 @@
     # Shared configurations.
     #
     imports = [
-        ../shared/hardware.nix
-        ../shared/configuration.nix
-        ../shared/packages.nix
+        ../hardware.nix
+        ../configuration.nix
+        ../packages.nix
     ];
 }
 

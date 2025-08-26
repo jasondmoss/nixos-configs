@@ -17,13 +17,13 @@
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
                 "nvidia-x11"
                 "nvidia-settings"
-                "nvidia-persistenced"
                 "nvidia-vaapi-driver"
                 "vulkan-headers"
                 "vulkan-loader"
                 "vulkan-tool"
                 "vulkan-validation-layers"
             ];
+#                "nvidia-persistenced"
 
             permittedInsecurePackages = [
                 "libsoup-2.74.3"
@@ -39,11 +39,11 @@
 #            (import ../packages/conky)
 
             # Firefox Nightly
-            (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
+            (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
 
             # PhpStorm
-            (import ../packages/jetbrains)
+            (import ./packages/jetbrains)
             (final: prev: {
                 phpstorm = prev.phpstorm.overrideAttrs (old: {
                     buildInputs = old.buildInputs ++ [
@@ -254,25 +254,28 @@
 
         #--  CUSTOM PACKAGES
 
+        # Ulauncher
+#        (pkgs.callPackage ./packages/ulauncher {})
+
         # Strawberry Music Player
-        (pkgs.callPackage ../packages/strawberry {})
+        (pkgs.callPackage ./packages/strawberry {})
 
         # Vivaldi Browser
-        (pkgs.callPackage ../packages/vivaldi {})
+        (pkgs.callPackage ./packages/vivaldi {})
 
         # Wavebox Beta
-        (pkgs.callPackage ../packages/wavebox {})
+        (pkgs.callPackage ./packages/wavebox {})
     ];
 
     imports = [
-        ../packages/firefox-nightly
-        ../packages/firefox-stable
-        ../packages/gimp
-        ../packages/gnome-desktop
-        ../packages/kde-desktop
-#        ../packages/ngrok
-        ../packages/php
-        ../packages/vaapi
+        ./packages/firefox-nightly
+        ./packages/firefox-stable
+        ./packages/gimp
+        ./packages/gnome-desktop
+        ./packages/kde-desktop
+#        ./packages/ngrok
+        ./packages/php
+        ./packages/vaapi
     ];
 
 }
