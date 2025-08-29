@@ -1,4 +1,5 @@
 rec {
+
     # Text color.
     foreground = "#f8f8f2";
 
@@ -48,4 +49,5 @@ rec {
         bright.cyan
         bright.white
     ];
+
 }

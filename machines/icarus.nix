@@ -199,6 +199,16 @@
     imports = [
         ../hardware.nix
         ../configuration.nix
+
+        ../components/environment.nix
+        ../components/fonts.nix
+        ../components/networking.nix
+        ../components/programs.nix
+        ../components/security.nix
+        ../components/services.nix
+        ../components/users.nix
+        ../components/xdg.nix
+
         ../packages.nix
     ];
 }

@@ -169,7 +169,7 @@
 
     services = {
         power-profiles-daemon.enable = false;
-        xserver.dpi = 162;
+        xserver.dpi = 192;
 
         tlp = {
             enable = true;
@@ -186,31 +186,7 @@
             cups-pdf.enable = true;
             startWhenNeeded = true;
         };
-
-#        navidrome = {
-#            enable = true;
-#            openFirewall = true;
-#            user = "navidrome";
-#
-#            settings = {
-#                Address = "0.0.0.0";
-#                Port = 4533;
-#                EnableSharing = true;
-#
-#                MusicFolder = "/home/me/Mega/Media/Music";
-#                CacheFolder = "/home/me/Mega/System/Configurations/navidrome/cache";
-#                DataFolder = "/home/me/Mega/System/Configurations/navidrome/data";
-#                FFmpegPath = "/run/current-system/sw/bin/ffmpeg";
-#
-#                CoverArtPriority = "cover.jpg";
-#                EnableStarRating = true;
-#                Jukebox.Enabled = true;
-#                Jukebox.AdminOnly = false;
-#            };
-#        };
     };
-
-#    systemd.services.navidrome.serviceConfig.ProtectHome = lib.mkForce false;
 
     nixpkgs = {
         hostPlatform = {
@@ -260,6 +236,16 @@
     imports = [
         ../hardware.nix
         ../configuration.nix
+
+        ../components/environment.nix
+        ../components/fonts.nix
+        ../components/networking.nix
+        ../components/programs.nix
+        ../components/security.nix
+        ../components/services.nix
+        ../components/users.nix
+        ../components/xdg.nix
+
         ../packages.nix
     ];
 }

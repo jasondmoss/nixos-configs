@@ -15,7 +15,8 @@
             };
 
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-                "nvidia-x11"
+#                "nvidia-x11"
+#                "nvidia-persistenced"
                 "nvidia-settings"
                 "nvidia-vaapi-driver"
                 "vulkan-headers"
@@ -23,12 +24,12 @@
                 "vulkan-tool"
                 "vulkan-validation-layers"
             ];
-#                "nvidia-persistenced"
 
             permittedInsecurePackages = [
                 "libsoup-2.74.3"
                 "olm-3.2.16"
                 "openssl-1.1.1w"
+                "qtwebengine-5.15.19"
             ];
         };
 
@@ -248,9 +249,9 @@
         p7zip-rar
 #        peazip
         systemctl-tui
-        trilium-next-desktop
         wezterm
-
+        xorg.xdpyinfo
+        xorg.xeyes
 
         #--  CUSTOM PACKAGES
 

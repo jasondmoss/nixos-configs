@@ -18,7 +18,7 @@
             open = true;
             forceFullCompositionPipeline = true;
             modesetting.enable = true;
-            nvidiaPersistenced = true;
+            nvidiaPersistenced = false;
             nvidiaSettings = true;
             datacenter.enable = false;
             gsp.enable = true;
