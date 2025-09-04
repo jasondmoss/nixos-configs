@@ -213,10 +213,11 @@
             audacity
 #            audible-cli
             cuetools
-#            darktable
+            darktable
             easytag
             flacon
 #            kdePackages.phonon-vlc
+            shotcut
             taglib-sharp
             taglib_extras
             tor-browser-bundle-bin

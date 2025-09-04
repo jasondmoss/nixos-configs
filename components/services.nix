@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
 
     services = {
         dbus.enable = true;
@@ -41,7 +41,7 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
-(sleep 10s;/home/me/.local/bin/megasync-wrapper.sh) &
+(sleep 10s;${config.users.users.me.home}/.local/bin/megasync-wrapper.sh) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
             '';
         };
@@ -128,20 +128,6 @@ local {
                 }
             ];
         };
-
-        ollama = {
-            enable = true;
-            acceleration = "cuda";
-
-            # https://ollama.com/library
-            loadModels = [
-                "gemma3:latest"
-            ];
-        };
-
-#        open-webui = {
-#            enable = true;
-#        };
     };
 
 }

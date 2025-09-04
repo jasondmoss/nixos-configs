@@ -19,7 +19,7 @@ python3Packages.buildPythonApplication rec {
         owner = "Ulauncher";
         repo = pname;
         rev = version;
-        hash = "sha256-G3tS+s+Ip5w+TC4VrJpYKmh8yGBTjGnKJmR3VuUm4HA=";
+        hash = "sha256-qS5dvJ/UEqsLtpUVAXPcVfPTishMYOWae+1xLLihR3Y=";
     };
 
     nativeBuildInputs = [

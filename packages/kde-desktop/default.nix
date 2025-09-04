@@ -1,7 +1,6 @@
 { pkgs, ... }: {
     environment = {
         plasma6.excludePackages = (with pkgs.kdePackages; [
-#            drkonqi
             elisa
             itinerary
         ]);
@@ -29,6 +28,7 @@
             bluedevil
             dolphin
             dolphin-plugins
+            drkonqi
             ffmpegthumbs
             frameworkintegration
             ghostwriter

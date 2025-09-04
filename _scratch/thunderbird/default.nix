@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
     thunderbirdDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
@@ -6,7 +6,7 @@ let
         name = "thunderbird";
         desktopName = "Thunderbird";
         exec = "thunderbird -P \"Me\"";
-        icon = "/home/me/Mega/Images/Icons/Apps/thunderbird-daily.png";
+        icon = "${config.users.users.me.home}/Mega/Images/Icons/Apps/thunderbird-daily.png";
         mimeTypes = [
             "message/rfc822"
             "x-scheme-handler/mailto"

@@ -90,7 +90,6 @@
         lsd
         lshw
         moreutils
-        neohtop
         nix-du
         nix-index
         nix-prefetch-git
@@ -102,7 +101,6 @@
         pcre2
         pmutils
         pngquant
-        python312Full
         rar
         smartmontools
         tldr
@@ -173,7 +171,7 @@
         gcc
         gdb
         git
-        go
+#        go
         libunwind
         lua
         nodejs
@@ -233,7 +231,7 @@
         #--  DESKTOP
         conky
         ly
-        ulauncher
+#        ulauncher
 
         #--  THEME
         comixcursors
@@ -244,6 +242,8 @@
         librechat
         libportal
         mozlz4a
+        nheko
+#        neohtop
         pandoc
 #        p7zip
         p7zip-rar
@@ -269,6 +269,7 @@
     ];
 
     imports = [
+        ./packages/ai
         ./packages/firefox-nightly
         ./packages/firefox-stable
         ./packages/gimp
@@ -276,6 +277,7 @@
         ./packages/kde-desktop
 #        ./packages/ngrok
         ./packages/php
+        ./packages/python
         ./packages/vaapi
     ];
 

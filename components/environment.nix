@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }: {
 
     environment = {
         etc = {
@@ -65,10 +65,10 @@ wavebox
             SSH_ASKPASS = lib.mkForce "/run/current-system/sw/bin/ksshaskpass";
             SSH_ASKPASS_REQUIRE = "prefer";
 
-            XDG_BIN_HOME = "/home/me/.local/bin";
-            XDG_CACHE_HOME = "/home/me/.cache";
-            XDG_CONFIG_HOME = "/home/me/.config";
-            XDG_DATA_HOME = "/home/me/.local/share";
+            XDG_BIN_HOME = "${config.users.users.me.home}/.local/bin";
+            XDG_CACHE_HOME = "${config.users.users.me.home}/.cache";
+            XDG_CONFIG_HOME = "${config.users.users.me.home}/.config";
+            XDG_DATA_HOME = "${config.users.users.me.home}/.local/share";
             XDG_SESSION_TYPE = "wayland";
             XDG_CURRENT_DESKTOP = "KDE";
             XDG_MENU_PREFIX = "kde-";
@@ -87,7 +87,7 @@ wavebox
 
             DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
-            GEMINI_API_KEY = "$(${pkgs.coreutils}/bin/cat /home/me/.config/gemini/api.key)";
+            GEMINI_API_KEY = "$(${pkgs.coreutils}/bin/cat ${config.users.users.me.home}/.config/gemini/api.key)";
         };
     };
 
