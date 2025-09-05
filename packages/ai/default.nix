@@ -1,20 +1,27 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
+
+    systemd.services.ollama.serviceConfig = {
+        DynamicUser = lib.mkForce false;
+        PrivateUsers = lib.mkForce false;
+        ProtectHome = lib.mkForce false;
+    };
 
     services = {
         ollama = {
-            enable = false;
+            enable = true;
             acceleration = "cuda";
-#            user = null;
-#            group = null;
-#            group = "config.services.ollama.user";
-#            host = "0.0.0.0:11434";
+            user = "ollama";
+            group = "config.services.ollama.user";
+            home = "/home/ollama";
+            host = "0.0.0.0";
+            openFirewall = true;
 
-#            environmentVariables = {
-#                OLLAMA_NUM_PARALLEL= "8";
-#                OLLAMA_MAX_LOADED_MODELS = "1";
-#                CUDA_VISIBLE_DEVICES = "0";
-#                OLLAMA_GPU_OVERHEAD = "2147483648";
-#            };
+            environmentVariables = {
+                OLLAMA_NUM_PARALLEL= "8";
+                OLLAMA_MAX_LOADED_MODELS = "1";
+                CUDA_VISIBLE_DEVICES = "0";
+                OLLAMA_GPU_OVERHEAD = "2147483648";
+            };
 
             # https://ollama.com/library
             loadModels = [ "deepseek-r1:32b" ];
