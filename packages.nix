@@ -15,8 +15,8 @@
             };
 
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-#                "nvidia-x11"
-#                "nvidia-persistenced"
+                "nvidia-x11"
+                "nvidia-persistenced"
                 "nvidia-settings"
                 "nvidia-vaapi-driver"
                 "vulkan-headers"
@@ -171,7 +171,6 @@
         gcc
         gdb
         git
-#        go
         libunwind
         lua
         nodejs

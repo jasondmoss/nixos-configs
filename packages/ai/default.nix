@@ -1,26 +1,23 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
 
     services = {
         ollama = {
-            enable = true;
+            enable = false;
             acceleration = "cuda";
+#            user = null;
+#            group = null;
+#            group = "config.services.ollama.user";
+#            host = "0.0.0.0:11434";
 
-            environmentVariables = {
-                OLLAMA_NUM_PARALLEL= "8";
-                OLLAMA_MAX_LOADED_MODELS = "1";
-                CUDA_VISIBLE_DEVICES = "0";
-                OLLAMA_GPU_OVERHEAD = "2147483648";
-                OLLAMA_HOST = "0.0.0.0:11434";
-            };
-
-#            serviceConfig = {
-#                Environment = [ "OLLAMA_HOST=0.0.0.0:11434" ];
+#            environmentVariables = {
+#                OLLAMA_NUM_PARALLEL= "8";
+#                OLLAMA_MAX_LOADED_MODELS = "1";
+#                CUDA_VISIBLE_DEVICES = "0";
+#                OLLAMA_GPU_OVERHEAD = "2147483648";
 #            };
 
             # https://ollama.com/library
-            loadModels = [
-                "deepseek-r1:32b"
-            ];
+            loadModels = [ "deepseek-r1:32b" ];
         };
 
 #        open-webui = {
