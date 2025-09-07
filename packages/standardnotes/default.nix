@@ -3,10 +3,12 @@
     python3, glib, desktop-file-utils, callPackage
 }:
 let
+
     srcjson = builtins.fromJSON (builtins.readFile ./src.json);
     throwSystem = throw "Unsupported system: ${stdenv.hostPlatform.system}";
-in
-stdenv.mkDerivation {
+
+in stdenv.mkDerivation {
+
     pname = "standardnotes";
     src = fetchurl (srcjson.deb.${stdenv.hostPlatform.system} or throwSystem);
 
@@ -76,4 +78,5 @@ end-to-end encryption, powerful extensions, and open-source applications.
         platforms = builtins.attrNames srcjson.deb;
         mainProgram = "standardnotes";
     };
+
 }

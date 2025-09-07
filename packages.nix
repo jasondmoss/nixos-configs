@@ -3,7 +3,7 @@
     # Setup.
     nixpkgs = {
         config = {
-            allowBroken = true;     # For 'php-packages'
+            allowBroken = true;
             allowUnfree = true;
 
             packageOverrides = pkgs: {
@@ -26,7 +26,6 @@
             ];
 
             permittedInsecurePackages = [
-                "libsoup-2.74.3"
                 "olm-3.2.16"
                 "openssl-1.1.1w"
                 "qtwebengine-5.15.19"
@@ -37,7 +36,7 @@
         let
         in [
             # Conky
-#            (import ../packages/conky)
+#            (import ./packages/conky)
 
             # Firefox Nightly
             (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
@@ -268,13 +267,13 @@
     ];
 
     imports = [
-        ./packages/ai
         ./packages/firefox-nightly
         ./packages/firefox-stable
         ./packages/gimp
         ./packages/gnome-desktop
         ./packages/kde-desktop
 #        ./packages/ngrok
+        ./packages/ollama
         ./packages/php
         ./packages/python
         ./packages/vaapi

@@ -3,17 +3,11 @@
     adwaita-icon-theme, gobject-introspection, gtk3, wrapGAppsHook3,
     webkitgtk_4_0, libnotify, keybinder3, libappindicator, intltool, wmctrl,
     xvfb-run, librsvg, libX11
-}:
-python3Packages.buildPythonApplication rec {
+}: python3Packages.buildPythonApplication rec {
+
     pname = "Ulauncher";
-    /*version = "5.15.7";*/
     version = "main";
     pyproject = true;
-
-#    src = fetchurl {
-#        url = "https://github.com/Ulauncher/Ulauncher/releases/download/${version}/ulauncher_${version}.tar.gz";
-#        hash = "sha256-YgOw3Gyy/o8qorWAnAlQrAZ2ZTnyP3PagLs2Qkdg788=";
-#    };
 
     src = fetchFromGitHub {
         owner = "Ulauncher";
@@ -125,4 +119,5 @@ python3Packages.buildPythonApplication rec {
             aaronjanse
         ];
     };
+
 }

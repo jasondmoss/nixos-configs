@@ -1,4 +1,5 @@
 self: pkgs: with pkgs; {
+
     phpstorm = jetbrains.phpstorm.overrideAttrs (oldAttrs: {
         version = "2025.2.1";
         build = "252.25557.128";
@@ -15,4 +16,5 @@ self: pkgs: with pkgs; {
 -Xmx4096m
         '';
     });
+
 }

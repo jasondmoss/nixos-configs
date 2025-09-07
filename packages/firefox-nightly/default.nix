@@ -1,5 +1,6 @@
 { pkgs, lib, ... }:
 let
+
     firefoxNightlyDesktopItem = pkgs.makeDesktopItem {
         type = "Application";
         terminal = false;
@@ -41,7 +42,9 @@ let
             };
         };
     };
+
 in {
+
     environment.systemPackages = (with pkgs; [
         #-- Rename executable.
         (pkgs.runCommand "latest.firefox-nightly-bin" {
@@ -54,4 +57,5 @@ ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
         #-- Create desktop entry.
         firefoxNightlyDesktopItem
     ]);
+
 }

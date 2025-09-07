@@ -1,10 +1,13 @@
-{ pkgs, config, ... }:
+{ ... }:
 let
+
     ngrok = builtins.fetchGit {
         url = "https://github.com/ngrok/ngrok-nix";
         rev = "c56189898f263153a2a16775ea2b871084a4efb0";
     };
+
 in {
+
     imports = [
         "${ngrok}/nixos.nix"
     ];
@@ -30,4 +33,5 @@ in {
             };
         };
     };
+
 }

@@ -5,10 +5,12 @@
     libtasn1, ninja, nix-update-script, p11-kit, pkg-config, qt6, rapidjson,
     sparsehash, sqlite, stdenv, taglib, util-linux
 }:
-
 let
+
     inherit (lib) optionals;
+
 in stdenv.mkDerivation rec {
+
     pname = "strawberry";
     version = "master";
 
@@ -92,4 +94,5 @@ qtWrapperArgs+=(
         platforms = platforms.linux;
         mainProgram = "strawberry";
     };
+
 }

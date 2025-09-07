@@ -1,12 +1,13 @@
-{ config, lib, pkgs, ... }: {
+{ pkgs, ... }: {
+
     services.httpd = {
         enablePHP = true;
 
         # PHP 8.4
         phpPackage = pkgs.php84.buildEnv {
-#            extensions = ({ enabled, all }: enabled ++ (with all; [
-#                xdebug
-#            ]));
+#        extensions = ({ enabled, all }: enabled ++ (with all; [
+#            xdebug
+#        ]));
 
             extraConfig = ''
 memory_limit=2048M
@@ -60,4 +61,5 @@ upload_max_filesize = 2048M
         zip
         zlib
     ]);
+
 }

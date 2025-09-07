@@ -17,14 +17,15 @@
     kerberosSupport ? true,
     libkrb5
 }:
-
 let
+
     branch = "snapshot";
     vivaldiName = "vivaldi-snapshot";
-in
-stdenv.mkDerivation rec {
+
+in stdenv.mkDerivation rec {
+
     pname = "vivaldi";
-    version = "7.6.3797.27";
+    version = "7.6.3797.28";
 
     suffix = {
         aarch64-linux = "arm64";
@@ -36,7 +37,7 @@ stdenv.mkDerivation rec {
         # https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_7.5.3725.3-1_amd64.deb
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            x86_64-linux = "sha256-wWvNNf2OFMDeEHgBHFwLhflAuveHvHcnlmzUn5Qee6g=";
+            x86_64-linux = "sha256-5agDTeNwWKr+mptAu6MmUQ9hWiEBIRI315TWlqHaRMo=";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };
@@ -54,63 +55,62 @@ tar -xvf data.tar.xz
 
     dontWrapQtApps = true;
 
-    buildInputs =
-        [
-            stdenv.cc.cc
-            stdenv.cc.libc
-            zlib
-            libX11
-            libXt
-            libXext
-            libSM
-            libICE
-            libxcb
-            libxkbcommon
-            libxshmfence
-            libXi
-            libXft
-            libXcursor
-            libXfixes
-            libXScrnSaver
-            libXcomposite
-            libXdamage
-            libXtst
-            libXrandr
-            atk
-            at-spi2-atk
-            at-spi2-core
-            alsa-lib
-            dbus
-            cups
-            gtk3
-            gdk-pixbuf
-            libexif
-            ffmpeg
-            systemd
-            libva
-            qt6.qtbase
-            qt6.qtwayland
-            freetype
-            fontconfig
-            libXrender
-            libuuid
-            expat
-            glib
-            nss
-            nspr
-            libGL
-            libxml2
-            pango
-            cairo
-            libdrm
-            libgbm
-            vulkan-loader
-            wayland
-            pipewire
-        ]
-        ++ lib.optional proprietaryCodecs vivaldi-ffmpeg-codecs
-        ++ lib.optional pulseSupport libpulseaudio
-        ++ lib.optional kerberosSupport libkrb5;
+    buildInputs = [
+        stdenv.cc.cc
+        stdenv.cc.libc
+        zlib
+        libX11
+        libXt
+        libXext
+        libSM
+        libICE
+        libxcb
+        libxkbcommon
+        libxshmfence
+        libXi
+        libXft
+        libXcursor
+        libXfixes
+        libXScrnSaver
+        libXcomposite
+        libXdamage
+        libXtst
+        libXrandr
+        atk
+        at-spi2-atk
+        at-spi2-core
+        alsa-lib
+        dbus
+        cups
+        gtk3
+        gdk-pixbuf
+        libexif
+        ffmpeg
+        systemd
+        libva
+        qt6.qtbase
+        qt6.qtwayland
+        freetype
+        fontconfig
+        libXrender
+        libuuid
+        expat
+        glib
+        nss
+        nspr
+        libGL
+        libxml2
+        pango
+        cairo
+        libdrm
+        libgbm
+        vulkan-loader
+        wayland
+        pipewire
+    ]
+    ++ lib.optional proprietaryCodecs vivaldi-ffmpeg-codecs
+    ++ lib.optional pulseSupport libpulseaudio
+    ++ lib.optional kerberosSupport libkrb5;
 
     libPath = lib.makeLibraryPath buildInputs
         + lib.optionalString (stdenv.hostPlatform.is64bit) (
@@ -198,4 +198,5 @@ runHook postInstall
             "aarch64-linux"
         ];
     };
+
 }

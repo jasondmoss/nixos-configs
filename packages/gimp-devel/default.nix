@@ -9,9 +9,12 @@
     xorg, xvfb-run
 }:
 let
+
     python = python3.withPackages (pp: [ pp.pygobject3 ]);
     lua = luajit.withPackages (ps: [ ps.lgi ]);
+
 in stdenv.mkDerivation (finalAttrs: {
+
     pname = "gimp";
     version = "3_0_0_RC3";
     #version = "master";
@@ -83,4 +86,5 @@ sed -i "/subdir('gimp-data\/images\/')/d" meson.build
         platforms = platforms.unix;
         mainProgram = "gimp";
     };
+
 })

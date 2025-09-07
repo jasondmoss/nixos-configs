@@ -1,4 +1,5 @@
 { pkgs, ... }: {
+
     environment = {
         plasma6.excludePackages = (with pkgs.kdePackages; [
             elisa
@@ -12,11 +13,8 @@
             (pkgs.callPackage ../kde-klassy {})
 
             adwaita-qt6
-#            kphotoalbum
             materia-kde-theme
             qadwaitadecorations-qt6
-#        ]) ++ (with pkgs.libsForQt5; [
-#            qt5ct
         ]) ++ (with pkgs.kdePackages; [
             full
             qt6ct
@@ -100,4 +98,5 @@
             qtstyleplugin-kvantum
         ]);
     };
+
 }

@@ -1,0 +1,13 @@
+diff --git a/cmake/ConkyPlatformChecks.cmake b/cmake/ConkyPlatformChecks.cmake
+index 994853b8..4b7224de 100644
+--- a/cmake/ConkyPlatformChecks.cmake
++++ b/cmake/ConkyPlatformChecks.cmake
+@@ -253,7 +253,7 @@ if(BUILD_IPV6)
+ endif(BUILD_IPV6)
+ 
+ if(BUILD_HTTP)
+-  pkg_check_modules(MICROHTTPD REQUIRED libmicrohttpd>=0.9.25)
++  pkg_check_modules(MICROHTTPD REQUIRED libmicrohttpd>=1.0.2)
+   set(conky_libs ${conky_libs} ${MICROHTTPD_LINK_LIBRARIES})
+   set(conky_includes ${conky_includes} ${MICROHTTPD_INCLUDE_DIRS})
+ endif(BUILD_HTTP)

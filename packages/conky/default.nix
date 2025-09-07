@@ -1,4 +1,5 @@
 self: pkgs: with pkgs; {
+
     conky = pkgs.conky.overrideAttrs (old: {
         src = pkgs.fetchFromGitHub {
             owner = "brndnmtthws";
@@ -8,7 +9,9 @@ self: pkgs: with pkgs; {
         };
 
         # Remove patches.
-        patches = [ ];
+        patches = [
+./http_module_check.patch
+        ];
 
         nativeBuildInputs = old.nativeBuildInputs ++ [
             pkgs.cairo
@@ -31,4 +34,5 @@ self: pkgs: with pkgs; {
             "-DBUILD_HTTP=ON"
         ];
     });
+
 }

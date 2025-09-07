@@ -6,6 +6,7 @@
     withGUI ? true
 }:
 let
+
     inherit (lib)
         enableFeature
         getDev
@@ -19,17 +20,15 @@ rake ${args}
 runHook post${name}
     '';
 
-in
-stdenv.mkDerivation (finalAttrs: {
+in stdenv.mkDerivation (finalAttrs: {
+
     pname = "mkvtoolnix";
-#    version = "92.0";
     version = "main";
 
     src = fetchFromGitea {
         domain = "codeberg.org";
         owner = "mbunkus";
         repo = "mkvtoolnix";
-#        tag = "release-${finalAttrs.version}";
         rev = finalAttrs.version;
         hash = "sha256-3yiQRGkjvOz80G6s39JHzqytxvGDmV9Lqs5bMxTAejo=";
     };
@@ -120,4 +119,5 @@ wrapQtApp $out/bin/mkvtoolnix-gui
         ];
         platforms = lib.platforms.unix;
     };
+
 })

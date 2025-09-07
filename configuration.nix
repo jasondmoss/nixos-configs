@@ -1,6 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 let
+
     theme = import ./components/theme.nix;
+
 in {
 
     system.rebuild.enableNg  = true;
@@ -21,7 +23,6 @@ in {
 
     console = {
         earlySetup = true;
-        #font = null;
         keyMap = "us";
         colors = theme.colors16;
     };

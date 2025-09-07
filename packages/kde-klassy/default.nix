@@ -12,15 +12,6 @@ stdenv.mkDerivation rec {
         hash = "sha256-vHqu3QyOBzVHiVbn++nwH+QPX2lU5DMzuhtz+mynLnQ=";
     };
 
-    # Temporary
-#    version = "plasma6.3";
-#    src = fetchFromGitHub {
-#        owner = "ivan-cukic";
-#        repo = "wip-klassy";
-#        rev = version;
-#        hash = "sha256-9IZhO8a8URTYPv6/bf7r3incfN1o2jBd2+mLVptNRYo=";
-#    };
-
     buildInputs = [
         kdePackages.frameworkintegration
         kdePackages.kcmutils

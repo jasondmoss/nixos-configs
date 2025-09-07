@@ -1,9 +1,9 @@
 { pkgs, ... }: {
+
     programs = {
         dconf.enable = true;
     };
 
-#    services.xserver.desktopManager.gnome.enable = true;
     services.desktopManager.gnome.enable = true;
 
     environment = {
@@ -24,16 +24,17 @@
             adwaita-icon-theme
             gcolor3
             glib-networking
-            #gnome-boxes
-            #gnome-browser-connector
-            #gnome-control-center
-            #gnome-shell
-            #gnome-tweaks
+#            gnome-boxes
+#            gnome-browser-connector
+#            gnome-control-center
+#            gnome-shell
+            gnome-tweaks
             gtk4
             libadwaita
             morewaita-icon-theme
             nautilus
-            #nautilus-open-any-terminal
+#            nautilus-open-any-terminal
         ]);
     };
+
 }

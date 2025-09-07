@@ -1,16 +1,14 @@
 {
     lib, stdenv, fetchFromGitHub, linux-pam, libxcb, makeBinaryWrapper,
     zig_0_13, callPackage, nixosTests
-}:
-stdenv.mkDerivation rec {
+}: stdenv.mkDerivation rec {
+
     pname = "ly";
-#    version = "1.0.3";
     version = "master";
 
     src = fetchFromGitHub {
         owner = "fairyglade";
         repo = "ly";
-#        rev = "v1.0.3";
         rev = version;
         hash = "sha256-TsEn0kH7j4myjjgwHnbOUmIZjHn8A1d/7IjamoWxpXQ=";
     };
@@ -42,4 +40,5 @@ ln -s ${
         platforms = platforms.linux;
         mainProgram = "ly";
     };
+
 }

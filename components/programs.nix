@@ -37,18 +37,6 @@
             withPython3 = true;
         };
 
-#         firefox = {
-#             enable = true;
-#             package = pkgs.firefox;
-#             policies.SearchEngines = {
-#                 Default = "DuckDuckGo";
-#                 Remove = [ "Bing" "Google" "Amazon.ca" "eBay" ];
-#             };
-#             preferences = {
-#                 "widget.use-xdg-desktop-portal.file-picker" = 1;
-#             };
-#         };
-
         _1password.enable = true;
         _1password-gui = {
             enable = true;

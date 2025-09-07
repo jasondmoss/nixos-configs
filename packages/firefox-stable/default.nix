@@ -1,5 +1,6 @@
 { pkgs, ... }:
 let
+
     firefoxStableDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
@@ -32,7 +33,9 @@ let
             };
         };
     };
+
 in {
+
     environment.systemPackages = (with pkgs; [
         (pkgs.runCommand "latest.firefox-bin" {
             preferLocalBuild = true;
@@ -44,4 +47,5 @@ ln -s ${firefox-bin}/bin/firefox $out/bin/firefox-stable
         #-- Create desktop entry.
         firefoxStableDesktopItem
     ]);
+
 }

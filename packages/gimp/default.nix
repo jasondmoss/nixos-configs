@@ -1,19 +1,20 @@
 { pkgs, ... }: {
+
     nixpkgs.overlays = [
         (final: prev: {
             babl = prev.babl.overrideAttrs (oldAttrs: {
-                version = "0.1.110";
+                version = "0.1.114";
                 src = final.fetchurl {
-                    url = "https://download.gimp.org/pub/babl/0.1/babl-0.1.110.tar.xz";
-                    hash = "sha256-v0e+dUDWJ1OJ9mQx7wMGTfU3YxXiQ9C6tEjGqnE/V0M=";
+                    url = "https://download.gimp.org/pub/babl/0.1/babl-0.1.114.tar.xz";
+                    hash = "sha256-vLt3hsHkR3A9s7x/o01i0NLRF7IvBNiDTHstXe1FZIc=";
                 };
             });
 
             gegl = prev.gegl.overrideAttrs (oldAttrs: {
-                version = "0.4.54";
+                version = "0.4.62";
                 src = final.fetchurl {
-                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.54.tar.xz";
-                    hash = "sha256-NaNC8IxrQ3mt7iy1dI/E4wfP3PJBfAuxfWymVD8jix4=";
+                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.62.tar.xz";
+                    hash = "sha256-WIdXY3Hr8dnpB5fRDkuafxZYIo1IJ1g+eeHbPZRQXGw=";
                 };
             });
         })
@@ -24,21 +25,22 @@
         gegl
 
         # Stable version
-        gimp
+        gimp3
 
         # Development version (currently RC2)
 #        (pkgs.callPackage ../gimp-devel {})
-    ]) ++ (with pkgs.gimpPlugins; [
+    ]) ++ (with pkgs.gimp3Plugins; [
 #        bimp
         exposureBlend
-        fourier
+#        fourier
 #        gap
-        gimplensfun
+#        gimplensfun
         gmic
         lightning
-        lqrPlugin
+#        lqrPlugin
 #        resynthesizer
-        texturize
-        waveletSharpen
+#        texturize
+#        waveletSharpen
     ]);
+
 }
