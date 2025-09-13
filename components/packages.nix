@@ -216,7 +216,6 @@
         ../packages/gnome-desktop
         ../packages/kde-desktop
 #        ../packages/ngrok
-        ../packages/ollama
         ../packages/php
         ../packages/python
         ../packages/vaapi

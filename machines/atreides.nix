@@ -234,6 +234,9 @@
 
     imports = [
         ../configuration.nix
+
+        # System-specific packages.
+        ../packages/ollama
     ];
 }
 
