@@ -1,5 +1,4 @@
 { lib, ... }: {
-
 	networking = {
         enableIPv6 = true;
         useDHCP = lib.mkDefault true;
@@ -19,5 +18,6 @@
             wifi.powersave = false;
         };
     };
-
 }
+
+# <> #

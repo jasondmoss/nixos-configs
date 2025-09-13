@@ -1,5 +1,4 @@
 { config, pkgs, ... }: {
-
 	fonts = {
         fontDir = {
             enable = true;
@@ -29,5 +28,6 @@
             unifont
         ];
     };
-
 }
+
+# <> #

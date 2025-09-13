@@ -1,5 +1,4 @@
 { ... }: {
-
     users.users = {
         me = {
             isNormalUser = true;
@@ -24,5 +23,6 @@
             ];
         };
     };
-
 }
+
+# <> #

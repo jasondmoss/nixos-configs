@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-
     xdg.portal = {
         enable = true;
         xdgOpenUsePortal = true;
@@ -14,5 +13,6 @@
             kdePackages.xdg-desktop-portal-kde
         ];
     };
-
 }
+
+# <> #

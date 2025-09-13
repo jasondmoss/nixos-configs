@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-
     programs = {
         kdeconnect.enable = true;
         mtr.enable = true;
@@ -44,5 +43,6 @@
             package = pkgs._1password-gui-beta;
         };
     };
-
 }
+
+# <> #

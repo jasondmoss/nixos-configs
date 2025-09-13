@@ -1,5 +1,4 @@
 { lib, pkgs, modulesPath, ... }: {
-
     imports = [
         <nixos-hardware/common/gpu/nvidia/turing>
         (modulesPath + "/installer/scan/not-detected.nix")
@@ -54,5 +53,6 @@
     };
 
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
-
 }
+
+# <> #

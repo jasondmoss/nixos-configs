@@ -170,8 +170,6 @@
         };
     };
 
-    #programs = {};
-
     nixpkgs = {
         hostPlatform = {
             #gcc.arch = "alderlake";
@@ -186,31 +184,9 @@
         };
     };
 
-#    environment.systemPackages = (with pkgs; []);
-
-#    virtualisation = {
-#        virtualbox.host.enable = true;
-#    };
-
-
-    #
-    # Shared configurations.
-    #
-    imports = [
-        ../hardware.nix
-        ../configuration.nix
-
-        ../components/environment.nix
-        ../components/fonts.nix
-        ../components/networking.nix
-        ../components/programs.nix
-        ../components/security.nix
-        ../components/services.nix
-        ../components/users.nix
-        ../components/xdg.nix
-
-        ../packages.nix
-    ];
+    virtualisation = {
+        virtualbox.host.enable = true;
+    };
 }
 
 # <> #

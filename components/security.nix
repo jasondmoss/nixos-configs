@@ -1,5 +1,4 @@
 { ... }: {
-
 	security = {
         rtkit.enable = true;
         polkit.enable = true;
@@ -30,5 +29,6 @@ Defaults env_keep+=SSH_AUTH_SOCK
             '';
         };
     };
-
 }
+
+# <> #

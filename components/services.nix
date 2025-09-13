@@ -1,5 +1,4 @@
 { config, pkgs, ... }: {
-
     services = {
         dbus.enable = true;
         devmon.enable = true;
@@ -41,8 +40,10 @@ local {
             upscaleDefaultCursor = true;
 
             displayManager.sessionCommands = ''
+# Manual autostart
 (sleep 10s;${config.users.users.me.home}/.local/bin/megasync-wrapper.sh) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
+
             '';
         };
 
@@ -89,12 +90,6 @@ local {
                 };
             };
 
-#            sddm = {
-#                enable = true;
-#                enableHidpi = true;
-#                wayland.enable = true;
-#            };
-
             defaultSession = "plasma";
         };
 
@@ -129,5 +124,6 @@ local {
             ];
         };
     };
-
 }
+
+# <> #
