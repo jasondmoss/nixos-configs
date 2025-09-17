@@ -59,7 +59,7 @@
 
         #--  SECURITY
         certbot
-        chkrootkit
+        clamav
         encfs
         lynis
         mkcert
@@ -162,6 +162,7 @@
 
         #--  NETWORK
         filezilla
+        google-chrome
         links2
         megasync
         megatools
@@ -184,7 +185,7 @@
         libportal
         mozlz4a
         nheko
-#        neohtop
+        neohtop
         pandoc
 #        p7zip
         p7zip-rar
