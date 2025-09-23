@@ -187,6 +187,18 @@
     virtualisation = {
         virtualbox.host.enable = true;
     };
+
+#    environment = {
+#        systemPackages = (with pkgs; [
+#        ]);
+#    };
+
+    imports = [
+        ../configuration.nix
+
+        # System-specific packages.
+#        ../packages/ollama
+    ];
 }
 
 # <> #

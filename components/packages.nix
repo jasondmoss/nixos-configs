@@ -8,10 +8,13 @@
         aha
         babl
         bluez
+        cairo
         clinfo
         coreutils-full
         curl
         dwz
+        egl-wayland
+        eglexternalplatform
         exfatprogs
         expat
         expect
@@ -21,21 +24,34 @@
         fwupd-efi
         gcr
         gd
+        glxinfo
+        gpm
         gsasl
+        imagemagick
         inetutils
         inotify-tools
+        iro
         killall
+        libdrm
+        libGL
+        libglvnd
+        libva
+        libva-utils
+        libva1
         libxfs
         libxml2
         linuxquota
         lm_sensors
         lsd
         lshw
+        mesa
         moreutils
         nix-du
         nix-index
         nix-prefetch-git
+        nvidia-vaapi-driver
         nvme-cli
+        nvtopPackages.full
         openssl
         openvpn
         optipng
@@ -51,10 +67,19 @@
         unrar
         unzip
         usbutils
+        virtualgl
+        vulkan-headers
+        vulkan-loader
+        vulkan-tools
+        vulkan-validation-layers
+        wayland-utils
         wget
         wirelesstools
+        wmctrl
         xclip
+        xdg-utils
         xfsprogs
+        xorg.libxcb
         zip
 
         #--  SECURITY
@@ -66,34 +91,10 @@
         sniffnet
 
         #--  GRAPHICS
-        cairo
-        egl-wayland
-        eglexternalplatform
-        glxinfo
-        gpm
-        imagemagick
+        figma-linux
         inkscape
-        iro
         jpegoptim
         jq
-        libGL
-        libdrm
-        libglvnd
-        libva
-        libva-utils
-        libva1
-        mesa
-        nvidia-vaapi-driver
-        nvtopPackages.full
-        virtualgl
-        vulkan-headers
-        vulkan-loader
-        vulkan-tools
-        vulkan-validation-layers
-        wayland-utils
-        wmctrl
-        xdg-utils
-        xorg.libxcb
 
         #--  DEVELOPMENT
         bison
@@ -173,7 +174,6 @@
         #--  DESKTOP
         conky
         ly
-#        ulauncher
 
         #--  THEME
         comixcursors
@@ -191,14 +191,12 @@
         p7zip-rar
 #        peazip
         systemctl-tui
+        warzone2100
         wezterm
         xorg.xdpyinfo
         xorg.xeyes
 
         #--  CUSTOM PACKAGES
-
-        # Ulauncher
-#        (pkgs.callPackage ../packages/ulauncher {})
 
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry {})

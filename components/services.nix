@@ -35,7 +35,7 @@ local {
         };
 
         xserver = {
-            enable = true;
+            enable = false;
             videoDrivers = [ "nvidia" ];
             upscaleDefaultCursor = true;
 
@@ -79,6 +79,7 @@ local {
             ly = {
                 enable = true;
                 x11Support = false;
+
                 settings = {
                     clear_password = true;
                     clock = "%c";
