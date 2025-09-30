@@ -137,8 +137,8 @@
         inkscape
 
         #--  DEVELOPMENT
-        bun
-        cockpit
+#        bun
+#        cockpit
         ddev
         docker
         docker-client
@@ -154,14 +154,14 @@
         libreoffice-qt6-fresh
         nomacs
         notes
-        semantik
+#        semantik
         standardnotes
-        typst
+#        typst
 
         #--  MULTIMEDIA
         isoimagewriter
-        kodi-wayland
-        koreader
+#        kodi-wayland
+#        koreader
         mpv
 
         #--  NETWORK
@@ -184,8 +184,7 @@
         #--  MISCELLANEOUS
         diskscan
         inxi
-        librechat
-        nheko
+        librechatnheko
         neohtop
 #        p7zip
         p7zip-rar
