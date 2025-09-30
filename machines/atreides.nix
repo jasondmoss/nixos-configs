@@ -233,7 +233,7 @@
     };
 
     imports = [
-        ../configuration.nix
+        ../common.nix
 
         # System-specific packages.
         ../packages/ollama

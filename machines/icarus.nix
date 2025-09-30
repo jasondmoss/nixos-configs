@@ -18,7 +18,8 @@
     networking.hostName = "icarus";
 
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+#        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+        kernelPackages = pkgs.linuxPackages_latest;
 
         initrd = {
             systemd.enable = true;
@@ -194,7 +195,7 @@
 #    };
 
     imports = [
-        ../configuration.nix
+        ../common.nix
 
         # System-specific packages.
 #        ../packages/ollama

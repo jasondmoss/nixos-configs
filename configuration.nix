@@ -1,49 +1,29 @@
-{ pkgs, ... }:
+{ lib, ... }:
 let
-    theme = import ./components/theme.nix;
+    # Determine current hostname from the running system.
+    hostFromEtc = if builtins.pathExists /etc/hostname then
+        lib.removeSuffix "\n" (builtins.readFile /etc/hostname)
+    else
+        null;
+
+    hostFromEnv = let h = builtins.getEnv "HOSTNAME"; in
+        if h != "" then h
+        else null;
+
+    hostname = if hostFromEtc != null then hostFromEtc
+        else if hostFromEnv != null then hostFromEnv
+        else "unknown";
+
+    machines = {
+        atreides = ./machines/atreides.nix;
+        icarus = ./machines/icarus.nix;
+    };
+
+    machineModule = machines.${hostname} or null;
 in {
-    system.rebuild.enableNg  = true;
+    # Automatically import the machine-specific configuration based on hostname.
+    imports = lib.optional (machineModule != null) machineModule;
 
-    nix = {
-        package = pkgs.nixVersions.latest;
-
-        settings = {
-            trusted-users = [ "root" "me" "@wheel" ];
-            allowed-users = [ "root" "me" "@wheel" ];
-            experimental-features = "nix-command flakes";
-            auto-optimise-store = true;
-            max-jobs = "auto";
-        };
-    };
-
-    i18n.defaultLocale = "en_CA.UTF-8";
-
-    console = {
-        earlySetup = true;
-        keyMap = "us";
-        colors = theme.colors16;
-    };
-
-    documentation = {
-        enable = true;
-        man.enable = true;
-        dev.enable = true;
-    };
-
-    #
-    # Configurations.
-    #
-    imports = [
-        ./components/hardware.nix
-        ./components/environment.nix
-        ./components/fonts.nix
-        ./components/networking.nix
-        ./components/programs.nix
-        ./components/security.nix
-        ./components/services.nix
-        ./components/users.nix
-        ./components/xdg.nix
-        ./components/nixpkgs.nix
-        ./components/packages.nix
-    ];
+    # Provide a default hostname if the machine module doesn't set it.
+    networking.hostName = lib.mkDefault hostname;
 }
