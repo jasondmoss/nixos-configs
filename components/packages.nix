@@ -7,23 +7,37 @@
         #--  BASE
         aha
         babl
+        bison
+        bisoncpp
         bluez
         cairo
+        cargo
         clinfo
+        cmake
         coreutils-full
         curl
+        desktop-file-utils
+        diffutils
         dwz
         egl-wayland
         eglexternalplatform
+        eww
         exfatprogs
         expat
         expect
+        extra-cmake-modules
+        faac
+        ffmpeg-full
+        ffmpegthumbnailer
+        flac
         flex
         fontconfig
         fwupd
         fwupd-efi
+        gcc
         gcr
         gd
+        gdb
         glxinfo
         gpm
         gsasl
@@ -31,10 +45,16 @@
         inetutils
         inotify-tools
         iro
+        jpegoptim
+        jq
         killall
+        lame
+        libcue
         libdrm
         libGL
         libglvnd
+        libportal
+        libunwind
         libva
         libva-utils
         libva1
@@ -44,23 +64,42 @@
         lm_sensors
         lsd
         lshw
+        lua
+        mac
         mesa
+        mkcue
         moreutils
+        mozlz4a
+        mpg123
+        mpvScripts.thumbfast
         nix-du
         nix-index
         nix-prefetch-git
+        nodejs
         nvidia-vaapi-driver
         nvme-cli
         nvtopPackages.full
         openssl
         openvpn
         optipng
+        opusTools
+        pandoc
+        pavucontrol
         pciutils
         pcre2
+        perl
+        phpunit
         pmutils
         pngquant
+        pre-commit
         rar
+        rustc
+        seer
+        shntool
         smartmontools
+        sox
+        speechd
+        superhtml
         tldr
         unar
         unixtools.script
@@ -68,10 +107,12 @@
         unzip
         usbutils
         virtualgl
+        vorbis-tools
         vulkan-headers
         vulkan-loader
         vulkan-tools
         vulkan-validation-layers
+        wavpack
         wayland-utils
         wget
         wirelesstools
@@ -79,6 +120,7 @@
         xclip
         xdg-utils
         xfsprogs
+        xnviewmp
         xorg.libxcb
         zip
 
@@ -93,36 +135,15 @@
         #--  GRAPHICS
         figma-linux
         inkscape
-        jpegoptim
-        jq
 
         #--  DEVELOPMENT
-        bison
-        bisoncpp
         bun
-        cargo
-        cmake
         cockpit
         ddev
-        desktop-file-utils
-        diffutils
         docker
         docker-client
         docker-compose
-        eww
-        extra-cmake-modules
-        gcc
-        gdb
         git
-        libunwind
-        lua
-        nodejs
-        perl
-        phpunit
-        pre-commit
-        rustc
-        seer
-        superhtml
         yarn
 
         nano
@@ -138,28 +159,10 @@
         typst
 
         #--  MULTIMEDIA
-        faac
-        ffmpeg-full
-        ffmpegthumbnailer
-        flac
         isoimagewriter
         kodi-wayland
         koreader
-        lame
-        libcue
-        mac
-        mkcue
-        mpg123
         mpv
-        mpvScripts.thumbfast
-        opusTools
-        pavucontrol
-        shntool
-        sox
-        speechd
-        vorbis-tools
-        wavpack
-        xnviewmp
 
         #--  NETWORK
         filezilla
@@ -167,7 +170,7 @@
         links2
         megasync
         megatools
-        ngrok
+#        ngrok
         nyxt
         protonvpn-gui
 
@@ -182,19 +185,16 @@
         diskscan
         inxi
         librechat
-        libportal
-        mozlz4a
         nheko
         neohtop
-        pandoc
 #        p7zip
         p7zip-rar
 #        peazip
         systemctl-tui
         warzone2100
         wezterm
-        xorg.xdpyinfo
-        xorg.xeyes
+#        xorg.xdpyinfo
+#        xorg.xeyes
 
         #--  CUSTOM PACKAGES
 
