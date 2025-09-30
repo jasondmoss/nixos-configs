@@ -184,7 +184,6 @@
         #--  MISCELLANEOUS
         diskscan
         inxi
-        librechatnheko
         neohtop
 #        p7zip
         p7zip-rar
