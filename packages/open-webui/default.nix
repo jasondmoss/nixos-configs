@@ -10,15 +10,15 @@ let
         owner = "open-webui";
         repo = "open-webui";
         rev = version;
-        hash = "sha256-5/06KwChZCXSc/EWSERaTNHdrADtkhZq/0SVH9U4t+A=";
+        hash = "sha256-TSPdV0nCmmaiZ52a2X21nw+AlFKXes9sOGEURbrHs5A=";
     };
 
     frontend = buildNpmPackage rec {
         pname = "open-webui-frontend";
         inherit version src;
 
-        # the backend for run-on-client-browser python execution
-        # must match lock file in open-webui
+        # The backend for run-on-client-browser python execution must
+        # match lock file in open-webui
         # TODO: should we automate this?
         # TODO: with JQ? "jq -r '.packages["node_modules/pyodide"].version' package-lock.json"
         pyodideVersion = "0.28.0";
@@ -27,7 +27,7 @@ let
             url = "https://github.com/pyodide/pyodide/releases/download/${pyodideVersion}/pyodide-${pyodideVersion}.tar.bz2";
         };
 
-        npmDepsHash = "sha256-AYChUMU8vLNaJPfIbX1SThx01uV3V6QpN6OjYrerg5U=";
+        npmDepsHash = "sha256-BcSDzLg2voHyUz4cnXQ0KRNSbLCsCwJ1itEJSbfAQhU=";
 
         # See https://github.com/open-webui/open-webui/issues/15880
         npmFlags = [

@@ -49,9 +49,9 @@
         jq
         killall
         lame
+        libGL
         libcue
         libdrm
-        libGL
         libglvnd
         libportal
         libunwind
@@ -94,7 +94,7 @@
         pre-commit
         rar
         rustc
-        seer
+
         shntool
         smartmontools
         sox
@@ -137,10 +137,9 @@
         inkscape
 
         #--  DEVELOPMENT
-#        bun
-#        cockpit
         ddev
         docker
+        docker-buildx
         docker-client
         docker-compose
         git
@@ -154,14 +153,10 @@
         libreoffice-qt6-fresh
         nomacs
         notes
-#        semantik
         standardnotes
-#        typst
 
         #--  MULTIMEDIA
         isoimagewriter
-#        kodi-wayland
-#        koreader
         mpv
 
         #--  NETWORK
@@ -170,7 +165,7 @@
         links2
         megasync
         megatools
-#        ngrok
+        ngrok
         nyxt
         protonvpn-gui
 
@@ -182,7 +177,7 @@
         comixcursors
 
         #--  MISCELLANEOUS
-        diskscan
+#        diskscan
         inxi
         neohtop
 #        p7zip
