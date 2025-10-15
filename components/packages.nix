@@ -157,7 +157,10 @@
 
         #--  MULTIMEDIA
         isoimagewriter
-        mpv
+        mpv-unwrapped
+        mpvScripts.autosub
+        mpvScripts.sponsorblock
+        mpvScripts.uosc
 
         #--  NETWORK
         filezilla

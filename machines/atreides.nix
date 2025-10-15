@@ -218,6 +218,7 @@
             easytag
             flacon
 #            kdePackages.phonon-vlc
+            quickemu
             shotcut
             taglib-sharp
             taglib_extras
