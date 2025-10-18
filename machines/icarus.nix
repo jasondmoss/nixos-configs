@@ -39,7 +39,7 @@
                 "sd_mod"
                 "usb_storage"
                 "usbhid"
-#                "vmd"
+                "vmd"
                 "xhci_pci"
             ];
 
