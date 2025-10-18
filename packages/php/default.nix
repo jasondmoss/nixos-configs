@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-
     services.httpd = {
         enablePHP = true;
 
@@ -61,5 +60,4 @@ upload_max_filesize = 2048M
         zip
         zlib
     ]);
-
 }

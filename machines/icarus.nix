@@ -18,8 +18,8 @@
     networking.hostName = "icarus";
 
     boot = {
-#        kernelPackages = pkgs.linuxPackages_xanmod_latest;
-        kernelPackages = pkgs.linuxPackages_latest;
+        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+#        kernelPackages = pkgs.linuxPackages_latest;
 
         initrd = {
             systemd.enable = true;
@@ -39,7 +39,7 @@
                 "sd_mod"
                 "usb_storage"
                 "usbhid"
-                "vmd"
+#                "vmd"
                 "xhci_pci"
             ];
 
@@ -86,6 +86,7 @@
 
             efi = {
                 canTouchEfiVariables = true;
+                efiSysMountPoint = "/boot/efi";
             };
         };
 
@@ -106,8 +107,6 @@
         device ="/swapfile";
         size = 16 * 1024;  # 16GB
     }];
-
-    console.font = "Lat2-Terminus16";
 
     hardware = {
         cpu.intel = {
@@ -133,6 +132,8 @@
             };
         };
     };
+
+    console.font = "Lat2-Terminus16";
 
     services = {
         power-profiles-daemon.enable = false;
@@ -189,10 +190,11 @@
         virtualbox.host.enable = true;
     };
 
-#    environment = {
-#        systemPackages = (with pkgs; [
-#        ]);
-#    };
+    environment = {
+        systemPackages = (with pkgs; [
+            tor-browser-bundle-bin
+        ]);
+    };
 
     imports = [
         ../common.nix

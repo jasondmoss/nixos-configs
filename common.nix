@@ -10,7 +10,8 @@ in {
         settings = {
             trusted-users = [ "root" "me" "@wheel" ];
             allowed-users = [ "root" "me" "@wheel" ];
-            experimental-features = "nix-command flakes";
+            experimental-features = "nix-command";
+#            experimental-features = "nix-command flakes";
             auto-optimise-store = true;
             max-jobs = "auto";
         };
