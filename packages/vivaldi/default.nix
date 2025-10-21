@@ -25,7 +25,7 @@ let
 in stdenv.mkDerivation rec {
 
     pname = "vivaldi";
-    version = "7.7.3836.3";
+    version = "7.7.3843.3";
 
     suffix = {
         aarch64-linux = "arm64";
@@ -37,7 +37,7 @@ in stdenv.mkDerivation rec {
         # https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_7.5.3725.3-1_amd64.deb
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            x86_64-linux = "sha256-C5bWO3E2eJ0pVkXAfj03T94g077WkmQzeNP60j+NtZI=";
+            x86_64-linux = "sha256-3/TNnRNE29yVfAi9xKovhczmn4MTLL66oHu6c3vu97U=";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };
