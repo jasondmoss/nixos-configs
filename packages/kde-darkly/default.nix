@@ -1,6 +1,5 @@
-{ lib, stdenv, fetchFromGitHub, kdePackages, cmake, qt6 }:
+{ lib, stdenv, fetchFromGitHub, kdePackages, cmake }:
 stdenv.mkDerivation rec {
-
     pname = "darkly";
     version = "main";
 
@@ -17,7 +16,6 @@ stdenv.mkDerivation rec {
         kdePackages.kdecoration
         kdePackages.kirigami
         kdePackages.qtwayland
-        qt6.full
     ];
 
     nativeBuildInputs = [
@@ -40,5 +38,4 @@ stdenv.mkDerivation rec {
         changelog = "https://github.com/Bali10050/Darkly/commit/05a945c69f0dd4bec8fc32331ba4d85819af1fcb";
         license = with lib.licenses; [ bsd3 cc0 fdl12Plus gpl2Only gpl2Plus gpl3Only mit ];
     };
-
 }

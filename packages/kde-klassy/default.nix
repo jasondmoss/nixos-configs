@@ -1,5 +1,5 @@
 {
-    lib, stdenv, fetchFromGitHub, kdePackages, cmake, qt6
+    lib, stdenv, fetchFromGitHub, kdePackages, cmake
 }:
 stdenv.mkDerivation rec {
     pname = "klassy";
@@ -18,7 +18,6 @@ stdenv.mkDerivation rec {
         kdePackages.kdecoration
         kdePackages.kirigami
         kdePackages.qtwayland
-        qt6.full
     ];
 
     nativeBuildInputs = [

@@ -40,7 +40,7 @@ wavebox
             QT_ENABLE_HIGHDPI_SCALING="1";
 
             QT_QPA_PLATFORM = "wayland;xcb";
-            QT_QPA_PLATFORMTHEME = "qt6ct";
+            QT_QPA_PLATFORMTHEME = lib.mkForce "qt6ct";
             QT_SCALE_FACTOR = "1";
             QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
             QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";

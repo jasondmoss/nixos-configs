@@ -171,6 +171,10 @@
         };
     };
 
+    virtualisation = {
+        virtualbox.host.enable = true;
+    };
+
     nixpkgs = {
         hostPlatform = {
             #gcc.arch = "alderlake";
@@ -185,9 +189,8 @@
         };
     };
 
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
+    qt.enable = true;
+    qt.platformTheme = "kde";
 
     environment = {
         systemPackages = (with pkgs; [

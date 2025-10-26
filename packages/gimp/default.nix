@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-
     nixpkgs.overlays = [
         (final: prev: {
             babl = prev.babl.overrideAttrs (oldAttrs: {
@@ -42,5 +41,4 @@
 #        texturize
 #        waveletSharpen
     ]);
-
 }

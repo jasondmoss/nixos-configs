@@ -1,9 +1,9 @@
 {
     lib, stdenv, fetchFromGitHub, fetchurl, cacert, unicode-emoji,
     unicode-character-database, unicode-idna, publicsuffix-list, cmake,
-    copyDesktopItems, makeDesktopItem, ninja, pkg-config, curl, lcms, libavif,
-    libGL, libjxl, libpulseaudio, libwebp, libxcrypt, openssl, python3,
-    qt6Packages, woff2, ffmpeg, fontconfig, simdutf, skia, nixosTests,
+    copyDesktopItems, makeDesktopItem, ninja, pkg-config, curl, kdePackages,
+    lcms, libavif, libGL, libjxl, libpulseaudio, libwebp, libxcrypt, openssl,
+    python3, woff2, ffmpeg, fontconfig, simdutf, skia, nixosTests,
     unstableGitUpdater, apple-sdk_14, libtommath
 }: let
 
@@ -80,7 +80,7 @@ chmod +w build/Caches/AdobeICCProfiles
         ninja
         pkg-config
         python3
-        qt6Packages.wrapQtAppsHook
+        kdePackages.wrapQtAppsHook
         libtommath
     ];
 
@@ -96,9 +96,9 @@ chmod +w build/Caches/AdobeICCProfiles
         lcms
         openssl
         libpulseaudio.dev
-        qt6Packages.qtbase
-        qt6Packages.qtmultimedia
-        qt6Packages.qtwayland
+        kdePackages.qtbase
+        kdePackages.qtmultimedia
+        kdePackages.qtwayland
         simdutf
         (skia.overrideAttrs (prev: {
             gnFlags = prev.gnFlags ++ [

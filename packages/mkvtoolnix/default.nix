@@ -1,12 +1,11 @@
 {
     lib, stdenv, fetchFromGitea, pkg-config, autoreconfHook, rake, boost, cmark,
-    docbook_xsl, expat, file, flac, fmt, gettext, gmp, gtest, libdvdread,
-    libebml, libiconv, libmatroska, libogg, libvorbis, libxslt, nlohmann_json,
-    pugixml, qt6, utf8cpp, xdg-utils, zlib, nix-update-script,
+    docbook_xsl, expat, file, flac, fmt, gettext, gmp, gtest, kdePackages,
+    libdvdread, libebml, libiconv, libmatroska, libogg, libvorbis, libxslt,
+    nlohmann_json, pugixml, utf8cpp, xdg-utils, zlib, nix-update-script,
     withGUI ? true
 }:
 let
-
     inherit (lib)
         enableFeature
         getDev
@@ -19,9 +18,7 @@ runHook pre${name}
 rake ${args}
 runHook post${name}
     '';
-
 in stdenv.mkDerivation (finalAttrs: {
-
     pname = "mkvtoolnix";
     version = "main";
 
@@ -47,7 +44,7 @@ in stdenv.mkDerivation (finalAttrs: {
         libxslt
         pkg-config
         rake
-    ] ++ optionals withGUI [ qt6.wrapQtAppsHook ];
+    ] ++ optionals withGUI [ kdePackages.wrapQtAppsHook ];
 
     # qtbase and qtmultimedia are needed without the GUI
     buildInputs =
@@ -65,14 +62,14 @@ in stdenv.mkDerivation (finalAttrs: {
             libvorbis
             nlohmann_json
             pugixml
-            qt6.qtbase
-            qt6.qtmultimedia
+            kdePackages.qtbase
+            kdePackages.qtmultimedia
             utf8cpp
             xdg-utils
             zlib
         ]
         ++ optionals withGUI [ cmark ]
-        ++ optionals stdenv.hostPlatform.isLinux [ qt6.qtwayland ];
+        ++ optionals stdenv.hostPlatform.isLinux [ kdePackages.qtwayland ];
 
     # autoupdate is not needed but it silences a ton of pointless warnings.
     postPatch = ''
@@ -119,5 +116,4 @@ wrapQtApp $out/bin/mkvtoolnix-gui
         ];
         platforms = lib.platforms.unix;
     };
-
 })

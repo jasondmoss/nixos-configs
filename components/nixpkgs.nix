@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, fetchpatch2, ... }: {
     # Setup.
     nixpkgs = {
         config = {
@@ -47,6 +47,17 @@
                         pkgs.libGL
                         pkgs.xorg.libX11
                         pkgs.fontconfig
+                    ];
+                });
+            })
+
+            # libQuotient
+            (final: prev: {
+                libquotient = prev.libquotient.overrideAttrs (old: {
+                    patches = old.patches ++ [
+                        (fetchpatch2 {
+                            url = "https://github.com/quotient-im/libQuotient/commit/ea83157eed37ff97ab275a5d14c971f0a5a70595.patch";
+                        })
                     ];
                 });
             })

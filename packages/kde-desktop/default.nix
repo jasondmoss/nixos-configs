@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-
     environment = {
         plasma6.excludePackages = (with pkgs.kdePackages; [
             elisa
@@ -16,10 +15,10 @@
             materia-kde-theme
             qadwaitadecorations-qt6
         ]) ++ (with pkgs.kdePackages; [
-            full
+#            full
             qt6ct
             accounts-qt
-            angelfish
+#            angelfish
             ark
             baloo
             baloo-widgets
@@ -30,7 +29,7 @@
             ffmpegthumbs
             frameworkintegration
             ghostwriter
-            itinerary
+#            itinerary
             kate
             karchive
             kbreakout
@@ -66,6 +65,7 @@
             kwayland
             kwindowsystem
             layer-shell-qt
+#            libquotient
             modemmanager-qt
             networkmanager-qt
             okular
@@ -81,7 +81,7 @@
             taglib
             wayland
             wayland-protocols
-            wayqt
+#            wayqt
             wrapQtAppsHook
 
             akonadi
@@ -98,5 +98,4 @@
             qtstyleplugin-kvantum
         ]);
     };
-
 }

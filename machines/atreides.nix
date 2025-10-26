@@ -188,6 +188,10 @@
         };
     };
 
+#    virtualisation = {
+#        virtualbox.host.enable = true;
+#    };
+
     nixpkgs = {
         hostPlatform = {
             #gcc.arch = "znver2";
@@ -208,6 +212,9 @@
             "steam-unwrapped"
         ];
     };
+
+    qt.enable = true;
+    qt.platformTheme = "kde";
 
     environment = {
         systemPackages = (with pkgs; [

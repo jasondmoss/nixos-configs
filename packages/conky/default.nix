@@ -10,7 +10,7 @@ self: pkgs: with pkgs; {
 
         # Remove patches.
         patches = [
-./http_module_check.patch
+            ./http_module_check.patch
         ];
 
         nativeBuildInputs = old.nativeBuildInputs ++ [

@@ -6,6 +6,7 @@
 
         #--  BASE
         aha
+        audit
         babl
         bison
         bisoncpp
@@ -32,6 +33,7 @@
         flac
         flex
         fontconfig
+        fop
         fwupd
         fwupd-efi
         gcc
@@ -52,14 +54,17 @@
         libGL
         libcue
         libdrm
+        libgcrypt
         libglvnd
         libportal
+        libselinux
         libunwind
         libva
         libva-utils
         libva1
         libxfs
         libxml2
+        libxslt
         linuxquota
         lm_sensors
         lsd
@@ -72,6 +77,7 @@
         mozlz4a
         mpg123
         mpvScripts.thumbfast
+        nettle
         nix-du
         nix-index
         nix-prefetch-git
@@ -94,7 +100,6 @@
         pre-commit
         rar
         rustc
-
         shntool
         smartmontools
         sox
@@ -120,8 +125,10 @@
         xclip
         xdg-utils
         xfsprogs
+        xmlto
         xnviewmp
         xorg.libxcb
+        xorg.xorgsgmldoctools
         zip
 
         #--  SECURITY
@@ -152,7 +159,7 @@
         #--  OFFICE/ADMIN
         libreoffice-qt6-fresh
         nomacs
-        notes
+#        notes
         standardnotes
 
         #--  MULTIMEDIA
@@ -171,6 +178,7 @@
         ngrok
         nyxt
         protonvpn-gui
+        vivaldi
 
         #--  DESKTOP
         conky
@@ -187,10 +195,8 @@
         p7zip-rar
 #        peazip
         systemctl-tui
-        warzone2100
+#        warzone2100
         wezterm
-#        xorg.xdpyinfo
-#        xorg.xeyes
 
 
         #--  CUSTOM PACKAGES
@@ -199,7 +205,7 @@
         (pkgs.callPackage ../packages/strawberry {})
 
         # Vivaldi Browser
-        (pkgs.callPackage ../packages/vivaldi {})
+#        (pkgs.callPackage ../packages/vivaldi-snapshot {})
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox {})

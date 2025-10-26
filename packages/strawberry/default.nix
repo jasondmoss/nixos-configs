@@ -1,8 +1,8 @@
 {
     alsa-lib, boost, chromaprint, cmake, fetchFromGitHub, fftw, glib-networking,
-    gnutls, gst_all_1, kdsingleapplication, lib, libXdmcp, libcdio, libebur128,
-    libidn2, libmtp, libpthreadstubs, libpulseaudio, libselinux, libsepol,
-    libtasn1, ninja, nix-update-script, p11-kit, pkg-config, qt6, rapidjson,
+    gnutls, gst_all_1, kdePackages, kdsingleapplication, lib, libXdmcp, libcdio,
+    libebur128, libidn2, libmtp, libpthreadstubs, libpulseaudio, libselinux,
+    libsepol, libtasn1, ninja, nix-update-script, p11-kit, pkg-config, rapidjson,
     sparsehash, sqlite, stdenv, taglib, util-linux
 }:
 let
@@ -18,7 +18,7 @@ in stdenv.mkDerivation rec {
         owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
-        hash = "sha256-vzXmSaRPu8+JK8EuEqna4n8hs/0r0nqSec38NhRlVwU=";
+        hash = "sha256-RHdKP/YuG0Bt5GSoUmWWWCPvQ0iiRXL1HliSBU8qZ5c=";
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,
@@ -42,7 +42,7 @@ substituteInPlace src/context/contextalbum.cpp \
         libmtp
         libpthreadstubs
         libtasn1
-        qt6.qtbase
+        kdePackages.qtbase
         rapidjson
         sparsehash
         sqlite
@@ -66,8 +66,8 @@ substituteInPlace src/context/contextalbum.cpp \
         cmake
         ninja
         pkg-config
-        qt6.qttools
-        qt6.wrapQtAppsHook
+        kdePackages.qttools
+        kdePackages.wrapQtAppsHook
     ] ++ optionals stdenv.hostPlatform.isLinux [
         util-linux
     ];
