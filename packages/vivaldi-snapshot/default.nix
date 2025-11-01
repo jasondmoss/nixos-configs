@@ -13,6 +13,7 @@
     libpulseaudio,
     kerberosSupport ? true,
     libkrb5,
+    kdePackages
 }:
 let
 
@@ -21,7 +22,7 @@ let
 
 in stdenv.mkDerivation rec {
     pname = "vivaldi";
-    version = "7.7.3845.3";
+    version = "7.7.3851.3";
 
     suffix = {
         x86_64-linux = "amd64";
@@ -32,7 +33,7 @@ in stdenv.mkDerivation rec {
         # https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_7.7.3845.3-1_amd64.deb
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            x86_64-linux = "sha256-V8JEqoRriw/TUnwAXTmRL9DtsLkvijHm2dGAk96T+mg=";
+            x86_64-linux = "sha256-lhip/P6eBx03wutzCC0wQO1I04hWalQtEFIokGNCD80=";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };
@@ -47,7 +48,7 @@ runHook postUnpack
     nativeBuildInputs = [
         patchelf
         makeWrapper
-        qt6.wrapQtAppsHook
+        kdePackages.wrapQtAppsHook
     ];
 
     dontWrapQtApps = true;
@@ -85,8 +86,8 @@ runHook postUnpack
         ffmpeg
         systemd
         libva
-        qt6.qtbase
-        qt6.qtwayland
+        kdePackages.qtbase
+        kdePackages.qtwayland
         freetype
         fontconfig
         libXrender
@@ -114,7 +115,7 @@ runHook postUnpack
         + lib.optionalString (stdenv.hostPlatform.is64bit) (
             ":" + lib.makeSearchPathOutput "lib" "lib64" buildInputs
         )
-        + ":$out/opt/vivaldi/lib";
+        + ":$out/opt/vivaldi-snapshot/lib";
 
     buildPhase = ''
 runHook preBuild
@@ -123,15 +124,15 @@ for f in chrome_crashpad_handler vivaldi-bin vivaldi-sandbox ; do
     patchelf \
         --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
         --set-rpath "${libPath}" \
-        opt/vivaldi/$f
+        opt/vivaldi-snapshot/$f
 done
 
 for f in libGLESv2.so libqt5_shim.so libqt6_shim.so; do
-    patchelf --set-rpath "${libPath}" opt/vivaldi/$f
+    patchelf --set-rpath "${libPath}" opt/vivaldi-snapshot/$f
 done
     ''
     + lib.optionalString proprietaryCodecs ''
-ln -s ${vivaldi-ffmpeg-codecs}/lib/libffmpeg.so opt/vivaldi/libffmpeg.so.''${version%\.*\.*}
+ln -s ${vivaldi-ffmpeg-codecs}/lib/libffmpeg.so opt/vivaldi-snapshot/libffmpeg.so.''${version%\.*\.*}
     ''
     + ''
 echo "Finished patching Vivaldi binaries"
@@ -146,21 +147,21 @@ runHook preInstall
 mkdir -p "$out"
 cp -r opt "$out"
 mkdir "$out/bin"
-ln -s "$out/opt/vivaldi/vivaldi" "$out/bin/vivaldi"
+ln -s "$out/opt/vivaldi-snapshot/vivaldi-snapshot" "$out/bin/vivaldi-snapshot"
 mkdir -p "$out/share"
 cp -r usr/share/{applications,xfce4} "$out"/share
 substituteInPlace "$out"/share/applications/*.desktop \
-    --replace-fail /usr/bin/vivaldi "$out"/bin/vivaldi
+    --replace-fail /usr/bin/vivaldi-snapshot "$out"/bin/vivaldi-snapshot
 substituteInPlace "$out"/share/applications/*.desktop \
-    --replace-fail vivaldi-stable vivaldi
+    --replace-fail vivaldi vivaldi-snapshot
 local d
-for d in 16 22 24 32 48 64 128 256; do
-    mkdir -p "$out"/share/icons/hicolor/''${d}x''${d}/apps
-    ln -s \
-        "$out"/opt/vivaldi/product_logo_''${d}.png \
-        "$out"/share/icons/hicolor/''${d}x''${d}/apps/vivaldi.png
-done
-wrapProgram "$out/bin/vivaldi" \
+#for d in 16 22 24 32 48 64 128 256; do
+#    mkdir -p "$out"/share/icons/hicolor/''${d}x''${d}/apps
+#    ln -s \
+#        "$out"/opt/vivaldi/product_logo_''${d}.png \
+#        "$out"/share/icons/hicolor/''${d}x''${d}/apps/vivaldi.png
+#done
+wrapProgram "$out/bin/vivaldi-snapshot" \
     --add-flags ${lib.escapeShellArg commandLineArgs} \
     --prefix XDG_DATA_DIRS : ${gtk3}/share/gsettings-schemas/${gtk3.name}/ \
     --prefix LD_LIBRARY_PATH : ${libPath} \
@@ -168,7 +169,7 @@ wrapProgram "$out/bin/vivaldi" \
     ''${qtWrapperArgs[@]}
     ''
     + lib.optionalString enableWidevine ''
-ln -sf ${widevine-cdm}/share/google/chrome/WidevineCdm $out/opt/vivaldi/WidevineCdm
+ln -sf ${widevine-cdm}/share/google/chrome/WidevineCdm $out/opt/vivaldi-snapshot/WidevineCdm
     ''
     + ''
 runHook postInstall

@@ -3,10 +3,10 @@
 
 set -eu -o pipefail
 
-version=$(curl -sS https://vivaldi.com/download/ | sed -rne 's/.*vivaldi-stable_([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)-1_amd64\.deb.*/\1/p')
+version=$(curl -sS https://vivaldi.com/download/ | sed -rne 's/.*vivaldi-snapshot_([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)-1_amd64\.deb.*/\1/p')
 
 update_hash() {
-    url="https://downloads.vivaldi.com/stable/vivaldi-stable_$version-1_$2.deb"
+    url="https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_$version-1_$2.deb"
     hash=$(nix hash to-sri --type sha256 $(nix-prefetch-url --type sha256 "$url"))
     update-source-version vivaldi "$version" "$hash" --system=$1 --ignore-same-version
 }

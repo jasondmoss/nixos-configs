@@ -40,7 +40,6 @@
         gcr
         gd
         gdb
-        glxinfo
         gpm
         gsasl
         imagemagick
@@ -70,9 +69,10 @@
         lsd
         lshw
         lua
-        mac
         mesa
+        mesa-demos
         mkcue
+        monkeysAudio
         moreutils
         mozlz4a
         mpg123
@@ -178,7 +178,7 @@
         ngrok
         nyxt
         protonvpn-gui
-        vivaldi
+#        vivaldi
 
         #--  DESKTOP
         conky
@@ -205,7 +205,7 @@
         (pkgs.callPackage ../packages/strawberry {})
 
         # Vivaldi Browser
-#        (pkgs.callPackage ../packages/vivaldi-snapshot {})
+        (pkgs.callPackage ../packages/vivaldi-snapshot {})
 
         # Wavebox Beta
         (pkgs.callPackage ../packages/wavebox {})
@@ -219,6 +219,7 @@
         ../packages/kde-desktop
 #        ../packages/ngrok
         ../packages/php
+#        ../packages/protonpass
         ../packages/python
         ../packages/vaapi
     ];

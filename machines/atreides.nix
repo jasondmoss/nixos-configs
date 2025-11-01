@@ -229,7 +229,7 @@
             shotcut
             taglib-sharp
             taglib_extras
-            tor-browser-bundle-bin
+            tor-browser
 #            vlc
 
             # LadyBird
