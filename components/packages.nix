@@ -179,6 +179,7 @@
         nyxt
         protonvpn-gui
 #        vivaldi
+        zoom-us
 
         #--  DESKTOP
         conky

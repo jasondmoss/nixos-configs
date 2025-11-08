@@ -39,12 +39,11 @@ local {
             videoDrivers = [ "nvidia" ];
             upscaleDefaultCursor = true;
 
-            displayManager.sessionCommands = ''
-# Manual autostart
-(sleep 10s;${config.users.users.me.home}/.local/bin/megasync-wrapper.sh) &
-(sleep 1m;/run/current-system/sw/bin/notes) &
-
-            '';
+#            displayManager.sessionCommands = ''
+## Manual autostart
+#(sleep 10s;${config.users.users.me.home}/.local/bin/megasync-wrapper.sh) &
+#(sleep 1m;/run/current-system/sw/bin/notes) &
+#            '';
         };
 
         locate = {
