@@ -1,4 +1,4 @@
-{
+    {
     lib, stdenv, coreutils, fetchurl, zlib, libX11, libXext, libSM, libICE, libxkbcommon, libxshmfence, libXfixes,
     libXt, libXi, libXcursor, libXScrnSaver, libXcomposite, libXdamage, libXtst, libXrandr, alsa-lib, dbus, cups,
     libexif, ffmpeg, systemd, libva, libGL, freetype, fontconfig, libXft, libXrender, libxcb, expat, libuuid, libxml2,
@@ -22,7 +22,7 @@ let
 
 in stdenv.mkDerivation rec {
     pname = "vivaldi";
-    version = "7.7.3851.36";
+    version = "7.7.3851.44";
 
     suffix = {
         x86_64-linux = "amd64";
@@ -33,7 +33,7 @@ in stdenv.mkDerivation rec {
         # https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_7.7.3845.3-1_amd64.deb
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            x86_64-linux = "sha256-PaXTQzLNIQUhFBS/J+J7BHgWuCzGQzb1K+WymHKDaow=";
+            x86_64-linux = "sha256-x6SP4Pq+iV9e2EJ7OJJfeo6yKK91oTe9jBSMhv5+x88=";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };

@@ -4,7 +4,8 @@
             "1password/custom_allowed_browsers" = {
                 text = ''
 firefox-nightly
-vivaldi-bin
+google-chrome-stable
+vivaldi-snapshot
 wavebox
                 '';
                 mode = "0755";

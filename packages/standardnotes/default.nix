@@ -2,14 +2,14 @@
     lib, stdenv, fetchurl, dpkg, makeWrapper, electron, libsecret, asar,
     python3, glib, desktop-file-utils, callPackage
 }:
-let
 
+let
     srcjson = builtins.fromJSON (builtins.readFile ./src.json);
     throwSystem = throw "Unsupported system: ${stdenv.hostPlatform.system}";
-
-in stdenv.mkDerivation {
-
+in
+stdenv.mkDerivation {
     pname = "standardnotes";
+
     src = fetchurl (srcjson.deb.${stdenv.hostPlatform.system} or throwSystem);
 
     inherit (srcjson) version;
@@ -32,7 +32,7 @@ in stdenv.mkDerivation {
                 (lib.getLib stdenv.cc.cc)
             ];
         in
-            ''
+        ''
 runHook preInstall
 
 mkdir -p $out/bin $out/share/standardnotes
@@ -47,7 +47,8 @@ ${lib.optionalString stdenv.hostPlatform.isAarch64 ''
 ''}
 asar e $out/share/standardnotes/app.asar asar-unpacked
 find asar-unpacked -name '*.node' -exec patchelf \
- --add-rpath "${libPath}" {};
+ --add-rpath "${libPath}" \
+ {} \;
 asar p asar-unpacked $out/share/standardnotes/app.asar
 
 makeWrapper ${electron}/bin/electron $out/bin/standardnotes \
@@ -57,7 +58,7 @@ ${desktop-file-utils}/bin/desktop-file-install --dir $out/share/applications \
  --set-key Exec --set-value standardnotes usr/share/applications/standard-notes.desktop
 
 runHook postInstall
-            '';
+        '';
 
     passthru.updateScript = callPackage ./update.nix { };
 
@@ -78,5 +79,4 @@ end-to-end encryption, powerful extensions, and open-source applications.
         platforms = builtins.attrNames srcjson.deb;
         mainProgram = "standardnotes";
     };
-
 }

@@ -2,8 +2,8 @@
     alsa-lib, boost, chromaprint, cmake, fetchFromGitHub, fftw, glib-networking,
     gnutls, gst_all_1, kdePackages, kdsingleapplication, lib, libXdmcp, libcdio,
     libebur128, libidn2, libmtp, libpthreadstubs, libpulseaudio, libselinux,
-    libsepol, libtasn1, ninja, nix-update-script, p11-kit, pkg-config, rapidjson,
-    sparsehash, sqlite, stdenv, taglib, util-linux
+    libsepol, libtasn1, ninja, nix-update-script, p11-kit, pkg-config,
+    rapidjson, sparsehash, sqlite, stdenv, taglib, util-linux
 }:
 let
 
@@ -18,7 +18,7 @@ in stdenv.mkDerivation rec {
         owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
-        hash = "sha256-RHdKP/YuG0Bt5GSoUmWWWCPvQ0iiRXL1HliSBU8qZ5c=";
+        hash = "sha256-W/48vLKNE4eIFejBJcWLMwnRs/ggQWSWtumUmiSC11Y=";
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,

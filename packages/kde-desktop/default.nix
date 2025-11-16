@@ -15,10 +15,8 @@
             materia-kde-theme
             qadwaitadecorations-qt6
         ]) ++ (with pkgs.kdePackages; [
-#            full
             qt6ct
             accounts-qt
-#            angelfish
             ark
             baloo
             baloo-widgets
@@ -56,6 +54,7 @@
             kio-gdrive
             kio-zeroconf
             kitinerary
+            koko
             ksshaskpass
             ksvg
             ktorrent
@@ -65,23 +64,23 @@
             kwayland
             kwindowsystem
             layer-shell-qt
-#            libquotient
             modemmanager-qt
             networkmanager-qt
             okular
             partitionmanager
+            plasma5support
             plasma-browser-integration
             plasma-desktop
             plasma-disks
             plasma-integration
             plasma-wayland-protocols
             plasma-workspace
+            qtbase
             qtsvg
             qttools
             taglib
             wayland
             wayland-protocols
-#            wayqt
             wrapQtAppsHook
 
             akonadi

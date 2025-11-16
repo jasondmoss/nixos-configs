@@ -39,11 +39,11 @@ local {
             videoDrivers = [ "nvidia" ];
             upscaleDefaultCursor = true;
 
-#            displayManager.sessionCommands = ''
-## Manual autostart
 #(sleep 10s;${config.users.users.me.home}/.local/bin/megasync-wrapper.sh) &
-#(sleep 1m;/run/current-system/sw/bin/notes) &
-#            '';
+            displayManager.sessionCommands = ''
+# Manual autostart
+(sleep 1m;/run/current-system/sw/bin/notes) &
+            '';
         };
 
         locate = {
@@ -82,8 +82,8 @@ local {
                 settings = {
                     clear_password = true;
                     clock = "%c";
-#                    animation = "matrix";
-#                    animation_timeout_sec = "20";
+                    #animation = "matrix";
+                    #animation_timeout_sec = "20";
                     animation = "none";
                     input_len = "64";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";

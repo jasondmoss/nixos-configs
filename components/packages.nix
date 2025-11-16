@@ -159,7 +159,7 @@
         #--  OFFICE/ADMIN
         libreoffice-qt6-fresh
         nomacs
-#        notes
+        notes
         standardnotes
 
         #--  MULTIMEDIA
@@ -177,7 +177,7 @@
         megatools
         ngrok
         nyxt
-        protonvpn-gui
+#        protonvpn-gui
 #        vivaldi
         zoom-us
 
@@ -189,14 +189,12 @@
         comixcursors
 
         #--  MISCELLANEOUS
-#        diskscan
         inxi
         neohtop
 #        p7zip
         p7zip-rar
 #        peazip
         systemctl-tui
-#        warzone2100
         wezterm
 
 
@@ -213,6 +211,7 @@
     ];
 
     imports = [
+#        ../packages/conky
         ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/gimp
@@ -221,7 +220,7 @@
 #        ../packages/ngrok
         ../packages/php
 #        ../packages/protonpass
-        ../packages/python
+#        ../packages/python
         ../packages/vaapi
     ];
 }

@@ -1,9 +1,9 @@
 {
-    "version": "3.196.4",
+    "version": "3.201.2",
     "deb": {
         "x86_64-linux": {
-            "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes%2Fdesktop%403.196.4/standard-notes-3.196.4-linux-amd64.deb",
-            "hash": "sha512-z7tZkOvzYzEPhu3rz8PG7mWdEua1z2ToVoj6l2wmvZUx/nS6lQ3yIFhEvpnMyXRZ2qDn4ihnBT20fyZttvkjMQ=="
+            "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes%2Fdesktop%403.201.2/standard-notes-3.201.2-linux-amd64.deb",
+            "hash": ""
         }
     }
 }

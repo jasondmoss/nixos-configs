@@ -25,9 +25,7 @@
             ];
 
             permittedInsecurePackages = [
-                "olm-3.2.16"
                 "openssl-1.1.1w"
-                "qtwebengine-5.15.19"
             ];
         };
 
