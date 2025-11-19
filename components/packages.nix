@@ -177,7 +177,7 @@
         megatools
         ngrok
         nyxt
-#        protonvpn-gui
+        protonvpn-gui
 #        vivaldi
         zoom-us
 
@@ -201,13 +201,13 @@
         #--  CUSTOM PACKAGES
 
         # Strawberry Music Player
-        (pkgs.callPackage ../packages/strawberry {})
+        (pkgs.callPackage ../packages/strawberry-master {})
 
         # Vivaldi Browser
         (pkgs.callPackage ../packages/vivaldi-snapshot {})
 
         # Wavebox Beta
-        (pkgs.callPackage ../packages/wavebox {})
+        (pkgs.callPackage ../packages/wavebox-beta {})
     ];
 
     imports = [
