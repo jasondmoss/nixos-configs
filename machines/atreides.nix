@@ -223,7 +223,7 @@
             cuetools
             darktable
             easytag
-            flacon
+#            flacon
 #            kdePackages.phonon-vlc
             quickemu
             shotcut

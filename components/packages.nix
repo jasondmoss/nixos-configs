@@ -72,7 +72,7 @@
         mesa
         mesa-demos
         mkcue
-        monkeysAudio
+#        monkeysAudio
         moreutils
         mozlz4a
         mpg123
