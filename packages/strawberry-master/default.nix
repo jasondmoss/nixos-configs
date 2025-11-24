@@ -18,7 +18,7 @@ in stdenv.mkDerivation rec {
         owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
-        hash = "sha256-W/48vLKNE4eIFejBJcWLMwnRs/ggQWSWtumUmiSC11Y=";
+        hash = "sha256-4xFr5wl2JkDj89/RNUYAax5jqmT5D0KsbDRTrKa+a4g=";
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,

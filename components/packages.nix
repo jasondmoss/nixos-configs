@@ -184,6 +184,7 @@
         #--  DESKTOP
         conky
         ly
+        rofi
 
         #--  THEME
         comixcursors
