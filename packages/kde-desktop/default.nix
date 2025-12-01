@@ -27,6 +27,7 @@
             ffmpegthumbs
             frameworkintegration
             ghostwriter
+            isoimagewriter
 #            itinerary
             kate
             karchive

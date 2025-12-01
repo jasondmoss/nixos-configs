@@ -163,7 +163,6 @@
         standardnotes
 
         #--  MULTIMEDIA
-        isoimagewriter
         mpv-unwrapped
         mpvScripts.autosub
         mpvScripts.sponsorblock
@@ -175,6 +174,7 @@
         links2
         megasync
         megatools
+        microsoft-edge
         ngrok
         nyxt
         protonvpn-gui
