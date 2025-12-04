@@ -144,6 +144,7 @@
         inkscape
 
         #--  DEVELOPMENT
+        codex   # Lightweight coding agent
         ddev
         docker
         docker-buildx
