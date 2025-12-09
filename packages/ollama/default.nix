@@ -8,7 +8,7 @@
     services = {
         ollama = {
             enable = true;
-            acceleration = "cuda";
+#            acceleration = "cuda";
             user = "ollama";
             group = "config.services.ollama.user";
             home = "/home/ollama";

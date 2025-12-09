@@ -33,6 +33,7 @@
                 firefox.enable = true;
             };
         };
+#        nvidia-container-toolkit.enable = true;
 
         bluetooth = {
             enable = true;
@@ -47,9 +48,14 @@
         keyboard.qmk.enable = true;
     };
 
-    virtualisation.docker = {
-        enable = true;
-        enableOnBoot = true;
+    virtualisation = {
+        docker = {
+            enable = true;
+            enableOnBoot = true;
+#            autoPrune.enable = true;
+        };
+
+        virtualbox.host.enable = true;
     };
 
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";

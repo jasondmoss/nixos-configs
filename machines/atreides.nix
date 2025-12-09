@@ -150,8 +150,7 @@
                 user = "root";
             };
 
-            updateMicrocode =
-                lib.mkDefault config.hardware.enableRedistributableFirmware;
+            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
 
         nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
@@ -188,10 +187,6 @@
         };
     };
 
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
-
     nixpkgs = {
         hostPlatform = {
             #gcc.arch = "znver2";
@@ -223,7 +218,7 @@
             cuetools
             darktable
             easytag
-#            flacon
+            flacon
 #            kdePackages.phonon-vlc
             quickemu
             shotcut

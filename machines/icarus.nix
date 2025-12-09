@@ -171,10 +171,6 @@
         };
     };
 
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
-
     nixpkgs = {
         hostPlatform = {
             #gcc.arch = "alderlake";

@@ -149,6 +149,7 @@
         docker
         docker-buildx
         docker-client
+#        docker-color-output
         docker-compose
         git
         yarn

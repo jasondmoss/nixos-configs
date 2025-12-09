@@ -39,9 +39,9 @@ local {
             videoDrivers = [ "nvidia" ];
             upscaleDefaultCursor = true;
 
-#(sleep 10s;${config.users.users.me.home}/.local/bin/megasync-wrapper.sh) &
             displayManager.sessionCommands = ''
 # Manual autostart
+(sleep 10s;${config.users.users.me.home}/.local/bin/megasync-wrapper.sh) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
             '';
         };
@@ -122,6 +122,10 @@ local {
                     };
                 }
             ];
+        };
+
+        homepage-dashboard = {
+            enable = true;
         };
     };
 }
