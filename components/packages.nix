@@ -72,7 +72,6 @@
         mesa
         mesa-demos
         mkcue
-#        monkeysAudio
         moreutils
         mozlz4a
         mpg123
@@ -146,16 +145,11 @@
         #--  DEVELOPMENT
         codex   # Lightweight coding agent
         ddev
-        docker
-        docker-buildx
-        docker-client
-#        docker-color-output
-        docker-compose
         git
         yarn
 
         nano
-        phpstorm    # Custom overlay.
+        phpstorm    # From custom overlay.
         sublime4
 
         #--  OFFICE/ADMIN

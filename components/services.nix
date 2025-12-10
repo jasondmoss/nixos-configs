@@ -124,9 +124,9 @@ local {
             ];
         };
 
-        homepage-dashboard = {
-            enable = true;
-        };
+#        homepage-dashboard = {
+#            enable = true;
+#        };
     };
 }
 

@@ -20,8 +20,8 @@
             modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
-            datacenter.enable = false;
             gsp.enable = true;
+            datacenter.enable = false;
 
             powerManagement = {
                 enable = true;
@@ -33,7 +33,6 @@
                 firefox.enable = true;
             };
         };
-#        nvidia-container-toolkit.enable = true;
 
         bluetooth = {
             enable = true;
@@ -48,14 +47,10 @@
         keyboard.qmk.enable = true;
     };
 
-    virtualisation = {
-        docker = {
-            enable = true;
-            enableOnBoot = true;
-#            autoPrune.enable = true;
-        };
-
-        virtualbox.host.enable = true;
+    virtualisation.docker = {
+        enable = true;
+        enableOnBoot = true;
+        package = pkgs.docker_25;
     };
 
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";

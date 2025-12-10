@@ -56,6 +56,8 @@
             kio-zeroconf
             kitinerary
             koko
+            krdc
+            krdp
             ksshaskpass
             ksvg
             ktorrent

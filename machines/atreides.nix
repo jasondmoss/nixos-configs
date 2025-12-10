@@ -150,7 +150,8 @@
                 user = "root";
             };
 
-            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+            updateMicrocode =
+                lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
 
         nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
@@ -185,6 +186,10 @@
             cups-pdf.enable = true;
             startWhenNeeded = true;
         };
+    };
+
+    virtualisation = {
+        virtualbox.host.enable = true;
     };
 
     nixpkgs = {
