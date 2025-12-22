@@ -148,6 +148,9 @@
         git
         yarn
 
+#        podman
+        docker-compose
+
         nano
         phpstorm    # From custom overlay.
         sublime4

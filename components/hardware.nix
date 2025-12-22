@@ -47,10 +47,21 @@
         keyboard.qmk.enable = true;
     };
 
-    virtualisation.docker = {
-        enable = true;
-        enableOnBoot = true;
-        package = pkgs.docker_25;
+    virtualisation = {
+#        containers.enable = true;
+
+        docker = {
+            enable = true;
+            enableOnBoot = true;
+#            package = pkgs.docker_25;
+        };
+
+#        podman = {
+#            enable = true;
+#            dockerCompat = true;
+#            dockerSocket.enable = true;
+#            defaultNetwork.settings.dns_enabled = true;
+#        };
     };
 
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";

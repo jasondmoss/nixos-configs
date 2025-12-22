@@ -1,26 +1,33 @@
 { ... }: {
-    users.users = {
-        me = {
-            isNormalUser = true;
-            home = "/home/me";
-            createHome = false;
-            uid = 1000;
-            group = "users";
-            description = "Jason D. Moss";
+    users = {
+#        groups = {
+#            docker = {};
+#        };
 
-            extraGroups = [
-                "33"
-                "audio"
-                "docker"
-                "mlocate"
-                "mysql"
-                "navidrome"
-                "networkmanager"
-                "power"
-                "video"
-                "wheel"
-                "wwwrun"
-            ];
+        users = {
+            me = {
+                isNormalUser = true;
+                home = "/home/me";
+                createHome = false;
+                uid = 1000;
+                group = "users";
+                description = "Jason D. Moss";
+
+                extraGroups = [
+                    "33"
+                    "audio"
+                    "docker"
+                    "mlocate"
+                    "mysql"
+                    "navidrome"
+                    "networkmanager"
+#                    "podman"
+                    "power"
+                    "video"
+                    "wheel"
+                    "wwwrun"
+                ];
+            };
         };
     };
 }

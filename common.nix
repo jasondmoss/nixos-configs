@@ -2,7 +2,7 @@
 let
     theme = import ./components/theme.nix;
 in {
-    system.rebuild.enableNg  = true;
+#    system.rebuild.enableNg  = true;
 
     nix = {
         package = pkgs.nixVersions.latest;

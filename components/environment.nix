@@ -68,6 +68,9 @@ wavebox
             XDG_CURRENT_DESKTOP = "KDE";
             XDG_MENU_PREFIX = "kde-";
 
+#            LANDO_ENGINE_CONFIG = "{\"socketPath\":\"'\"$XDG_RUNTIME_DIR\"'/podman/podman.sock\"}";
+#            DOCKER_HOST = "{'socketPath':'"'$XDG_RUNTIME_DIR'"/podman/podman.sock'}";
+
             XCURSOR_THEME = "ComixCursors";
 
             GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" [
