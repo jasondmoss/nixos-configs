@@ -13,8 +13,6 @@
         "gccarch-znver2"
     ];
 
-    system.stateVersion = "25.05";
-    time.timeZone = "America/Toronto";
     networking.hostName = "atreides";
 
     boot = {
@@ -156,8 +154,8 @@
 
         nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
-
-    console.font = "alt-8x16.gz";
+#
+#    console.font = "alt-8x16.gz";
 
     programs = {
         steam = {
@@ -188,10 +186,6 @@
         };
     };
 
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
-
     nixpkgs = {
         hostPlatform = {
             #gcc.arch = "znver2";
@@ -212,9 +206,6 @@
             "steam-unwrapped"
         ];
     };
-
-    qt.enable = true;
-    qt.platformTheme = "kde";
 
     environment = {
         systemPackages = (with pkgs; [

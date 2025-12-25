@@ -13,8 +13,6 @@
         "gccarch-alderlake"
     ];
 
-    system.stateVersion = "25.05";
-    time.timeZone = "America/Toronto";
     networking.hostName = "icarus";
 
     boot = {
@@ -132,7 +130,7 @@
         };
     };
 
-    console.font = "Lat2-Terminus16";
+#    console.font = "Lat2-Terminus16";
 
     services = {
         power-profiles-daemon.enable = false;
@@ -171,10 +169,6 @@
         };
     };
 
-    virtualisation = {
-        virtualbox.host.enable = true;
-    };
-
     nixpkgs = {
         hostPlatform = {
             #gcc.arch = "alderlake";
@@ -188,9 +182,6 @@
             system = "x86_64-linux";
         };
     };
-
-    qt.enable = true;
-    qt.platformTheme = "kde";
 
     environment = {
         systemPackages = (with pkgs; [

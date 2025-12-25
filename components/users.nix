@@ -21,7 +21,6 @@
                     "mysql"
                     "navidrome"
                     "networkmanager"
-#                    "podman"
                     "power"
                     "video"
                     "wheel"

@@ -17,19 +17,26 @@ in {
         };
     };
 
+    system.stateVersion = "25.11";
+    time.timeZone = "America/Toronto";
     i18n.defaultLocale = "en_CA.UTF-8";
 
     console = {
         earlySetup = true;
         keyMap = "us";
+        font = "alt-8x16.gz";
         colors = theme.colors16;
     };
+
 
     documentation = {
         enable = true;
         man.enable = true;
         dev.enable = true;
     };
+
+    qt.enable = true;
+    qt.platformTheme = "kde";
 
     #
     # Configurations.

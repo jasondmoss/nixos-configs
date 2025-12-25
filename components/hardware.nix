@@ -49,19 +49,13 @@
 
     virtualisation = {
 #        containers.enable = true;
+        virtualbox.host.enable = true;
 
         docker = {
             enable = true;
             enableOnBoot = true;
-#            package = pkgs.docker_25;
+            package = pkgs.docker_25;
         };
-
-#        podman = {
-#            enable = true;
-#            dockerCompat = true;
-#            dockerSocket.enable = true;
-#            defaultNetwork.settings.dns_enabled = true;
-#        };
     };
 
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";

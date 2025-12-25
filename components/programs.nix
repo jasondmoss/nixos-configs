@@ -66,7 +66,7 @@
         _1password-gui = {
             enable = true;
             polkitPolicyOwners = [ "team-originoutside" ];
-            package = pkgs._1password-gui-beta;
+            package = pkgs._1password-gui;
         };
     };
 }
