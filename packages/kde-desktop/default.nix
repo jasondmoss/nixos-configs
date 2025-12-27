@@ -47,6 +47,7 @@
             kglobalacceld
             kguiaddons
             kiconthemes
+            kimageformats
             kio
             kio-admin
             kio-extras

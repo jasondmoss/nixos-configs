@@ -130,8 +130,6 @@
         };
     };
 
-#    console.font = "Lat2-Terminus16";
-
     services = {
         power-profiles-daemon.enable = false;
         printing.enable = true;

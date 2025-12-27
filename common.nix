@@ -15,6 +15,13 @@ in {
             auto-optimise-store = true;
             max-jobs = "auto";
         };
+
+        gc = {
+            automatic = true;
+            randomizedDelaySec = "14m";
+            options = "--delete-older-than 2d";
+            dates = "weekly";
+        };
     };
 
     system.stateVersion = "25.11";

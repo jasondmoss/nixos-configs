@@ -154,8 +154,6 @@
 
         nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
-#
-#    console.font = "alt-8x16.gz";
 
     programs = {
         steam = {
