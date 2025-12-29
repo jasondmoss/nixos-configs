@@ -6,6 +6,7 @@
 
         #--  BASE
         aha
+        alac
         audit
         babl
         bison
@@ -105,6 +106,7 @@
         speechd
         superhtml
         tldr
+        ttaenc
         unar
         unixtools.script
         unrar
