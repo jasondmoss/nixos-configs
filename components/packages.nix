@@ -20,6 +20,7 @@
         curl
         desktop-file-utils
         diffutils
+        dsf2flac
         dwz
         egl-wayland
         eglexternalplatform
@@ -164,6 +165,7 @@
         standardnotes
 
         #--  MULTIMEDIA
+        haruna
         mpv-unwrapped
         mpvScripts.autosub
         mpvScripts.sponsorblock

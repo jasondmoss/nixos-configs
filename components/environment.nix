@@ -52,6 +52,10 @@ wavebox
 
             GSK_RENDERER = "ngl";
 
+            GTK_IM_MODULE = lib.mkForce null;
+            QT_IM_MODULE = lib.mkForce null;
+#            QT_QPA_PLATFORM = lib.mkForce null;
+
             MOZ_DISABLE_GMP_SANDBOX = "1";
             MOZ_DISABLE_RDD_SANDBOX = "1";
             MOZ_ENABLE_WAYLAND = "1";
