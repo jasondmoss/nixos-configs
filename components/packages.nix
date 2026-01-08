@@ -178,10 +178,10 @@
         megasync
         megatools
         microsoft-edge
-        ngrok
+        mullvad-browser
+#        ngrok
         nyxt
         protonvpn-gui
-#        vivaldi
         zoom-us
 
         #--  DESKTOP
@@ -221,10 +221,7 @@
         ../packages/gimp
         ../packages/gnome-desktop
         ../packages/kde-desktop
-#        ../packages/ngrok
         ../packages/php
-#        ../packages/protonpass
-#        ../packages/python
         ../packages/vaapi
     ];
 }

@@ -1,8 +1,8 @@
 {
-    "version": "3.201.2",
+    "version": "3.201.6",
     "deb": {
         "x86_64-linux": {
-            "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes%2Fdesktop%403.201.2/standard-notes-3.201.2-linux-amd64.deb",
+            "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes/desktop%403.201.6/standard-notes-3.201.6-linux-amd64.deb",
             "hash": ""
         }
     }
