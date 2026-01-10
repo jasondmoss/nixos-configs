@@ -1,90 +1,333 @@
 {
-    aalib, alsa-lib, appstream, appstream-glib, babl, bashInteractive, cairo,
-    cfitsio, desktop-file-utils, fetchurl, findutils, gdk-pixbuf, gegl, gexiv2,
-    ghostscript, gi-docgen, gjs, glib, glib-networking, gobject-introspection,
-    gtk3, isocodes, lcms, lib, libarchive, libgudev, libheif, libiff, libilbm,
-    libjxl, libmng, libmypaint, librsvg, libwebp, libwmf, libxslt, luajit,
-    meson, mypaint-brushes1, ninja, openexr, perl538, pkg-config, poppler,
-    poppler_data, python3, qoi, shared-mime-info, stdenv, vala, wrapGAppsHook,
-    xorg, xvfb-run
+    stdenv,
+    lib,
+    fetchurl,
+    replaceVars,
+    meson,
+    ninja,
+    pkg-config,
+    babl,
+    cfitsio,
+    gegl,
+    gtk3,
+    glib,
+    gdk-pixbuf,
+    graphviz,
+    isocodes,
+    pango,
+    cairo,
+    libarchive,
+    luajit,
+    freetype,
+    fontconfig,
+    lcms,
+    libpng,
+    libiff,
+    libilbm,
+    libjpeg,
+    libjxl,
+    poppler,
+    poppler_data,
+    libtiff,
+    libmng,
+    librsvg,
+    libwmf,
+    zlib,
+    xz,
+    libzip,
+    ghostscript,
+    aalib,
+    shared-mime-info,
+    python3,
+    libexif,
+    gettext,
+    wrapGAppsHook3,
+    libxslt,
+    gobject-introspection,
+    vala,
+    gi-docgen,
+    perl,
+    appstream,
+    desktop-file-utils,
+    xorg,
+    glib-networking,
+    json-glib,
+    libmypaint,
+    llvmPackages,
+    gexiv2,
+    harfbuzz,
+    mypaint-brushes1,
+    libwebp,
+    libheif,
+    gjs,
+    libgudev,
+    openexr,
+    xvfb-run,
+    dbus,
+    adwaita-icon-theme,
+    alsa-lib,
+    desktopToDarwinBundle,
+    fetchpatch,
 }:
 let
-
-    python = python3.withPackages (pp: [ pp.pygobject3 ]);
-    lua = luajit.withPackages (ps: [ ps.lgi ]);
-
+    python = python3.withPackages (
+        pp: with pp; [
+            pygobject3
+        ]
+    );
 in stdenv.mkDerivation (finalAttrs: {
-
     pname = "gimp";
-    version = "3_0_0_RC3";
-    #version = "master";
-    #https://download.gimp.org/pub/gimp/v3.0/gimp-3.0.0-RC3.tar.xz
+#    version = "3.0.6";
+    version = "3.2.0";
 
-    outputs = [ "out" "dev" ];
-
-#    src = fetchgit {
-#        name = "gimp";
-#
-#        src = {
-#            url = "https://gitlab.gnome.org/GNOME/gimp.git";
-#            sparseCheckout = [ "gimp" ];
-#            hash = "";
-#        };
-#    };
+    outputs = [
+        "out"
+        "dev"
+        "devdoc"
+        "man"
+    ];
 
     src = fetchurl {
-        url = "https://download.gimp.org/pub/gimp/v3.0/gimp-3.0.0-RC3.tar.xz";
-        hash = "sha256-YftSfPItCTo/NQGIR5arq9PDDdfw41Tb3AQb7w9+OOw=";
+        url = "https://download.gimp.org/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}-RC2.tar.xz";
+        hash = "sha256-SVS2DuM3457X6/ivdRIUGzbBKjg1lRQFos3NYSYRC0g=";
     };
 
-    # src = fetchFromGitHub {
-    #    owner = "GNOME";
-    #    repo = "gimp";
-    #    rev = version;
-    #    hash = "";
-    # };
+    patches = [
+        # https://gitlab.gnome.org/GNOME/gimp/-/issues/15257
+#        (fetchpatch {
+#            name = "fix-gegl-bevel-test.patch";
+#            url = "https://gitlab.gnome.org/GNOME/gimp/-/commit/2fd12847496a9a242ca8edc448d400d3660b8009.patch";
+#            hash = "sha256-pjOjyzZxxl+zRqThXBwCBfYHdGhgaMI/IMKaL3XGAMs=";
+#        })
 
-    # Fixed in RC2 release.
-    #patches = [
-    #    ./meson-gtls.patch
-    #    ./pygimp-interp.patch
-    #];
+        # to remove compiler from the runtime closure, reference was retained via
+        # gimp --version --verbose output
+        (replaceVars ./remove-cc-reference.patch {
+            cc_version = stdenv.cc.cc.name;
+        })
+
+        # Use absolute paths instead of relying on PATH
+        # to make sure plug-ins are loaded by the correct interpreter.
+        # TODO: This now only appears to be used on Windows.
+        (replaceVars ./hardcode-plugin-interpreters.patch {
+            python_interpreter = python.interpreter;
+            PYTHON_EXE = null;
+        })
+
+        # D-Bus configuration is not available in the build sandbox
+        # so we need to pick up the one from the package.
+        (replaceVars ./tests-dbus-conf.patch {
+            session_conf = "${dbus.out}/share/dbus-1/session.conf";
+        })
+    ];
 
     nativeBuildInputs = [
-        aalib alsa-lib appstream bashInteractive findutils ghostscript gi-docgen
-        isocodes libarchive libheif libiff libilbm libjxl libmng libwebp libxslt
-        meson ninja perl538 pkg-config vala wrapGAppsHook xvfb-run
+        meson
+        ninja
+        pkg-config
+        gettext
+        wrapGAppsHook3
+        libxslt # for xsltproc
+        gobject-introspection
+        perl
+        vala
+
+        # for docs
+        gi-docgen
+
+        # for tests
+        desktop-file-utils
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
+        dbus
+        xvfb-run
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
+        desktopToDarwinBundle
     ];
 
     buildInputs = [
-        aalib appstream-glib babl cairo cfitsio desktop-file-utils gdk-pixbuf
-        gegl gexiv2 ghostscript gjs glib glib-networking gobject-introspection
-        gtk3 lcms libgudev libheif libjxl libmng libmypaint librsvg libwebp
-        libwmf lua mypaint-brushes1 openexr poppler poppler_data python qoi
-        shared-mime-info xorg.libXmu xorg.libXpm
+        appstream # for library
+        babl
+        cfitsio
+        gegl
+        gtk3
+        glib
+        gdk-pixbuf
+        pango
+        cairo
+        libarchive
+        gexiv2
+        harfbuzz
+        isocodes
+        freetype
+        fontconfig
+        lcms
+        libpng
+        libiff
+        libilbm
+        libjpeg
+        libjxl
+        poppler
+        poppler_data
+        libtiff
+        openexr
+        libmng
+        librsvg
+        libwmf
+        zlib
+        xz
+        libzip
+        ghostscript
+        aalib
+        shared-mime-info
+        json-glib
+        libwebp
+        libheif
+        python
+        libexif
+        xorg.libXpm
+        xorg.libXmu
+        glib-networking
+        libmypaint
+        mypaint-brushes1
+
+        # New file dialogue crashes with “Icon 'image-missing' not present in theme Symbolic” without an icon theme.
+        adwaita-icon-theme
+
+        # for Lua plug-ins
+        (luajit.withPackages (pp: [
+            pp.lgi
+        ]))
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
+        alsa-lib
+
+        # for JavaScript plug-ins
+        gjs
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
+        llvmPackages.openmp
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
+        libgudev
     ];
 
-    preConfigure = ''
-patchShebangs tools/gimp-mkenums app/tests/create_test_env.sh plug-ins/script-fu/scripts/ts-helloworld.scm plug-ins/python/python-eval.py tools/in-build-gimp.sh
-sed -i "/subdir('gimp-data\/images\/')/d" meson.build
-    '';
+    propagatedBuildInputs = [
+        # needed by gimp-3.0.pc
+        gegl
+        cairo
+        pango
+        gexiv2
+    ];
 
     mesonFlags = [
-        "-Dheadless-tests=disabled"
-        "-Dlua=true"
+        "-Dbug-report-url=https://github.com/NixOS/nixpkgs/issues/new"
+        "-Dicc-directory=/run/current-system/sw/share/color/icc"
+        "-Dcheck-update=no"
+        (lib.mesonEnable "gudev" stdenv.hostPlatform.isLinux)
+        (lib.mesonEnable "headless-tests" stdenv.hostPlatform.isLinux)
+        (lib.mesonEnable "linux-input" stdenv.hostPlatform.isLinux)
+        # Not very important to do downstream, save a dependency.
+        "-Dappdata-test=disabled"
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
+        "-Dalsa=disabled"
+        "-Djavascript=disabled"
     ];
 
-    enableParallelBuilding = true;
+    doCheck = true;
 
-    doCheck = false;
+    env = {
+        # The check runs before glib-networking is registered
+        GIO_EXTRA_MODULES = "${glib-networking}/lib/gio/modules";
 
-    meta = with lib; {
-        description = "The GNU Image Manipulation Program: Development Edition";
-        homepage = "https://www.gimp.org/";
-        maintainers = with maintainers; [ "9p4" ];
-        license = licenses.gpl3Plus;
-        platforms = platforms.unix;
-        mainProgram = "gimp";
+        NIX_CFLAGS_COMPILE = lib.optionalString stdenv.hostPlatform.isDarwin "-DGDK_OSX_BIG_SUR=16";
+
+        # Check if librsvg was built with --disable-pixbuf-loader.
+        PKG_CONFIG_GDK_PIXBUF_2_0_GDK_PIXBUF_MODULEDIR = "${librsvg}/${gdk-pixbuf.moduleDir}";
     };
 
+    postPatch = ''
+        patchShebangs tools/gimp-mkenums
+
+        # GIMP is executed at build time so we need to fix this.
+        # TODO: Look into if we can fix the interp thing.
+        chmod +x plug-ins/python/{colorxhtml,file-openraster,foggify,gradients-save-as-css,histogram-export,palette-offset,palette-sort,palette-to-gradient,python-eval,spyro-plus}.py
+        patchShebangs \
+            plug-ins/python/{colorxhtml,file-openraster,foggify,gradients-save-as-css,histogram-export,palette-offset,palette-sort,palette-to-gradient,python-eval,spyro-plus}.py
+    '';
+
+    preBuild =
+        let
+            librarySuffix =
+                if stdenv.hostPlatform.extensions.library == ".so" then
+                    "3.0.so.0"
+                else if stdenv.hostPlatform.extensions.library == ".dylib" then
+                    "3.0.0.dylib"
+                else
+                    throw "Unsupported library extension ‘${stdenv.hostPlatform.extensions.library}’";
+        in
+        ''
+            # Our gobject-introspection patches make the shared library paths absolute
+            # in the GIR files. When running GIMP in build or check phase, it will try
+            # to use plug-ins, which import GIMP introspection files which will try
+            # to load the GIMP libraries which will not be installed yet.
+            # So we need to replace the absolute path with a local one.
+            # We are using a symlink that will be overridden during installation.
+            mkdir -p "$out/lib"
+            ln -s "$PWD/libgimp/libgimp-${librarySuffix}" \
+                "$PWD/libgimpbase/libgimpbase-${librarySuffix}" \
+                "$PWD/libgimpcolor/libgimpcolor-${librarySuffix}" \
+                "$PWD/libgimpconfig/libgimpconfig-${librarySuffix}" \
+                "$PWD/libgimpmath/libgimpmath-${librarySuffix}" \
+                "$PWD/libgimpmodule/libgimpmodule-${librarySuffix}" \
+                "$out/lib/"
+        '';
+
+    preCheck = ''
+        # Avoid “Error retrieving accessibility bus address”
+        export NO_AT_BRIDGE=1
+        # Fix storing recent file list in tests
+        export HOME="$TMPDIR"
+        export XDG_DATA_DIRS="${glib.getSchemaDataDirPath gtk3}:${adwaita-icon-theme}/share:$XDG_DATA_DIRS"
+    '';
+
+    preFixup = ''
+        gappsWrapperArgs+=(--prefix PATH : "${
+            lib.makeBinPath [
+                # for dot for gegl:introspect (Debug » Show Image Graph, hidden by default on stable release)
+                graphviz
+                # for gimp-script-fu-interpreter-3.0 invoked by shebang of some plug-ins
+                "$out"
+            ]
+        }")
+    '';
+
+    postFixup = ''
+        # Cannot be in postInstall, otherwise _multioutDocs hook in preFixup will move right back.
+        moveToOutput "share/doc" "$devdoc"
+    '';
+
+    passthru = {
+        # The declarations for `gimp-with-plugins` wrapper,
+        # used for determining plug-in installation paths
+        majorVersion = "${lib.versions.major finalAttrs.version}.0";
+        targetLibDir = "lib/gimp/${finalAttrs.passthru.majorVersion}";
+        targetDataDir = "share/gimp/${finalAttrs.passthru.majorVersion}";
+        targetPluginDir = "${finalAttrs.passthru.targetLibDir}/plug-ins";
+        targetScriptDir = "${finalAttrs.passthru.targetDataDir}/scripts";
+
+        # probably its a good idea to use the same gtk in plugins ?
+        gtk = gtk3;
+    };
+
+    meta = {
+        description = "GNU Image Manipulation Program";
+        homepage = "https://www.gimp.org/";
+        maintainers = with lib.maintainers; [ jtojnar ];
+        license = lib.licenses.gpl3Plus;
+        platforms = lib.platforms.linux;
+        mainProgram = "gimp";
+    };
 })

@@ -151,7 +151,6 @@
         git
         yarn
 
-#        podman
         docker-compose
 
         nano
@@ -182,6 +181,7 @@
 #        ngrok
         nyxt
         protonvpn-gui
+        tor-browser
         zoom-us
 
         #--  DESKTOP
@@ -215,7 +215,6 @@
     ];
 
     imports = [
-#        ../packages/conky
         ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/gimp

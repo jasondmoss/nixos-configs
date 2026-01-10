@@ -208,18 +208,14 @@
     environment = {
         systemPackages = (with pkgs; [
             audacity
-#            audible-cli
             cuetools
-            darktable
+#            darktable
             easytag
             flacon
-#            kdePackages.phonon-vlc
             quickemu
             shotcut
             taglib-sharp
             taglib_extras
-            tor-browser
-#            vlc
 
             # LadyBird
 #            (pkgs.callPackage ../packages/ladybird {})
