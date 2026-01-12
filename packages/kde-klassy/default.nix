@@ -9,7 +9,7 @@ stdenv.mkDerivation rec {
         owner = "paulmcauley";
         repo = "klassy";
         rev = version;
-        hash = "sha256-3h7G92HgyrKzGvMBB6s75R12r11pIqbl4keOgCVt6Tc=";
+        hash = "sha256-PrGvsZ9Ppu3pc16LC6hei/S/Wh5uYuEhu5IYUwe52WE=";
     };
 
     buildInputs = [
