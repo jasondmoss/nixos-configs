@@ -148,10 +148,10 @@
         #--  DEVELOPMENT
         codex   # Lightweight coding agent
         ddev
+        docker-compose
         git
         yarn
 
-        docker-compose
 
         nano
         phpstorm    # From custom overlay.
@@ -164,7 +164,6 @@
         standardnotes
 
         #--  MULTIMEDIA
-        haruna
         mpv-unwrapped
         mpvScripts.autosub
         mpvScripts.sponsorblock
@@ -178,26 +177,21 @@
         megatools
         microsoft-edge
         mullvad-browser
-#        ngrok
         nyxt
         protonvpn-gui
         tor-browser
-        zoom-us
 
-        #--  DESKTOP
-        conky
-        ly
-        rofi
-
-        #--  THEME
+        #--  UTILITIES
         comixcursors
-
-        #--  MISCELLANEOUS
+        conky
+        dysk
         inxi
         neohtop
+        ly
 #        p7zip
         p7zip-rar
 #        peazip
+        rofi
         systemctl-tui
         wezterm
 
