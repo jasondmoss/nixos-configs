@@ -186,6 +186,7 @@
         conky
         dysk
         inxi
+        moltbot    # From custom overlay.
         neohtop
         ly
 #        p7zip

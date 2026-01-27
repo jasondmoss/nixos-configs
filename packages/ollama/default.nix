@@ -22,7 +22,7 @@
             };
 
             # https://ollama.com/library
-            loadModels = [ "deepseek-r1:32b" ];
+            loadModels = [  ];
         };
 
 #        open-webui = {

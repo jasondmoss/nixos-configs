@@ -30,9 +30,6 @@
         };
 
         overlays = [
-            # Conky
-#            (import ../packages/conky)
-
             # Firefox Nightly
             (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
@@ -47,6 +44,11 @@
                         pkgs.fontconfig
                     ];
                 });
+            })
+
+            # Moltbot
+            (final: prev: {
+                moltbot = final.callPackage ../packages/moltbot { };
             })
 
             # libQuotient
