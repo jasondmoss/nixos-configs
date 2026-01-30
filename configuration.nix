@@ -1,4 +1,6 @@
-{ lib, ... }:
+{
+    lib, ...
+}:
 let
     # Determine current hostname from the running system.
     hostFromEtc = if builtins.pathExists /etc/hostname then

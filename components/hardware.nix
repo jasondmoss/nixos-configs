@@ -48,7 +48,6 @@
     };
 
     virtualisation = {
-#        containers.enable = true;
         virtualbox.host.enable = true;
 
         docker = {

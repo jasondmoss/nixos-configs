@@ -27,6 +27,11 @@ wavebox
 		};
 
 		variables = {
+            # Unsetting these allows Toolkits (Qt/GTK) to
+            # auto-detect the IM via the portal/Wayland protocol.
+            GTK_IM_MODULE = lib.mkForce "";
+            QT_IM_MODULE = lib.mkForce "";
+
 			# Backend logic
 			GBM_BACKEND = "nvidia-drm";
 			__GLX_VENDOR_LIBRARY_NAME = "nvidia";
@@ -57,16 +62,20 @@ wavebox
 			SSH_ASKPASS_REQUIRE = "prefer";
 		};
 
-		sessionVariables.GST_PLUGIN_SYSTEM_PATH_1_0 =
-			lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [
-				gst-editing-services
-				gst-libav
-				gst-plugins-bad
-				gst-plugins-base
-				gst-plugins-good
-				gst-plugins-ugly
-				gstreamer
-			]);
+		sessionVariables = {
+            XMODIFIERS = "@im=ibus";
+
+            GST_PLUGIN_SYSTEM_PATH_1_0 =
+                lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [
+                    gst-editing-services
+                    gst-libav
+                    gst-plugins-bad
+                    gst-plugins-base
+                    gst-plugins-good
+                    gst-plugins-ugly
+                    gstreamer
+                ]);
+        };
 	};
 }
 

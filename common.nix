@@ -2,8 +2,6 @@
 let
     theme = import ./components/theme.nix;
 in {
-#    system.rebuild.enableNg  = true;
-
     nix = {
         package = pkgs.nixVersions.latest;
 
@@ -25,7 +23,18 @@ in {
 
     system.stateVersion = "25.11";
     time.timeZone = "America/Toronto";
-    i18n.defaultLocale = "en_CA.UTF-8";
+    i18n = {
+        defaultLocale = "en_CA.UTF-8";
+
+        inputMethod = {
+            enabled = "ibus";
+
+            ibus.engines = with pkgs.ibus-engines; [
+                libpinyin
+                anthy
+            ];
+        };
+    };
 
     console = {
         earlySetup = true;
@@ -55,9 +64,9 @@ in {
         ./components/programs.nix
         ./components/security.nix
         ./components/services.nix
-        ./components/system.nix
         ./components/users.nix
         ./components/xdg.nix
+        ./components/system.nix
         ./components/nixpkgs.nix
         ./components/packages.nix
     ];

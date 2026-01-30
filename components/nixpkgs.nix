@@ -62,7 +62,6 @@
                 });
             })
 
-
             (import ../../overlays/default.nix)
         ];
     };

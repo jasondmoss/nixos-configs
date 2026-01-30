@@ -51,6 +51,7 @@ in {
         gdb
         gpm
         gsasl
+        ibus-with-plugins
         imagemagick
         inetutils
         inotify-tools
@@ -64,6 +65,7 @@ in {
         libdrm
         libgcrypt
         libglvnd
+        libnotify   # For debugging notifications
         libportal
         libselinux
         libunwind

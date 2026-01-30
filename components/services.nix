@@ -40,11 +40,11 @@ local {
             videoDrivers = [ "nvidia" ];
             upscaleDefaultCursor = true;
 
-            displayManager.sessionCommands = ''
-# Manual autostart
-(sleep 10s;/home/me/.local/bin/megasync-wrapper.sh) &
-(sleep 1m;/run/current-system/sw/bin/notes) &
-            '';
+#            displayManager.sessionCommands = ''
+## Manual autostart
+#(sleep 10s;/home/me/.local/bin/megasync-wrapper.sh) &
+#(sleep 1m;/run/current-system/sw/bin/notes) &
+#            '';
         };
 
         locate = {
@@ -98,36 +98,6 @@ local {
            enable = true;
            enableQt5Integration = false;
         };
-
-#        httpd = {
-#            enable = true;
-#            adminAddr = "me@localhost";
-#            user = "me";
-#            group = "users";
-#            extraModules = [ "http2" ];
-#        };
-
-#        mysql = {
-#            enable = true;
-#            package = pkgs.mariadb;
-#
-#            settings.mysqld = {
-#                transaction-isolation = "READ-COMMITTED";
-#            };
-#
-#            ensureUsers = [
-#                {
-#                    name = "me";
-#                    ensurePermissions = {
-#                        "*.*" = "ALL PRIVILEGES";
-#                    };
-#                }
-#            ];
-#        };
-
-#        homepage-dashboard = {
-#            enable = true;
-#        };
     };
 }
 

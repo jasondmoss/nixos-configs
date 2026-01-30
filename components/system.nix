@@ -9,7 +9,34 @@
     };
 
     systemd = {
+        packages = [ pkgs.megasync ];
+
         services = {
+            megasync = {
+                description = "MEGAcmd Sync Client";
+
+                after = [ "graphical-session.target" ];
+                wantedBy = [ "graphical-session.target" ];
+#                partOf = [ "graphical-session.target" ];
+
+                serviceConfig = {
+                    Type = "simple";
+#                    ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+                    ExecStart = "${pkgs.megasync}/bin/megasync";
+                    Restart = "on-failure";
+                    RestartSec = "10s";
+
+                    # Vital for Wayland/Plasma 6 to find the session
+#                    Environment = "PATH=${pkgs.megasync}/bin:${pkgs.coreutils}/bin";
+
+                    Environment = [
+                        "QT_QPA_PLATFORM=wayland"
+                        "XDG_CURRENT_DESKTOP=KDE"
+                        "XDG_SESSION_TYPE=wayland"
+                    ];
+                };
+            };
+
             nix-index-database-update = {
                 description = "Update nix-index database";
                 serviceConfig = {
@@ -17,6 +44,24 @@
                     # Run as your user so the database is available in ~/.cache/nix-index
                     User = "me";
                     ExecStart = "${pkgs.nix-index}/bin/nix-index";
+                };
+            };
+
+            notes = {
+                description = "Notes Desktop Application";
+                # Ensure the service waits for the Plasma Wayland session
+#                after = [ "graphical-session.target" ];
+                wantedBy = [ "graphical-session.target" ];
+                partOf = [ "graphical-session.target" ];
+
+                serviceConfig = {
+#                    Type = "simple";
+                    ExecStartPre = "${pkgs.coreutils}/bin/sleep 30";
+                    ExecStart = "${pkgs.notes}/bin/notes";
+                    Restart = "on-failure";
+#                    RestartSec = "3s";
+                    # Ensures the app finds the Wayland/X11 socket.
+                    PassEnvironment = [ "DISPLAY" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" ];
                 };
             };
         };
@@ -47,22 +92,6 @@
                         RemainAfterExit = "yes";
                     };
                 };
-
-#                ssh-eager-load = {
-#                    description = "Eagerly load default SSH keys into agent";
-#                    wantedBy = [ "graphical-session.target" ];
-#                    partOf = [ "graphical-session.target" ];
-#                    unitConfig.ConditionEnvironment = "SSH_AUTH_SOCK";
-#
-#                    serviceConfig = {
-#                        Type = "oneshot";
-#                        # -q: Quiet mode
-#                        # By default, this adds ~/.ssh/id_rsa, id_ed25519, etc.
-#                        # If you have custom key names, append them here (e.g., ~/.ssh/my_custom_key)
-#                        ExecStart = "${pkgs.openssh}/bin/ssh-add -q %h/.ssh/id_ed25519_2026_jasondmoss %h/.ssh/id_ed25519_2026_originoutside";
-#                        RemainAfterExit = true;
-#                    };
-#                };
             };
         };
     };

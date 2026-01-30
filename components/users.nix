@@ -1,9 +1,5 @@
 { ... }: {
     users = {
-#        groups = {
-#            docker = {};
-#        };
-
         users = {
             me = {
                 isNormalUser = true;
