@@ -6,8 +6,22 @@
         bash.completion.enable = true;
 
         ssh = {
-#            startAgent = true;
+            startAgent = true;
             askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass.out}/bin/ksshaskpass";
+
+            extraConfig = ''
+# Personal GitHub (Default)
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_2026_jasondmoss
+
+# Work GitHub
+Host github.com-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_2026_originoutside
+            '';
         };
 
         gnupg.agent = {
@@ -17,14 +31,19 @@
 
         git = {
             enable = true;
+            lfs.enable = true;
 
             config = {
-                user.name = "jasondmoss";
-                user.email = "jason@jdmlabs.com";
-                credential.helper = "cache --timeout=86400";
-            };
+                # Default Identity (Personal)
+                user = {
+                    name = "Jason D. Moss";
+                    email = "jason@jdmlabs.com";
+                };
 
-            lfs.enable = true;
+                init.defaultBranch = "main";
+
+                includeIf."gitdir:~/Repository/origin/".path = "/etc/gitconfig.work";
+            };
         };
 
 #        mpv= {

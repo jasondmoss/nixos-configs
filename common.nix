@@ -11,7 +11,6 @@ in {
             trusted-users = [ "root" "me" "@wheel" ];
             allowed-users = [ "root" "me" "@wheel" ];
             experimental-features = "nix-command";
-#            experimental-features = "nix-command flakes";
             auto-optimise-store = true;
             max-jobs = "auto";
         };
@@ -56,6 +55,7 @@ in {
         ./components/programs.nix
         ./components/security.nix
         ./components/services.nix
+        ./components/system.nix
         ./components/users.nix
         ./components/xdg.nix
         ./components/nixpkgs.nix

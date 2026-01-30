@@ -24,7 +24,7 @@
             datacenter.enable = false;
 
             powerManagement = {
-                enable = true;
+                enable = false;
                 finegrained = false;
             };
 

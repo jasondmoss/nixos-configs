@@ -1,4 +1,8 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }:
+let
+    # Custom GitHub cloning script.
+    gh-clone = pkgs.callPackage ../packages/gh-clone/default.nix {};
+in {
     environment.systemPackages = with pkgs; [
         #--  NIXOS
         nixos-icons
@@ -150,12 +154,13 @@
         ddev
         docker-compose
         git
+        gh-clone    # Custom script for cloning GitHub repositories
         yarn
 
 
         nano
         phpstorm    # From custom overlay.
-        sublime4
+#        sublime4
 
         #--  OFFICE/ADMIN
         libreoffice-qt6-fresh
@@ -186,7 +191,6 @@
         conky
         dysk
         inxi
-        moltbot    # From custom overlay.
         neohtop
         ly
 #        p7zip

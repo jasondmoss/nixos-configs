@@ -5,6 +5,7 @@
         gpm.enable = true;
         pcscd.enable = true;
         sysstat.enable = true;
+        gnome.gcr-ssh-agent.enable = false;
 
         smartd = {
             enable = true;
@@ -41,7 +42,7 @@ local {
 
             displayManager.sessionCommands = ''
 # Manual autostart
-(sleep 10s;${config.users.users.me.home}/.local/bin/megasync-wrapper.sh) &
+(sleep 10s;/home/me/.local/bin/megasync-wrapper.sh) &
 (sleep 1m;/run/current-system/sw/bin/notes) &
             '';
         };

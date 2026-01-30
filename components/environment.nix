@@ -10,6 +10,12 @@ wavebox
                 '';
                 mode = "0755";
             };
+
+            "gitconfig.work".text = ''
+[user]
+name = "Jason D. Moss (Origin)"
+email = "jmoss@originoutside.com";
+            '';
         };
 
         variables = {
