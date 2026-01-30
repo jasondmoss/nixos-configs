@@ -177,6 +177,7 @@ in {
 
         #--  NETWORK
         filezilla
+        firefox-nightly    # Custom wrapped version
         google-chrome
         links2
         megasync
@@ -215,7 +216,7 @@ in {
     ];
 
     imports = [
-        ../packages/firefox-nightly
+#        ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/gimp
         ../packages/gnome-desktop

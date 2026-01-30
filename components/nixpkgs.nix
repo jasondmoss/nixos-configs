@@ -61,6 +61,9 @@
                     ];
                 });
             })
+
+
+            (import ../../overlays/default.nix)
         ];
     };
 }

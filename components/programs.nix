@@ -15,12 +15,14 @@ Host github.com
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_ed25519_2026_jasondmoss
+    IdentitiesOnly yes
 
 # Work GitHub
 Host github.com-work
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_ed25519_2026_originoutside
+    IdentitiesOnly yes
             '';
         };
 
@@ -35,27 +37,20 @@ Host github.com-work
 
             config = {
                 credential.helper = "libsecret";
+                init.defaultBranch = "main";
 
                 # Global aliases for identity management.
                 alias = {
-                    # Shows who you are in the current repo (Email/Name).
                     whoami = "!git config user.email && git config user.name";
-                    check-personal = "!ssh -T git@github.com";
-                    check-work = "!ssh -T git@github.com-work";
-
-                    # Shows a summary of the remote URL and the identity.
                     id = "!echo '--- Identity ---' && git whoami && echo '--- Remote ---' && git remote -v";
                 };
 
-                # Default Identity (Personal)
-                user = {
-                    name = "Jason D. Moss";
-                    email = "jason@jdmlabs.com";
+                includeIf = {
+                    "gitdir/i:/home/me/Repository/origin/" .path = "/etc/gitconfig.work";
+                    "gitdir/i:/home/me/Repository/personal/" .path = "/etc/gitconfig.personal";
+                    # Fallback for your main config repo if it's not in the personal folder.
+                    "gitdir/i:/home/me/Repository/system/" .path = "/etc/gitconfig.personal";
                 };
-
-                init.defaultBranch = "main";
-
-                includeIf."gitdir:~/Repository/origin/".path = "/etc/gitconfig.work";
             };
         };
 
