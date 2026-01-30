@@ -9,11 +9,15 @@
             };
 
             services = {
-                kwallet = {
-                    kwallet.enable = true;
+                login = {
+                    enableKwallet = true;
                 };
 
                 ly = {
+                    kwallet.enable = true;
+                };
+
+                kwallet = {
                     kwallet.enable = true;
                 };
             };

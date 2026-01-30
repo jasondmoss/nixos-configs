@@ -8,8 +8,11 @@
         ssh = {
             startAgent = true;
             askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass.out}/bin/ksshaskpass";
+#            askPassword = "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
 
             extraConfig = ''
+AddKeysToAgent yes
+
 # Personal GitHub (Default)
 Host github.com
     HostName github.com

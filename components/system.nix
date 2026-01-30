@@ -36,21 +36,33 @@
 
         user = {
             services = {
-                ssh-eager-load = {
-                    description = "Eagerly load default SSH keys into agent";
+                ssh-key-pollen = {
+                    description = "Load SSH keys into agent via KWallet";
                     wantedBy = [ "graphical-session.target" ];
                     partOf = [ "graphical-session.target" ];
-                    unitConfig.ConditionEnvironment = "SSH_AUTH_SOCK";
 
                     serviceConfig = {
+                        ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.openssh}/bin/ssh-add %h/.ssh/id_ed25519_2026_jasondmoss %h/.ssh/id_ed25519_2026_originoutside < /dev/null'";
                         Type = "oneshot";
-                        # -q: Quiet mode
-                        # By default, this adds ~/.ssh/id_rsa, id_ed25519, etc.
-                        # If you have custom key names, append them here (e.g., ~/.ssh/my_custom_key)
-                        ExecStart = "${pkgs.openssh}/bin/ssh-add -q %h/.ssh/id_ed25519_2026_jasondmoss %h/.ssh/id_ed25519_2026_originoutside";
-                        RemainAfterExit = true;
+                        RemainAfterExit = "yes";
                     };
                 };
+
+#                ssh-eager-load = {
+#                    description = "Eagerly load default SSH keys into agent";
+#                    wantedBy = [ "graphical-session.target" ];
+#                    partOf = [ "graphical-session.target" ];
+#                    unitConfig.ConditionEnvironment = "SSH_AUTH_SOCK";
+#
+#                    serviceConfig = {
+#                        Type = "oneshot";
+#                        # -q: Quiet mode
+#                        # By default, this adds ~/.ssh/id_rsa, id_ed25519, etc.
+#                        # If you have custom key names, append them here (e.g., ~/.ssh/my_custom_key)
+#                        ExecStart = "${pkgs.openssh}/bin/ssh-add -q %h/.ssh/id_ed25519_2026_jasondmoss %h/.ssh/id_ed25519_2026_originoutside";
+#                        RemainAfterExit = true;
+#                    };
+#                };
             };
         };
     };

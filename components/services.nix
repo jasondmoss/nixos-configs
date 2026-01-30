@@ -99,31 +99,31 @@ local {
            enableQt5Integration = false;
         };
 
-        httpd = {
-            enable = true;
-            adminAddr = "me@localhost";
-            user = "me";
-            group = "users";
-            extraModules = [ "http2" ];
-        };
+#        httpd = {
+#            enable = true;
+#            adminAddr = "me@localhost";
+#            user = "me";
+#            group = "users";
+#            extraModules = [ "http2" ];
+#        };
 
-        mysql = {
-            enable = true;
-            package = pkgs.mariadb;
-
-            settings.mysqld = {
-                transaction-isolation = "READ-COMMITTED";
-            };
-
-            ensureUsers = [
-                {
-                    name = "me";
-                    ensurePermissions = {
-                        "*.*" = "ALL PRIVILEGES";
-                    };
-                }
-            ];
-        };
+#        mysql = {
+#            enable = true;
+#            package = pkgs.mariadb;
+#
+#            settings.mysqld = {
+#                transaction-isolation = "READ-COMMITTED";
+#            };
+#
+#            ensureUsers = [
+#                {
+#                    name = "me";
+#                    ensurePermissions = {
+#                        "*.*" = "ALL PRIVILEGES";
+#                    };
+#                }
+#            ];
+#        };
 
 #        homepage-dashboard = {
 #            enable = true;
