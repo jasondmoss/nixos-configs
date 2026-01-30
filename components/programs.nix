@@ -34,6 +34,19 @@ Host github.com-work
             lfs.enable = true;
 
             config = {
+                credential.helper = "libsecret";
+
+                # Global aliases for identity management.
+                alias = {
+                    # Shows who you are in the current repo (Email/Name).
+                    whoami = "!git config user.email && git config user.name";
+                    check-personal = "!ssh -T git@github.com";
+                    check-work = "!ssh -T git@github.com-work";
+
+                    # Shows a summary of the remote URL and the identity.
+                    id = "!echo '--- Identity ---' && git whoami && echo '--- Remote ---' && git remote -v";
+                };
+
                 # Default Identity (Personal)
                 user = {
                     name = "Jason D. Moss";
@@ -46,31 +59,10 @@ Host github.com-work
             };
         };
 
-#        mpv= {
-#            enable = true;
-#
-#            package = (
-#                pkgs.mpv-unwrapped.wrapper {
-#                    scripts = with pkgs.mpvScripts; [
-#                        autosub
-#                        sponsorblock
-#                        uosc
-#                    ];
-#
-#                    mpv = pkgs.mpv-unwrapped.override {
-#                        waylandSupport = true;
-#
-#                        ffmpeg = pkgs.ffmpeg-full;
-#                    };
-#                }
-#            );
-#
-#            config = {
-#                profile = "high-quality";
-#                ytdl-format = "bestvideo+bestaudio";
-#                cache-default = 4000000;
-#            };
-#        };
+        nix-index = {
+            enable = true;
+            enableBashIntegration = true;
+        };
 
         neovim = {
             enable = true;

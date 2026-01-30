@@ -2,6 +2,9 @@
 let
     # Custom GitHub cloning script.
     gh-clone = pkgs.callPackage ../packages/gh-clone/default.nix {};
+
+    # Custom MPV wrapper.
+    mpv-custom = import ../packages/mpv-custom/default.nix { inherit pkgs; };
 in {
     environment.systemPackages = with pkgs; [
         #--  NIXOS
@@ -67,6 +70,7 @@ in {
         libva
         libva-utils
         libva1
+        libvdpau-va-gl
         libxfs
         libxml2
         libxslt
@@ -169,10 +173,7 @@ in {
         standardnotes
 
         #--  MULTIMEDIA
-        mpv-unwrapped
-        mpvScripts.autosub
-        mpvScripts.sponsorblock
-        mpvScripts.uosc
+        mpv-custom    # From custom package
 
         #--  NETWORK
         filezilla

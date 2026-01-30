@@ -1,5 +1,39 @@
 { pkgs, ... }: {
+    system = {
+        activationScripts = {
+            makeWorkDir = {
+                text = "mkdir -p /home/jason/Repository/origin";
+                deps = [ "users" ];
+            };
+        };
+    };
+
     systemd = {
+        services = {
+            nix-index-database-update = {
+                description = "Update nix-index database";
+                serviceConfig = {
+                    Type = "oneshot";
+                    # Run as your user so the database is available in ~/.cache/nix-index
+                    User = "me";
+                    ExecStart = "${pkgs.nix-index}/bin/nix-index";
+                };
+            };
+        };
+
+        timers = {
+            nix-index-database-update = {
+                description = "Weekly update of nix-index database";
+
+                timerConfig = {
+                    OnCalendar = "weekly";
+                    Persistent = true; # Run immediately if the system was off during scheduled time
+                };
+
+                wantedBy = [ "timers.target" ];
+            };
+        };
+
         user = {
             services = {
                 ssh-eager-load = {
@@ -17,15 +51,6 @@
                         RemainAfterExit = true;
                     };
                 };
-            };
-        };
-    };
-
-    system = {
-        activationScripts = {
-            makeWorkDir = {
-                text = "mkdir -p /home/jason/Repository/origin";
-                deps = [ "users" ];
             };
         };
     };

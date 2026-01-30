@@ -43,15 +43,42 @@ let
         };
     };
 
+    # Define the hardware acceleration policies
+    firefoxNightlyPolicies = {
+        policies = {
+            DisableAppUpdate = true;
+
+            UserPreferences = {
+                "media.ffmpeg.vaapi.enabled" = true;
+                "media.rdd-ffvpx.enabled" = false;
+                "media.navigator.mediadatadecoder_vpx_enabled" = true;
+                "media.ffvpx.enabled" = false;
+                "gfx.webrender.all" = true;
+                "layers.acceleration.force-enabled" = true;
+            };
+        };
+    };
+
 in {
 
     environment.systemPackages = (with pkgs; [
-        #-- Rename executable.
-        (pkgs.runCommand "latest.firefox-nightly-bin" {
-            preferLocalBuild = true;
+        (pkgs.runCommand "latest.firefox-nightly-bin-wrapped" {
+        nativeBuildInputs = [ pkgs.makeWrapper ];
         } ''
 mkdir -p $out/bin
-ln -s ${latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
+mkdir -p $out/lib/firefox-nightly/distribution
+
+# Create the symlink
+ln -s ${pkgs.latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
+
+# Wrap the binary with environment variables for NVIDIA VA-API
+wrapProgram $out/bin/firefox-nightly \
+ --set LIBVA_DRIVER_NAME nvidia \
+ --set MOZ_DISABLE_RDD_SANDBOX 1 \
+ --set NVD_BACKEND direct
+
+# Inject the policies JSON for preferences
+echo '${builtins.toJSON firefoxNightlyPolicies}' > $out/lib/firefox-nightly/distribution/policies.json
         '')
 
         #-- Create desktop entry.
