@@ -50,39 +50,57 @@ let
 
             UserPreferences = {
                 "media.ffmpeg.vaapi.enabled" = true;
+                "media.hardware-video-decoding.force-enabled" = true; # NEW: Bypass the blocklist
                 "media.rdd-ffvpx.enabled" = false;
                 "media.navigator.mediadatadecoder_vpx_enabled" = true;
                 "media.ffvpx.enabled" = false;
                 "gfx.webrender.all" = true;
                 "layers.acceleration.force-enabled" = true;
+                "widget.dmabuf.force-enabled" = true; # Helps with NVIDIA buffer sharing
             };
         };
     };
 
 in {
 
-    environment.systemPackages = (with pkgs; [
+    environment.systemPackages = [
         (pkgs.runCommand "latest.firefox-nightly-bin-wrapped" {
-        nativeBuildInputs = [ pkgs.makeWrapper ];
+            nativeBuildInputs = [ pkgs.makeWrapper ];
         } ''
+# We look for a file named 'firefox' that is executable
+REAL_BIN=$(find ${pkgs.latest.firefox-nightly-bin} -type f -executable -name "firefox" | head -n 1)
+
+# If 'firefox' isn't found, try 'firefox-bin'
+if [ -z "$REAL_BIN" ]; then
+    REAL_BIN=$(find ${pkgs.latest.firefox-nightly-bin} -type f -executable -name "firefox-bin" | head -n 1)
+fi
+
+SOURCE_DIR=$(dirname "$REAL_BIN")
+DEST_LIB="$out/lib/firefox-nightly"
+mkdir -p "$DEST_LIB"
+
+for item in "$SOURCE_DIR"/*; do
+    basename=$(basename "$item")
+
+    if [ "$basename" != "firefox" ] && [ "$basename" != "firefox-bin" ] && [ "$basename" != "distribution" ]; then
+        ln -s "$item" "$DEST_LIB/$basename"
+    fi
+done
+
+cp "$REAL_BIN" "$DEST_LIB/firefox"
+
+mkdir -p "$DEST_LIB/distribution"
+echo '${builtins.toJSON firefoxNightlyPolicies}' > "$DEST_LIB/distribution/policies.json"
+
 mkdir -p $out/bin
-mkdir -p $out/lib/firefox-nightly/distribution
-
-# Create the symlink
-ln -s ${pkgs.latest.firefox-nightly-bin}/bin/firefox $out/bin/firefox-nightly
-
-# Wrap the binary with environment variables for NVIDIA VA-API
-wrapProgram $out/bin/firefox-nightly \
+makeWrapper "$DEST_LIB/firefox" "$out/bin/firefox-nightly" \
  --set LIBVA_DRIVER_NAME nvidia \
  --set MOZ_DISABLE_RDD_SANDBOX 1 \
- --set NVD_BACKEND direct
-
-# Inject the policies JSON for preferences
-echo '${builtins.toJSON firefoxNightlyPolicies}' > $out/lib/firefox-nightly/distribution/policies.json
+ --set NVD_BACKEND direct \
+ --set MOZ_X11_EGL 1
         '')
 
         #-- Create desktop entry.
         firefoxNightlyDesktopItem
-    ]);
-
+    ];
 }
