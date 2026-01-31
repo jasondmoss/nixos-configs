@@ -24,14 +24,15 @@ wavebox
 	name = "Jason D. Moss"
 	email = "jason@jdmlabs.com"
 			'';
+
+            "gitconfig.gitlab".text = ''
+[user]
+    name = "Jason Moss"
+    email = "work@jdmlabs.com"
+            '';
 		};
 
 		variables = {
-            # Unsetting these allows Toolkits (Qt/GTK) to
-            # auto-detect the IM via the portal/Wayland protocol.
-            GTK_IM_MODULE = lib.mkForce "";
-            QT_IM_MODULE = lib.mkForce "";
-
 			# Backend logic
 			GBM_BACKEND = "nvidia-drm";
 			__GLX_VENDOR_LIBRARY_NAME = "nvidia";
@@ -60,11 +61,11 @@ wavebox
 			# Integration
 			SSH_ASKPASS = lib.mkForce "ksshaskpass";
 			SSH_ASKPASS_REQUIRE = "prefer";
+
+			EDITOR = "nano";
 		};
 
 		sessionVariables = {
-            XMODIFIERS = "@im=ibus";
-
             GST_PLUGIN_SYSTEM_PATH_1_0 =
                 lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [
                     gst-editing-services

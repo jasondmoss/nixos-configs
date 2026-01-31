@@ -25,6 +25,13 @@ Host github.com-work
     User git
     IdentityFile ~/.ssh/id_ed25519_2026_originoutside
     IdentitiesOnly yes
+
+# GitLab
+Host gitlab.com-gitlab
+    HostName gitlab.com
+    User git
+    IdentityFile /home/me/.ssh/id_ed25519_2026_gitlab
+    IdentitiesOnly yes
             '';
         };
 
@@ -48,10 +55,14 @@ Host github.com-work
                 };
 
                 includeIf = {
+                    # GitHub
                     "gitdir/i:/home/me/Repository/origin/" .path = "/etc/gitconfig.work";
                     "gitdir/i:/home/me/Repository/personal/" .path = "/etc/gitconfig.personal";
                     # Fallback for your main config repo if it's not in the personal folder.
                     "gitdir/i:/home/me/Repository/system/" .path = "/etc/gitconfig.personal";
+
+                    # GitLab
+                    "gitdir/i:/home/me/Repository/work/cyan-solutions/" .path = "/etc/gitconfig.gitlab";
                 };
             };
         };

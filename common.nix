@@ -23,16 +23,23 @@ in {
 
     system.stateVersion = "25.11";
     time.timeZone = "America/Toronto";
+
     i18n = {
         defaultLocale = "en_CA.UTF-8";
 
         inputMethod = {
-            enabled = "ibus";
+            enable = true;
+            type = "fcitx5";
 
-            ibus.engines = with pkgs.ibus-engines; [
-                libpinyin
-                anthy
-            ];
+            fcitx5 = {
+                waylandFrontend = true;
+
+                addons = with pkgs; [
+                    fcitx5-gtk
+                    qt6Packages.fcitx5-chinese-addons
+                    kdePackages.fcitx5-configtool
+                ];
+            };
         };
     };
 
