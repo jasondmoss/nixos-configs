@@ -2,6 +2,7 @@
     services = {
         dbus.enable = true;
         devmon.enable = true;
+        gnome.gnome-keyring.enable = true;
         gpm.enable = true;
         pcscd.enable = true;
         sysstat.enable = true;
@@ -39,12 +40,6 @@ local {
             enable = false;
             videoDrivers = [ "nvidia" ];
             upscaleDefaultCursor = true;
-
-#            displayManager.sessionCommands = ''
-## Manual autostart
-#(sleep 10s;/home/me/.local/bin/megasync-wrapper.sh) &
-#(sleep 1m;/run/current-system/sw/bin/notes) &
-#            '';
         };
 
         locate = {

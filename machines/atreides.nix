@@ -93,7 +93,7 @@
     fileSystems."/home" = {
         device = "/dev/disk/by-uuid/4d656a69-dc46-46b6-bec3-934e12415711";
         fsType = "btrfs";
-        options = [ "compress=lzo" ];
+        options = [ "compress=zstd:1" ];
     };
 
     # [sdb2]
@@ -112,7 +112,7 @@
     fileSystems."/home/me/Repository" = {
         device = "/dev/disk/by-uuid/2cf8ca9d-43ab-4ef5-99ff-0a909e765c5e";
         fsType = "btrfs";
-        options = [ "compress=lzo" ];
+        options = [ "compress=zstd:1" ];
     };
 
     # [sda1]
@@ -170,8 +170,13 @@
         tlp = {
             enable = true;
             settings = {
-                CPU_SCALING_GOVERNOR_ON_AC = "performance";
-                CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+                # 'powersave' governor allows amd_pstate to manage frequencies dynamically
+                CPU_SCALING_GOVERNOR_ON_AC = "powersave";
+
+                # Tell the CPU to prefer performance (EPP)
+                CPU_ENERGY_PERF_POLICY_ON_AC = "performance"; # or "balance_performance"
+
+                # Keep your min/max settings
                 CPU_MIN_PERF_ON_AC = 0;
                 CPU_MAX_PERF_ON_AC = 100;
             };
@@ -227,8 +232,6 @@
 
     imports = [
         ../common.nix
-
-        # System-specific packages.
         ../packages/ollama
     ];
 }

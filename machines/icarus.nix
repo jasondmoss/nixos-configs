@@ -114,6 +114,12 @@
             updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
 
+        graphics = {
+            extraPackages = with pkgs; [
+                intel-media-driver
+            ];
+        };
+
         nvidia = {
             package = config.boot.kernelPackages.nvidiaPackages.beta;
 
@@ -189,8 +195,6 @@
 
     imports = [
         ../common.nix
-
-        # System-specific packages.
 #        ../packages/ollama
     ];
 }

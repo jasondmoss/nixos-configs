@@ -1,5 +1,10 @@
 { config, pkgs, ... }:
 let
+    # Google Gemini CLI
+    gemini-wrapped = pkgs.callPackage ../packages/gemini-cli/wrapper.nix {};
+    # Context-aware assistant
+    gemini-nix = pkgs.callPackage ../packages/gemini-nix-assistant/default.nix {};
+
     # Custom GitHub cloning script.
     gh-clone = pkgs.callPackage ../packages/gh-clone/default.nix {};
 
@@ -159,8 +164,7 @@ in {
         codex   # Lightweight coding agent
         ddev
         docker-compose
-        git
-        gh-clone    # Custom script for cloning GitHub repositories
+        git    # Custom script for cloning GitHub repositories
         yarn
 
 
@@ -172,10 +176,7 @@ in {
         libreoffice-qt6-fresh
         nomacs
         notes
-        standardnotes
-
-        #--  MULTIMEDIA
-        mpv-custom    # From custom package
+        standardnotes    # From custom package
 
         #--  NETWORK
         filezilla
@@ -206,6 +207,12 @@ in {
 
 
         #--  CUSTOM PACKAGES
+
+#        gemini-cli
+        gemini-wrapped
+        gemini-nix
+        gh-clone
+        mpv-custom
 
         # Strawberry Music Player
         (pkgs.callPackage ../packages/strawberry-master {})

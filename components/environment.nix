@@ -55,9 +55,6 @@ wavebox
 			# Browser
 			DEFAULT_BROWSER = "${lib.getExe pkgs.firefox-nightly}";
 
-			# Google Gemini API
-			GEMINI_API_KEY = "$(${pkgs.coreutils}/bin/cat ${config.users.users.me.home}/.config/gemini/api.key)";
-
 			# Integration
 			SSH_ASKPASS = lib.mkForce "ksshaskpass";
 			SSH_ASKPASS_REQUIRE = "prefer";
