@@ -76,5 +76,6 @@ in {
         ./components/system.nix
         ./components/nixpkgs.nix
         ./components/packages.nix
+        ./components/virtualization.nix
     ];
 }

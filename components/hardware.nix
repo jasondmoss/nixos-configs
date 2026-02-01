@@ -43,16 +43,6 @@
         keyboard.qmk.enable = true;
     };
 
-    virtualisation = {
-        virtualbox.host.enable = true;
-
-        docker = {
-            enable = true;
-            enableOnBoot = true;
-            package = pkgs.docker_25;
-        };
-    };
-
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 }
 

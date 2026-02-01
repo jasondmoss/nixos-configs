@@ -62,7 +62,7 @@
 
                     serviceConfig = {
                         Type = "simple";
-                        ExecStartPre = "${pkgs.coreutils}/bin/sleep 3";
+                        ExecStartPre = "${pkgs.coreutils}/bin/sleep 3s";
                         ExecStart = "${pkgs.megasync}/bin/megasync";
                         Restart = "on-failure";
                         RestartSec = "10s";
@@ -86,12 +86,12 @@
 
                     serviceConfig = {
                         Type = "simple";
-                        ExecStartPre = "${pkgs.coreutils}/bin/sleep 30";
+                        ExecStartPre = "${pkgs.coreutils}/bin/sleep 30s";
                         ExecStart = "${pkgs.notes}/bin/notes";
                         Restart = "on-failure";
 
                         # Ensures the app finds the Wayland/X11 socket.
-#                        PassEnvironment = [ "DISPLAY" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" ];
+                        PassEnvironment = [ "DISPLAY" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" ];
                     };
                 };
             };

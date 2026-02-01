@@ -98,6 +98,7 @@ in {
         nix-index
         nix-prefetch-git
         nodejs
+        nss     # Required for mkcert to install into Firefox/Chrome DBs
         nvidia-vaapi-driver
         nvme-cli
         nvtopPackages.full
@@ -161,10 +162,9 @@ in {
         inkscape
 
         #--  DEVELOPMENT
-        codex   # Lightweight coding agent
         ddev
-        docker-compose
         git    # Custom script for cloning GitHub repositories
+        jq
         yarn
 
 
@@ -225,7 +225,6 @@ in {
     ];
 
     imports = [
-#        ../packages/firefox-nightly
         ../packages/firefox-stable
         ../packages/gimp
         ../packages/gnome-desktop
