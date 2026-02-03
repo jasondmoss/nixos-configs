@@ -12,25 +12,26 @@
             extraConfig = ''
 AddKeysToAgent yes
 
-# Personal GitHub (Default)
 Host github.com
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_ed25519_2026_jasondmoss
     IdentitiesOnly yes
 
-# Work GitHub
 Host github.com-work
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_ed25519_2026_originoutside
     IdentitiesOnly yes
 
-# GitLab
 Host gitlab.com-gitlab
     HostName gitlab.com
     User git
     IdentityFile /home/me/.ssh/id_ed25519_2026_gitlab
+    IdentitiesOnly yes
+
+Host pantheon.io *.pantheon.io
+    IdentityFile ~/.ssh/id_rsa
     IdentitiesOnly yes
             '';
         };

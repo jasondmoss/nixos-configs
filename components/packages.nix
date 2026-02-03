@@ -81,6 +81,7 @@ let
 
         network-web = with pkgs; [
             filezilla
+            firefox-nightly
             google-chrome
             links2
             megasync
