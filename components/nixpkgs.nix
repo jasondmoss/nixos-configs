@@ -35,7 +35,7 @@
 
 
             # PhpStorm
-            (import ../packages/jetbrains)
+            (import ../custom-packages/jetbrains)
             (final: prev: {
                 phpstorm = prev.phpstorm.overrideAttrs (old: {
                     buildInputs = old.buildInputs ++ [
@@ -48,7 +48,7 @@
 
             # Moltbot
             (final: prev: {
-                moltbot = final.callPackage ../packages/moltbot { };
+                moltbot = final.callPackage ../custom-packages/moltbot { };
             })
 
             # libQuotient

@@ -54,27 +54,34 @@
                     };
                 };
 
-                megasync = {
-                    description = "MEGAcmd Sync Client";
+                megasync-custom = {
+                    description = "MEGAcmd Sync Client (Custom Autostart)";
 
+                    # Using default.target is more reliable for user-services
+                    # that need to be "found" by systemctl --user
+                    wantedBy = [ "default.target" ];
                     after = [ "graphical-session.target" ];
-                    wantedBy = [ "graphical-session.target" ];
+                    partOf = [ "graphical-session.target" ];
+
+                    startLimitIntervalSec = 0;
 
                     serviceConfig = {
                         Type = "simple";
-                        ExecStartPre = "${pkgs.coreutils}/bin/sleep 3s";
+
+                        # Clean lock and wait
+                        ExecStartPre = [
+                            "!${pkgs.bash}/bin/bash -c 'rm -f %h/.local/share/data/Mega\\ Limited/MEGAsync/megasync.lock'"
+                            "${pkgs.coreutils}/bin/sleep 10"
+                        ];
+
                         ExecStart = "${pkgs.megasync}/bin/megasync";
-                        Restart = "on-failure";
+                        Restart = "always";
                         RestartSec = "10s";
 
                         Environment = [
                             "QT_QPA_PLATFORM=wayland"
                             "XDG_CURRENT_DESKTOP=KDE"
                             "XDG_SESSION_TYPE=wayland"
-                            # Forces software rendering for the tray icon if the GPU driver flickers during login
-                            "QT_QUICK_BACKEND=software"
-                            # Helps Megasync find the correct DBus session
-                            "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus"
                         ];
                     };
                 };

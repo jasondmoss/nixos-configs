@@ -17,7 +17,6 @@
 
     boot = {
         kernelPackages = pkgs.linuxPackages_xanmod_latest;
-#        kernelPackages = pkgs.linuxPackages_latest;
 
         initrd = {
             systemd.enable = true;
@@ -195,7 +194,7 @@
 
     imports = [
         ../common.nix
-#        ../packages/ollama
+#        ../custom-packages/ollama
     ];
 }
 

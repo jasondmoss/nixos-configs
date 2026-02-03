@@ -11,6 +11,13 @@
             # Klassy KDE theme engine
             (pkgs.callPackage ../kde-klassy {})
 
+            clazy
+            gammaray
+            heaptrack
+            qtcreator
+            valgrind
+
+            # Theming
             adwaita-qt6
             materia-kde-theme
             qadwaitadecorations-qt6
@@ -32,6 +39,7 @@
             kate
             karchive
             kbreakout
+            kcachegrind
             kcalc
             kcmutils
             kconfigwidgets
@@ -43,9 +51,11 @@
             kdenlive
             kdeplasma-addons
             kdesdk-thumbnailers
+            kdevelop
             kglobalaccel
             kglobalacceld
             kguiaddons
+            khelpcenter
             kiconthemes
             kimageformats
             kio
@@ -57,6 +67,7 @@
             kio-zeroconf
             kitinerary
             koko
+            kompare
             krdc
             krdp
             ksshaskpass
@@ -80,6 +91,7 @@
             plasma-wayland-protocols
             plasma-workspace
             qtbase
+            qtdeclarative
             qtsvg
             qttools
             taglib

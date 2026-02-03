@@ -11,14 +11,12 @@ wavebox
 				mode = "0755";
 			};
 
-			# Work Identity File
 			"gitconfig.work".text = ''
 [user]
 	name = "Jason D. Moss (Origin)"
 	email = "jmoss@originoutside.com";
 			'';
 
-			# Personal Identity File
 			"gitconfig.personal".text = ''
 [user]
 	name = "Jason D. Moss"
@@ -63,6 +61,11 @@ wavebox
 		};
 
 		sessionVariables = {
+		    QT_QPA_PLATFORM = "wayland";
+		    KDE_SESSION_VERSION = "6";
+		    # Point to the Qt6 dev headers for IDEs
+            Qt6_DIR = "${pkgs.kdePackages.qtbase.dev}/lib/cmake/Qt6";
+
             GST_PLUGIN_SYSTEM_PATH_1_0 =
                 lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [
                     gst-editing-services

@@ -148,8 +148,7 @@
                 user = "root";
             };
 
-            updateMicrocode =
-                lib.mkDefault config.hardware.enableRedistributableFirmware;
+            updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
 
         nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
@@ -170,11 +169,11 @@
         tlp = {
             enable = true;
             settings = {
-                # 'powersave' governor allows amd_pstate to manage frequencies dynamically
+                # 'powersave' governor allows amd_pstate to manage frequencies dynamically.
                 CPU_SCALING_GOVERNOR_ON_AC = "powersave";
 
                 # Tell the CPU to prefer performance (EPP)
-                CPU_ENERGY_PERF_POLICY_ON_AC = "performance"; # or "balance_performance"
+                CPU_ENERGY_PERF_POLICY_ON_AC = "performance"; # or "balance_performance".
 
                 # Keep your min/max settings
                 CPU_MIN_PERF_ON_AC = 0;
@@ -223,16 +222,16 @@
             taglib_extras
 
             # LadyBird
-#            (pkgs.callPackage ../packages/ladybird {})
+#            (pkgs.callPackage ../custom-packages/ladybird {})
 
             # MKVToolNix
-            (pkgs.callPackage ../packages/mkvtoolnix {})
+            (pkgs.callPackage ../custom-packages/mkvtoolnix {})
         ]);
     };
 
     imports = [
         ../common.nix
-        ../packages/ollama
+        ../custom-packages/ollama
     ];
 }
 

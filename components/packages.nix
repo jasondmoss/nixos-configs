@@ -1,237 +1,148 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
+
 let
-    # Google Gemini CLI
-    gemini-wrapped = pkgs.callPackage ../packages/gemini-cli/wrapper.nix {};
-    # Context-aware assistant
-    gemini-nix = pkgs.callPackage ../packages/gemini-nix-assistant/default.nix {};
+    # --- Custom Package Definitions ---
+    customPkgs = {
+        gemini-wrapped = pkgs.callPackage ../custom-packages/gemini-cli/wrapper.nix {};
+        gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant/default.nix {};
+        gh-clone       = pkgs.callPackage ../custom-packages/gh-clone/default.nix {};
+        #mpv-custom     = import ../custom-packages/mpv-custom/default.nix { inherit pkgs; };
+        strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
+        vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
+        wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
+        plasma-gemini  = pkgs.kdePackages.callPackage ../../workshop/plasmagemini/package.nix {};
+    };
 
-    # Custom GitHub cloning script.
-    gh-clone = pkgs.callPackage ../packages/gh-clone/default.nix {};
+    # --- Package Categories ---
+    pkgsByCategories = {
+        nixos = with pkgs; [
+            nixos-icons
+            nixos-rebuild-ng
+        ];
 
-    # Custom MPV wrapper.
-    mpv-custom = import ../packages/mpv-custom/default.nix { inherit pkgs; };
+        development = with pkgs; [
+            cargo
+            cmake
+            ddev
+            extra-cmake-modules
+            gcc
+            gdb
+            git
+            gnumake
+            ninja
+            nodejs
+            phpstorm
+            phpunit
+            pkg-config
+            pre-commit
+            rustc
+            sublime4
+            yarn
+        ];
+
+        system-tools = with pkgs; [
+            coreutils-full
+            curl
+            diffutils
+            dysk
+            fwupd
+            fwupd-efi
+            htop
+            inetutils
+            inxi
+            killall
+            lsd
+            lshw
+            nvme-cli
+            pciutils
+            smartmontools
+            systemctl-tui
+            usbutils
+            wget
+        ];
+
+        graphics-multimedia = with pkgs; [
+            cairo
+            ffmpeg-full
+            ffmpegthumbnailer
+            figma-linux
+            imagemagick
+            inkscape
+            mpv-unwrapped
+            mpvScripts.autosub
+            mpvScripts.sponsorblock
+            mpvScripts.uosc
+            nomacs
+            nvtopPackages.full
+            pavucontrol
+            vulkan-tools
+            xnviewmp
+        ];
+
+        network-web = with pkgs; [
+            filezilla
+            google-chrome
+            links2
+            megasync
+            megatools
+            microsoft-edge
+            mullvad-browser
+            nyxt
+            openvpn
+            protonvpn-gui
+            tor-browser
+        ];
+
+        security = with pkgs; [
+            certbot
+            clamav
+            encfs
+            lynis
+            mkcert
+            sniffnet
+        ];
+
+        utilities = with pkgs; [
+            comixcursors
+            conky
+            jq
+            libnotify
+            ly
+            p7zip-rar
+            rofi
+            tldr
+            unrar
+            unzip
+            wezterm
+            xclip
+            zip
+        ];
+
+        custom = builtins.attrValues customPkgs;
+    };
+
 in {
-    environment.systemPackages = with pkgs; [
-        #--  NIXOS
-        nixos-icons
-        nixos-rebuild-ng
-
-        #--  BASE
-        aha
-        alac
-        audit
-        babl
-        bison
-        bisoncpp
-        bluez
-        cairo
-        cargo
-        clinfo
-        cmake
-        coreutils-full
-        curl
-        desktop-file-utils
-        diffutils
-        dsf2flac
-        dwz
-        egl-wayland
-        eglexternalplatform
-        eww
-        exfatprogs
-        expat
-        expect
-        extra-cmake-modules
-        faac
-        ffmpeg-full
-        ffmpegthumbnailer
-        flac
-        flex
-        fontconfig
-        fop
-        fwupd
-        fwupd-efi
-        gcc
-        gcr
-        gd
-        gdb
-        gpm
-        gsasl
-        ibus-with-plugins
-        imagemagick
-        inetutils
-        inotify-tools
-        iro
-        jpegoptim
-        jq
-        killall
-        lame
-        libGL
-        libcue
-        libdrm
-        libgcrypt
-        libglvnd
-        libnotify   # For debugging notifications
-        libportal
-        libselinux
-        libunwind
-        libva
-        libva-utils
-        libva1
-        libvdpau-va-gl
-        libxfs
-        libxml2
-        libxslt
-        linuxquota
-        lm_sensors
-        lsd
-        lshw
-        lua
-        mesa
-        mesa-demos
-        mkcue
-        moreutils
-        mozlz4a
-        mpg123
-        mpvScripts.thumbfast
-        nettle
-        nix-du
-        nix-index
-        nix-prefetch-git
-        nodejs
-        nss     # Required for mkcert to install into Firefox/Chrome DBs
-        nvidia-vaapi-driver
-        nvme-cli
-        nvtopPackages.full
-        openssl
-        openvpn
-        optipng
-        opusTools
-        pandoc
-        pavucontrol
-        pciutils
-        pcre2
-        perl
-        phpunit
-        pmutils
-        pngquant
-        pre-commit
-        rar
-        rustc
-        shntool
-        smartmontools
-        sox
-        speechd
-        superhtml
-        tldr
-        ttaenc
-        unar
-        unixtools.script
-        unrar
-        unzip
-        usbutils
-        virtualgl
-        vorbis-tools
-        vulkan-headers
-        vulkan-loader
-        vulkan-tools
-        vulkan-validation-layers
-        wavpack
-        wayland-utils
-        wget
-        wirelesstools
-        wmctrl
-        xclip
-        xdg-utils
-        xfsprogs
-        xmlto
-        xnviewmp
-        xorg.libxcb
-        xorg.xorgsgmldoctools
-        zip
-
-        #--  SECURITY
-        certbot
-        clamav
-        encfs
-        lynis
-        mkcert
-        sniffnet
-
-        #--  GRAPHICS
-        figma-linux
-        inkscape
-
-        #--  DEVELOPMENT
-        ddev
-        git    # Custom script for cloning GitHub repositories
-        jq
-        yarn
-
-
-        nano
-        phpstorm    # From custom overlay.
-#        sublime4
-
-        #--  OFFICE/ADMIN
-        libreoffice-qt6-fresh
-        nomacs
-        notes
-        standardnotes    # From custom package
-
-        #--  NETWORK
-        filezilla
-        firefox-nightly    # Custom wrapped version
-        google-chrome
-        links2
-        megasync
-        megatools
-        microsoft-edge
-        mullvad-browser
-        nyxt
-        protonvpn-gui
-        tor-browser
-
-        #--  UTILITIES
-        comixcursors
-        conky
-        dysk
-        inxi
-        neohtop
-        ly
-#        p7zip
-        p7zip-rar
-#        peazip
-        rofi
-        systemctl-tui
-        wezterm
-
-
-        #--  CUSTOM PACKAGES
-
-#        gemini-cli
-        gemini-wrapped
-        gemini-nix
-        gh-clone
-        mpv-custom
-
-        # Strawberry Music Player
-        (pkgs.callPackage ../packages/strawberry-master {})
-
-        # Vivaldi Browser
-        (pkgs.callPackage ../packages/vivaldi-snapshot {})
-
-        # Wavebox Beta
-        (pkgs.callPackage ../packages/wavebox-beta {})
-    ];
-
     imports = [
-        ../packages/firefox-stable
-        ../packages/gimp
-        ../packages/gnome-desktop
-        ../packages/kde-desktop
-        ../packages/php
-        ../packages/vaapi
+        ../custom-packages/firefox-stable
+        ../custom-packages/gimp
+        ../custom-packages/gnome-desktop
+        ../custom-packages/kde-desktop
+        ../custom-packages/php
+        ../custom-packages/vaapi
     ];
+
+    # Flatten the attribute set of lists into a single list.
+    environment.systemPackages = lib.flatten (builtins.attrValues pkgsByCategories);
+
+    # Ensure specialized drivers are prioritized.
+    hardware.graphics = {
+        enable = true;
+        extraPackages = with pkgs; [
+            nvidia-vaapi-driver
+            libva-vdpau-driver
+            libvdpau-va-gl
+        ];
+    };
 }
 
 # <> #
