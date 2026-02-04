@@ -7,6 +7,7 @@ let
         gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant/default.nix {};
         gh-clone       = pkgs.callPackage ../custom-packages/gh-clone/default.nix {};
         #mpv-custom     = import ../custom-packages/mpv-custom/default.nix { inherit pkgs; };
+        nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom/default.nix { };
         strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
         wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
@@ -88,7 +89,7 @@ let
             megatools
             microsoft-edge
             mullvad-browser
-            nyxt
+#            nyxt
             openvpn
             protonvpn-gui
             tor-browser
