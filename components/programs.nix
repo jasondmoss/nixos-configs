@@ -57,7 +57,7 @@ Host pantheon.io *.pantheon.io
 
                 includeIf = {
                     # GitHub
-                    "gitdir/i:/home/me/Repository/origin/" .path = "/etc/gitconfig.work";
+                    "gitdir/i:/home/me/Repository/work/origin/" .path = "/etc/gitconfig.work";
                     "gitdir/i:/home/me/Repository/personal/" .path = "/etc/gitconfig.personal";
                     # Fallback for your main config repo if it's not in the personal folder.
                     "gitdir/i:/home/me/Repository/system/" .path = "/etc/gitconfig.personal";

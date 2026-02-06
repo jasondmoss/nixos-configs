@@ -10,7 +10,7 @@ REPO=$(echo "$1" | sed 's|.*github.com[:/]||; s|\.git$||')
 CURRENT_DIR=$(pwd)
 
 # Match the new organization directory
-WORK_DIR="/home/me/Repository/origin"
+WORK_DIR="/home/me/Repository/work/origin"
 
 if [[ "$CURRENT_DIR" == "$WORK_DIR"* ]]; then
     echo "🏗️  Work directory detected..."

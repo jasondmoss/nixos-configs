@@ -2,7 +2,7 @@
     system = {
         activationScripts = {
             makeWorkDir = {
-                text = "mkdir -p /home/jason/Repository/origin";
+                text = "mkdir -p /home/jason/Repository/work/origin";
                 deps = [ "users" ];
             };
         };
