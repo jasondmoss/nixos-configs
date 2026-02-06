@@ -22,6 +22,7 @@ let
 
         development = with pkgs; [
             cargo
+            cppcheck
             cmake
             ddev
             extra-cmake-modules

@@ -25,6 +25,7 @@ find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS
 find_package(KF6 ${KF_MIN_VERSION} REQUIRED COMPONENTS
     StatusNotifierItem
     Kirigami
+    GlobalAccel
 )
 
 # 2. Define Sources
@@ -44,6 +45,7 @@ target_link_libraries(gemini-desktop
     Qt6::WebEngineQuick
     KF6::StatusNotifierItem
     KF6::Kirigami
+    KF6::GlobalAccel
 )
 
 install(TARGETS gemini-desktop ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

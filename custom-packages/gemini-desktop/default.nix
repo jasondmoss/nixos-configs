@@ -1,9 +1,9 @@
 {
     lib, stdenv, cmake, extra-cmake-modules, qt6, kdePackages,
-    copyDesktopItems, makeDesktopItem
+    makeDesktopItem, copyDesktopItems
 }:
 
-stdenv.mkDerivation {
+stdenv.mkDerivation rec {
     pname = "gemini-desktop";
     version = "1.0.0";
 
@@ -22,6 +22,14 @@ stdenv.mkDerivation {
         qt6.qtwebengine
         kdePackages.kstatusnotifieritem
         kdePackages.kirigami
+        kdePackages.kglobalaccel
+    ];
+
+    # CRITICAL: We inject the sandbox disable flag here.
+    # This guarantees it reaches the subprocesses.
+    qtWrapperArgs = [
+        "--set QTWEBENGINE_DISABLE_SANDBOX 1"
+        "--set QML_DISABLE_DISK_CACHE 1" # Optional: forces fresh QML load
     ];
 
     desktopItems = [
@@ -32,16 +40,11 @@ stdenv.mkDerivation {
             exec = "gemini-desktop";
             icon = "google-gemini";
             categories = [ "Network" "Utility" "Qt" "KDE" ];
-            keywords = [ "ai" "gemini" "google" "chat" ];
-            comment = "Native Gemini wrapper for Plasma";
         })
     ];
 
-    # We remove installPhase entirely.
-    # CMake handles the binary installation automatically.
-    # We only keep postInstall for the custom icon.
     postInstall = ''
-        install -Dm644 $src/google-gemini.svg $out/share/icons/hicolor/scalable/apps/google-gemini.svg
+install -Dm644 $src/google-gemini.svg $out/share/icons/hicolor/scalable/apps/google-gemini.svg
     '';
 
     meta = with lib; {
