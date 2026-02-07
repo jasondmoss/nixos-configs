@@ -71,7 +71,7 @@
                         # Clean lock and wait
                         ExecStartPre = [
                             "!${pkgs.bash}/bin/bash -c 'rm -f %h/.local/share/data/Mega\\ Limited/MEGAsync/megasync.lock'"
-                            "${pkgs.coreutils}/bin/sleep 10"
+                            "${pkgs.coreutils}/bin/sleep 2"
                         ];
 
                         ExecStart = "${pkgs.megasync}/bin/megasync";
@@ -93,7 +93,7 @@
 
                     serviceConfig = {
                         Type = "simple";
-                        ExecStartPre = "${pkgs.coreutils}/bin/sleep 30s";
+#                        ExecStartPre = "${pkgs.coreutils}/bin/sleep 5s";
                         ExecStart = "${pkgs.notes}/bin/notes";
                         Restart = "on-failure";
 

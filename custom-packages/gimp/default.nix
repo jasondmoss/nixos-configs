@@ -24,10 +24,10 @@
         gegl
 
         # Stable version
-        gimp3
+#        gimp3
 
         # Development version (currently RC2)
-#        (pkgs.callPackage ../gimp-devel {})
+        (pkgs.callPackage ../gimp-devel {})
     ]) ++ (with pkgs.gimp3Plugins; [
 #        bimp
 #        exposureBlend
