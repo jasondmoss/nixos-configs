@@ -21,32 +21,6 @@ Kirigami.ApplicationWindow {
         topPadding: 0
         bottomPadding: 0
 
-        // Actions (The "Toolbar" buttons).
-        // actions: [
-        //     Kirigami.Action {
-        //         icon.name: "go-previous"
-        //         text: "Back"
-        //         visible: webView.canGoBack
-        //         onTriggered: webView.goBack()
-        //     },
-        //     Kirigami.Action {
-        //         icon.name: "go-next"
-        //         text: "Forward"
-        //         visible: webView.canGoForward
-        //         onTriggered: webView.goForward()
-        //     },
-        //     Kirigami.Action {
-        //         icon.name: "view-refresh"
-        //         text: "Refresh"
-        //         onTriggered: webView.reload()
-        //     },
-        //     Kirigami.Action {
-        //         icon.name: "go-home"
-        //         text: "Home"
-        //         onTriggered: webView.url = "https://gemini.google.com/"
-        //     }
-        // ]
-
         // Content.
         contentItem: WebEngineView {
             id: webView

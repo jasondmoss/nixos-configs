@@ -34,7 +34,6 @@ wavebox
 			# Backend logic
 			GBM_BACKEND = "nvidia-drm";
 			__GLX_VENDOR_LIBRARY_NAME = "nvidia";
-			LIBVA_DRIVER_NAME = "nvidia";
 
 			# Performance & Protocol
 			__GL_THREADED_OPTIMIZATION = "1";
@@ -46,25 +45,29 @@ wavebox
 			XDG_CONFIG_HOME = "$HOME/.config";
 			XDG_DATA_HOME = "$HOME/.local/share";
 
-			# Electron/Wayland Overrides (Still needed for some apps)
-			NIXOS_OZONE_WL = "1";
-			ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-
-			# Browser
-			DEFAULT_BROWSER = "${lib.getExe pkgs.firefox-nightly}";
-
-			# Integration
 			SSH_ASKPASS = lib.mkForce "ksshaskpass";
 			SSH_ASKPASS_REQUIRE = "prefer";
-
-			EDITOR = "nano";
 		};
 
 		sessionVariables = {
-		    QT_QPA_PLATFORM = "wayland";
+		    QT_QPA_PLATFORM = "wayland;xcb";
+		    # Fixes flickering in WebEngine apps on NVIDIA
+            QT_QUICK_BACKEND = "software"; # Fallback if hardware fails, but usually "rhi" is default.
+            # Electron/Wayland Overrides (Still needed for some apps)
+            NIXOS_OZONE_WL = "1";
+            # Validates hardware video acceleration
+            LIBVA_DRIVER_NAME = "nvidia";
+            # Required for Firefox/Chromium/WebEngine hardware decode
+            NVD_BACKEND = "direct";
+
 		    KDE_SESSION_VERSION = "6";
 		    # Point to the Qt6 dev headers for IDEs
             Qt6_DIR = "${pkgs.kdePackages.qtbase.dev}/lib/cmake/Qt6";
+
+			ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+
+			DEFAULT_BROWSER = "${lib.getExe pkgs.firefox-nightly}";
+			EDITOR = "nano";
 
             GST_PLUGIN_SYSTEM_PATH_1_0 =
                 lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [

@@ -8,6 +8,7 @@ let
         gh-clone       = pkgs.callPackage ../custom-packages/gh-clone/default.nix {};
         gemini-desktop = pkgs.callPackage ../custom-packages/gemini-desktop/default.nix {};
         nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom/default.nix { };
+#        proton-suite   = pkgs.callPackage ../custom-packages/proton-suite/default.nix {};
         strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
         wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
@@ -135,16 +136,6 @@ in {
 
     # Flatten the attribute set of lists into a single list.
     environment.systemPackages = lib.flatten (builtins.attrValues pkgsByCategories);
-
-    # Ensure specialized drivers are prioritized.
-    hardware.graphics = {
-        enable = true;
-        extraPackages = with pkgs; [
-            nvidia-vaapi-driver
-            libva-vdpau-driver
-            libvdpau-va-gl
-        ];
-    };
 }
 
 # <> #

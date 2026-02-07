@@ -5,7 +5,7 @@ project(gemini-desktop VERSION 1.0)
 set(QT_MIN_VERSION "6.6.0")
 set(KF_MIN_VERSION "6.0.0")
 
-# 1. Find Dependencies
+# Find Dependencies
 find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
@@ -28,13 +28,13 @@ find_package(KF6 ${KF_MIN_VERSION} REQUIRED COMPONENTS
     GlobalAccel
 )
 
-# 2. Define Sources
+# Define Sources
 set(gemini_SRCS
     main.cpp
     resources.qrc # You'll need this to bundle the QML
 )
 
-# 3. Executable & Linking
+# Executable & Linking
 add_executable(gemini-desktop ${gemini_SRCS})
 
 target_link_libraries(gemini-desktop
