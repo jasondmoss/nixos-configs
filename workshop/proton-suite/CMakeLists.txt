@@ -1,46 +1,48 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
+project(proton-suite)
 
-project(proton-suite VERSION 1.0 LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 20)
+# Standard C++23 setup
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(ECM 6.0.0 REQUIRED NO_MODULE)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(KDEInstallDirs)
-include(KDECMakeSettings)
-include(KDECompilerSettings NO_POLICY_SCOPE)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick WebEngineQuick Core Gui Widgets WebChannel)
-find_package(KF6Kirigami REQUIRED)
-find_package(KF6StatusNotifierItem REQUIRED)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Qml Quick WebEngineQuick)
+find_package(KF6 6.5 REQUIRED COMPONENTS I18n CoreAddons StatusNotifierItem GlobalAccel WindowSystem DBusAddons)
 
-qt_standard_project_setup()
-
-qt_add_executable(proton-suite
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/resources.qrc
+add_executable(proton-suite
+    src/main.cpp
+    src/controller.cpp
+    # src/controller.h
 )
 
-target_link_libraries(proton-suite
-    PRIVATE
-    Qt6::Quick
-    Qt6::WebEngineQuick
-    Qt6::Widgets
-    Qt6::WebChannel
-    KF6::Kirigami
-    KF6::StatusNotifierItem
+target_link_libraries(proton-suite PRIVATE
+    Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick Qt6::WebEngineQuick
+    KF6::I18n KF6::CoreAddons KF6::StatusNotifierItem KF6::GlobalAccel KF6::WindowSystem KF6::DBusAddons
 )
 
-install(TARGETS proton-suite
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${KDE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${KDE_INSTALL_BINDIR}
-)
-
-# [FIX] Install SVG to the 'scalable' directory.
-# If this path is wrong, the icon will not appear in the menu.
 install(FILES src/assets/proton-suite.svg
-    DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps
+        DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
+
+install(TARGETS proton-suite DESTINATION ${KDE_INSTALL_BINDIR})
+
+# Embed QML resources
+qt_add_qml_module(proton-suite
+    URI "ProtonSuite"
+    VERSION 1.0
+    QML_FILES
+        src/qml/Main.qml
+        src/qml/ProtonTab.qml
 )
+
+install(FILES src/assets/proton-suite.svg
+        DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
+
+install(TARGETS proton-suite DESTINATION bin)

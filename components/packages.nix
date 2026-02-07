@@ -8,7 +8,7 @@ let
         gh-clone       = pkgs.callPackage ../custom-packages/gh-clone/default.nix {};
         gemini-desktop = pkgs.callPackage ../custom-packages/gemini-desktop/default.nix {};
         nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom/default.nix { };
-#        proton-suite   = pkgs.callPackage ../custom-packages/proton-suite/default.nix {};
+        proton-suite   = pkgs.callPackage ../custom-packages/proton-suite/default.nix {};
         strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
         wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};

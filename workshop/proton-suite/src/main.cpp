@@ -1,15 +1,14 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtWebEngineQuick/QtWebEngineQuick>
+#include <QQmlContext>
+#include <KDBusService>
+#include <KLocalizedString>
+#include "controller.h"
+
 #include <QStandardPaths>
 #include <QDir>
 #include <QDebug>
-#include <QIcon>
-#include <QString>
-#include <QMenu>
-#include <QAction>
-#include <QWindow>
-#include <KStatusNotifierItem>
 
 int main(int argc, char *argv[])
 {
@@ -17,66 +16,58 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    app.setQuitOnLastWindowClosed(false);
-    app.setApplicationName(QStringLiteral("Proton Suite"));
-    app.setOrganizationName(QStringLiteral("Proton"));
-    app.setOrganizationDomain(QStringLiteral("nixos.local"));
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("proton-suite")));
+    KLocalizedString::setApplicationDomain("proton-suite");
 
-    // 1. [NUCLEAR FIX] Manually Create the Storage Directory
-    // QML fails if this folder doesn't exist yet.
-    QString basePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    // Path: ~/.local/share/Proton/Proton Suite/QtWebEngine/ProtonSession
-    QString storagePath = basePath + QStringLiteral("/QtWebEngine/ProtonSession");
+    // These names define the folder structure in ~/.local/share/
+    app.setOrganizationName("Proton");
+    app.setApplicationName("proton-suite");
+    app.setWindowIcon(QIcon::fromTheme("proton-suite"));
 
-    QDir dir(storagePath);
-    if (!dir.exists()) {
-        dir.mkpath(QStringLiteral("."));
-        qDebug() << "Created storage directory:" << storagePath;
+    // Ensure the storage directory exists
+    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dir(dataPath);
+
+    if (! dir.exists()) {
+        qInfo() << "Creating data directory:" << dataPath;
+        dir.mkpath("."); // Effectively 'mkdir -p'
+    } else {
+        qInfo() << "Using data directory:" << dataPath;
     }
+
+    KDBusService service(KDBusService::Unique);
+
+    Controller controller;
+
+    QObject::connect(
+        &service,
+        &KDBusService::activateRequested,
+        &controller,
+        &Controller::activate
+    );
 
     QQmlApplicationEngine engine;
 
+    engine.rootContext()->setContextProperty("Controller", &controller);
+
+    const QUrl url(QStringLiteral("qrc:/ProtonSuite/src/qml/Main.qml"));
+
     QObject::connect(
-        &engine, &QQmlApplicationEngine::objectCreationFailed,
-        &app, []() { QCoreApplication::exit(-1); },
-        Qt::QueuedConnection
-    );
-
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("proton-suite")));
-
-    engine.load(QUrl(QStringLiteral("qrc:/qml/Main.qml")));
-
-    // --- TRAY LOGIC ---
-    KStatusNotifierItem *tray = new KStatusNotifierItem(&app);
-    tray->setIconByName(QStringLiteral("proton-suite"));
-    tray->setTitle(QStringLiteral("Proton Suite"));
-    tray->setToolTip(QStringLiteral("Proton Suite"), QStringLiteral("Mail, Drive & Calendar"), QStringLiteral("proton-suite"));
-    tray->setCategory(KStatusNotifierItem::ApplicationStatus);
-    tray->setStatus(KStatusNotifierItem::Active);
-
-    auto toggleWindow = [&engine]() {
-        const auto rootObjects = engine.rootObjects();
-        if (rootObjects.isEmpty()) return;
-        QWindow *window = qobject_cast<QWindow*>(rootObjects.first());
-        if (window) {
-            if (window->isVisible()) {
-                window->hide();
-            } else {
-                window->show();
-                window->requestActivate();
-            }
+        &engine,
+        &QQmlApplicationEngine::objectCreated,
+        &app,
+        [url, &controller](QObject *obj,
+        const QUrl &objUrl
+    ) {
+        if (!obj && url == objUrl) {
+            QCoreApplication::exit(-1);
         }
-    };
 
-    QObject::connect(tray, &KStatusNotifierItem::activateRequested, &app, toggleWindow);
+        if (auto window = qobject_cast<QQuickWindow*>(obj)) {
+            controller.setWindow(window);
+        }
+    }, Qt::QueuedConnection);
 
-    QMenu *menu = tray->contextMenu();
-    QAction *showAction = menu->addAction(QStringLiteral("Show/Hide"));
-    QObject::connect(showAction, &QAction::triggered, &app, toggleWindow);
-
-    QAction *quitAction = menu->addAction(QStringLiteral("Quit"));
-    QObject::connect(quitAction, &QAction::triggered, &app, &QCoreApplication::quit);
+    engine.load(url);
 
     return app.exec();
 }
