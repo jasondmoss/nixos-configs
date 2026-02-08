@@ -1,6 +1,4 @@
-{
-    lib, stdenv, fetchFromGitHub, kdePackages, cmake
-}:
+{ lib, stdenv, fetchFromGitHub, kdePackages, cmake }:
 stdenv.mkDerivation rec {
     pname = "klassy";
     version = "master";
@@ -9,7 +7,7 @@ stdenv.mkDerivation rec {
         owner = "paulmcauley";
         repo = "klassy";
         rev = version;
-        hash = "";
+        hash = "sha256-Qsd1Wd7QmeWTgqZd7VNbn6myVt4H8KbWt2aU4qpyy30=";
     };
 
     buildInputs = [

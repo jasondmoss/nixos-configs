@@ -7,7 +7,7 @@ let
         gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant/default.nix {};
         gh-clone       = pkgs.callPackage ../custom-packages/gh-clone/default.nix {};
         gemini-desktop = pkgs.callPackage ../custom-packages/gemini-desktop/default.nix {};
-        # kde-klassy   = pkgs.callPackage ../custom-packages/kde-klassy {};
+        kde-klassy   = pkgs.callPackage ../custom-packages/kde-klassy {};
         kde-darkly     = pkgs.callPackage ../custom-packages/kde-darkly {};
         nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom/default.nix { };
         proton-suite   = pkgs.callPackage ../custom-packages/proton-suite/default.nix {};
@@ -58,8 +58,6 @@ let
             cppcheck
         ];
 
-        # New Category: KDE Plasma 6 & KF6 Core
-        # Following Plasma 6.5+ and KF 6.20+ standards
         kde-plasma-core = with pkgs.kdePackages; [
 
             # Core Shell & Workspaces
@@ -106,7 +104,9 @@ let
             isoimagewriter
             kate
             kcalc
+            kdegraphics-thumbnailers
             kdenlive
+            kdesdk-thumbnailers
             kdevelop
             kompare
             krdc
@@ -114,8 +114,6 @@ let
             ktorrent
             okular
             partitionmanager
-            kdegraphics-thumbnailers
-            kdesdk-thumbnailers
         ];
 
         kde-pim = with pkgs.kdePackages; [
@@ -132,17 +130,35 @@ let
         ];
 
         gnome-stack = with pkgs; [
-            nautilus
-            gnome-tweaks
-            gcolor3
             adwaita-icon-theme
+            gcolor3
+            gnome-tweaks
             morewaita-icon-theme
+            nautilus
         ];
 
         system-tools = with pkgs; [
-            coreutils-full curl diffutils dysk fwupd fwupd-efi
-            htop inetutils inxi killall lsd lshw nvme-cli pciutils
-            smartmontools systemctl-tui usbutils wget git
+            conky
+            coreutils-full
+            curl
+            diffutils
+            dysk
+            fwupd
+            fwupd-efi
+            git
+            htop
+            inetutils
+            inxi
+            killall
+            lsd
+            lshw
+            nvme-cli
+            pciutils
+            smartmontools
+            systemctl-tui
+            usbutils
+            wezterm
+            wget
         ];
 
         graphics-multimedia = with pkgs; [
@@ -164,9 +180,17 @@ let
         ];
 
         network-web = with pkgs; [
-            filezilla firefox-nightly google-chrome links2 megasync
-            megatools microsoft-edge mullvad-browser openvpn
-            protonvpn-gui tor-browser
+            filezilla
+            firefox-nightly
+            google-chrome
+            links2
+            megasync
+            megatools
+            microsoft-edge
+            mullvad-browser
+            openvpn
+            protonvpn-gui
+            tor-browser
         ];
 
         theming-compat = with pkgs; [
@@ -175,6 +199,10 @@ let
             qadwaitadecorations-qt6
             comixcursors
             kdePackages.qt6ct
+        ];
+
+        miscellaneous = with pkgs; [
+            rofi
         ];
 
         custom = (builtins.attrValues customPkgs);
