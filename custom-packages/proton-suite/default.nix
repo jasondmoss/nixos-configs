@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
             name = "proton-suite";
             desktopName = "Proton Suite";
             genericName = "Encrypted Workspace";
-            exec = "proton-suite";
+            exec = "proton-suite %u";
             icon = "proton-suite";
             comment = "Proton Mail, Drive, Calendar, and Pass";
             categories = [ "Office" "Network" "Email" ];
