@@ -1,8 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
 
 let
     # --- Custom Package Definitions ---
     customPkgs = {
+        feedbin-rss    = pkgs.callPackage ../custom-packages/feedbin-rss/default.nix { };
         gemini-wrapped = pkgs.callPackage ../custom-packages/gemini-cli/wrapper.nix {};
         gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant/default.nix {};
         gh-clone       = pkgs.callPackage ../custom-packages/gh-clone/default.nix {};
