@@ -22,6 +22,21 @@ int main(int argc, char *argv[]) {
     app.setApplicationName("proton-suite");
     app.setWindowIcon(QIcon::fromTheme("proton-suite"));
 
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Proton Suite PWA");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    // Define the --background option
+    QCommandLineOption minOption(
+        "background",
+        "Start application minimized to system tray."
+    );
+    parser.addOption(minOption);
+    parser.process(app);
+
+    bool startMinimized = parser.isSet(minOption);
+
     // Data Path.
     QString dataPath = QStandardPaths::writableLocation(
         QStandardPaths::AppDataLocation
@@ -38,7 +53,9 @@ int main(int argc, char *argv[]) {
     profile->setHttpCacheType(QWebEngineProfile::DiskHttpCache);
 
     // Notification Bridge.
-    profile->setNotificationPresenter([](std::unique_ptr<QWebEngineNotification> webNotice) {
+    profile->setNotificationPresenter(
+        [](std::unique_ptr<QWebEngineNotification> webNotice
+    ) {
         KNotification *notify = new KNotification("event");
         notify->setTitle(webNotice->title());
         notify->setText(webNotice->message());
@@ -47,7 +64,7 @@ int main(int argc, char *argv[]) {
     });
 
     KDBusService service(KDBusService::Unique);
-    Controller controller;
+    Controller controller(nullptr, startMinimized);
     QObject::connect(
         &service,
         &KDBusService::activateRequested,

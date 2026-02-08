@@ -8,8 +8,8 @@ import QtCore
 Kirigami.ApplicationWindow {
     id: root
     width: 2000
-    height: 1450
-    visible: true
+    height: 1250
+    visible: Controller.visible
     title: "Proton Suite"
 
     // Define profile in QML.

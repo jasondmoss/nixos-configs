@@ -27,7 +27,7 @@ stdenv.mkDerivation rec {
     desktopItems = [
         (makeDesktopItem {
             name = "feedbin-rss";
-            exec = "feedbin-rss";
+            exec = "feedbin-rss %u";
             icon = "feedbin-rss";
             desktopName = "Feedbin RSS";
             genericName = "RSS Reader";

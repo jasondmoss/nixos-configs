@@ -133,7 +133,7 @@ class GeminiApp(QApplication):
         self.setup_global_shortcut()
 
         # Only show the window if "--hidden" is NOT present in the arguments.
-        if "--hidden" not in argv:
+        if "--background" not in argv:
             self.window.show()
 
     def on_tray_click(self, reason):

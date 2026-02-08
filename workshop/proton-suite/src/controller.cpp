@@ -5,12 +5,11 @@
 #include <QCoreApplication>
 #include <QMenu>
 #include <QtQuick>
-// ADDED: Standard event headers
 #include <QEvent>
 #include <QCloseEvent>
 
-Controller::Controller(QObject *parent)
-    : QObject(parent), m_tray(nullptr), m_isVisible(true)
+Controller::Controller(QObject *parent, bool startMinimized)
+    : QObject(parent), m_tray(nullptr), m_isVisible(! startMinimized)
 {
     setupTray();
     setupGlobalShortcut();
@@ -19,24 +18,19 @@ Controller::Controller(QObject *parent)
 void Controller::setWindow(QQuickWindow* window)
 {
     m_window = window;
-
-    // CRITICAL FIX: We do NOT use connect() here anymore because
-    // QQuickCloseEvent is incomplete in this Qt version. We use an event
-    // filter instead.
     if (m_window) {
         m_window->installEventFilter(this);
     }
 }
 
-// CRITICAL FIX: Handle the close event via the standard QCloseEvent class
 bool Controller::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == m_window && event->type() == QEvent::Close) {
         auto *closeEvent = static_cast<QCloseEvent*>(event);
-        closeEvent->ignore(); // Keep app running
-        setVisible(false);    // Just hide the window
+        closeEvent->ignore(); // Keep app running.
+        setVisible(false);    // Just hide the window.
 
-        return true;          // Event handled
+        return true;
     }
 
     return QObject::eventFilter(watched, event);

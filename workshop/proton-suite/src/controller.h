@@ -11,7 +11,8 @@ class Controller
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
 
 public:
-    explicit Controller(QObject *parent = nullptr);
+//    explicit Controller(QObject *parent = nullptr);
+    explicit Controller(QObject *parent = nullptr, bool startMinimized = false);
 
     void setWindow(QQuickWindow* window);
     bool isVisible() const;

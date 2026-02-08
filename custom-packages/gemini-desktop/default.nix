@@ -33,7 +33,7 @@ python3Packages.buildPythonApplication rec {
         (makeDesktopItem {
             name = "gemini-desktop";
             desktopName = "Gemini Desktop";
-            exec = "gemini-desktop --hidden";
+            exec = "gemini-desktop %u";
             icon = "gemini-desktop";
             comment = "Google Gemini AI PWA";
             categories = [ "Office" "Network" ];

@@ -97,9 +97,22 @@ int main(int argc, char *argv[])
     QObject::connect(tray, &KStatusNotifierItem::activateRequested, toggleWindow);
     QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
 
-    KGlobalAccel::self()->setGlobalShortcut(toggleAction, QKeySequence(QStringLiteral("Meta+S")));
+    KGlobalAccel::self()->setGlobalShortcut(
+        toggleAction,
+        QKeySequence(QStringLiteral("Meta+S"))
+    );
 
     app.setQuitOnLastWindowClosed(false);
+
+    // Check if the "--background" flag was passed.
+    bool startMinimized = app.arguments().contains(QStringLiteral("--background"));
+    if (! startMinimized) {
+        view->show();
+    } else {
+        // Ensure the window is technically created but not visible.
+        view->hide();
+    }
+
     view->show();
 
     return app.exec();
