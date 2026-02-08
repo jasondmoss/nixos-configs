@@ -21,13 +21,14 @@ stdenv.mkDerivation rec {
         qt6.qtbase
         qt6.qtdeclarative
         qt6.qtwebengine
-        kdePackages.kirigami
         kdePackages.kcoreaddons
-        kdePackages.ki18n
-        kdePackages.kstatusnotifieritem
-        kdePackages.kglobalaccel
-        kdePackages.kwindowsystem
         kdePackages.kdbusaddons
+        kdePackages.kglobalaccel
+        kdePackages.ki18n
+        kdePackages.kirigami
+        kdePackages.knotifications
+        kdePackages.kstatusnotifieritem
+        kdePackages.kwindowsystem
     ];
 
     desktopItems = [

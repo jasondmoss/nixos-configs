@@ -103,6 +103,7 @@ let
             ffmpegthumbs
             ghostwriter
             isoimagewriter
+            ksshaskpass
             kate
             kcalc
             kdegraphics-thumbnailers

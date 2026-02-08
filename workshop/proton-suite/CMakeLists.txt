@@ -14,8 +14,22 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(KDEInstallDirs)
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Qml Quick WebEngineQuick)
-find_package(KF6 6.5 REQUIRED COMPONENTS I18n CoreAddons StatusNotifierItem GlobalAccel WindowSystem DBusAddons)
+find_package(Qt6 6.8 REQUIRED COMPONENTS
+    Core
+    Gui
+    Qml
+    Quick
+    WebEngineQuick
+)
+find_package(KF6 6.5 REQUIRED COMPONENTS
+    CoreAddons
+    DBusAddons
+    GlobalAccel
+    I18n
+    Notifications
+    StatusNotifierItem
+    WindowSystem
+)
 
 add_executable(proton-suite
     src/main.cpp
@@ -24,12 +38,22 @@ add_executable(proton-suite
 )
 
 target_link_libraries(proton-suite PRIVATE
-    Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick Qt6::WebEngineQuick
-    KF6::I18n KF6::CoreAddons KF6::StatusNotifierItem KF6::GlobalAccel KF6::WindowSystem KF6::DBusAddons
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Quick
+    Qt6::WebEngineQuick
+    KF6::CoreAddons
+    KF6::DBusAddons
+    KF6::GlobalAccel
+    KF6::I18n
+    KF6::Notifications
+    KF6::StatusNotifierItem
+    KF6::WindowSystem
 )
 
 install(FILES src/assets/proton-suite.svg
-        DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
+    DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
 
 install(TARGETS proton-suite DESTINATION ${KDE_INSTALL_BINDIR})
 
@@ -43,6 +67,6 @@ qt_add_qml_module(proton-suite
 )
 
 install(FILES src/assets/proton-suite.svg
-        DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
+    DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
 
 install(TARGETS proton-suite DESTINATION bin)
