@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import sys
 import os
 import signal
@@ -25,22 +26,27 @@ class GeminiWindow(QMainWindow):
         self.resize(1200, 1600)
         self.setWindowIcon(QIcon(ICON_PATH))
 
-        # Setup Persistence
+        # Setup Persistence.
         self.profile = QWebEngineProfile(APP_ID, self)
         self.profile.setPersistentStoragePath(STORAGE_PATH)
-        self.profile.setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies)
+        self.profile.setPersistentCookiesPolicy(
+            QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies
+        )
         self.profile.setHttpUserAgent(USER_AGENT)
 
-        # Inject JS to clean up the environment
+        # Inject JS to clean up the environment.
         self.inject_gecko_spoof()
 
-        # Setup Web View
+        # Setup Web View.
         self.webview = QWebEngineView()
         self.webview.setPage(GeminiPage(self.profile, self.webview))
 
-        # This allows navigator.clipboard.writeText to function
+        # This allows navigator.clipboard.writeText to function.
         settings = self.webview.settings()
-        settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptCanAccessClipboard, True)
+        settings.setAttribute(
+            QWebEngineSettings.WebAttribute.JavascriptCanAccessClipboard,
+            True
+        )
         settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptCanPaste, True)
 
         self.setCentralWidget(self.webview)
@@ -56,6 +62,7 @@ Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
         script.setWorldId(QWebEngineScript.ScriptWorldId.MainWorld)
         script.setInjectionPoint(QWebEngineScript.InjectionPoint.DocumentCreation)
         script.setRunsOnSubFrames(True)
+
         self.profile.scripts().insert(script)
 
     def closeEvent(self, event):
@@ -124,7 +131,10 @@ class GeminiApp(QApplication):
         self.tray_icon.show()
 
         self.setup_global_shortcut()
-        self.window.show()
+
+        # Only show the window if "--hidden" is NOT present in the arguments.
+        if "--hidden" not in argv:
+            self.window.show()
 
     def on_tray_click(self, reason):
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
@@ -132,7 +142,11 @@ class GeminiApp(QApplication):
 
     def toggle_window(self, _=None):
         if self.window.isVisible():
-            if self.window.isActiveWindow():
+            # If minimized or not active, bring it to front.
+            if self.window.isMinimized():
+                 self.window.showNormal()
+                 self.window.activateWindow()
+            elif self.window.isActiveWindow():
                 self.window.hide()
             else:
                 self.window.activateWindow()
@@ -150,33 +164,9 @@ class GeminiApp(QApplication):
 
     def setup_global_shortcut(self):
         try:
-            bus = dbus.SessionBus()
-            kglobalaccel = bus.get_object("org.kde.kglobalaccel", "/kglobalaccel")
-
-            component = "gemini-desktop"
-            action_name = "toggle"
-            friendly_name = "Toggle Gemini Desktop"
-
-            kglobalaccel.doRegister([component, action_name, friendly_name],
-                                    dbus_interface="org.kde.KGlobalAccel")
-
-            key_seq = QKeySequence("Meta+Z")
-            key_int = key_seq[0].toCombined()
-
-            kglobalaccel.setShortcut(
-                [component, action_name],
-                [key_int],
-                0,
-                dbus_interface="org.kde.KGlobalAccel"
-            )
-
-            bus.add_signal_receiver(
-                self.on_shortcut_triggered,
-                dbus_interface="org.kde.kglobalaccel.Component",
-                signal_name="globalShortcutPressed"
-            )
+           pass
         except Exception as e:
-            print(f"Failed to register global shortcut: {e}")
+           print(f"Failed to register global shortcut: {e}")
 
     def on_shortcut_triggered(self, component, action, timestamp):
         if component == "gemini-desktop" and action == "toggle":

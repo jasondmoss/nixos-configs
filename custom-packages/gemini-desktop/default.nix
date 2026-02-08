@@ -33,7 +33,7 @@ python3Packages.buildPythonApplication rec {
         (makeDesktopItem {
             name = "gemini-desktop";
             desktopName = "Gemini Desktop";
-            exec = "gemini-desktop";
+            exec = "gemini-desktop --hidden";
             icon = "gemini-desktop";
             comment = "Google Gemini AI PWA";
             categories = [ "Office" "Network" ];
@@ -48,10 +48,10 @@ mkdir -p $out/bin
 cp main.py $out/bin/gemini-desktop
 chmod +x $out/bin/gemini-desktop
 
-# FIX: Copy the icon to the bin folder so the python script finds it
+# Copy the icon to the bin folder so the python script finds it.
 cp gemini-desktop.svg $out/bin/gemini-desktop.svg
 
-# Keep this copy for the system menu integration
+# Keep this copy for the system menu integration.
 mkdir -p $out/share/icons/hicolor/scalable/apps
 cp gemini-desktop.svg $out/share/icons/hicolor/scalable/apps/gemini-desktop.svg
 

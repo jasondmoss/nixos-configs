@@ -144,6 +144,7 @@ let
             coreutils-full
             curl
             diffutils
+            dmidecode
             dysk
             fwupd
             fwupd-efi
@@ -156,6 +157,7 @@ let
             lshw
             nvme-cli
             pciutils
+            screenfetch
             smartmontools
             systemctl-tui
             usbutils
