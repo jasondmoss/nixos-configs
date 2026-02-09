@@ -232,6 +232,7 @@
     imports = [
         ../common.nix
         ../custom-packages/ollama
+        # ../components/debugging.nix
     ];
 }
 

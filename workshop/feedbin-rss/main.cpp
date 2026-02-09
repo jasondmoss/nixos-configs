@@ -14,6 +14,7 @@
 #include <QUrl>
 #include <QDir>
 #include <QDesktopServices>
+#include <QToolTip>
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +23,9 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("feedbin-rss")));
 
     // --- Persistence Setup ---
-    const QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    const QString appDataPath = QStandardPaths::writableLocation(
+        QStandardPaths::AppDataLocation
+    );
     const QString storagePath = appDataPath + QStringLiteral("/webengine");
     QDir().mkpath(storagePath);
 
@@ -38,10 +41,27 @@ int main(int argc, char *argv[])
     view->setWindowTitle(QStringLiteral("Feedbin RSS"));
     view->resize(1700, 1200);
 
+    // Listener for Tooltips.
+    QObject::connect(page, &QWebEnginePage::linkHovered, [](const QString &url) {
+        if (! url.isEmpty()) {
+            // Show the URL as a tooltip at the current mouse position.
+            QToolTip::showText(QCursor::pos(), url);
+        } else {
+            // Hide the tooltip when moving away from a link.
+            QToolTip::hideText();
+        }
+    });
+
     // --- External Link Handling (C++ Side) ---
-    QObject::connect(page, &QWebEnginePage::navigationRequested, [](QWebEngineNavigationRequest &request) {
+    QObject::connect(
+        page,
+        &QWebEnginePage::navigationRequested,
+        [](QWebEngineNavigationRequest &request)
+    {
         const QUrl url = request.url();
-        if (!url.host().contains(QStringLiteral("feedbin.com")) && !url.host().isEmpty()) {
+        if (! url.host().contains(QStringLiteral("feedbin.com"))
+            && !url.host().isEmpty()
+        ) {
             request.reject();
             QDesktopServices::openUrl(url);
         } else {
@@ -54,11 +74,27 @@ int main(int argc, char *argv[])
         if (ok) {
             page->runJavaScript(QStringLiteral(
                 "document.addEventListener('click', function(e) {"
-                "    let anchor = e.target.closest('a');"
-                "    if (anchor && anchor.href && !anchor.href.includes('feedbin.com')) {"
-                "        e.preventDefault();"
-                "        window.location.href = anchor.href;"
-                "    }"
+                "  let anchor = e.target.closest('a');"
+                "  if (anchor && anchor.href && ! anchor.href.includes('feedbin.com')) {"
+                "    e.preventDefault();"
+                "    window.location.href = anchor.href;"
+                "  }"
+                "}, true);"
+
+                // HOVER Handler (Targeted Tooltips)
+                "document.addEventListener('mouseover', function(e) {"
+                "  let anchor = e.target.closest('a');"
+                "  /* Only show tooltip if link is inside the article content column */"
+                "  if (anchor && anchor.closest('.entry-column .entry-content-wrap')) {"
+                "    window.status = 'hover:' + anchor.href;"
+                "  } else {"
+                "    window.status = '';"
+                "  }"
+                "}, true);"
+
+                // MOUSEOUT Handler (Cleanup)
+                "document.addEventListener('mouseout', function(e) {"
+                "  window.status = '';"
                 "}, true);"
             ));
         }
@@ -76,10 +112,18 @@ int main(int argc, char *argv[])
     tray->setStatus(KStatusNotifierItem::Active);
     tray->setStandardActionsEnabled(false);
 
-    auto *toggleAction = new QAction(QIcon::fromTheme(QStringLiteral("view-preview")), QStringLiteral("Show/Hide"), view);
-    toggleAction->setObjectName(QStringLiteral("toggleWindowAction")); // FIXES SHORTCUT WARNING
+    auto *toggleAction = new QAction(
+        QIcon::fromTheme(QStringLiteral("view-preview")),
+        QStringLiteral("Show/Hide"),
+        view
+    );
+    toggleAction->setObjectName(QStringLiteral("toggleWindowAction"));
 
-    auto *quitAction = new QAction(QIcon::fromTheme(QStringLiteral("application-exit")), QStringLiteral("Quit"), view);
+    auto *quitAction = new QAction(
+        QIcon::fromTheme(QStringLiteral("application-exit")),
+        QStringLiteral("Quit"),
+        view
+    );
     quitAction->setObjectName(QStringLiteral("quitAction"));
 
     auto *menu = new QMenu();
@@ -113,8 +157,5 @@ int main(int argc, char *argv[])
         view->hide();
     }
 
-    view->show();
-
     return app.exec();
 }
-

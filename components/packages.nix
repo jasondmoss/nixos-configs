@@ -32,7 +32,6 @@ let
             nodejs
             yarn
             gcc
-            gdb
             gnumake
             ninja
             cmake
