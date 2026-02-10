@@ -7,8 +7,8 @@ import QtCore
 
 Kirigami.ApplicationWindow {
     id: root
-    width: 2000
-    height: 1250
+    width: 2200
+    height: 1300
     visible: Controller.visible
     title: "Proton Suite"
 
