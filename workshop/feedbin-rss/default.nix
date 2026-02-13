@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
     pname = "feedbin-rss";
     version = "1.0.0";
 
-    src = ../../workshop/feedbin-rss;
+    src = ./.;
 
     nativeBuildInputs = [
         cmake

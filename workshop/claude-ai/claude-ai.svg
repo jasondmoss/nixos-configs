@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+    <!-- Background circle -->
+    <circle cx="64" cy="64" r="60" fill="#D4A574"/>
+    <!-- Stylized "C" letterform representing Claude -->
+    <path d="M82 42c-4-6-11-10-18-10-16 0-28 14-28 32s12 32 28 32c7 0 14-4 18-10"
+          fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+    <!-- Accent dot — the "spark" -->
+    <circle cx="88" cy="42" r="5" fill="#FFFFFF"/>
+</svg>

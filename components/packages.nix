@@ -3,18 +3,21 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
-        feedbin-rss    = pkgs.callPackage ../custom-packages/feedbin-rss/default.nix { };
         gemini-wrapped = pkgs.callPackage ../custom-packages/gemini-cli/wrapper.nix {};
-        gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant/default.nix {};
-        gh-clone       = pkgs.callPackage ../custom-packages/gh-clone/default.nix {};
-        gemini-desktop = pkgs.callPackage ../custom-packages/gemini-desktop/default.nix {};
+        gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant {};
+        gh-clone       = pkgs.callPackage ../custom-packages/gh-clone {};
         kde-klassy   = pkgs.callPackage ../custom-packages/kde-klassy {};
         kde-darkly     = pkgs.callPackage ../custom-packages/kde-darkly {};
-        nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom/default.nix { };
-        proton-suite   = pkgs.callPackage ../custom-packages/proton-suite/default.nix {};
+        nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom { };
         strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
         wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
+
+        # Custom made applications.
+        claude-ai      = pkgs.callPackage ../workshop/claude-ai {};
+        feedbin-rss    = pkgs.callPackage ../workshop/feedbin-rss { };
+        gemini-desktop = pkgs.callPackage ../workshop/gemini-desktop {};
+        proton-suite   = pkgs.callPackage ../workshop/proton-suite {};
     };
 
     # --- Package Categories ---

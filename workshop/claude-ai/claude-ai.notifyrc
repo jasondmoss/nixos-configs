@@ -1,0 +1,10 @@
+[Global]
+IconName=claude-ai
+Comment=Claude AI
+Name=Claude AI
+
+[Event/webNotification]
+Name=Web Notification
+Comment=Notification from Claude AI web application
+Action=Popup
+Urgency=Normal

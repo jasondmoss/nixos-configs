@@ -7,7 +7,7 @@ stdenv.mkDerivation rec {
     pname = "proton-suite";
     version = "1.0.2";
 
-    src = ../../workshop/proton-suite;
+    src = ./.;
 
     nativeBuildInputs = [
         cmake

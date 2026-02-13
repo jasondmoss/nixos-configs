@@ -4,7 +4,7 @@ python3Packages.buildPythonApplication rec {
     pname = "gemini-desktop";
     version = "1.0.0";
 
-    src = ../../workshop/gemini-desktop;
+    src = ./.;
 
     format = "other";
 
