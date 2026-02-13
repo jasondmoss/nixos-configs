@@ -73,28 +73,28 @@ int main(int argc, char *argv[])
     QObject::connect(page, &QWebEnginePage::loadFinished, [page](bool ok) {
         if (ok) {
             page->runJavaScript(QStringLiteral(
-                "document.addEventListener('click', function(e) {"
-                "  let anchor = e.target.closest('a');"
-                "  if (anchor && anchor.href && ! anchor.href.includes('feedbin.com')) {"
-                "    e.preventDefault();"
-                "    window.location.href = anchor.href;"
-                "  }"
+                "document.addEventListener('click', (e) => {"
+                "    let anchor = e.target.closest('a');"
+                "    if (anchor && anchor.href && ! anchor.href.includes('feedbin.com')) {"
+                "        e.preventDefault();"
+                "        window.location.href = anchor.href;"
+                "    }"
                 "}, true);"
 
                 // HOVER Handler (Targeted Tooltips)
-                "document.addEventListener('mouseover', function(e) {"
-                "  let anchor = e.target.closest('a');"
-                "  /* Only show tooltip if link is inside the article content column */"
-                "  if (anchor && anchor.closest('.entry-column .entry-content-wrap')) {"
-                "    window.status = 'hover:' + anchor.href;"
-                "  } else {"
-                "    window.status = '';"
-                "  }"
+                "document.addEventListener('mouseover', (e) => {"
+                "    let anchor = e.target.closest('a');"
+                "    /* Only show tooltip if link is inside the article content column */"
+                "    if (anchor && anchor.closest('.entry-column.has-content .entry-inner')) {"
+                "        window.status = 'hover:' + anchor.href;"
+                "    } else {"
+                "        window.status = '';"
+                "    }"
                 "}, true);"
 
                 // MOUSEOUT Handler (Cleanup)
-                "document.addEventListener('mouseout', function(e) {"
-                "  window.status = '';"
+                "document.addEventListener('mouseout', (e) => {"
+                "    window.status = '';"
                 "}, true);"
             ));
         }

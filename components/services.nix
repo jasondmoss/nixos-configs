@@ -73,31 +73,22 @@ local {
         displayManager = {
             enable = true;
 
-            sddm = {
+            ly = {
                 enable = true;
-                enableHidpi = true;
-                wayland = {
-                    enable = true;
-                    compositor = "kwin";
+                x11Support = false;
+
+                settings = {
+                    clear_password = true;
+                    clock = "%c";
+                    #animation = "matrix";
+                    #animation_timeout_sec = "20";
+                    animation = "none";
+                    input_len = "64";
+                    waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
                 };
             };
 
             defaultSession = "plasma";
-
-#            ly = {
-#                enable = true;
-#                x11Support = false;
-#
-#                settings = {
-#                    clear_password = true;
-#                    clock = "%c";
-#                    #animation = "matrix";
-#                    #animation_timeout_sec = "20";
-#                    animation = "none";
-#                    input_len = "64";
-#                    waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
-#                };
-#            };
         };
 
         desktopManager.plasma6 = {
