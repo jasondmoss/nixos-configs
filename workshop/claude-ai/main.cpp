@@ -22,6 +22,8 @@
 #include <KStatusNotifierItem>
 #include <KNotification>
 #include <KGlobalAccel>
+#include <KSharedConfig>
+#include <KWindowConfig>
 #include <QAction>
 #include <QCloseEvent>
 #include <QMenu>
@@ -45,6 +47,8 @@ class ClaudeWindow : public QMainWindow
     protected:
         void closeEvent(QCloseEvent *event) override
         {
+            auto grp = KSharedConfig::openConfig()->group(QStringLiteral("MainWindow"));
+            KWindowConfig::saveWindowSize(windowHandle(), grp);
             event->ignore();
             hide();
         }
@@ -115,7 +119,16 @@ int main(int argc, char *argv[])
     // --- Main window with URL bar ---
     auto *window = new ClaudeWindow();
     window->setWindowTitle(QStringLiteral("Claude AI"));
-    window->resize(1700, 1200);
+
+    // Default size (first launch only — overridden by saved config).
+    window->resize(1075, 1580);
+
+    // Restore saved window size from previous session.
+    window->winId(); // Forces native QWindow creation (create() is protected).
+    KWindowConfig::restoreWindowSize(
+        window->windowHandle(),
+        KSharedConfig::openConfig()->group(QStringLiteral("MainWindow"))
+    );
 
     // URL bar in a non-movable toolbar.
     auto *navBar = new QToolBar(QStringLiteral("Navigation"), window);
@@ -170,7 +183,9 @@ int main(int argc, char *argv[])
         &QWebEnginePage::permissionRequested,
         [](QWebEnginePermission permission)
     {
-        if (permission.permissionType() == QWebEnginePermission::PermissionType::Notifications) {
+        if (permission.permissionType() ==
+            QWebEnginePermission::PermissionType::Notifications
+        ) {
             permission.grant();
         }
     });
@@ -270,7 +285,12 @@ int main(int argc, char *argv[])
         tray, &KStatusNotifierItem::activateRequested, activateOrHide
     );
     QObject::connect(quitAction, &QAction::triggered, &app, [window, &app]() {
+        auto grp = KSharedConfig::openConfig()
+            ->group(QStringLiteral("MainWindow"));
+        KWindowConfig::saveWindowSize(window->windowHandle(), grp);
+
         delete window; // Tear down WebEngine before profile/app destructor.
+
         app.quit();
     });
 
@@ -286,7 +306,6 @@ int main(int argc, char *argv[])
     const bool startMinimized = app.arguments().contains(
         QStringLiteral("--background")
     );
-
     if (! startMinimized) {
         window->show();
     }

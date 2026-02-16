@@ -59,6 +59,9 @@ let
             sublime4
             pre-commit
             cppcheck
+
+            # Android
+            android-tools
         ];
 
         kde-plasma-core = with pkgs.kdePackages; [

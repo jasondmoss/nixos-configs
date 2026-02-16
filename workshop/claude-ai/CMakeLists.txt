@@ -14,6 +14,7 @@ find_package(Qt6 6.10 REQUIRED COMPONENTS
     Widgets
 )
 find_package(KF6 6.20 REQUIRED COMPONENTS
+    ConfigWidgets
     GlobalAccel
     Notifications
     StatusNotifierItem
@@ -24,6 +25,7 @@ add_executable(claude-ai main.cpp)
 target_link_libraries(claude-ai
     Qt6::WebEngineWidgets
     Qt6::Widgets
+    KF6::ConfigWidgets
     KF6::GlobalAccel
     KF6::Notifications
     KF6::StatusNotifierItem

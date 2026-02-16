@@ -15,6 +15,7 @@ stdenv.mkDerivation rec {
 
     buildInputs = [
         qt6.qtwebengine
+        kdePackages.kconfigwidgets
         kdePackages.kglobalaccel
         kdePackages.knotifications
         kdePackages.kstatusnotifieritem
@@ -37,7 +38,7 @@ stdenv.mkDerivation rec {
     ];
 
     postInstall = ''
-        install -Dm644 $src/claude-ai.svg $out/share/icons/hicolor/scalable/apps/claude-ai.svg
+install -Dm644 $src/claude-ai.svg $out/share/icons/hicolor/scalable/apps/claude-ai.svg
     '';
 
     meta = with lib; {
