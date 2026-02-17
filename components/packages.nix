@@ -3,15 +3,15 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
-        gemini-wrapped = pkgs.callPackage ../custom-packages/gemini-cli/wrapper.nix {};
         gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant {};
+        gemini-wrapped = pkgs.callPackage ../custom-packages/gemini-cli/wrapper.nix {};
         gh-clone       = pkgs.callPackage ../custom-packages/gh-clone {};
-        kde-klassy   = pkgs.callPackage ../custom-packages/kde-klassy {};
         kde-darkly     = pkgs.callPackage ../custom-packages/kde-darkly {};
+        kde-klassy   = pkgs.callPackage ../custom-packages/kde-klassy {};
         nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom { };
         strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
-        wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
+#        wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
 
         # Custom made applications.
         claude-ai      = pkgs.callPackage ../workshop/claude-ai {};
@@ -28,7 +28,6 @@ let
         ];
 
         development = with pkgs; [
-
             # Base Toolchain
             cargo
             rustc
@@ -65,7 +64,6 @@ let
         ];
 
         kde-plasma-core = with pkgs.kdePackages; [
-
             # Core Shell & Workspaces
             plasma-desktop
             plasma-workspace
@@ -106,7 +104,7 @@ let
             dolphin
             dolphin-plugins
             ffmpegthumbs
-            ghostwriter
+#            ghostwriter
             isoimagewriter
             ksshaskpass
             kate
@@ -132,8 +130,8 @@ let
             akonadi-mime
             akonadi-search
             calendarsupport
-            kitinerary
-            ktrip
+#            kitinerary
+#            ktrip
         ];
 
         gnome-stack = with pkgs; [
@@ -162,7 +160,7 @@ let
             lshw
             nvme-cli
             pciutils
-            screenfetch
+            rofi
             smartmontools
             systemctl-tui
             usbutils
@@ -171,10 +169,14 @@ let
         ];
 
         graphics-multimedia = with pkgs; [
+            # Multimedia support.
+            gst_all_1.gstreamer
+            gst_all_1.gst-plugins-base
+            gst_all_1.gst-plugins-good
+
             cairo
             ffmpeg-full
             ffmpegthumbnailer
-            figma-linux
             imagemagick
             inkscape
             mpv-unwrapped
@@ -208,10 +210,6 @@ let
             qadwaitadecorations-qt6
             comixcursors
             kdePackages.qt6ct
-        ];
-
-        miscellaneous = with pkgs; [
-            rofi
         ];
 
         custom = (builtins.attrValues customPkgs);
