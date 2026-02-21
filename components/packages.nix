@@ -27,6 +27,53 @@ let
             nix-prefetch-github
         ];
 
+        system-tools = with pkgs; [
+            coreutils-full
+            curl
+            diffutils
+            dmidecode
+            dysk
+            fwupd
+            fwupd-efi
+            git
+            htop
+            inetutils
+            inxi
+            killall
+            lsd
+            lshw
+            nvme-cli
+            pciutils
+            smartmontools
+            systemctl-tui
+            usbutils
+            wget
+        ];
+
+        graphics-multimedia = with pkgs; [
+            # Multimedia support.
+            gst_all_1.gstreamer
+            gst_all_1.gst-plugins-base
+            gst_all_1.gst-plugins-good
+
+            cairo
+            ffmpeg-full
+            ffmpegthumbnailer
+            imagemagick
+            inkscape
+            mpv-unwrapped
+            mpvScripts.autosub
+            mpvScripts.sponsorblock
+            mpvScripts.uosc
+            nomacs
+            nvtopPackages.full
+            pavucontrol
+            vorbis-tools
+            vulkan-tools
+            wayland-utils
+            xnviewmp
+        ];
+
         development = with pkgs; [
             # Base Toolchain
             cargo
@@ -105,9 +152,9 @@ let
             dolphin-plugins
             ffmpegthumbs
             isoimagewriter
-            ksshaskpass
             kate
             kcalc
+            kdbusaddons
             kdegraphics-thumbnailers
             kdenlive
             kdesdk-thumbnailers
@@ -115,6 +162,7 @@ let
             kompare
             krdc
             krdp
+            ksshaskpass
             ktorrent
             okular
             partitionmanager
@@ -139,54 +187,6 @@ let
             nautilus
         ];
 
-        system-tools = with pkgs; [
-            conky
-            coreutils-full
-            curl
-            diffutils
-            dmidecode
-            dysk
-            fwupd
-            fwupd-efi
-            git
-            htop
-            inetutils
-            inxi
-            killall
-            lsd
-            lshw
-            nvme-cli
-            pciutils
-            rofi
-            smartmontools
-            systemctl-tui
-            usbutils
-            wezterm
-            wget
-        ];
-
-        graphics-multimedia = with pkgs; [
-            # Multimedia support.
-            gst_all_1.gstreamer
-            gst_all_1.gst-plugins-base
-            gst_all_1.gst-plugins-good
-
-            cairo
-            ffmpeg-full
-            ffmpegthumbnailer
-            imagemagick
-            inkscape
-            mpv-unwrapped
-            mpvScripts.autosub
-            mpvScripts.sponsorblock
-            mpvScripts.uosc
-            nomacs
-            nvtopPackages.full
-            pavucontrol
-            vulkan-tools
-            xnviewmp
-        ];
-
         network-web = with pkgs; [
             filezilla
             firefox-nightly
@@ -199,6 +199,18 @@ let
             openvpn
             protonvpn-gui
             tor-browser
+        ];
+
+        office = with pkgs; [
+            libreoffice-qt-fresh
+            notes
+            standardnotes
+        ];
+
+        utilities = with pkgs; [
+            conky
+            rofi
+            wezterm
         ];
 
         theming-compat = with pkgs; [
