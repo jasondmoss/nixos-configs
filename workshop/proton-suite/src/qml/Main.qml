@@ -7,7 +7,7 @@ import org.kde.kirigami as Kirigami
 Kirigami.ApplicationWindow {
     id: root
     width: 2200
-    height: 1300
+    height: 1600
     visible: Controller.visible
     title: "Proton Suite"
 
