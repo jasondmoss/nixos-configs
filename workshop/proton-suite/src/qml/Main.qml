@@ -3,7 +3,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtWebEngine
 import org.kde.kirigami as Kirigami
-import QtCore
 
 Kirigami.ApplicationWindow {
     id: root
@@ -12,15 +11,50 @@ Kirigami.ApplicationWindow {
     visible: Controller.visible
     title: "Proton Suite"
 
-    // Define profile in QML.
-    property WebEngineProfile sharedProfile: WebEngineProfile {
+    WebEngineProfile {
+        id: sharedProfile
         storageName: "proton"
         offTheRecord: false
         persistentCookiesPolicy: WebEngineProfile.ForcePersistentCookies
         httpCacheType: WebEngineProfile.DiskHttpCache
+
+        Component.onCompleted: {
+            var script = Qt.createQmlObject(
+                'import QtWebEngine; WebEngineScript {}',
+                sharedProfile
+            );
+            script.name = "proton-notification-bridge";
+            script.injectionPoint = WebEngineScript.DocumentCreation;
+            script.worldId = WebEngineScript.MainWorld;
+            script.sourceCode = "
+(function()
+{
+    if (window.__protonBridgeInstalled) {
+        return;
+    }
+    window.__protonBridgeInstalled = true;
+
+    function BridgedNotification(title, options)
+    {
+        var body = (options && options.body) ? options.body : '';
+        window.open('proton-notify://?title=' + encodeURIComponent(title) +
+            '&body=' + encodeURIComponent(body),
+            '_blank', 'width=1,height=1'
+        );
     }
 
-    // Router Logic.
+    BridgedNotification.permission = 'granted';
+    BridgedNotification.requestPermission = function(cb) {
+        if (typeof cb === 'function') cb('granted');
+        return Promise.resolve('granted');
+    };
+    window.Notification = BridgedNotification;
+})();
+            ";
+            userScripts.insert(script);
+        }
+    }
+
     function handleNavigation(url)
     {
         let u = url.toString();
@@ -29,38 +63,29 @@ Kirigami.ApplicationWindow {
 
             return;
         }
-        if (u.includes("mail.proton.me")) { switchTab(0, u); return; }
-        if (u.includes("calendar.proton.me")) { switchTab(1, u); return; }
-        if (u.includes("drive.proton.me")) { switchTab(2, u); return; }
-        if (u.includes("docs.proton.me")) {
-             if (stack.currentIndex !== 4) {
-                 switchTab(3, u);
-             } else {
-                 switchTab(4, u);
-             }
-
-             return;
+        if (u.includes("mail.proton.me")) {
+            switchTab(0, u); return;
         }
-        if (u.includes("lumo.proton.me")) { switchTab(5, u); return; }
-        if (u.includes("pass.proton.me")) { switchTab(6, u); return; }
+        if (u.includes("calendar.proton.me")) {
+            switchTab(1, u); return;
+        }
+        if (u.includes("drive.proton.me")) {
+            switchTab(2, u); return;
+        }
         if (u.includes("account.proton.me")) {
             stack.children[stack.currentIndex].url = u;
 
             return;
         }
-
         Qt.openUrlExternally(u);
     }
 
     function switchTab(index, url)
     {
         mainTabs.currentIndex = index;
-        if (url) {
-            stack.children[index].url = url;
-        }
+        if (url) stack.children[index].url = url;
     }
 
-    // Shortcuts.
     Shortcut {
         sequence: "Ctrl+Tab"
         onActivated: mainTabs.currentIndex =
@@ -72,7 +97,6 @@ Kirigami.ApplicationWindow {
             (mainTabs.currentIndex - 1 + mainTabs.count) % mainTabs.count
     }
 
-    // Direct Layout.
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -81,14 +105,9 @@ Kirigami.ApplicationWindow {
             id: mainTabs
             Layout.fillWidth: true
             z: 1
-
-            TabButton { text: "Mail"; onClicked: stack.currentIndex = 0 }
-            TabButton { text: "Calendar"; onClicked: stack.currentIndex = 1 }
-            TabButton { text: "Drive"; onClicked: stack.currentIndex = 2 }
-            TabButton { text: "Docs"; onClicked: stack.currentIndex = 3 }
-            TabButton { text: "Sheets"; onClicked: stack.currentIndex = 4 }
-            TabButton { text: "Lumo"; onClicked: stack.currentIndex = 5 }
-            TabButton { text: "Pass"; onClicked: stack.currentIndex = 6 }
+            TabButton { text: "Mail" }
+            TabButton { text: "Calendar" }
+            TabButton { text: "Drive" }
         }
 
         StackLayout {
@@ -98,39 +117,19 @@ Kirigami.ApplicationWindow {
             currentIndex: mainTabs.currentIndex
 
             ProtonTab {
-                url: "https://mail.proton.me/";
-                appProfile: root.sharedProfile;
+                url: "https://mail.proton.me/"
+                appProfile: sharedProfile
                 expectedHost: "mail.proton.me"
             }
             ProtonTab {
-                url: "https://calendar.proton.me/";
-                appProfile: root.sharedProfile;
+                url: "https://calendar.proton.me/"
+                appProfile: sharedProfile
                 expectedHost: "calendar.proton.me"
             }
             ProtonTab {
-                url: "https://drive.proton.me/";
-                appProfile: root.sharedProfile;
+                url: "https://drive.proton.me/"
+                appProfile: sharedProfile
                 expectedHost: "drive.proton.me"
-            }
-            ProtonTab {
-                url: "https://docs.proton.me/";
-                appProfile: root.sharedProfile;
-                expectedHost: "docs.proton.me"
-            }
-            ProtonTab {
-                url: "https://docs.proton.me/";
-                appProfile: root.sharedProfile;
-                expectedHost: "docs.proton.me"
-            }
-            ProtonTab {
-                url: "https://lumo.proton.me/";
-                appProfile: root.sharedProfile;
-                expectedHost: "lumo.proton.me"
-            }
-            ProtonTab {
-                url: "https://pass.proton.me/";
-                appProfile: root.sharedProfile;
-                expectedHost: "pass.proton.me"
             }
         }
     }

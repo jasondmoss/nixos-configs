@@ -12,7 +12,7 @@ WebEngineView {
 
     settings.javascriptEnabled: true
     settings.localStorageEnabled: true
-    settings.pluginsEnabled: true
+    settings.javascriptCanOpenWindows: true
 
     onFullScreenRequested: (request) => {
         request.accept();
@@ -21,34 +21,35 @@ WebEngineView {
     onNavigationRequested: (request) => {
         if (request.navigationType === WebEngineNavigationRequest.LinkClicked) {
             let u = request.url.toString();
-
-            /**
-             * Allow navigation if it matches the tab's expected host (e.g.
-             * clicking an email in Mail)
-             *
-             * OR if it is a sub-navigation (like settings)
-             */
             if (u.includes(expectedHost)) {
                 request.action = WebEngineNavigationRequest.AcceptRequest;
             } else {
                 request.action = WebEngineNavigationRequest.IgnoreRequest;
-                /**
-                 * Forward external links to the Main Router
-                 * We use the parent chain:
-                 *      (StackLayout)
-                 *          -> parent (ColumnLayout)
-                 *          -> parent (Page)
-                 *          -> parent (Window)
-                 *
-                 * OR simpler: access the global 'root' id if it's in the same
-                 * engine context.
-                 */
                 root.handleNavigation(request.url);
             }
         }
     }
 
     onNewWindowRequested: (request) => {
+        let u = request.requestedUrl.toString();
+        if (u.startsWith("proton-notify://")) {
+            let query = u.split("?")[1] || "";
+            let params = {};
+            query.split("&").forEach(function(pair) {
+                let parts = pair.split("=");
+                if (parts.length >= 2) {
+                    params[parts[0]] = decodeURIComponent(parts.slice(1).join("="));
+                }
+            });
+
+            Controller.showNotification(
+                params["title"] || "",
+                params["body"]  || ""
+            );
+
+            return;
+        }
+
         root.handleNavigation(request.requestedUrl);
     }
 

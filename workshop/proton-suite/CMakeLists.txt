@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(proton-suite)
 
-# Standard C++23 setup
+# Standard C++23 setup.
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -34,7 +34,6 @@ find_package(KF6 6.5 REQUIRED COMPONENTS
 add_executable(proton-suite
     src/main.cpp
     src/controller.cpp
-    # src/controller.h
 )
 
 target_link_libraries(proton-suite PRIVATE
@@ -57,7 +56,7 @@ install(FILES src/assets/proton-suite.svg
 
 install(TARGETS proton-suite DESTINATION ${KDE_INSTALL_BINDIR})
 
-# Embed QML resources
+# Embed QML resources.
 qt_add_qml_module(proton-suite
     URI "ProtonSuite"
     VERSION 1.0

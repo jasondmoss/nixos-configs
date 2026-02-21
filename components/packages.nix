@@ -7,11 +7,10 @@ let
         gemini-wrapped = pkgs.callPackage ../custom-packages/gemini-cli/wrapper.nix {};
         gh-clone       = pkgs.callPackage ../custom-packages/gh-clone {};
         kde-darkly     = pkgs.callPackage ../custom-packages/kde-darkly {};
-        kde-klassy   = pkgs.callPackage ../custom-packages/kde-klassy {};
+        kde-klassy     = pkgs.callPackage ../custom-packages/kde-klassy {};
         nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom { };
         strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
-#        wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
 
         # Custom made applications.
         claude-ai      = pkgs.callPackage ../workshop/claude-ai {};
@@ -25,6 +24,7 @@ let
         nixos = with pkgs; [
             nixos-icons
             nixos-rebuild-ng
+            nix-prefetch-github
         ];
 
         development = with pkgs; [
@@ -104,7 +104,6 @@ let
             dolphin
             dolphin-plugins
             ffmpegthumbs
-#            ghostwriter
             isoimagewriter
             ksshaskpass
             kate
@@ -130,8 +129,6 @@ let
             akonadi-mime
             akonadi-search
             calendarsupport
-#            kitinerary
-#            ktrip
         ];
 
         gnome-stack = with pkgs; [

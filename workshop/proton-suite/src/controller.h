@@ -4,23 +4,20 @@
 #include <QPointer>
 #include <QQuickWindow>
 
-class Controller
-    : public QObject
+class Controller : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
 
 public:
-//    explicit Controller(QObject *parent = nullptr);
     explicit Controller(QObject *parent = nullptr, bool startMinimized = false);
 
-    void setWindow(QQuickWindow* window);
+    void setWindow(QQuickWindow *window);
     bool isVisible() const;
-
-    // ADDED: Override standard event filter to handle closing safely
     bool eventFilter(QObject *watched, QEvent *event) override;
+    Q_INVOKABLE void showNotification(const QString &title, const QString &message);
 
-public: // "public slots" removed to satisfy Cppcheck
+public:
     void toggleWindow();
     void setVisible(bool visible);
     void activate();

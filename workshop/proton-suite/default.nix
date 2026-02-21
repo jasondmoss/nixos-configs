@@ -5,7 +5,7 @@
 
 stdenv.mkDerivation rec {
     pname = "proton-suite";
-    version = "1.0.2";
+    version = "1.0.7";
 
     src = ./.;
 
