@@ -90,7 +90,7 @@ static void presentNotification(std::unique_ptr<QWebEngineNotification> wn)
 int main(int argc, char *argv[])
 {
     // Suppress noisy-but-harmless Chromium warnings (Permissions-Policy, etc.).
-    qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--log-level=3");
+    qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--log-level=3 --disable-renderer-accessibility");
 
     QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("claude-ai"));
