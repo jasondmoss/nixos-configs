@@ -192,7 +192,6 @@ let
             firefox-nightly
             google-chrome
             links2
-            megasync
             megatools
             microsoft-edge
             mullvad-browser

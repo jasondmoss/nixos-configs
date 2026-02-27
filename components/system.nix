@@ -2,7 +2,17 @@
     system = {
         activationScripts = {
             makeWorkDir = {
-                text = "mkdir -p /home/jason/Repository/work/origin";
+                text = ''
+mkdir -p /home/jason/Repository/work/origin
+                '';
+                deps = [ "users" ];
+            };
+
+            megasyncUserService = {
+                text = ''
+mkdir -p /home/me/.config/systemd/user
+ln -sf /etc/systemd/user/megasync.service /home/me/.config/systemd/user/megasync.service
+                '';
                 deps = [ "users" ];
             };
         };
@@ -54,35 +64,16 @@
                     };
                 };
 
-                megasync-custom = {
-                    description = "MEGAcmd Sync Client (Custom Autostart)";
-
-                    # Using default.target is more reliable for user-services
-                    # that need to be "found" by systemctl --user
-                    wantedBy = [ "default.target" ];
-                    after = [ "graphical-session.target" ];
-                    partOf = [ "graphical-session.target" ];
-
-                    startLimitIntervalSec = 0;
+                megasync = {
+                    description = "MEGAsync Cloud Sync application";
+                    after    = [ "graphical-session.target" ];
+                    wantedBy = [ "graphical-session.target" ];
 
                     serviceConfig = {
-                        Type = "simple";
-
-                        # Clean lock and wait
-                        ExecStartPre = [
-                            "!${pkgs.bash}/bin/bash -c 'rm -f %h/.local/share/data/Mega\\ Limited/MEGAsync/megasync.lock'"
-                            "${pkgs.coreutils}/bin/sleep 2"
-                        ];
-
-                        ExecStart = "${pkgs.megasync}/bin/megasync";
-                        Restart = "always";
-                        RestartSec = "10s";
-
-                        Environment = [
-                            "QT_QPA_PLATFORM=wayland"
-                            "XDG_CURRENT_DESKTOP=KDE"
-                            "XDG_SESSION_TYPE=wayland"
-                        ];
+                        Type       = "simple";
+                        ExecStart  = "${pkgs.megasync}/bin/megasync";
+                        Restart    = "on-failure";
+                        RestartSec = "5s";
                     };
                 };
 
