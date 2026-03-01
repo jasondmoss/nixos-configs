@@ -208,7 +208,11 @@ let
 
         utilities = with pkgs; [
             conky
+            rar
+            p7zip-rar
             rofi
+            unrar
+            unzip
             wezterm
         ];
 
