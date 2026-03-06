@@ -16,7 +16,8 @@
     networking.hostName = "atreides";
 
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+#        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+        kernelPackages = pkgs.linuxPackages_xanmod;
 
         initrd = {
             systemd.enable = true;
@@ -152,6 +153,7 @@
         };
 
         nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+#        nvidia.package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
     };
 
     programs = {
