@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/qml">
+    <file alias="main.qml">/home/me/Repository/system/nixos/configs/workshop/plasma-dock/qml/main.qml</file>
+    <file alias="DockIconPlaceholder.qml">/home/me/Repository/system/nixos/configs/workshop/plasma-dock/qml/DockIconPlaceholder.qml</file>
+    <file alias="DockIcon.qml">/home/me/Repository/system/nixos/configs/workshop/plasma-dock/qml/DockIcon.qml</file>
+  </qresource>
+</RCC>
+

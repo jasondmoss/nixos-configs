@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/me/Repository/system/nixos/configs/workshop/plasma-dock/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -108,6 +108,10 @@ let
 
             # Android
             android-tools
+
+            # AI
+            claude-code
+            claude-monitor
         ];
 
         kde-plasma-core = with pkgs.kdePackages; [
@@ -208,9 +212,10 @@ let
 
         utilities = with pkgs; [
             conky
+            fuzzel
             rar
             p7zip-rar
-            rofi
+#            rofi
             unrar
             unzip
             wezterm

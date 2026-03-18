@@ -1,0 +1,10 @@
+# Hashes of file build rules.
+3fbf51ca84326106a2dcf8535726e129 .qt/rcc/qrc_qml_resources.cpp
+5687b6bacb0164b9173bb3e9f479fee9 CMakeFiles/fetch-translations
+bbdccbcd9267d0f2e9396b46fb556ad8 CMakeFiles/plasma-dock_autogen
+bbdccbcd9267d0f2e9396b46fb556ad8 CMakeFiles/plasma-dock_autogen_timestamp_deps
+509d367001428e260d40df5b24f35053 CMakeFiles/uninstall
+9eef825b0d3fc348c3b83c94d9b79fff plasma-dock_autogen/timestamp
+3483be7d18cdcf4e61216065a615cb38 protocols/wlr-layer-shell-unstable-v1-client-protocol.h
+0769395621a882460b253d6326cfdfbd protocols/wlr-layer-shell-unstable-v1-protocol.c
+a229a968fdad28546302803b60ffd08c releaseme

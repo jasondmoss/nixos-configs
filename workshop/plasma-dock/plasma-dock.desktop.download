@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Plasma Dock
+Comment=Custom KDE Plasma dock
+Exec=plasma-dock
+Icon=start-here-kde
+Categories=System;
+X-KDE-autostart-phase=2
+X-KDE-StartupNotify=false
+OnlyShowIn=KDE;
+NotShowIn=GNOME;Unity;
