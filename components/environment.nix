@@ -31,6 +31,7 @@ wavebox
 		};
 
 		variables = {
+            CUDA_PATH = "${pkgs.cudaPackages.cudatoolkit}";
 			SSH_ASKPASS = lib.mkForce "ksshaskpass";
 			SSH_ASKPASS_REQUIRE = "prefer";
 		};

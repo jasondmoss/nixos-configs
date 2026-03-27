@@ -46,11 +46,6 @@
                 });
             })
 
-            # Moltbot
-            (final: prev: {
-                moltbot = final.callPackage ../custom-packages/moltbot { };
-            })
-
             # libQuotient
             (final: prev: {
                 libquotient = prev.libquotient.overrideAttrs (old: {

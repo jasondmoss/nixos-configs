@@ -3,6 +3,7 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
+#        automatic1111  = pkgs.callPackage ../custom-packages/automatic1111 {};
         gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant {};
         gemini-wrapped = pkgs.callPackage ../custom-packages/gemini-cli/wrapper.nix {};
         gh-clone       = pkgs.callPackage ../custom-packages/gh-clone {};
@@ -35,7 +36,6 @@ let
             dysk
             fwupd
             fwupd-efi
-            git
             htop
             inetutils
             inxi
@@ -57,6 +57,7 @@ let
             gst_all_1.gst-plugins-good
 
             cairo
+            ffmpeg
             ffmpeg-full
             ffmpegthumbnailer
             imagemagick
@@ -81,6 +82,7 @@ let
             nodejs
             yarn
             gcc
+            git
             gnumake
             ninja
             cmake
@@ -108,8 +110,14 @@ let
 
             # Android
             android-tools
+        ];
 
-            # AI
+        cuda = with pkgs.cudaPackages; [
+            cudatoolkit
+            cudnn
+        ];
+
+        ai-tools = with pkgs; [
             claude-code
             claude-monitor
         ];
