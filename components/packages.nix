@@ -12,6 +12,7 @@ let
         nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom { };
         strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
+        wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
 
         # Custom made applications.
         claude-ai      = pkgs.callPackage ../workshop/claude-ai {};

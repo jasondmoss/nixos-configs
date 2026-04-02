@@ -17,7 +17,6 @@
 
     boot = {
         kernelPackages = pkgs.linuxPackages_xanmod_latest;
-#        kernelPackages = pkgs.linuxPackages_xanmod;
 
         initrd = {
             systemd.enable = true;
