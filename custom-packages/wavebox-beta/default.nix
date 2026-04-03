@@ -1,7 +1,7 @@
 {
-    alsa-lib, autoPatchelfHook, fetchurl, gtk3, gtk4, libdrm, libnotify,
-    kdePackages, makeDesktopItem, makeWrapper, nss, lib, mesa, stdenv, udev,
-    xdg-utils, xorg
+    addDriverRunpath, alsa-lib, autoPatchelfHook, fetchurl, gtk3, gtk4,
+    libdrm, libglvnd, libnotify, kdePackages, makeDesktopItem, makeWrapper,
+    nss, lib, mesa, stdenv, udev, vulkan-loader, xdg-utils, xorg
 }:
 with lib;
 let
@@ -33,6 +33,13 @@ let
         sourceProvenance = with sourceTypes; [ binaryNativeCode ];
         license = licenses.mpl20;
     };
+
+    ## GPU library path: libglvnd (EGL/GL dispatcher) + vulkan-loader +
+    ## NVIDIA driver libraries via addDriverRunpath.
+    gpuLibPath = lib.makeLibraryPath [
+        libglvnd
+        vulkan-loader
+    ] + ":${addDriverRunpath.driverLink}/lib";
 in stdenv.mkDerivation rec {
     pname = "wavebox";
     inherit version;
@@ -79,6 +86,8 @@ ln -s $out/opt/wavebox/product_logo_128.png $out/share/icons/hicolor/128x128/app
     '';
 
     postFixup = ''
-makeWrapper $out/opt/wavebox/wavebox-launcher $out/bin/wavebox --prefix PATH : ${xdg-utils}/bin
+makeWrapper $out/opt/wavebox/wavebox-launcher $out/bin/wavebox \
+ --prefix PATH : ${xdg-utils}/bin \
+ --prefix LD_LIBRARY_PATH : "${gpuLibPath}"
     '';
 }
