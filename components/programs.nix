@@ -30,6 +30,12 @@ Host gitlab.com-gitlab
     IdentityFile /home/me/.ssh/id_ed25519_2026_gitlab
     IdentitiesOnly yes
 
+Host bitbucket.org
+    HostName bitbucket.org
+    User git
+    IdentityFile /home/me/.ssh/id_ed25519_2026_bitbucket
+    IdentitiesOnly yes
+
 Host pantheon.io *.pantheon.io
     IdentityFile ~/.ssh/id_rsa
     IdentitiesOnly yes
@@ -60,6 +66,7 @@ Host pantheon.io *.pantheon.io
                 includeIf = {
                     # GitHub
                     "gitdir/i:/home/me/Repository/work/origin/" .path = "/etc/gitconfig.work";
+                    "gitdir/i:/home/me/Repository/work/mmgy/" .path = "/etc/gitconfig.bitbucket";
                     "gitdir/i:/home/me/Repository/personal/" .path = "/etc/gitconfig.personal";
                     # Fallback for your main config repo if it's not in the personal folder.
                     "gitdir/i:/home/me/Repository/system/" .path = "/etc/gitconfig.personal";
