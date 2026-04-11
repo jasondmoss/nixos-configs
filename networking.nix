@@ -7,9 +7,11 @@
         firewall = {
             enable = true;
             allowPing = true;
-            checkReversePath = false;
+            checkReversePath = "loose";
+            logRefusedConnections = true;
 
-            allowedTCPPorts = [ 22 80 443 1025 1143 33728 ];
+#            allowedTCPPorts = [ 22 80 443 1025 1143 33728 ];
+            allowedTCPPorts = [ 22 80 443 ];
             allowedUDPPorts = [];
         };
 
@@ -42,7 +44,7 @@ local {
             enable = true;
 
             settings = {
-                PasswordAuthentication = true;
+                PasswordAuthentication = false;
                 PermitRootLogin = "no";
                 KbdInteractiveAuthentication = false;
             };

@@ -3,13 +3,14 @@
         dbus.enable = true;
         devmon.enable = true;
         fstrim.enable = true;
+        gnome.gcr-ssh-agent.enable = false;
         gnome.gnome-keyring.enable = true;
         gpm.enable = true;
         irqbalance.enable = true;
-        systembus-notify.enable = lib.mkForce true;
+        openssh.settings.AllowUsers = [ "me" ];
         pcscd.enable = true;
         sysstat.enable = true;
-        gnome.gcr-ssh-agent.enable = false;
+        systembus-notify.enable = lib.mkForce true;
 
         earlyoom = {
             enable = true;
@@ -17,6 +18,7 @@
             freeSwapThreshold = 10; # % of swap
             enableNotifications = true;
         };
+
 
         locate = {
             enable = true;

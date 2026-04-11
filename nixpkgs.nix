@@ -13,7 +13,7 @@
         };
 
         config = {
-            allowBroken = true;
+            allowBroken = false;
             allowUnfree = true;
 
             packageOverrides = pkgs: {

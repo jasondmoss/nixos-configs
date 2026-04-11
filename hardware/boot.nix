@@ -57,6 +57,10 @@
 
         kernel.sysctl = {
             "fs.inotify.max_user_watches" = 2140000000;
+            "kernel.unprivileged_bpf_disabled" = 1;
+            "net.core.bpf_jit_harden" = 2;
+            "kernel.kptr_restrict" = 2;
+            "kernel.yama.ptrace_scope" = 1;
         };
 
         loader = {

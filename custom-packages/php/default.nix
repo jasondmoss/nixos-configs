@@ -15,9 +15,9 @@ xdebug.mode=debug
         };
 
         phpOptions = ''
-allow_url_fopen = On
+allow_url_fopen = Off
 allow_url_include = On
-display_errors = On
+display_errors = Off
 display_startup_errors = On
 max_execution_time = 10000
 max_input_time = 3000
