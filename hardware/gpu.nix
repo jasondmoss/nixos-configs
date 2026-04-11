@@ -1,7 +1,7 @@
-{ lib, pkgs, modulesPath, ... }: {
+{ config, lib, pkgs, ... }: {
     imports = [
         <nixos-hardware/common/gpu/nvidia/turing>
-        (modulesPath + "/installer/scan/not-detected.nix")
+        ../custom-packages/vaapi
     ];
 
     hardware = {
@@ -18,6 +18,7 @@
 
         nvidia = {
             open = true;
+            package = config.boot.kernelPackages.nvidiaPackages.beta;
             forceFullCompositionPipeline = true;
             modesetting.enable = true;
             nvidiaPersistenced = true;
@@ -35,21 +36,25 @@
                 firefox.enable = true;
             };
         };
-
-        bluetooth = {
-            enable = true;
-
-            settings = {
-                General = {
-                    Experimental = "true";
-                };
-            };
-        };
-
-        keyboard.qmk.enable = true;
     };
 
-    powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+    services.xserver = {
+        enable = false;
+        videoDrivers = [ "nvidia" ];
+        upscaleDefaultCursor = true;
+        dpi = 192;
+    };
+
+    # NVIDIA & Wayland environment variables.
+    environment.sessionVariables = {
+        GBM_BACKEND = "nvidia-drm";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        LIBVA_DRIVER_NAME = "nvidia";
+
+        # Performance tuning for RTX 2060.
+        __GL_THREADED_OPTIMIZATION = "1";
+        __GL_SHADER_CACHE = "1";
+    };
 }
 
 # <> #

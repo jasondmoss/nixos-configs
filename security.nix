@@ -1,4 +1,4 @@
-{ ... }: {
+{ config, ... }: {
 	security = {
         rtkit.enable = true;
         polkit.enable = true;
@@ -32,6 +32,12 @@ Defaults:me !authenticate
 Defaults env_keep+=SSH_AUTH_SOCK
             '';
         };
+    };
+
+    services.fail2ban = {
+        enable = true;
+        maxretry = 5;
+        bantime = "1h";
     };
 }
 

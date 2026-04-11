@@ -1,6 +1,17 @@
 { pkgs, fetchpatch2, ... }: {
-    # Setup.
     nixpkgs = {
+        hostPlatform = {
+            #gcc.arch = "znver2";
+            #gcc.tune = "znver2";
+            system = "x86_64-linux";
+        };
+
+        buildPlatform = {
+            #gcc.arch = "znver2";
+            #gcc.tune = "znver2";
+            system = "x86_64-linux";
+        };
+
         config = {
             allowBroken = true;
             allowUnfree = true;
@@ -18,6 +29,10 @@
                 "nvidia-persistenced"
                 "nvidia-settings"
                 "nvidia-vaapi-driver"
+                "steam"
+                "steam-run"
+                "steam-original"
+                "steam-unwrapped"
                 "vulkan-headers"
                 "vulkan-loader"
                 "vulkan-tool"
@@ -30,12 +45,11 @@
         };
 
         overlays = [
-            # Firefox Nightly
-            (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
+            # Firefox Nightly.
+            (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
-
-            # PhpStorm
-            (import ../custom-packages/jetbrains)
+            # PhpStorm.
+            (import ./custom-packages/jetbrains)
             (final: prev: {
                 phpstorm = prev.phpstorm.overrideAttrs (old: {
                     buildInputs = old.buildInputs ++ [
@@ -46,7 +60,7 @@
                 });
             })
 
-            # libQuotient
+            # libQuotient.
             (final: prev: {
                 libquotient = prev.libquotient.overrideAttrs (old: {
                     patches = old.patches ++ [
@@ -57,7 +71,7 @@
                 });
             })
 
-            (import ../../overlays/default.nix)
+            (import ../overlays/default.nix)
         ];
     };
 }

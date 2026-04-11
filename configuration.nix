@@ -1,31 +1,110 @@
-{
-    lib, ...
-}:
+################################################################################
+ ##                                                                          ##
+ ##                             ·: ATREIDES :·                               ##
+ ##                                                                          ##
+ ##          NixOS 25.11                                                     ##
+ ##          AMD Ryzen 9 3900X                                               ##
+ ##          NVIDIA RTX 2060 -- 32 GiB RAM                                   ##
+ ##          KDE Plasma 6                                                    ##
+ ##          Wayland                                                         ##
+ ##                                                                          ##
+################################################################################
+
+{ pkgs, ... }:
 let
-    # Determine current hostname from the running system.
-    hostFromEtc = if builtins.pathExists /etc/hostname then
-        lib.removeSuffix "\n" (builtins.readFile /etc/hostname)
-    else
-        null;
+    theme = import ./desktop/theme.nix;
+in {
+    nix = {
+        package = pkgs.nixVersions.latest;
 
-    hostFromEnv = let h = builtins.getEnv "HOSTNAME"; in
-        if h != "" then h
-        else null;
+        settings = {
+            trusted-users = [ "root" "me" "@wheel" ];
+            allowed-users = [ "root" "me" "@wheel" ];
+            experimental-features = "nix-command";
+            auto-optimise-store = true;
+            max-jobs = "auto";
+            system-features = [
+                "benchmark"
+                "big-parallel"
+                "kvm"
+                "nixos-test"
+                "gccarch-znver2"
+            ];
+        };
 
-    hostname = if hostFromEtc != null then hostFromEtc
-        else if hostFromEnv != null then hostFromEnv
-        else "unknown";
-
-    machines = {
-        atreides = ./machines/atreides.nix;
-        icarus = ./machines/icarus.nix;
+        gc = {
+            automatic = true;
+            randomizedDelaySec = "14m";
+            options = "--delete-older-than 2d";
+            dates = "weekly";
+        };
     };
 
-    machineModule = machines.${hostname} or null;
-in {
-    # Automatically import the machine-specific configuration based on hostname.
-    imports = lib.optional (machineModule != null) machineModule;
+    networking.hostName = "atreides";
+    system.stateVersion = "25.11";
+    time.timeZone = "America/Toronto";
 
-    # Provide a default hostname if the machine module doesn't set it.
-    networking.hostName = lib.mkDefault hostname;
+    i18n = {
+        defaultLocale = "en_CA.UTF-8";
+
+        inputMethod = {
+            enable = true;
+            type = "fcitx5";
+
+            fcitx5 = {
+                waylandFrontend = true;
+
+                addons = with pkgs; [
+                    fcitx5-gtk
+                    qt6Packages.fcitx5-chinese-addons
+                    kdePackages.fcitx5-configtool
+                ];
+            };
+        };
+    };
+
+    console = {
+        earlySetup = true;
+        keyMap = "us";
+        font = "alt-8x16.gz";
+        colors = theme.colors16;
+    };
+
+    documentation = {
+        enable = true;
+        man.enable = true;
+        dev.enable = true;
+    };
+
+    #
+    # Configurations.
+    #
+    imports = [
+        ./nixpkgs.nix
+
+        # Hardware.
+        ./hardware/boot.nix
+        ./hardware/gpu.nix
+        ./hardware/peripherals.nix
+        ./hardware/power.nix
+
+        # Desktop.
+        ./desktop/plasma.nix
+        ./desktop/fonts.nix
+
+        # System.
+        ./networking.nix
+        ./security.nix
+        ./users.nix
+        ./environment.nix
+        ./programs.nix
+        ./packages.nix
+        ./services.nix
+
+        # Development & AI.
+        ./development.nix
+        ./ai.nix
+    ];
 }
+
+# <> #

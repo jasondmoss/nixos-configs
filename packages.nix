@@ -3,22 +3,22 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
-#        automatic1111  = pkgs.callPackage ../custom-packages/automatic1111 {};
-        gemini-nix     = pkgs.callPackage ../custom-packages/gemini-nix-assistant {};
-        gemini-wrapped = pkgs.callPackage ../custom-packages/gemini-cli/wrapper.nix {};
-        gh-clone       = pkgs.callPackage ../custom-packages/gh-clone {};
-        kde-darkly     = pkgs.callPackage ../custom-packages/kde-darkly {};
-        kde-klassy     = pkgs.callPackage ../custom-packages/kde-klassy {};
-        nyxt-custom    = pkgs.callPackage ../custom-packages/nyxt-custom { };
-        strawberry     = pkgs.callPackage ../custom-packages/strawberry-master {};
-        vivaldi        = pkgs.callPackage ../custom-packages/vivaldi-snapshot {};
-        wavebox        = pkgs.callPackage ../custom-packages/wavebox-beta {};
+#        automatic1111  = pkgs.callPackage ./custom-packages/automatic1111 {};
+        gemini-nix     = pkgs.callPackage ./custom-packages/gemini-nix-assistant {};
+        gemini-wrapped = pkgs.callPackage ./custom-packages/gemini-cli/wrapper.nix {};
+        gh-clone       = pkgs.callPackage ./custom-packages/gh-clone {};
+        kde-darkly     = pkgs.callPackage ./custom-packages/kde-darkly {};
+        kde-klassy     = pkgs.callPackage ./custom-packages/kde-klassy {};
+        nyxt-custom    = pkgs.callPackage ./custom-packages/nyxt-custom { };
+        strawberry     = pkgs.callPackage ./custom-packages/strawberry-master {};
+        vivaldi        = pkgs.callPackage ./custom-packages/vivaldi-snapshot {};
+        wavebox        = pkgs.callPackage ./custom-packages/wavebox-beta {};
 
-        # Custom made applications.
-        claude-ai      = pkgs.callPackage ../workshop/claude-ai {};
-        feedbin-rss    = pkgs.callPackage ../workshop/feedbin-rss { };
-        gemini-desktop = pkgs.callPackage ../workshop/gemini-desktop {};
-        proton-suite   = pkgs.callPackage ../workshop/proton-suite {};
+        # Custom workshop applications.
+        #claude-ai      = pkgs.callPackage ./workshop/claude-ai {};
+        #feedbin-rss    = pkgs.callPackage ./workshop/feedbin-rss { };
+        #gemini-desktop = pkgs.callPackage ./workshop/gemini-desktop {};
+        #proton-suite   = pkgs.callPackage ./workshop/proton-suite {};
     };
 
     # --- Package Categories ---
@@ -30,6 +30,7 @@ let
         ];
 
         system-tools = with pkgs; [
+            btrfs-progs
             coreutils-full
             curl
             diffutils
@@ -41,6 +42,7 @@ let
             inetutils
             inxi
             killall
+            lm_sensors
             lsd
             lshw
             nvme-cli
@@ -57,10 +59,13 @@ let
             gst_all_1.gst-plugins-base
             gst_all_1.gst-plugins-good
 
+            audacity
             cairo
-            ffmpeg
+            cuetools
+            easytag
             ffmpeg-full
             ffmpegthumbnailer
+            flacon
             imagemagick
             inkscape
             mpv-unwrapped
@@ -70,10 +75,16 @@ let
             nomacs
             nvtopPackages.full
             pavucontrol
+            shotcut
+            taglib-sharp
+            taglib_extras
             vorbis-tools
             vulkan-tools
             wayland-utils
             xnviewmp
+
+            # MKVToolNix
+            (pkgs.callPackage ./custom-packages/mkvtoolnix {})
         ];
 
         development = with pkgs; [
@@ -113,16 +124,6 @@ let
             android-tools
         ];
 
-        cuda = with pkgs.cudaPackages; [
-            cudatoolkit
-            cudnn
-        ];
-
-        ai-tools = with pkgs; [
-            claude-code
-            claude-monitor
-        ];
-
         kde-plasma-core = with pkgs.kdePackages; [
             # Core Shell & Workspaces
             plasma-desktop
@@ -156,7 +157,6 @@ let
             qtdeclarative
             qtsvg
             qttools
-            wrapQtAppsHook
         ];
 
         kde-applications = with pkgs.kdePackages; [
@@ -222,9 +222,9 @@ let
         utilities = with pkgs; [
             conky
             fuzzel
+            quickemu
             rar
             p7zip-rar
-#            rofi
             unrar
             unzip
             wezterm
@@ -243,10 +243,8 @@ let
 
 in {
     imports = [
-        ../custom-packages/firefox-stable
-        ../custom-packages/gimp
-        ../custom-packages/php
-        ../custom-packages/vaapi
+        ./custom-packages/firefox-stable
+        ./custom-packages/gimp
     ];
 
     # KDE exclude list.

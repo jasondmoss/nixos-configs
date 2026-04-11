@@ -5,6 +5,12 @@
         xwayland.enable = true;
         bash.completion.enable = true;
 
+        steam = {
+            enable = true;
+            remotePlay.openFirewall = true;
+            dedicatedServer.openFirewall = true;
+        };
+
         ssh = {
             startAgent = true;
             askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass.out}/bin/ksshaskpass";
