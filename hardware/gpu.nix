@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }: {
     imports = [
         <nixos-hardware/common/gpu/nvidia/turing>
-        ../custom-packages/vaapi
+        ../packages/vaapi
     ];
 
     hardware = {

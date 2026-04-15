@@ -49,7 +49,7 @@
             (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
             # PhpStorm.
-            (import ./custom-packages/jetbrains)
+            (import ./packages/jetbrains)
             (final: prev: {
                 phpstorm = prev.phpstorm.overrideAttrs (old: {
                     buildInputs = old.buildInputs ++ [

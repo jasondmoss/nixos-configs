@@ -70,7 +70,7 @@ exec python launch.py \
     '';
 in {
     imports = [
-        ./custom-packages/ollama
+        ./packages/ollama
     ];
 
     environment = {

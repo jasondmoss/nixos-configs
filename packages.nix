@@ -3,16 +3,16 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
-#        automatic1111  = pkgs.callPackage ./custom-packages/automatic1111 {};
-        gemini-nix     = pkgs.callPackage ./custom-packages/gemini-nix-assistant {};
-        gemini-wrapped = pkgs.callPackage ./custom-packages/gemini-cli/wrapper.nix {};
-        gh-clone       = pkgs.callPackage ./custom-packages/gh-clone {};
-        kde-darkly     = pkgs.callPackage ./custom-packages/kde-darkly {};
-        kde-klassy     = pkgs.callPackage ./custom-packages/kde-klassy {};
-        nyxt-custom    = pkgs.callPackage ./custom-packages/nyxt-custom { };
-        strawberry     = pkgs.callPackage ./custom-packages/strawberry-master {};
-        vivaldi        = pkgs.callPackage ./custom-packages/vivaldi-snapshot {};
-        wavebox        = pkgs.callPackage ./custom-packages/wavebox-beta {};
+#        automatic1111  = pkgs.callPackage ./packages/automatic1111 {};
+        gemini-nix     = pkgs.callPackage ./packages/gemini-nix-assistant {};
+        gemini-wrapped = pkgs.callPackage ./packages/gemini-cli/wrapper.nix {};
+        gh-clone       = pkgs.callPackage ./packages/gh-clone {};
+        kde-darkly     = pkgs.callPackage ./packages/kde-darkly {};
+        kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
+        nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
+        strawberry     = pkgs.callPackage ./packages/strawberry-master {};
+        vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {};
+        wavebox        = pkgs.callPackage ./packages/wavebox-beta {};
 
         # Custom workshop applications.
         #claude-ai      = pkgs.callPackage ./workshop/claude-ai {};
@@ -84,7 +84,7 @@ let
             xnviewmp
 
             # MKVToolNix
-            (pkgs.callPackage ./custom-packages/mkvtoolnix {})
+            (pkgs.callPackage ./packages/mkvtoolnix {})
         ];
 
         development = with pkgs; [
@@ -243,8 +243,8 @@ let
 
 in {
     imports = [
-        ./custom-packages/firefox-stable
-        ./custom-packages/gimp
+        ./packages/firefox-stable
+        ./packages/gimp
     ];
 
     # KDE exclude list.

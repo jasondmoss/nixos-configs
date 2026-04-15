@@ -8,7 +8,7 @@ A macOS-style application dock for KDE Plasma 6, built with Qt6/QML and the
 ```
 plasma-dock/
 ├── CMakeLists.txt          Build configuration
-├── package.nix             Nix derivation (drop into custom-packages/)
+├── package.nix             Nix derivation (drop into packages/)
 ├── protocols/
 │   └── wlr-layer-shell-unstable-v1.xml   Protocol spec → C bindings via wayland-scanner
 ├── src/
@@ -39,12 +39,12 @@ QT_QPA_PLATFORM=wayland ./plasma-dock
 
 ## Build (Nix)
 
-Copy `package.nix` to `~/Repository/system/nixos/configs/custom-packages/plasma-dock.nix`.
+Copy `package.nix` to `~/Repository/system/nixos/configs/packages/plasma-dock.nix`.
 Add to your overlay or `pkgs.callPackage` directly:
 
 ```nix
 # In your packages.nix or an overlay:
-plasma-dock = pkgs.callPackage ./custom-packages/plasma-dock.nix {};
+plasma-dock = pkgs.callPackage ./packages/plasma-dock.nix {};
 ```
 
 Then `sudo nixos-rebuild switch` and run `plasma-dock`.

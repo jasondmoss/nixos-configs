@@ -1,14 +1,14 @@
 { config, pkgs, ... }: {
     imports = [
-        ./custom-packages/php
+        ./packages/php
     ];
 
     virtualisation.docker = {
         enable = true;
         enableOnBoot = true;
         storageDriver = "overlay2";
-#        package = pkgs.docker_25;
-        package = pkgs.docker;
+        package = pkgs.docker_25;
+#        package = pkgs.docker;
 
         autoPrune = {
             enable = true;
