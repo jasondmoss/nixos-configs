@@ -18,15 +18,14 @@ let
 set -e
 
 INSTALL_DIR="$HOME/.local/share/automatic1111"
-#REPO_DIR="$INSTALL_DIR/repo"
 REPO_DIR="$INSTALL_DIR/sdnext"
 VENV_DIR="$INSTALL_DIR/venv"
 
 # First-run: clone and set up
 if [ ! -d "$REPO_DIR" ]; then
-    echo ">> Cloning AUTOMATIC1111..."
+    echo ">> Cloning SD.Next..."
     mkdir -p "$INSTALL_DIR"
-    git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui "$REPO_DIR"
+    git clone https://github.com/vladmandic/automatic "$REPO_DIR"
 fi
 
 # Create venv if missing
@@ -57,14 +56,13 @@ export STABLE_DIFFUSION_REPO="https://github.com/CompVis/stable-diffusion"
 cd "$REPO_DIR"
 
 exec python launch.py \
- --skip-requirements \
  --skip-torch \
  --use-cuda \
  --use-xformers \
  --medvram \
  --api \
  --listen \
- --allowed-paths "$REPO_DIR/html" \
+ --allowed-paths "$REPO_DIR" \
  --data-dir "$INSTALL_DIR/data" \
  "$@"
     '';
@@ -89,16 +87,16 @@ in {
         ]);
     };
 
-    # Automatic1111 systemd service.
+    # SD.Next systemd service.
     systemd.user.services.automatic1111 = {
-        description = "AUTOMATIC1111 Stable Diffusion WebUI";
+        description = "SD.Next Stable Diffusion WebUI";
         wantedBy = [ "default.target" ];
         after = [ "network.target" ];
 
         serviceConfig = {
             Type = "simple";
             ExecStart = "${a1111Launcher}/bin/automatic1111";
-            WorkingDirectory = "%h/.local/share/automatic1111/repo";
+            WorkingDirectory = "%h/.local/share/automatic1111/sdnext";
             Restart = "on-failure";
             RestartSec = "10s";
         };
