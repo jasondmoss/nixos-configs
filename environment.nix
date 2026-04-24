@@ -28,6 +28,12 @@ wavebox
     name = "Jason Moss"
     email = "work@jdmlabs.com"
             '';
+
+            "gitconfig.bitbucket".text = ''
+[user]
+    name = "Jason D. Moss"
+    email = "jmoss@originoutside.com"
+            '';
 		};
 
 		variables = {
