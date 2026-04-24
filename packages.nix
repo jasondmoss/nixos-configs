@@ -240,7 +240,6 @@ let
 
         custom = (builtins.attrValues customPkgs);
     };
-
 in {
     imports = [
         ./packages/firefox-stable

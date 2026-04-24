@@ -4,6 +4,7 @@
         mtr.enable = true;
         xwayland.enable = true;
         bash.completion.enable = true;
+        direnv.enable = true;
 
         steam = {
             enable = true;
