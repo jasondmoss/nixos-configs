@@ -10,7 +10,7 @@ let
         owner = "open-webui";
         repo = "open-webui";
         rev = version;
-        hash = "sha256-TSPdV0nCmmaiZ52a2X21nw+AlFKXes9sOGEURbrHs5A=";
+        hash = "sha256-NiB8V7B5H57t4NjKlAcQdK1E1dfS3nc/+8tWbSE3MBQ=";
     };
 
     frontend = buildNpmPackage rec {
@@ -27,7 +27,7 @@ let
             url = "https://github.com/pyodide/pyodide/releases/download/${pyodideVersion}/pyodide-${pyodideVersion}.tar.bz2";
         };
 
-        npmDepsHash = "sha256-BcSDzLg2voHyUz4cnXQ0KRNSbLCsCwJ1itEJSbfAQhU=";
+        npmDepsHash = "sha256-8bsC6LM+v7RTbhAjGYHKClKoiC/rLhzt+UGVp3CVDB0=";
 
         # See https://github.com/open-webui/open-webui/issues/15880
         npmFlags = [
@@ -93,6 +93,7 @@ substituteInPlace pyproject.toml\
         aiocache
         aiofiles
         aiohttp
+        aiosqlite
         alembic
         anthropic
         apscheduler
@@ -138,6 +139,7 @@ substituteInPlace pyproject.toml\
         ldap3
         loguru
         markdown
+        mcp
         moto
         nltk
         onnxruntime
@@ -146,16 +148,16 @@ substituteInPlace pyproject.toml\
         openpyxl
         opensearch-py
         opentelemetry-api
-        opentelemetry-sdk
         opentelemetry-exporter-otlp
         opentelemetry-instrumentation
+        opentelemetry-instrumentation-aiohttp-client
         opentelemetry-instrumentation-fastapi
-        opentelemetry-instrumentation-sqlalchemy
+        opentelemetry-instrumentation-httpx
+        opentelemetry-instrumentation-logging
         opentelemetry-instrumentation-redis
         opentelemetry-instrumentation-requests
-        opentelemetry-instrumentation-logging
-        opentelemetry-instrumentation-httpx
-        opentelemetry-instrumentation-aiohttp-client
+        opentelemetry-instrumentation-sqlalchemy
+        opentelemetry-sdk
         oracledb
         pandas
         passlib
@@ -167,6 +169,7 @@ substituteInPlace pyproject.toml\
         playwright
         posthog
         psutil
+        psycopg
         psycopg2-binary
         pyarrow
         pycrdt
@@ -180,6 +183,7 @@ substituteInPlace pyproject.toml\
         pypdf
         python-dotenv
         python-jose
+        python-mimeparse
         python-multipart
         python-pptx
         python-socketio
@@ -195,6 +199,7 @@ substituteInPlace pyproject.toml\
         sentencepiece
         soundfile
         starlette-compress
+        starsessions
         tencentcloud-sdk-python
         tiktoken
         transformers

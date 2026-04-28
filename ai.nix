@@ -67,16 +67,18 @@ exec python launch.py \
  "$@"
     '';
 in {
-    imports = [
-        ./packages/ollama
-    ];
+#    imports = [
+#        ./packages/ollama
+#    ];
 
     environment = {
         variables = {
             CUDA_PATH = "${pkgs.cudaPackages.cudatoolkit}";
         };
 
-        systemPackages = a1111Deps ++ [ a1111Launcher ] ++ (with pkgs; [
+        systemPackages = with pkgs; [
+            oterm
+        ] ++ a1111Deps ++ [ a1111Launcher ] ++ [
             # CUDA.
             cudaPackages.cudatoolkit
             cudaPackages.cudnn
@@ -84,28 +86,75 @@ in {
             # AI tools.
             claude-code
             claude-monitor
-        ]);
+        ];
     };
 
-    # SD.Next systemd service.
-    systemd.user.services.automatic1111 = {
-        description = "SD.Next Stable Diffusion WebUI";
-        wantedBy = [ "default.target" ];
-        after = [ "network.target" ];
+    services = {
+        ollama = {
+            enable = true;
+            user = "ollama";
+            group = "config.services.ollama.user";
+            home = "/home/ollama";
+            host = "127.0.0.1";
+            openFirewall = false;
 
-        serviceConfig = {
-            Type = "simple";
-            ExecStart = "${a1111Launcher}/bin/automatic1111";
-            WorkingDirectory = "%h/.local/share/automatic1111/sdnext";
-            Restart = "on-failure";
-            RestartSec = "10s";
+            environmentVariables = {
+                OLLAMA_NUM_PARALLEL= "8";
+                OLLAMA_MAX_LOADED_MODELS = "1";
+                CUDA_VISIBLE_DEVICES = "0";
+                OLLAMA_GPU_OVERHEAD = "2147483648";
+            };
+
+            # https://ollama.com/library
+            loadModels = [
+                "deepseek-v4-pro:cloud"
+            ];
+        };
+
+        open-webui = {
+            enable = true;
+
+            environment = {
+                ANONYMIZED_TELEMETRY = "False";
+                DO_NOT_TRACK = "True";
+                SCARF_NO_ANALYTICS = "True";
+                OLLAMA_API_BASE_URL = "http://127.0.0.1:11434/api";
+                OLLAMA_BASE_URL = "http://127.0.0.1:11434";
+            };
+
+            package = (pkgs.callPackage ./packages/open-webui {});
         };
     };
 
-    system.activationScripts.automatic1111Dirs = ''
+    # SD.Next systemd service.
+    systemd = {
+        services.ollama.serviceConfig = {
+            DynamicUser = lib.mkForce false;
+            PrivateUsers = lib.mkForce false;
+            ProtectHome = lib.mkForce false;
+        };
+
+        user.services.automatic1111 = {
+            description = "SD.Next Stable Diffusion WebUI";
+            wantedBy = [ "default.target" ];
+            after = [ "network.target" ];
+
+            serviceConfig = {
+                Type = "simple";
+                ExecStart = "${a1111Launcher}/bin/automatic1111";
+                WorkingDirectory = "%h/.local/share/automatic1111/sdnext";
+                Restart = "on-failure";
+                RestartSec = "10s";
+            };
+        };
+    };
+
+    system = {
+        activationScripts.automatic1111Dirs = ''
 mkdir -p /home/me/.local/share/automatic1111/{models/Stable-diffusion,models/VAE,outputs,extensions}
 chown -R me:users /home/me/.local/share/automatic1111
-    '';
+        '';
+    };
 }
 
 # <> #

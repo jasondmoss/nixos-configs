@@ -3,7 +3,6 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
-#        automatic1111  = pkgs.callPackage ./packages/automatic1111 {};
         gemini-nix     = pkgs.callPackage ./packages/gemini-nix-assistant {};
         gemini-wrapped = pkgs.callPackage ./packages/gemini-cli/wrapper.nix {};
         gh-clone       = pkgs.callPackage ./packages/gh-clone {};
@@ -15,10 +14,7 @@ let
         wavebox        = pkgs.callPackage ./packages/wavebox-beta {};
 
         # Custom workshop applications.
-        #claude-ai      = pkgs.callPackage ./workshop/claude-ai {};
-        #feedbin-rss    = pkgs.callPackage ./workshop/feedbin-rss { };
-        #gemini-desktop = pkgs.callPackage ./workshop/gemini-desktop {};
-        #proton-suite   = pkgs.callPackage ./workshop/proton-suite {};
+        #plasma-dock      = pkgs.callPackage ./workshop/plasma-dock {};
     };
 
     # --- Package Categories ---
@@ -90,35 +86,35 @@ let
         development = with pkgs; [
             # Base Toolchain
             cargo
-            rustc
-            nodejs
-            yarn
+            cmake
             gcc
             git
             gnumake
             ninja
-            cmake
+            nodejs
             pkg-config
+            rustc
+            yarn
 
             # KDE/Qt Specific Development
-            extra-cmake-modules
             clazy
+            extra-cmake-modules
             gammaray
             heaptrack
             qtcreator
             valgrind
 
             # GNOME/GTK Development
+            glib-networking
             gtk4
             libadwaita
-            glib-networking
 
             # IDEs & Tools
+            cppcheck
             phpstorm
             phpunit
-            sublime4
             pre-commit
-            cppcheck
+            sublime4
 
             # Android
             android-tools
@@ -126,11 +122,11 @@ let
 
         kde-plasma-core = with pkgs.kdePackages; [
             # Core Shell & Workspaces
+            layer-shell-qt
             plasma-desktop
+            plasma-wayland-protocols
             plasma-workspace
             plasma5support # Essential for legacy widget compatibility in KF6
-            plasma-wayland-protocols
-            layer-shell-qt
 
             # System Integration
             baloo
@@ -142,8 +138,8 @@ let
             kwallet-pam
             kwayland
             kwindowsystem
-            networkmanager-qt
             modemmanager-qt
+            networkmanager-qt
 
             # Theming & Assets
             breeze
@@ -222,9 +218,11 @@ let
         utilities = with pkgs; [
             conky
             fuzzel
+            p7zip-rar
             quickemu
             rar
-            p7zip-rar
+            rofi
+            rofi-calc
             unrar
             unzip
             wezterm
@@ -232,10 +230,10 @@ let
 
         theming-compat = with pkgs; [
             adwaita-qt6
-            materia-kde-theme
-            qadwaitadecorations-qt6
             comixcursors
             kdePackages.qt6ct
+            materia-kde-theme
+            qadwaitadecorations-qt6
         ];
 
         custom = (builtins.attrValues customPkgs);

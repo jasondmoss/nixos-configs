@@ -2,7 +2,7 @@
     networking = {
         enableIPv6 = true;
         useDHCP = lib.mkDefault true;
-        nftables.enable = true;
+        nftables.enable = false;
 
         firewall = {
             enable = true;
@@ -19,6 +19,7 @@
             enable = true;
             insertNameservers = [ "127.0.0.1" ];
             wifi.powersave = false;
+            plugins = with pkgs; [ networkmanager-openvpn ];
         };
     };
 
