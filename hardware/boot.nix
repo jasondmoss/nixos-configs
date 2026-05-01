@@ -26,13 +26,9 @@
             ];
         };
 
-        extraModulePackages = with pkgs.linuxPackages_xanmod_latest; [
-            zenpower
-        ];
-
         kernelModules = [
             "kvm-amd"
-            "zenpower"
+            "k10temp"
         ];
 
         kernelParams = [
@@ -52,7 +48,6 @@
         blacklistedKernelModules = [
             "nouveau"
             "i2c-nvidia_gpu"
-            "k10temp"
         ];
 
         kernel.sysctl = {
