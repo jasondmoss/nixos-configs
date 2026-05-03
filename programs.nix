@@ -1,15 +1,18 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+ let
+    identity = import ./identity.nix;
+ in {
     programs = {
+        bash.completion.enable = true;
+        direnv.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;
         xwayland.enable = true;
-        bash.completion.enable = true;
-        direnv.enable = true;
 
         steam = {
             enable = true;
-            remotePlay.openFirewall = true;
             dedicatedServer.openFirewall = true;
+            remotePlay.openFirewall = true;
         };
 
         ssh = {
@@ -34,13 +37,13 @@ Host github.com-work
 Host gitlab.com-gitlab
     HostName gitlab.com
     User git
-    IdentityFile /home/me/.ssh/id_ed25519_2026_gitlab
+    IdentityFile ~/.ssh/id_ed25519_2026_gitlab
     IdentitiesOnly yes
 
 Host bitbucket.org
     HostName bitbucket.org
     User git
-    IdentityFile /home/me/.ssh/id_ed25519_2026_bitbucket
+    IdentityFile ~/.ssh/id_ed25519_2026_bitbucket
     IdentitiesOnly yes
 
 Host pantheon.io *.pantheon.io
@@ -48,7 +51,6 @@ Host pantheon.io *.pantheon.io
     IdentitiesOnly yes
 
             '';
-
         };
 
         gnupg.agent = {
@@ -72,14 +74,14 @@ Host pantheon.io *.pantheon.io
 
                 includeIf = {
                     # GitHub
-                    "gitdir/i:/home/me/Repository/work/origin/" .path = "/etc/gitconfig.work";
-                    "gitdir/i:/home/me/Repository/work/mmgy/" .path = "/etc/gitconfig.bitbucket";
-                    "gitdir/i:/home/me/Repository/personal/" .path = "/etc/gitconfig.personal";
+                    "gitdir/i:${identity.userHome}/Repository/work/origin/" .path = "/etc/gitconfig.work";
+                    "gitdir/i:${identity.userHome}/Repository/work/mmgy/" .path = "/etc/gitconfig.bitbucket";
+                    "gitdir/i:${identity.userHome}/Repository/personal/" .path = "/etc/gitconfig.personal";
                     # Fallback for your main config repo if it's not in the personal folder.
-                    "gitdir/i:/home/me/Repository/system/" .path = "/etc/gitconfig.personal";
+                    "gitdir/i:${identity.userHome}/Repository/system/" .path = "/etc/gitconfig.personal";
 
                     # GitLab
-                    "gitdir/i:/home/me/Repository/work/cyan-solutions/" .path = "/etc/gitconfig.gitlab";
+                    "gitdir/i:${identity.userHome}/Repository/work/cyan-solutions/" .path = "/etc/gitconfig.gitlab";
                 };
             };
         };

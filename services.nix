@@ -1,4 +1,7 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+let
+    identity = import ./identity.nix;
+in {
     services = {
         dbus.enable = true;
         devmon.enable = true;
@@ -7,23 +10,23 @@
         gnome.gnome-keyring.enable = true;
         gpm.enable = true;
         irqbalance.enable = true;
-        openssh.settings.AllowUsers = [ "me" ];
+        openssh.settings.AllowUsers = [ identity.userHandle ];
         pcscd.enable = true;
         sysstat.enable = true;
         systembus-notify.enable = lib.mkForce true;
 
         earlyoom = {
             enable = true;
+            enableNotifications = true;
             freeMemThreshold = 5;   # % of RAM
             freeSwapThreshold = 10; # % of swap
-            enableNotifications = true;
         };
 
 
         locate = {
             enable = true;
-            package = pkgs.mlocate;
             interval = "hourly";
+            package = pkgs.mlocate;
         };
 
         pipewire = {
@@ -39,13 +42,13 @@
         };
 
         snapper = {
-            snapshotInterval = "hourly";
             cleanupInterval = "1d";
+            snapshotInterval = "hourly";
 
             configs = {
                 home = {
                     SUBVOLUME = "/home";
-                    ALLOW_USERS = [ "me" ];
+                    ALLOW_USERS = [ identity.userHandle ];
                     TIMELINE_CREATE = true;
                     TIMELINE_CLEANUP = true;
                     TIMELINE_LIMIT_HOURLY = "10";
@@ -55,8 +58,8 @@
                 };
 
                 repository = {
-                    SUBVOLUME = "/home/me/Repository";
-                    ALLOW_USERS = [ "me" ];
+                    SUBVOLUME = "${identity.userHome}/Repository";
+                    ALLOW_USERS = [ identity.userHandle ];
                     TIMELINE_CREATE = true;
                     TIMELINE_CLEANUP = true;
                     TIMELINE_LIMIT_HOURLY = "10";
@@ -76,7 +79,7 @@
             serviceConfig = {
                 Type = "oneshot";
                 # Run as your user so the database is available in ~/.cache/nix-index
-                User = "me";
+                User = identity.userHandle;
                 ExecStart = "${pkgs.nix-index}/bin/nix-index";
             };
         };
@@ -143,8 +146,8 @@
 
     system.activationScripts.megasyncUserService = {
         text = ''
-mkdir -p /home/me/.config/systemd/user
-ln -sf /etc/systemd/user/megasync.service /home/me/.config/systemd/user/megasync.service
+mkdir -p ${identity.userHome}/.config/systemd/user
+ln -sf /etc/systemd/user/megasync.service ${identity.userHome}/.config/systemd/user/megasync.service
         '';
         deps = [ "users" ];
     };

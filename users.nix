@@ -1,13 +1,16 @@
-{ ... }: {
+{ ... }:
+ let
+    identity = import ./identity.nix;
+ in {
     users = {
         users = {
             me = {
                 isNormalUser = true;
-                home = "/home/me";
+                home = "${identity.userHome}";
                 createHome = false;
                 uid = 1000;
                 group = "users";
-                description = "Jason D. Moss";
+                description = identity.userName;
 
                 extraGroups = [
                     "33"

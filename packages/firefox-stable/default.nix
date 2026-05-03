@@ -1,5 +1,6 @@
 { pkgs, ... }:
 let
+    identity = import ../../identity.nix;
 
     firefoxStableDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
@@ -7,7 +8,7 @@ let
         name = "firefox-stable";
         desktopName = "Firefox Stable";
         exec = "firefox-stable -P \"Stable\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
+        icon = "${identity.userHome}/Mega/Images/Icons/Apps/firefox.png";
         mimeTypes = [
             "application/vnd.mozilla.xul+xml"
             "application/xhtml+xml"
@@ -33,7 +34,6 @@ let
             };
         };
     };
-
 in {
 
     environment.systemPackages = (with pkgs; [
@@ -47,5 +47,4 @@ ln -s ${firefox-bin}/bin/firefox $out/bin/firefox-stable
         #-- Create desktop entry.
         firefoxStableDesktopItem
     ]);
-
 }

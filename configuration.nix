@@ -12,14 +12,15 @@
 
 { pkgs, ... }:
 let
+    identity = import ./identity.nix;
     theme = import ./desktop/theme.nix;
 in {
     nix = {
         package = pkgs.nixVersions.latest;
 
         settings = {
-            trusted-users = [ "root" "me" "@wheel" ];
-            allowed-users = [ "root" "me" "@wheel" ];
+            trusted-users = [ "root" identity.userHandle "@wheel" ];
+            allowed-users = [ "root" identity.userHandle "@wheel" ];
             experimental-features = "nix-command";
             auto-optimise-store = true;
             max-jobs = "auto";

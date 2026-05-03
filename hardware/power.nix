@@ -20,10 +20,7 @@
         tlp = {
             enable = true;
             settings = {
-                # 'powersave' governor allows amd_pstate to manage frequencies dynamically.
                 CPU_SCALING_GOVERNOR_ON_AC = "powersave";
-
-                # Tell the CPU to prefer performance (EPP).
                 CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
 
                 CPU_MIN_PERF_ON_AC = 0;

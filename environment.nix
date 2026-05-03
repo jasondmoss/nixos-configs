@@ -1,4 +1,7 @@
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }:
+let
+    identity = import ./identity.nix;
+in {
 	environment = {
 		etc = {
 			"1password/custom_allowed_browsers" = {
@@ -13,26 +16,26 @@ wavebox
 
 			"gitconfig.work".text = ''
 [user]
-	name = "Jason D. Moss (Origin)"
-	email = "jmoss@originoutside.com";
+	name = ${identity.userName}
+	email = ${identity.emailOrigin};
 			'';
 
 			"gitconfig.personal".text = ''
 [user]
-	name = "Jason D. Moss"
-	email = "jason@jdmlabs.com"
+	name = ${identity.userName}
+	email = ${identity.emailPersonal}
 			'';
 
             "gitconfig.gitlab".text = ''
 [user]
-    name = "Jason Moss"
-    email = "work@jdmlabs.com"
+    name = ${identity.userName}
+    email = ${identity.emailWork}
             '';
 
             "gitconfig.bitbucket".text = ''
 [user]
-    name = "Jason D. Moss"
-    email = "jmoss@originoutside.com"
+    name = ${identity.userName}
+    email = ${identity.emailOrigin}
             '';
 		};
 

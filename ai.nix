@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
 let
+    identity = import ./identity.nix;
+
     # Runtime deps only — no Python package building in Nix
     a1111Deps = with pkgs; [
         python311
@@ -67,10 +69,6 @@ exec python launch.py \
  "$@"
     '';
 in {
-#    imports = [
-#        ./packages/ollama
-#    ];
-
     environment = {
         variables = {
             CUDA_PATH = "${pkgs.cudaPackages.cudatoolkit}";
@@ -151,8 +149,8 @@ in {
 
     system = {
         activationScripts.automatic1111Dirs = ''
-mkdir -p /home/me/.local/share/automatic1111/{models/Stable-diffusion,models/VAE,outputs,extensions}
-chown -R me:users /home/me/.local/share/automatic1111
+mkdir -p ${identity.userHome}/.local/share/automatic1111/{models/Stable-diffusion,models/VAE,outputs,extensions}
+chown -R ${identity.userHandle}:users ${identity.userHome}/.local/share/automatic1111
         '';
     };
 }

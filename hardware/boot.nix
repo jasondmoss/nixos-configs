@@ -1,4 +1,7 @@
-{ lib, pkgs, modulesPath, ... }: {
+{ lib, pkgs, modulesPath, ... }:
+ let
+    identity = import ../identity.nix;
+ in {
     imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
@@ -94,32 +97,32 @@
     };
 
     # [sdb2]
-    fileSystems."/home/me/Mega" = {
+    fileSystems."${identity.userHome}/Mega" = {
         device = "/dev/disk/by-uuid/ccee2c99-427f-40f1-ad72-af6c81be4379";
         fsType = "ext4";
     };
 
     # [sdc1]
-    fileSystems."/home/me/Music" = {
+    fileSystems."${identity.userHome}/Music" = {
         device = "/dev/disk/by-uuid/bf9410ed-bf55-4341-97f5-5576f80ce071";
         fsType = "ext4";
     };
 
     # [sdb1]
-    fileSystems."/home/me/Repository" = {
+    fileSystems."${identity.userHome}/Repository" = {
         device = "/dev/disk/by-uuid/2cf8ca9d-43ab-4ef5-99ff-0a909e765c5e";
         fsType = "btrfs";
         options = [ "compress=zstd:1" ];
     };
 
     # [sda1]
-    fileSystems."/home/me/Videos/Movies" = {
+    fileSystems."${identity.userHome}/Videos/Movies" = {
         device = "/dev/disk/by-uuid/52dfd9d6-7557-45fd-83c6-a6bfff2c0c83";
         fsType = "ext4";
     };
 
     # [sdd]
-     fileSystems."/home/me/Videos/Television" = {
+     fileSystems."${identity.userHome}/Videos/Television" = {
          device = "/dev/disk/by-uuid/a7007b9d-f315-4dec-83cd-ef883729e3c0";
          fsType = "ext4";
      };

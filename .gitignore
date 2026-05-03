@@ -1,5 +1,6 @@
 **/nixpkgs
+**/result
 **/secret.txt
 .idea
+identity.nix
 result
-**/result
