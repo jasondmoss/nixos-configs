@@ -23,6 +23,7 @@ let
             nixos-icons
             nixos-rebuild-ng
             nix-prefetch-github
+            nh
         ];
 
         system-tools = with pkgs; [

@@ -43,6 +43,12 @@ wavebox
 			SSH_ASKPASS = lib.mkForce "ksshaskpass";
 			SSH_ASKPASS_REQUIRE = "prefer";
 		};
+		pathsToLink = [
+            "/home/me/Mega/Images/Icons/Apps/"
+            "/share/applications"
+            "/share/icons"
+            "/share/pixmaps"
+        ];
 
 		sessionVariables = {
             # XDG Base Directory Specification.

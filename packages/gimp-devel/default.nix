@@ -14,7 +14,6 @@ let
     python = python3.withPackages (pp: with pp; [ pygobject3 ]);
 in stdenv.mkDerivation (finalAttrs: {
     pname = "gimp";
-#    version = "3.0.8";
     version = "3.2.0";
 
     outputs = [ "out" "dev" "man" ];
@@ -22,7 +21,6 @@ in stdenv.mkDerivation (finalAttrs: {
     src = fetchurl {
 #        url = "https://download.gimp.org/gimp/v3.0/gimp-${finalAttrs.version}.tar.xz";
         url = "https://download.gimp.org/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}-RC2.tar.xz";
-#        hash = "sha256-/rSYrMAbJoJ8/x/5Wqj7gs3Wpg16v3c8/NGavq/KM4Y=";
         hash = "sha256-SVS2DuM3457X6/ivdRIUGzbBKjg1lRQFos3NYSYRC0g=";
     };
 
