@@ -25,6 +25,22 @@ nixpkgs only. The entry point is `configuration.nix`.
 
 ---
 
+## Filesystems
+
+| Mount point         | Device       | FS    | Notes                          |
+|---------------------|--------------|-------|--------------------------------|
+| `/`                 | nvme0n1p2    | ext4  | Root (NVMe)                    |
+| `/home`             | nvme1n1p1    | Btrfs | zstd:1, Snapper snapshots      |
+| `~/Repository`      | sdb2         | Btrfs | zstd:1, Snapper snapshots      |
+| `~/Mega`            | sdb2         | ext4  | MEGAsync storage               |
+| `~/Music`           | sdc1         | ext4  | Music library                  |
+| `~/Videos/Movies`   | sda1         | ext4  | Movie library                  |
+| `~/Videos/Television` | sdd        | ext4  | TV library                     |
+| `/boot/efi`         | vfat         | vfat  | EFI partition                  |
+| (swapfile)          | /swapfile    | —     | 16 GiB                         |
+
+---
+
 ## Module Structure
 
 ### Hardware (`hardware/`)
@@ -36,11 +52,9 @@ nixpkgs only. The entry point is `configuration.nix`.
 | `peripherals.nix`| Bluetooth, QMK keyboard firmware, printing, SMART monitoring, udev   |
 | `power.nix`      | AMD CPU microcode, `amd_pstate=active`, TLP power management          |
 
-**Filesystems:** root on ext4 (NVMe), `/home` and `Repository` on Btrfs with zstd
-compression, separate ext4 partitions for media libraries. 16 GiB swap file.
+**Kernel params:** `amd_iommu=on`, `amd_pstate=active`, `nvidia-drm.modeset=1`, `nvidia-drm.fbdev=1`. nouveau and `i2c-nvidia_gpu` are blacklisted.
 
-**Kernel hardening:** `kernel.kptr_restrict`, `unprivileged_bpf_disabled`,
-`bpf_jit_harden`, `yama.ptrace_scope`, nouveau blacklisted.
+**Kernel hardening:** `kptr_restrict=2`, `unprivileged_bpf_disabled=1`, `bpf_jit_harden=2`, `yama.ptrace_scope=1`.
 
 ---
 
@@ -50,7 +64,7 @@ compression, separate ext4 partitions for media libraries. 16 GiB swap file.
 |-------------|----------------------------------------------------------------------------|
 | `plasma.nix`| KDE Plasma 6, Ly display manager, XDG portals, Wayland/Qt session vars    |
 | `fonts.nix` | Font packages and fontconfig rules                                         |
-| `theme.nix` | 16-color terminal palette (plain Nix value, imported by configuration.nix) |
+| `theme.nix` | 16-color terminal palette (plain Nix value, imported by `configuration.nix`) |
 
 **Plasma 6** is configured with Qt 6 only (`enableQt5Integration = false`), RHI
 rendering backend (`QT_QUICK_BACKEND = rhi`), and XDG portal delegation for KDE/GTK.
@@ -64,18 +78,18 @@ rendering backend (`QT_QUICK_BACKEND = rhi`), and XDG portal delegation for KDE/
 | File             | Purpose                                                                  |
 |------------------|--------------------------------------------------------------------------|
 | `nixpkgs.nix`    | Host platform, unfree allowlist, overlays (Firefox Nightly, PhpStorm, libQuotient) |
-| `identity.nix`   | User identity values (handle, home path) — plain Nix value, not a module |
-| `networking.nix` | nftables firewall, NetworkManager + OpenVPN, CoreDNS (local resolver), OpenSSH |
+| `identity.nix`   | User identity values — plain Nix value, not a module (see below)         |
+| `networking.nix` | iptables firewall (TCP 22/80/443), NetworkManager + OpenVPN, CoreDNS (local resolver), OpenSSH (key-only, root disabled) |
 | `security.nix`   | PAM, polkit rules, sudo configuration                                    |
 | `users.nix`      | User account and group memberships                                       |
 | `environment.nix`| Session/env vars, XDG base dirs, GStreamer paths, per-host git configs, 1Password browser allowlist |
 | `programs.nix`   | git (LFS, conditional identity includes), neovim, SSH agent, GnuPG (pinentry-qt), 1Password, Steam, direnv, KDE Connect, nix-index |
 | `packages.nix`   | Central package manifest, organized by category (see below)              |
-| `services.nix`   | PipeWire, Snapper (Btrfs snapshots), earlyoom, locate, systemd user units (megasync, notes, ssh-key-pollen, nix-index updater) |
+| `services.nix`   | PipeWire, Snapper (Btrfs snapshots on `/home` and `~/Repository`), earlyoom, mlocate, systemd user units (megasync, notes, ssh-key-pollen) + system timer (nix-index weekly update) |
 
 **Networking:** CoreDNS runs locally on `127.0.0.1` as the system resolver, forwarding
-to Cloudflare (1.1.1.1) and Google (8.8.8.8). SSH allows only key authentication;
-root login disabled.
+to Cloudflare and Google. A `local` zone resolves all `*.local` names to `127.0.0.1`.
+NetworkManager inserts `127.0.0.1` as the sole nameserver.
 
 **Nix store:** auto-optimise enabled, GC runs weekly (deletes generations older than
 2 days), `experimental-features = nix-command` only (no flakes).
@@ -84,77 +98,87 @@ root login disabled.
 
 ### Development (`development.nix`)
 
-Docker (v25, overlay2 storage driver) with weekly auto-prune, docker-compose,
+Docker (overlay2 storage driver) with weekly auto-prune, docker-compose,
 docker-buildx. PHP/Apache stack via `packages/php`.
 
 ---
 
 ### AI (`ai.nix`)
 
-| Component       | Details                                                          |
-|-----------------|------------------------------------------------------------------|
-| Ollama          | Local LLM server, CUDA-accelerated, single-GPU, 8 parallel slots|
-| Open WebUI      | Web interface for Ollama (custom package build)                  |
-| Automatic1111   | SD.Next Stable Diffusion WebUI, runs as a systemd user service   |
-| CUDA            | `cudatoolkit` + `cudnn`, `CUDA_PATH` exported                    |
-| claude-code     | Anthropic Claude CLI                                             |
-| claude-monitor  | Usage monitor for Claude Code                                    |
-| oterm           | TUI client for Ollama                                            |
+| Component   | Details                                                                    |
+|-------------|----------------------------------------------------------------------------|
+| Ollama      | Local LLM server, CUDA-accelerated, single-GPU, 8 parallel slots, model storage at `~/Repository/ollama/models` |
+| Open WebUI  | Web interface for Ollama (custom package build via `packages/open-webui`)  |
+| CUDA        | `cudatoolkit` + `cudnn`, `CUDA_PATH` exported                              |
+| claude-code | Anthropic Claude CLI                                                        |
+| claude-monitor | Usage monitor for Claude Code                                           |
 
 ---
 
 ## Package Categories (`packages.nix`)
 
 Packages are organized into named category lists, flattened into
-`environment.systemPackages` at build time.
+`environment.systemPackages` at build time via `lib.flatten (builtins.attrValues pkgsByCategories)`.
 
-| Category            | Contents                                                          |
-|---------------------|-------------------------------------------------------------------|
-| `nixos`             | nixos-icons, nixos-rebuild-ng, nix-prefetch-github               |
-| `system-tools`      | btrfs-progs, htop, lsd, inxi, pciutils, smartmontools, dysk, fwupd, etc. |
+| Category              | Contents                                                          |
+|-----------------------|-------------------------------------------------------------------|
+| `nixos`               | fastfetch, nixos-icons, nixos-rebuild-ng, nix-prefetch-github, nh |
+| `system-tools`        | btrfs-progs, htop, lsd, inxi, pciutils, smartmontools, dysk, fwupd, etc. |
 | `graphics-multimedia` | FFmpeg, mpv, Inkscape, Audacity, Shotcut, GStreamer plugins, MKVToolNix |
-| `development`       | GCC, Rust/Cargo, Node.js, CMake, Qt/KDE dev tools, PhpStorm, Valgrind, Android tools |
-| `kde-plasma-core`   | Plasma workspace, Baloo, KWallet, Breeze, NetworkManager-Qt, etc. |
-| `kde-applications`  | Dolphin, Kate, Kdenlive, KTorrent, Okular, Ark, KDevelop, etc.   |
-| `kde-pim`           | Akonadi stack (calendar, contacts, search, MIME)                 |
-| `gnome-stack`       | Nautilus, GNOME Tweaks, Adwaita icons (for GTK app compatibility) |
-| `network-web`       | Firefox Nightly, Mullvad Browser, Tor Browser, ProtonVPN, megatools |
-| `office`            | LibreOffice (Qt/fresh), Notes, Standard Notes                    |
-| `utilities`         | Wezterm, fuzzel, rofi, quickemu, p7zip, conky                    |
-| `theming-compat`    | adwaita-qt6, Kvantum, qt6ct, Materia KDE, comixcursors           |
-| `custom`            | All local package derivations (see below)                        |
+| `development`         | GCC, Rust/Cargo, Node.js, CMake, Qt/KDE dev tools, PhpStorm, Valgrind, Android tools |
+| `kde-plasma-core`     | Plasma workspace, Baloo, KWallet, Breeze, NetworkManager-Qt, layer-shell-qt, etc. |
+| `kde-applications`    | Dolphin, Kate, Kdenlive, KTorrent, Okular, Ark, KDevelop, etc.   |
+| `kde-pim`             | Akonadi stack (calendar, contacts, search, MIME)                  |
+| `gnome-stack`         | Nautilus, GNOME Tweaks, Adwaita icons (for GTK app compatibility) |
+| `network-web`         | Firefox Nightly, Mullvad Browser, Tor Browser, ProtonVPN, megatools, Google Chrome, Microsoft Edge |
+| `office`              | LibreOffice (Qt/fresh), Notes, Standard Notes                     |
+| `utilities`           | Wezterm, fuzzel, rofi, quickemu, p7zip, rar, conky                |
+| `theming-compat`      | adwaita-qt6, Kvantum, qt6ct, Materia KDE, comixcursors            |
+| `custom`              | All local package derivations (see below)                         |
+
+KDE excluded packages: `elisa`, `itinerary`. GNOME excluded packages: decibels, geary, gnome-calculator, gnome-calendar, gnome-console, gnome-contacts, gnome-maps, gnome-music, gnome-tour, gnome-weather.
 
 ---
 
 ## Custom Packages (`packages/`)
 
 Local derivations for software not in nixpkgs or requiring customization.
-Integrated via `pkgs.callPackage` in `packages.nix`.
 
-| Package                | Notes                                              |
-|------------------------|----------------------------------------------------|
-| `firefox-nightly`      | Via nixpkgs-mozilla overlay                        |
-| `firefox-stable`       | Custom wrapper/module                              |
-| `gemini-cli`           | Google Gemini CLI with wrapper                     |
-| `gemini-nix-assistant` | Nix-aware Gemini assistant tool                    |
-| `gh-clone`             | GitHub repository clone helper                     |
-| `gimp`                 | GIMP module                                        |
-| `gimp-devel`           | GIMP development build with wrapper                |
-| `jetbrains`            | PhpStorm overlay with OpenGL/font fixes            |
-| `kde-darkly`           | Darkly KDE window decoration theme                 |
-| `kde-klassy`           | Klassy KDE window decoration theme                 |
-| `ladybird`             | Ladybird browser build                             |
-| `libquotient`          | libQuotient with upstream patch applied            |
-| `ly`                   | Ly display manager                                 |
-| `mkvtoolnix`           | MKVToolNix (inline callPackage in packages.nix)    |
-| `nyxt-custom`          | Nyxt browser with customizations                   |
-| `open-webui`           | Open WebUI (used by ai.nix service)                |
-| `php`                  | PHP + Apache httpd stack                           |
-| `standardnotes`        | Standard Notes desktop app                         |
-| `strawberry-master`    | Strawberry music player (git master build)         |
-| `vaapi`                | Custom VAAPI driver/wrapper                        |
-| `vivaldi-snapshot`     | Vivaldi snapshot browser build                     |
-| `wavebox-beta`         | Wavebox Beta browser/workspace app                 |
+**`customPkgs` attrset** (integrated via `pkgs.callPackage` in `packages.nix`, included via `builtins.attrValues customPkgs`):
+
+| Package                | Attrset key      |
+|------------------------|------------------|
+| `gemini-nix-assistant` | `gemini-nix`     |
+| `gemini-cli/wrapper`   | `gemini-wrapped` |
+| `gh-clone`             | `gh-clone`       |
+| `kde-darkly`           | `kde-darkly`     |
+| `kde-klassy`           | `kde-klassy`     |
+| `nyxt-custom`          | `nyxt-custom`    |
+| `strawberry-master`    | `strawberry`     |
+| `vivaldi-snapshot`     | `vivaldi`        |
+| `wavebox-beta`         | `wavebox`        |
+
+**Module imports** (imported as full NixOS modules, not via `customPkgs`):
+
+| Package          | Where imported      |
+|------------------|---------------------|
+| `firefox-stable` | `packages.nix`      |
+| `gimp`           | `packages.nix`      |
+
+**Overlay-based** (registered in `nixpkgs.nix` or `overlays/`):
+
+| Package          | Mechanism                                      |
+|------------------|------------------------------------------------|
+| `firefox-nightly`| `overlays/nixpkgs-mozilla/firefox-overlay.nix` |
+| `jetbrains` (PhpStorm) | Inline overlay in `nixpkgs.nix`          |
+| `libquotient`    | Inline overlay in `nixpkgs.nix` (upstream patch) |
+
+**Inline callPackage** in category lists:
+
+| Package      | Location                    |
+|--------------|-----------------------------|
+| `mkvtoolnix` | `graphics-multimedia` list  |
+| `open-webui` | `ai.nix` services block     |
 
 ---
 
@@ -162,19 +186,19 @@ Integrated via `pkgs.callPackage` in `packages.nix`.
 
 In-development KDE applications built locally.
 
-| Project          | Description                                             |
-|------------------|---------------------------------------------------------|
-| `plasma-dock/`   | Custom KDE Wayland dock using wlr-layer-shell           |
-| `kde-dev-shell.nix` | Nix shell environment for KDE/Qt development        |
+| Project             | Description                                             |
+|---------------------|---------------------------------------------------------|
+| `plasma-dock/`      | Custom KDE Wayland dock using wlr-layer-shell           |
+| `kde-dev-shell.nix` | Nix shell environment for KDE/Qt development            |
 
 ---
 
 ## Overlays (`overlays/`)
 
-| Overlay                    | Purpose                                          |
-|----------------------------|--------------------------------------------------|
-| `nixpkgs-mozilla/`         | Mozilla overlay providing `firefox-nightly`      |
-| `default.nix`              | Top-level overlay aggregator                     |
+| Overlay              | Purpose                                          |
+|----------------------|--------------------------------------------------|
+| `nixpkgs-mozilla/`   | Mozilla overlay providing `firefox-nightly`      |
+| `default.nix`        | Top-level overlay aggregator                     |
 
 Additional inline overlays in `nixpkgs.nix`: PhpStorm (OpenGL/font deps),
 libQuotient (upstream patch).
@@ -185,10 +209,12 @@ libQuotient (upstream patch).
 
 - **No flakes** — traditional NixOS module system with channel-based nixpkgs only.
 - **Plain Nix values** — `desktop/theme.nix` (color palette) and `identity.nix` (user
-  identity) are imported with `import`, not as modules.
+  identity) are imported with `import`, not as NixOS modules. Access their attrs
+  directly (e.g. `identity.userHandle`, `theme.colors16`).
+- **`identity.nix` fields** — `userName`, `userHandle`, `userHome`, `emailPersonal`,
+  `emailWork`. See `identity.nix.example` for the template. This file is not committed.
 - **File endings** — all `.nix` files close with a `# <> #` comment marker.
-- **Unfree packages** — managed via `allowUnfreePredicate` in `nixpkgs.nix`; covers
-  NVIDIA drivers, Steam, and Vulkan components.
-- **Custom packages** — collected into a `customPkgs` attrset in `packages.nix` and
-  included via `builtins.attrValues customPkgs`; some packages (firefox-stable, gimp)
-  are imported as full NixOS modules instead.
+- **Adding a package** — add it to the appropriate category list in `packages.nix`. For
+  a new custom derivation, add a `pkgs.callPackage ./packages/<name> {}` entry to the
+  `customPkgs` attrset.
+- **Unfree packages** — add the package name to `allowUnfreePredicate` in `nixpkgs.nix`.
