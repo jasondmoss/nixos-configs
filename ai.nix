@@ -22,9 +22,9 @@ in {
         ollama = {
             enable = true;
             user = "ollama";
-            group = "config.services.ollama.user";
+            group = config.services.ollama.user;
             home = "/home/ollama";
-            models = "/home/me/Repository/models";
+            models = "/home/me/Repository/ollama/models";
             host = "127.0.0.1";
             openFirewall = false;
 
@@ -37,7 +37,8 @@ in {
 
             # https://ollama.com/library
             loadModels = [
-                "deepseek-v4-pro:cloud"
+                "ministral-3"
+#                "deepseek-v4-pro:cloud"
             ];
         };
 
@@ -57,7 +58,8 @@ in {
     };
 
     systemd.tmpfiles.rules = [
-        "d /home/me/Repository/models 0755 ollama ollama -"
+        "d /home/me/Repository/ollama 0755 ollama ollama -"
+        "d /home/me/Repository/ollama/models 0755 ollama ollama -"
     ];
 
     # SD.Next systemd service.

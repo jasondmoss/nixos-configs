@@ -20,6 +20,7 @@
                     "mysql"
                     "navidrome"
                     "networkmanager"
+                    "ollama"
                     "power"
                     "video"
                     "wheel"

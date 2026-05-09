@@ -20,6 +20,7 @@ let
     # --- Package Categories ---
     pkgsByCategories = {
         nixos = with pkgs; [
+            fastfetch
             nixos-icons
             nixos-rebuild-ng
             nix-prefetch-github
@@ -160,6 +161,7 @@ let
             ark
             dolphin
             dolphin-plugins
+            filelight
             ffmpegthumbs
             isoimagewriter
             kate
