@@ -73,6 +73,7 @@ let
             nomacs
             nvtopPackages.full
             pavucontrol
+            qbz
             shotcut
             taglib-sharp
             taglib_extras
