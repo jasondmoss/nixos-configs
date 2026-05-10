@@ -15,6 +15,7 @@ in {
             # AI tools.
             claude-code
             claude-monitor
+            realesrgan-ncnn-vulkan
         ];
     };
 

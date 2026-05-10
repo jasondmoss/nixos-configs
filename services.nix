@@ -41,34 +41,34 @@ in {
             };
         };
 
-        snapper = {
-            cleanupInterval = "1d";
-            snapshotInterval = "hourly";
+        #snapper = {
+        #    cleanupInterval = "1d";
+        #    snapshotInterval = "hourly";
 
-            configs = {
-                home = {
-                    SUBVOLUME = "/home";
-                    ALLOW_USERS = [ identity.userHandle ];
-                    TIMELINE_CREATE = true;
-                    TIMELINE_CLEANUP = true;
-                    TIMELINE_LIMIT_HOURLY = "10";
-                    TIMELINE_LIMIT_DAILY = "7";
-                    TIMELINE_LIMIT_WEEKLY = "4";
-                    TIMELINE_LIMIT_MONTHLY = "6";
-                };
+        #    configs = {
+        #        home = {
+        #            SUBVOLUME = "/home";
+        #            ALLOW_USERS = [ identity.userHandle ];
+        #            TIMELINE_CREATE = true;
+        #            TIMELINE_CLEANUP = true;
+        #            TIMELINE_LIMIT_HOURLY = "1";
+        #            TIMELINE_LIMIT_DAILY = "2";
+        #            TIMELINE_LIMIT_WEEKLY = "1";
+        #            TIMELINE_LIMIT_MONTHLY = "0";
+        #        };
 
-                repository = {
-                    SUBVOLUME = "${identity.userHome}/Repository";
-                    ALLOW_USERS = [ identity.userHandle ];
-                    TIMELINE_CREATE = true;
-                    TIMELINE_CLEANUP = true;
-                    TIMELINE_LIMIT_HOURLY = "10";
-                    TIMELINE_LIMIT_DAILY = "7";
-                    TIMELINE_LIMIT_WEEKLY = "4";
-                    TIMELINE_LIMIT_MONTHLY = "6";
-                };
-            };
-        };
+        #        #repository = {
+        #        #    SUBVOLUME = "${identity.userHome}/Repository";
+        #        #    ALLOW_USERS = [ identity.userHandle ];
+        #        #    TIMELINE_CREATE = true;
+        #        #    TIMELINE_CLEANUP = true;
+        #        #    TIMELINE_LIMIT_HOURLY = "2";
+        #        #    TIMELINE_LIMIT_DAILY = "3";
+        #        #    TIMELINE_LIMIT_WEEKLY = "1";
+        #        #    TIMELINE_LIMIT_MONTHLY = "0";
+        #        #};
+        #    };
+        #};
     };
 
     systemd = {
