@@ -8,6 +8,7 @@
 
             ly = {
                 enable = true;
+                package = pkgs.callPackage ../packages/ly {};
                 x11Support = false;
 
                 settings = {

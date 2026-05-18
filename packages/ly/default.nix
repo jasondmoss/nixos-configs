@@ -1,33 +1,42 @@
 {
-    lib, stdenv, fetchFromGitHub, linux-pam, libxcb, makeBinaryWrapper,
-    zig_0_13, callPackage, nixosTests
-}: stdenv.mkDerivation rec {
+    lib, stdenv, fetchFromGitea, linux-pam, libxcb, makeBinaryWrapper, zig_0_16,
+    nixosTests,
+    x11Support ? true
+}:
 
+let
+    src = fetchFromGitea {
+        domain = "codeberg.org";
+        owner = "fairyglade";
+        repo = "ly";
+        rev = "master";
+        hash = "sha256-fxKkRf/joY+0aaifNdApa5/FlaDir0eqpiZ8y9j0RJo=";
+    };
+
+    deps = zig_0_16.fetchDeps {
+        pname = "ly";
+        version = "master";
+        inherit src;
+        hash = "sha256-ZTGQhsDTpWfG4giM0WsfCjlDVr4htC6WWBpSGyKZUr0=";
+    };
+in stdenv.mkDerivation {
     pname = "ly";
     version = "master";
 
-    src = fetchFromGitHub {
-        owner = "fairyglade";
-        repo = "ly";
-        rev = version;
-        hash = "sha256-TsEn0kH7j4myjjgwHnbOUmIZjHn8A1d/7IjamoWxpXQ=";
-    };
+    inherit src;
 
     nativeBuildInputs = [
         makeBinaryWrapper
-        zig_0_13.hook
+        zig_0_16.hook
     ];
     buildInputs = [
-        libxcb
         linux-pam
-    ];
+    ] ++ lib.optional x11Support libxcb;
+
+    zigBuildFlags = lib.optional (!x11Support) "-Denable_x11_support=false";
 
     postPatch = ''
-ln -s ${
-    callPackage ./deps.nix {
-        zig = zig_0_13;
-    }
-} $ZIG_GLOBAL_CACHE_DIR/p
+ln -s ${deps} $ZIG_GLOBAL_CACHE_DIR/p
     '';
 
     passthru.tests = { inherit (nixosTests) ly; };
@@ -35,10 +44,11 @@ ln -s ${
     meta = with lib; {
         description = "TUI display manager";
         license = licenses.wtfpl;
-        homepage = "https://github.com/fairyglade/ly";
+        homepage = "https://codeberg.org/fairyglade/ly";
         maintainers = [ maintainers.vidister ];
         platforms = platforms.linux;
         mainProgram = "ly";
     };
-
 }
+
+# <> #

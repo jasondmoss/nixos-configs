@@ -4,7 +4,7 @@ let
     # Reference the base package we built earlier
     base-gemini = pkgs.callPackage ./default.nix {};
 in
-pkgs.writeShellScriptBin "gemini" ''
+    pkgs.writeShellScriptBin "gemini" ''
 KEY_FILE="$HOME/.config/gemini/api.key"
 
 if [ -f "$KEY_FILE" ]; then
@@ -17,4 +17,6 @@ fi
 
 # Execute the real gemini binary with all passed arguments ($@)
 exec ${base-gemini}/bin/gemini "$@"
-''
+    ''
+
+# <> #

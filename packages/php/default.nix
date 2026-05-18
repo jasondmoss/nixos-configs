@@ -3,10 +3,10 @@
         enablePHP = true;
 
         # PHP 8.4
-        phpPackage = pkgs.php84.buildEnv {
-#        extensions = ({ enabled, all }: enabled ++ (with all; [
-#            xdebug
-#        ]));
+        phpPackage = pkgs.php85.buildEnv {
+            # extensions = ({ enabled, all }: enabled ++ (with all; [
+            #     xdebug
+            # ]));
 
             extraConfig = ''
 memory_limit=2048M
@@ -33,8 +33,8 @@ upload_max_filesize = 2048M
     };
 
     environment.systemPackages = (with pkgs; [
-        php84
-    ]) ++ (with pkgs.php84Extensions; [
+        php85
+    ]) ++ (with pkgs.php85Extensions; [
         bz2
         ctype
         curl
@@ -47,7 +47,7 @@ upload_max_filesize = 2048M
         mysqlnd
         openssl
         pdo
-#        pdo_dblib
+        # pdo_dblib
         pdo_mysql
         pdo_odbc
         session
@@ -61,3 +61,5 @@ upload_max_filesize = 2048M
         zlib
     ]);
 }
+
+# <> #

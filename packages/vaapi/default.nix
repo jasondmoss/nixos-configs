@@ -1,10 +1,8 @@
 { config, lib, ... }:
+
 let
-
     cfg = config.hardware.nvidia.vaapi;
-
 in {
-
     options.hardware.nvidia.vaapi = with lib.types; {
         enable = lib.mkEnableOption "vaapi";
 
@@ -37,5 +35,6 @@ Sometimes useful for graphics cards with little VRAM.
             NVD_MAX_INSTANCES = toString cfg.maxInstances;
         };
     };
-
 }
+
+# <> #

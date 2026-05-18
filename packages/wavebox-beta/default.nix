@@ -1,11 +1,11 @@
 {
-    addDriverRunpath, alsa-lib, autoPatchelfHook, fetchurl, gtk3, gtk4,
-    libdrm, libglvnd, libnotify, kdePackages, makeDesktopItem, makeWrapper,
-    nss, lib, mesa, stdenv, udev, vulkan-loader, xdg-utils, xorg
+    addDriverRunpath, alsa-lib, autoPatchelfHook, fetchurl, gtk3, gtk4, libdrm,
+    libglvnd, libnotify, kdePackages, makeDesktopItem, makeWrapper, nss, lib,
+    mesa, stdenv, udev, vulkan-loader, xdg-utils, xorg
 }:
 with lib;
+
 let
-    bits = "x86_64";
     version = "148.2.16-3";
     tarball = "Wavebox_${version}.tar.gz";
 
@@ -40,7 +40,8 @@ let
         libglvnd
         vulkan-loader
     ] + ":${addDriverRunpath.driverLink}/lib";
-in stdenv.mkDerivation rec {
+in
+stdenv.mkDerivation rec {
     pname = "wavebox";
     inherit version;
     inherit meta;
@@ -91,3 +92,5 @@ makeWrapper $out/opt/wavebox/wavebox-launcher $out/bin/wavebox \
  --prefix LD_LIBRARY_PATH : "${gpuLibPath}"
     '';
 }
+
+# <> #

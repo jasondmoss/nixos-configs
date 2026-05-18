@@ -1,13 +1,5 @@
 {
-    writeScript,
-    lib,
-    curl,
-    runtimeShell,
-    jq,
-    coreutils,
-    moreutils,
-    nix,
-    gnused,
+    writeScript, lib, curl, runtimeShell, jq, coreutils, moreutils, nix, gnused
 }:
 
 writeScript "update-standardnotes" ''
@@ -70,3 +62,5 @@ updatePlatform x86_64-linux linux-amd64
 updatePlatform aarch64-linux linux-arm64
 setJsonKey .version "$newVersion"
 ''
+
+# <> #

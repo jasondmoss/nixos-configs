@@ -1,4 +1,5 @@
 { lib, stdenv, fetchFromGitHub, kdePackages, cmake }:
+
 stdenv.mkDerivation rec {
     pname = "darkly";
     version = "main";
@@ -39,3 +40,5 @@ stdenv.mkDerivation rec {
         license = with lib.licenses; [ bsd3 cc0 fdl12Plus gpl2Only gpl2Plus gpl3Only mit ];
     };
 }
+
+# <> #

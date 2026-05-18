@@ -1,9 +1,11 @@
-    {
-    lib, stdenv, coreutils, fetchurl, zlib, libX11, libXext, libSM, libICE, libxkbcommon, libxshmfence, libXfixes,
-    libXt, libXi, libXcursor, libXScrnSaver, libXcomposite, libXdamage, libXtst, libXrandr, alsa-lib, dbus, cups,
-    libexif, ffmpeg, systemd, libva, libGL, freetype, fontconfig, libXft, libXrender, libxcb, expat, libuuid, libxml2,
-    glib, gtk3, pango, gdk-pixbuf, cairo, atk, at-spi2-atk, at-spi2-core, qt6, libdrm, libgbm, vulkan-loader, nss,
-    nspr, patchelf, makeWrapper, wayland, pipewire,
+{
+    lib, stdenv, coreutils, fetchurl, zlib, libX11, libXext, libSM, libICE,
+    libxkbcommon, libxshmfence, libXfixes, libXt, libXi, libXcursor,
+    libXScrnSaver, libXcomposite, libXdamage, libXtst, libXrandr, alsa-lib,
+    dbus, cups, libexif, ffmpeg, systemd, libva, libGL, freetype, fontconfig,
+    libXft, libXrender, libxcb, expat, libuuid, libxml2, glib, gtk3, pango,
+    gdk-pixbuf, cairo, atk, at-spi2-atk, at-spi2-core, qt6, libdrm, libgbm,
+    vulkan-loader, nss, nspr, patchelf, makeWrapper, wayland, pipewire,
     proprietaryCodecs ? false,
     vivaldi-ffmpeg-codecs ? null,
     enableWidevine ? false,
@@ -15,14 +17,13 @@
     libkrb5,
     kdePackages
 }:
-let
 
+let
     branch = "snapshot";
     vivaldiName = "vivaldi-snapshot";
-
 in stdenv.mkDerivation rec {
     pname = "vivaldi";
-    version = "8.0.4033.11";
+    version = "8.0.4033.15";
 
     suffix = {
         x86_64-linux = "amd64";
@@ -33,7 +34,7 @@ in stdenv.mkDerivation rec {
         # https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_7.7.3845.3-1_amd64.deb
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            x86_64-linux = "sha256-C81rnFxnX6Uh/CXUTYK6yBPaad1oo4xhNL/bYWu0VHw=";
+            x86_64-linux = "sha256-IWx5TqvuEignIsnDdXJ7oYRf7NBllS9FIqdy2qJ3Tuw=";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };
@@ -193,3 +194,5 @@ runHook postInstall
         ];
     };
 }
+
+# <> #

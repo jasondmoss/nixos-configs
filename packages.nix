@@ -89,9 +89,11 @@ let
             # Base Toolchain
             cargo
             cmake
+            ddev
             gcc
             git
             gnumake
+            mkcert
             ninja
             nodejs
             pkg-config
@@ -175,7 +177,6 @@ let
             krdc
             krdp
             ksshaskpass
-            ktorrent
             okular
             partitionmanager
         ];
@@ -209,6 +210,7 @@ let
             mullvad-browser
             openvpn
             protonvpn-gui
+            qbittorrent
             tor-browser
         ];
 

@@ -5,36 +5,35 @@
     lcms, libavif, libGL, libjxl, libpulseaudio, libwebp, libxcrypt, openssl,
     python3, woff2, ffmpeg, fontconfig, simdutf, skia, nixosTests,
     unstableGitUpdater, apple-sdk_14, libtommath
-}: let
+}:
 
+let
     adobe-icc-profiles = fetchurl {
         url = "https://download.adobe.com/pub/adobe/iccprofiles/win/AdobeICCProfilesCS4Win_end-user.zip";
         hash = "sha256-kgQ7fDyloloPaXXQzcV9tgpn3Lnr37FbFiZzEb61j5Q=";
         name = "adobe-icc-profiles.zip";
     };
     cacert_version = "2025-05-20";
-
 in stdenv.mkDerivation (finalAttrs: {
-
     pname = "ladybird";
-#        version = "master";
+    # version = "master";
     version = "0-unstable-2025-06-27";
 
     src = fetchFromGitHub {
         owner = "LadybirdBrowser";
         repo = "ladybird";
+        # rev = "master";
+        # hash = "sha256-Wzv+cS3j3yzs373bcOSsxhcX2QcbamkgLUlLhQ1GE/E=";
         rev = "831ba5d6550fd9dfaf90153876ff42396f7165ac";
         hash = "sha256-7feXPFKExjuOGbitlAkSEEzYNEZb6hGSDUZW1EJGIW8=";
-#            rev = "master";
-#            hash = "sha256-Wzv+cS3j3yzs373bcOSsxhcX2QcbamkgLUlLhQ1GE/E=";
     };
 
-#        patches = [
-#            # Revert https://github.com/LadybirdBrowser/ladybird/commit/51d189198d3fc61141fc367dc315c7f50492a57e
-#            # This commit doesn't update the skia used by ladybird vcpkg, but it does update the skia that
-#            # that cmake wants.
-#            ./001-revert-fake-skia-update.patch
-#        ];
+    # patches = [
+    #     # Revert https://github.com/LadybirdBrowser/ladybird/commit/51d189198d3fc61141fc367dc315c7f50492a57e
+    #     # This commit doesn't update the skia used by ladybird vcpkg, but it does update the skia that
+    #     # that cmake wants.
+    #     ./001-revert-fake-skia-update.patch
+    # ];
 
     postPatch = ''
 sed -i '/iconutil/d' UI/CMakeLists.txt
@@ -174,3 +173,5 @@ mv $out/bundle/Ladybird.app $out/Applications
         mainProgram = "Ladybird";
     };
 })
+
+# <> #

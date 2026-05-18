@@ -5,6 +5,7 @@
     nlohmann_json, pugixml, utf8cpp, xdg-utils, zlib, nix-update-script,
     withGUI ? true
 }:
+
 let
     inherit (lib)
         enableFeature
@@ -29,12 +30,6 @@ in stdenv.mkDerivation (finalAttrs: {
         rev = finalAttrs.version;
         hash = "sha256-3yiQRGkjvOz80G6s39JHzqytxvGDmV9Lqs5bMxTAejo=";
     };
-
-#    passthru = {
-#        updateScript = nix-update-script {
-#            extraArgs = [ "--version-regex=release-(.*)" ];
-#        };
-#    };
 
     nativeBuildInputs = [
         autoreconfHook
@@ -117,3 +112,5 @@ wrapQtApp $out/bin/mkvtoolnix-gui
         platforms = lib.platforms.unix;
     };
 })
+
+# <> #

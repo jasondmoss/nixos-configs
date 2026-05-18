@@ -10,3 +10,5 @@ wrapProgram $out/bin/nyxt \
  --set GDK_BACKEND wayland
     '';
 }
+
+# <> #

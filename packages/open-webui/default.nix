@@ -2,6 +2,7 @@
     lib, buildNpmPackage, fetchFromGitHub, python3Packages, nixosTests,
     fetchurl, ffmpeg-headless
 }:
+
 let
     pname = "open-webui";
     version = "main";
@@ -253,3 +254,5 @@ Nixpkgs treats this custom license as non-free due to these factors.
         ];
     };
 }
+
+# <> #

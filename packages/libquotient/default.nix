@@ -7,3 +7,5 @@ self: pkgs: with pkgs.kdePackages; {
         ];
     });
 }
+
+# <> #

@@ -5,6 +5,7 @@
     nss,  atk, at-spi2-atk, cairo, gdk-pixbuf, glib, gtk3, pango,  xorg,
     alsa-lib, wayland, mesa, libkrb5, libva
 }:
+
 let
     identity = import ../../identity.nix;
 
@@ -65,7 +66,8 @@ let
             };
         };
     };
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
     pname = "firefox-nightly-wrapped";
     version = "latest";
     src = firefox-src;
@@ -127,3 +129,5 @@ runHook postInstall
         platforms = platforms.linux;
     };
 }
+
+# <> #

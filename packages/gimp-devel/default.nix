@@ -6,42 +6,38 @@
   ghostscript, aalib, shared-mime-info, python3, libexif, gettext,
   wrapGAppsHook3, libxslt, gobject-introspection, vala, gi-docgen, perl,
   appstream, desktop-file-utils, xorg, glib-networking, json-glib, libmypaint,
-  gexiv2, mypaint-brushes1, mypaint-brushes, libwebp, libheif, gjs, libgudev, openexr, xvfb-run,
+  gexiv2, mypaint-brushes, libwebp, libheif, gjs, libgudev, openexr, xvfb-run,
   dbus, adwaita-icon-theme, alsa-lib, libunwind, bash-completion, glibcLocales
-
 }:
+
 let
     python = python3.withPackages (pp: with pp; [ pygobject3 ]);
 in stdenv.mkDerivation (finalAttrs: {
     pname = "gimp";
-    version = "3.2.0";
+    version = "3.2.4";
 
     outputs = [ "out" "dev" "man" ];
 
     src = fetchurl {
-#        url = "https://download.gimp.org/gimp/v3.0/gimp-${finalAttrs.version}.tar.xz";
-        url = "https://download.gimp.org/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}-RC2.tar.xz";
-        hash = "sha256-SVS2DuM3457X6/ivdRIUGzbBKjg1lRQFos3NYSYRC0g=";
+        url = "https://download.gimp.org/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}.tar.xz";
+        hash = "sha256-cxK8U+nG0tAFbKe5PxxrmHB5Rt2TT3FMIbh0bstgFYg=";
     };
 
     nativeBuildInputs = [
-        meson ninja pkg-config gettext wrapGAppsHook3
-        libxslt gobject-introspection perl vala gi-docgen
-        desktop-file-utils glibcLocales
+        meson ninja pkg-config gettext wrapGAppsHook3 libxslt
+        gobject-introspection perl vala gi-docgen desktop-file-utils
+        glibcLocales
     ] ++ lib.optionals stdenv.hostPlatform.isLinux [ dbus xvfb-run ];
 
     buildInputs = [
-        babl gegl gtk3 glib json-glib gdk-pixbuf gexiv2 openexr
-        lcms isocodes libmypaint mypaint-brushes libjxl cfitsio
-        libwebp libheif libexif luajit shared-mime-info pango
-        cairo freetype glib-networking libarchive libtiff libpng
-        librsvg libiff libwmf libgudev zlib xz libzip graphviz gjs appstream
-        alsa-lib ghostscript aalib fontconfig libilbm
-        libjpeg poppler poppler_data libmng adwaita-icon-theme
-        libunwind
+        babl gegl gtk3 glib json-glib gdk-pixbuf gexiv2 openexr lcms isocodes
+        libmypaint mypaint-brushes libjxl cfitsio libwebp libheif libexif luajit
+        shared-mime-info pango cairo freetype glib-networking libarchive libtiff
+        libpng librsvg libiff libwmf libgudev zlib xz libzip graphviz gjs
+        appstream alsa-lib ghostscript aalib fontconfig libilbm libjpeg poppler
+        poppler_data libmng adwaita-icon-theme libunwind bash-completion
         xorg.libX11 xorg.libXmu xorg.libXpm xorg.libXext xorg.libXcursor
         python python3.pkgs.pygobject3
-        bash-completion
     ];
 
     preConfigure = ''
@@ -124,3 +120,5 @@ fi
         mainProgram = "gimp";
     };
 })
+
+# <> #

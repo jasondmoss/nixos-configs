@@ -1,4 +1,5 @@
 { pkgs, lib, ... }:
+
 let
     gimpPublicDeps = with pkgs; [
         gegl babl gexiv2 lcms2 libarchive poppler
@@ -169,3 +170,5 @@ substituteInPlace CMakeLists.txt \
         pkgs.customGimp3Plugins.lightning
     ];
 }
+
+# <> #

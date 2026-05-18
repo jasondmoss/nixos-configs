@@ -2,7 +2,6 @@
 
 let
     python = pkgs.python311;
-
     pythonEnv = python.withPackages (ps: with ps; [
         torch
         torchvision
@@ -21,10 +20,10 @@ let
         requests
         pyyaml
         psutil
-#        fonts
-#        roboto
-#        roboto-mono
-#        blendmodes
+        # fonts
+        # roboto
+        # roboto-mono
+        # blendmodes
         httpcore
         httpx
         fastapi
@@ -35,11 +34,9 @@ let
     src = fetchFromGitHub {
         owner  = "AUTOMATIC1111";
         repo   = "stable-diffusion-webui";
-        rev    = "v1.10.1";  # Pin to stable release; bump as needed
-#        sha256 = lib.fakeSha256;  # Replace after first build: nix-build --show-trace 2>&1 | grep "got:"
-        sha256 = "sha256-lY+fZQ9yzFBVX5hrmvaIAm/FaRnsIkB2z4WpcJMmL3w=";  # Replace after first build: nix-build --show-trace 2>&1 | grep "got:"
+        rev    = "v1.10.1";
+        sha256 = "sha256-lY+fZQ9yzFBVX5hrmvaIAm/FaRnsIkB2z4WpcJMmL3w=";
     };
-
 in pkgs.stdenv.mkDerivation {
     pname   = "automatic1111-webui";
     version = "1.10.1";
@@ -71,3 +68,5 @@ makeWrapper ${pythonEnv}/bin/python $out/bin/automatic1111 \
         platforms   = lib.platforms.linux;
     };
 }
+
+# <> #
