@@ -14,9 +14,10 @@
                 settings = {
                     clear_password = true;
                     clock = "%c";
-                    #animation = "matrix";
-                    #animation_timeout_sec = "20";
                     animation = "none";
+                    # animation = "/home/me/Mega/System/Configurations/ly/blackhole-smooth-240x67.dur";
+                    # animation = "matrix";
+                    # animation_timeout_sec = "20";
                     input_len = "64";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
                 };
