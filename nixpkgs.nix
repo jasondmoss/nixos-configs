@@ -53,9 +53,9 @@
             (final: prev: {
                 phpstorm = prev.phpstorm.overrideAttrs (old: {
                     buildInputs = old.buildInputs ++ [
-                        pkgs.libGL
-                        pkgs.xorg.libX11
-                        pkgs.fontconfig
+                        pkgs.nss
+                        pkgs.nspr
+                        pkgs.libxkbcommon
                     ];
                 });
             })
