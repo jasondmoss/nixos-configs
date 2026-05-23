@@ -224,6 +224,7 @@ let
             conky
             fuzzel
             p7zip-rar
+            pandoc
             quickemu
             rar
             rofi
