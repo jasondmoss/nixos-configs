@@ -1,6 +1,8 @@
 **/nixpkgs
 **/result
 **/secret.txt
+.claude
 .idea
+CLAUDE.md
 identity.nix
 result
