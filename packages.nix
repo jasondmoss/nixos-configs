@@ -9,6 +9,7 @@ let
         kde-darkly     = pkgs.callPackage ./packages/kde-darkly {};
         kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
+        parachord      = pkgs.callPackage ./packages/parachord {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {};
         wavebox        = pkgs.callPackage ./packages/wavebox-beta {};
