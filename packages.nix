@@ -63,6 +63,7 @@ let
             easytag
             ffmpeg-full
             ffmpegthumbnailer
+            figma-linux
             flacon
             imagemagick
             inkscape
@@ -73,6 +74,7 @@ let
             nomacs
             nvtopPackages.full
             pavucontrol
+            photoprism
             shotcut
             taglib-sharp
             taglib_extras
@@ -217,7 +219,7 @@ let
         office = with pkgs; [
             libreoffice-qt-fresh
             notes
-            standardnotes
+            #standardnotes
         ];
 
         utilities = with pkgs; [
