@@ -1,8 +1,19 @@
 { pkgs, lib, ... }:
 
 let
+    # Ferrite requires Rust ≥ 1.92; NixOS 25.11 ships 1.91.1.
+    # Pull just the compiler/cargo from nixpkgs-unstable; build inputs stay on stable.
+    unstable = import /nix/var/nix/profiles/per-user/root/channels/nixpkgs {
+        config = pkgs.config;
+    };
+    ferriteRustPlatform = pkgs.makeRustPlatform {
+        cargo = unstable.cargo;
+        rustc = unstable.rustc;
+    };
+
     # --- Custom Package Definitions ---
     customPkgs = {
+        ferrite        = pkgs.callPackage ./packages/ferrite { rustPlatform = ferriteRustPlatform; };
         gemini-nix     = pkgs.callPackage ./packages/gemini-nix-assistant {};
         gemini-wrapped = pkgs.callPackage ./packages/gemini-cli/wrapper.nix {};
         gh-clone       = pkgs.callPackage ./packages/gh-clone {};
