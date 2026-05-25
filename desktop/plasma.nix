@@ -58,6 +58,12 @@
         };
     };
 
+    # Rebuild KDE sycoca on every nixos-rebuild switch so the app launcher
+    # picks up newly installed/removed .desktop files immediately.
+    system.userActivationScripts.rebuildKdeSycoca = ''
+${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental
+    '';
+
     # Plasma 6 & Qt session variables.
     environment.sessionVariables = {
         KDE_SESSION_VERSION = "6";
