@@ -22,12 +22,12 @@ let
 in
 {
   phpstorm = unstable.jetbrains.phpstorm.overrideAttrs (_old: {
-    version = "2026.1.2";
-    buildNumber = "261.24374.185";
+    version = "2026.1.3";
+    buildNumber = "261.25134.104";
 
     src = pkgs.fetchurl {
-      url = "https://download.jetbrains.com/webide/PhpStorm-2026.1.2.tar.gz";
-      sha256 = "sha256-VbXsfKahp1X4AwAC10VghE+ZkxThovnYHHYyvkOTtFc=";
+      url = "https://download.jetbrains.com/webide/PhpStorm-2026.1.3.tar.gz";
+      sha256 = "sha256-hXb2KcCaNKIJOGbN0ZUDxMKuX++dO1FRoxvC580VIHQ=";
     };
   });
 }

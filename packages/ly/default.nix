@@ -10,7 +10,7 @@ let
         owner = "fairyglade";
         repo = "ly";
         rev = "master";
-        hash = "sha256-fxKkRf/joY+0aaifNdApa5/FlaDir0eqpiZ8y9j0RJo=";
+        hash = "sha256-g5TQcPSdGlF9rGVX0sbZa65v7blmnpZHWYFaWzetX3Y=";
     };
 
     deps = zig_0_16.fetchDeps {
@@ -35,8 +35,8 @@ in stdenv.mkDerivation {
 
     zigBuildFlags = lib.optional (!x11Support) "-Denable_x11_support=false";
 
-    postPatch = ''
-ln -s ${deps} $ZIG_GLOBAL_CACHE_DIR/p
+    postConfigure = ''
+        ln -s ${deps} "$ZIG_GLOBAL_CACHE_DIR/p"
     '';
 
     passthru.tests = { inherit (nixosTests) ly; };

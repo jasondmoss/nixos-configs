@@ -4,6 +4,7 @@
  in {
     programs = {
         bash.completion.enable = true;
+        command-not-found.enable = false;
         direnv.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;

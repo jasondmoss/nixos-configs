@@ -95,7 +95,7 @@ let
             xnviewmp
 
             # MKVToolNix
-            (pkgs.callPackage ./packages/mkvtoolnix {})
+            mkvtoolnix
         ];
 
         development = with pkgs; [
@@ -115,7 +115,6 @@ let
 
             # KDE/Qt Specific Development
             clazy
-            extra-cmake-modules
             gammaray
             heaptrack
             qtcreator
@@ -138,6 +137,8 @@ let
         ];
 
         kde-plasma-core = with pkgs.kdePackages; [
+            extra-cmake-modules
+
             # Core Shell & Workspaces
             layer-shell-qt
             plasma-desktop
@@ -222,7 +223,7 @@ let
             microsoft-edge
             mullvad-browser
             openvpn
-            protonvpn-gui
+            proton-vpn
             qbittorrent
             tor-browser
         ];

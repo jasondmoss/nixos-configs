@@ -2,7 +2,7 @@
  ##                                                                          ##
  ##                             ·: ATREIDES :·                               ##
  ##                                                                          ##
- ##          NixOS 25.11                                                     ##
+ ##          NixOS 26.05                                                     ##
  ##          AMD Ryzen 9 3900X                                               ##
  ##          NVIDIA RTX 2060 -- 32 GiB RAM                                   ##
  ##          KDE Plasma 6                                                    ##
@@ -42,7 +42,8 @@ in {
     };
 
     networking.hostName = "atreides";
-    system.stateVersion = "25.11";
+#    system.stateVersion = "25.11";
+    system.stateVersion = "26.05";
     time.timeZone = "America/Toronto";
 
     i18n = {
