@@ -1,7 +1,19 @@
 { config, ... }: {
 	security = {
         rtkit.enable = true;
-        polkit.enable = true;
+        polkit = {
+            enable = true;
+
+            extraConfig = ''
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.systemd1.run" &&
+        subject.isInGroup("wheel")
+    ) {
+        return polkit.Result.AUTH_KEEP;
+    }
+});
+            '';
+        };
 
         pam = {
             sshAgentAuth = {
