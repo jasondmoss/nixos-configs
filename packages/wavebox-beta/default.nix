@@ -6,12 +6,12 @@
 with lib;
 
 let
-    version = "149.2.66-3";
+    version = "149.2.69-3";
     tarball = "Wavebox_${version}.tar.gz";
 
     src = fetchurl {
         url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-        sha256 = "sha256-h0g2tBKkNmbmpgGPfhFxDaWvQcompeNXfmDMXpjGHac=";
+        sha256 = "sha256-zqvWusX9komyuC+ZLU81thiXbcjDQMwgt3D2UwXLcCs=";
     };
 
     desktopItem = makeDesktopItem rec {
@@ -89,7 +89,8 @@ ln -s $out/opt/wavebox/product_logo_128.png $out/share/icons/hicolor/128x128/app
     postFixup = ''
 makeWrapper $out/opt/wavebox/wavebox-launcher $out/bin/wavebox \
  --prefix PATH : ${xdg-utils}/bin \
- --prefix LD_LIBRARY_PATH : "${gpuLibPath}"
+ --prefix LD_LIBRARY_PATH : "${gpuLibPath}" \
+ --add-flags "--disable-features=Vulkan"
     '';
 }
 

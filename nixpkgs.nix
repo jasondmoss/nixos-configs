@@ -72,6 +72,13 @@
 #            })
 
             (import ../overlays/default.nix)
+
+            # Disable Vulkan for Chrome — incompatible with --ozone-platform=wayland (NIXOS_OZONE_WL=1).
+            (final: prev: {
+                google-chrome = prev.google-chrome.override {
+                    commandLineArgs = "--disable-features=Vulkan";
+                };
+            })
         ];
     };
 }
