@@ -23,7 +23,7 @@ let
     vivaldiName = "vivaldi-snapshot";
 in stdenv.mkDerivation rec {
     pname = "vivaldi";
-    version = "8.1.4061.3";
+    version = "8.1.4070.3";
 
     suffix = {
         x86_64-linux = "amd64";
@@ -34,7 +34,7 @@ in stdenv.mkDerivation rec {
         # https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_7.7.3845.3-1_amd64.deb
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            x86_64-linux = "sha256-DK6zGZrk0OFOw5npKA/uqniMc58UjySE9qaMKWiHSzA=";
+            x86_64-linux = "sha256-ZDHBPP1QMqpIpNgkwwjGU/6ciRGaIT3onpHz1pWSTro=";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };
