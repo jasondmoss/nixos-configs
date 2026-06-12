@@ -63,6 +63,7 @@ let
                 "gfx.webrender.all" = true;
                 "layers.acceleration.force-enabled" = true;
                 "widget.dmabuf.force-enabled" = true;
+                "gfx.webrender.partial-present.force-disabled" = true;
             };
         };
     };
@@ -118,7 +119,8 @@ makeWrapper "$LIB_DIR/firefox" "$out/bin/firefox-nightly" \
  --set MOZ_ENABLE_WAYLAND 1 \
  --set LIBVA_DRIVER_NAME nvidia \
  --set MOZ_DISABLE_RDD_SANDBOX 1 \
- --set NVD_BACKEND direct
+ --set NVD_BACKEND direct \
+ --set __EGL_DISABLE_EXPLICIT_SYNC 1
 
 runHook postInstall
     '';

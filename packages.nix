@@ -242,8 +242,6 @@ let
             pandoc
             quickemu
             rar
-            rofi
-            rofi-calc
             unrar
             unzip
             wezterm
