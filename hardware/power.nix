@@ -1,4 +1,4 @@
-{ config, lib, ... }: {
+    { config, lib, ... }: {
     hardware.cpu.amd = {
         ryzen-smu.enable = true;
 
@@ -14,20 +14,9 @@
 
     powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
 
-    services = {
-        power-profiles-daemon.enable = false;
-
-        tlp = {
-            enable = true;
-            settings = {
-                CPU_SCALING_GOVERNOR_ON_AC = "powersave";
-                CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-
-                CPU_MIN_PERF_ON_AC = 0;
-                CPU_MAX_PERF_ON_AC = 100;
-            };
-        };
-    };
+    # No TLP/power-profiles-daemon — static performance governor (above) manages
+    # CPU scaling directly. Desktop is always on AC; nothing to power-profile.
+    services.power-profiles-daemon.enable = false;
 }
 
 # <> #

@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: {
     imports = [
-        <nixos-hardware/common/gpu/nvidia/turing>
+        <nixos-hardware/common/gpu/nvidia/blackwell>
         ../packages/vaapi
     ];
 
@@ -18,9 +18,7 @@
 
         nvidia = {
             open = true;
-#            package = config.boot.kernelPackages.nvidiaPackages.beta;
-            package = config.boot.kernelPackages.nvidiaPackages.stable;
-            forceFullCompositionPipeline = true;
+            package = config.boot.kernelPackages.nvidiaPackages.bleeding_edge;
             modesetting.enable = true;
             nvidiaPersistenced = true;
             nvidiaSettings = true;
@@ -42,8 +40,6 @@
     services.xserver = {
         enable = false;
         videoDrivers = [ "nvidia" ];
-        upscaleDefaultCursor = true;
-        dpi = 192;
     };
 
     # NVIDIA & Wayland environment variables.
@@ -52,7 +48,7 @@
         __GLX_VENDOR_LIBRARY_NAME = "nvidia";
         LIBVA_DRIVER_NAME = "nvidia";
 
-        # Performance tuning for RTX 2060.
+        # Performance tuning for RTX 5060 Ti.
         __GL_THREADED_OPTIMIZATION = "1";
         __GL_SHADER_CACHE = "1";
     };

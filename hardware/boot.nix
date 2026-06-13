@@ -39,12 +39,12 @@
             "amd_pstate=active"
             "nvidia-drm.fbdev=1"
             "nvidia-drm.modeset=1"
+            "pcie_aspm=off"
+            "processor.max_cstate=1"
         ];
 
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
-            "NVreg_EnablePCIeGen3=1"
             "NVreg_PreserveVideoMemoryAllocations=1"
-            "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
             "NVreg_UsePageAttributeTable=1"
         ];
 
@@ -54,7 +54,8 @@
         ];
 
         kernel.sysctl = {
-            "fs.inotify.max_user_watches" = 2140000000;
+            "fs.inotify.max_user_watches" = 1048576;
+            "vm.max_map_count" = 2147483642;
             "kernel.unprivileged_bpf_disabled" = 1;
             "net.core.bpf_jit_harden" = 2;
             "kernel.kptr_restrict" = 2;
@@ -93,7 +94,7 @@
     fileSystems."/home" = {
         device = "/dev/disk/by-uuid/4d656a69-dc46-46b6-bec3-934e12415711";
         fsType = "btrfs";
-        options = [ "compress=zstd:1" ];
+        options = [ "compress=zstd:1" "noatime" ];
     };
 
     # [sdb2]
@@ -112,7 +113,7 @@
     fileSystems."${identity.userHome}/Repository" = {
         device = "/dev/disk/by-uuid/2cf8ca9d-43ab-4ef5-99ff-0a909e765c5e";
         fsType = "btrfs";
-        options = [ "compress=zstd:1" ];
+        options = [ "compress=zstd:1" "noatime" ];
     };
 
     # [sda1]
