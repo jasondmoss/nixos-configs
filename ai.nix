@@ -13,7 +13,7 @@ in {
             cudaPackages.cudnn
 
             # AI tools.
-            claude-code
+            (pkgs.callPackage ./packages/claude-code {})
             claude-monitor
             realesrgan-ncnn-vulkan
         ];
@@ -38,24 +38,24 @@ in {
 
             # https://ollama.com/library
             loadModels = [
-#                "ministral-3"
                 "deepseek-v4-pro:cloud"
             ];
         };
 
-#        open-webui = {
-#            enable = true;
-#
-#            environment = {
-#                ANONYMIZED_TELEMETRY = "False";
-#                DO_NOT_TRACK = "True";
-#                SCARF_NO_ANALYTICS = "True";
-#                OLLAMA_API_BASE_URL = "http://127.0.0.1:11434/api";
-#                OLLAMA_BASE_URL = "http://127.0.0.1:11434";
-#            };
-#
-#            package = (pkgs.callPackage ./packages/open-webui {});
-#        };
+        # http://127.0.0.1:8080/
+        open-webui = {
+            enable = true;
+
+            environment = {
+                ANONYMIZED_TELEMETRY = "False";
+                DO_NOT_TRACK = "True";
+                SCARF_NO_ANALYTICS = "True";
+                OLLAMA_API_BASE_URL = "http://127.0.0.1:11434/api";
+                OLLAMA_BASE_URL = "http://127.0.0.1:11434";
+            };
+
+            package = (pkgs.callPackage ./packages/open-webui {});
+        };
     };
 
     systemd.tmpfiles.rules = [

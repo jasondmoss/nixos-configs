@@ -4,6 +4,8 @@
         useDHCP = lib.mkDefault true;
         nftables.enable = false;
 
+        nameservers = [ "127.0.0.1" ];
+
         firewall = {
             enable = true;
             allowPing = true;
@@ -16,9 +18,32 @@
 
         networkmanager = {
             enable = true;
-            insertNameservers = [ "127.0.0.1" ];
+            dns = "none";
             wifi.powersave = false;
             plugins = with pkgs; [ networkmanager-openvpn ];
+
+            ensureProfiles = {
+                environmentFiles = [ "/var/lib/nm-secrets/wifi.env" ];
+                profiles.Skynet = {
+                    connection = {
+                        id = "Skynet";
+                        uuid = "441c1068-8fd5-479b-b342-41ed6be093de";
+                        type = "wifi";
+                        autoconnect = true;
+                        autoconnect-priority = 10;
+                    };
+                    wifi = {
+                        ssid = "Skynet";
+                        mode = "infrastructure";
+                    };
+                    wifi-security = {
+                        key-mgmt = "sae";
+                        psk = "$WIFI_PSK";
+                    };
+                    ipv4.method = "auto";
+                    ipv6.method = "auto";
+                };
+            };
         };
     };
 
