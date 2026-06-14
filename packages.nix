@@ -13,6 +13,7 @@ let
 
     # --- Custom Package Definitions ---
     customPkgs = {
+        audacity-beta  = pkgs.callPackage ./packages/audacity-beta {};
         ferrite        = pkgs.callPackage ./packages/ferrite { rustPlatform = ferriteRustPlatform; };
         gemini-nix     = pkgs.callPackage ./packages/gemini-nix-assistant {};
         gemini-wrapped = pkgs.callPackage ./packages/gemini-cli/wrapper.nix {};
