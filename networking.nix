@@ -1,6 +1,6 @@
 { lib, pkgs, ... }: {
     networking = {
-        enableIPv6 = true;
+        enableIPv6 = false;
         useDHCP = lib.mkDefault true;
         nftables.enable = false;
 
