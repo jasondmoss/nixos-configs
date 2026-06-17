@@ -71,6 +71,10 @@ ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental
         # Transition from 'software' to 'rhi' (Render Hardware Interface).
         QT_QUICK_BACKEND = "rhi";
         PLASMA_USE_QT_SCENE_GRAPH_BACKEND = "opengl";
+        # Silence the harmless KF icon-theme fallback warning emitted by Qt/KF
+        # helpers such as ksshaskpass (e.g. "kf.iconthemes: Icon theme
+        # \"gnome\" not found." during git/ssh over SSH).
+        QT_LOGGING_RULES = "kf.iconthemes.warning=false";
     };
 }
 
