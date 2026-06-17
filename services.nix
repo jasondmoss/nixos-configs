@@ -40,40 +40,9 @@ in {
                 support32Bit = true;
             };
         };
-
-        #snapper = {
-        #    cleanupInterval = "1d";
-        #    snapshotInterval = "hourly";
-
-        #    configs = {
-        #        home = {
-        #            SUBVOLUME = "/home";
-        #            ALLOW_USERS = [ identity.userHandle ];
-        #            TIMELINE_CREATE = true;
-        #            TIMELINE_CLEANUP = true;
-        #            TIMELINE_LIMIT_HOURLY = "1";
-        #            TIMELINE_LIMIT_DAILY = "2";
-        #            TIMELINE_LIMIT_WEEKLY = "1";
-        #            TIMELINE_LIMIT_MONTHLY = "0";
-        #        };
-
-        #        #repository = {
-        #        #    SUBVOLUME = "${identity.userHome}/Repository";
-        #        #    ALLOW_USERS = [ identity.userHandle ];
-        #        #    TIMELINE_CREATE = true;
-        #        #    TIMELINE_CLEANUP = true;
-        #        #    TIMELINE_LIMIT_HOURLY = "2";
-        #        #    TIMELINE_LIMIT_DAILY = "3";
-        #        #    TIMELINE_LIMIT_WEEKLY = "1";
-        #        #    TIMELINE_LIMIT_MONTHLY = "0";
-        #        #};
-        #    };
-        #};
     };
 
     systemd = {
-        packages = [ pkgs.megasync ];
-
         services.nix-index-database-update = {
             description = "Update nix-index database";
             serviceConfig = {
@@ -120,7 +89,16 @@ in {
 
                 serviceConfig = {
                     Type = "simple";
+
+                    # Wait for the ProtonVPN WireGuard interface (proton0) to come
+                    # up before launching, so sync traffic never leaves the tunnel.
+                    # proton0 only exists while the VPN is connected.
+                    ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.iproute2}/bin/ip link show proton0 > /dev/null 2>&1; do sleep 2; done'";
                     ExecStart = "${pkgs.megasync}/bin/megasync";
+
+                    # Allow the VPN as long as it needs to connect.
+                    TimeoutStartSec = "infinity";
+
                     Restart = "on-failure";
                     RestartSec = "5s";
                 };
@@ -142,14 +120,6 @@ in {
                 };
             };
         };
-    };
-
-    system.activationScripts.megasyncUserService = {
-        text = ''
-mkdir -p ${identity.userHome}/.config/systemd/user
-ln -sf /etc/systemd/user/megasync.service ${identity.userHome}/.config/systemd/user/megasync.service
-        '';
-        deps = [ "users" ];
     };
 }
 
