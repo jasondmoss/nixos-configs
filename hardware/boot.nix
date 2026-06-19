@@ -70,6 +70,9 @@
 
             systemd-boot = {
                 enable = true;
+                # Block the boot-time kernel-cmdline editor so a passer-by can't
+                # append init=/bin/sh at the console for a root shell.
+                editor = false;
                 configurationLimit = 3;
                 memtest86.enable = true;
                 consoleMode = "auto";
