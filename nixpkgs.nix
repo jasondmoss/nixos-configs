@@ -62,6 +62,21 @@
 
             (import ../overlays/default.nix)
 
+            # Conky 1.24.2 — newer than nixpkgs (still at 1.22.3).
+            (final: prev: {
+                conky = prev.conky.overrideAttrs (old: rec {
+                    version = "1.24.2";
+                    src = final.fetchFromGitHub {
+                        owner = "brndnmtthws";
+                        repo = "conky";
+                        tag = "v${version}";
+                        hash = "sha256-fnH87Ts28t2FIKQkrXjlOFG1NIDPq0JqfDR9aIfog6I=";
+                    };
+                    # 1.24.x makes XInput2 mandatory under X11.
+                    buildInputs = old.buildInputs ++ [ final.libxi ];
+                });
+            })
+
             # Disable Vulkan for Chrome — incompatible with
             # --ozone-platform=wayland (NIXOS_OZONE_WL=1).
             (final: prev: {
