@@ -12,7 +12,10 @@
             checkReversePath = "loose";
             logRefusedConnections = true;
 
-            allowedTCPPorts = [ 22 80 443 ];
+            # Closed 80/443 on 2026-06-19: local dev (DDEV/httpd) binds localhost,
+            # so they needn't be reachable from the LAN. Restore if serving others.
+            # allowedTCPPorts = [ 22 80 443 ];
+            allowedTCPPorts = [ 22 ];
             allowedUDPPorts = [];
         };
 
