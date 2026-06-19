@@ -1,9 +1,4 @@
-{ lib, pkgs, identity, ... }:
-# identity now provided via _module.args (configuration.nix).
-# let
-#    identity = import ./identity.nix;
-# in
-{
+{ lib, pkgs, identity, ... }: {
     services = {
         dbus.enable = true;
         devmon.enable = true;
@@ -49,7 +44,7 @@
             description = "Update nix-index database";
             serviceConfig = {
                 Type = "oneshot";
-                # Run as your user so the database is available in ~/.cache/nix-index
+                # Run as your user so database is available in ~/.cache/nix-index
                 User = identity.userHandle;
                 ExecStart = "${pkgs.nix-index}/bin/nix-index";
             };
@@ -113,7 +108,6 @@
 
                 serviceConfig = {
                     Type = "simple";
-#                    ExecStartPre = "${pkgs.coreutils}/bin/sleep 5s";
                     ExecStart = "${pkgs.notes}/bin/notes";
                     Restart = "on-failure";
 

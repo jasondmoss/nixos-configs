@@ -15,7 +15,6 @@
                     clear_password = true;
                     clock = "%c";
                     animation = "none";
-                    # animation = "/home/me/Mega/System/Configurations/ly/blackhole-smooth-240x67.dur";
                     # animation = "matrix";
                     # animation_timeout_sec = "20";
                     input_len = "64";

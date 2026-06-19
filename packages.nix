@@ -146,7 +146,7 @@ let
             plasma-desktop
             plasma-wayland-protocols
             plasma-workspace
-            plasma5support # Essential for legacy widget compatibility in KF6
+            plasma5support
 
             # System Integration
             baloo

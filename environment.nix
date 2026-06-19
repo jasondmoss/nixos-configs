@@ -1,9 +1,4 @@
-{ config, lib, pkgs, identity, ... }:
-# identity now provided via _module.args (configuration.nix).
-# let
-#    identity = import ./identity.nix;
-# in
-{
+{ config, lib, pkgs, identity, ... }: {
 	environment = {
 		etc = {
 			"1password/custom_allowed_browsers" = {

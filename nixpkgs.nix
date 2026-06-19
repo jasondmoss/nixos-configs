@@ -60,20 +60,10 @@
                 });
             })
 
-            # libQuotient.
-#            (final: prev: {
-#                libquotient = prev.libquotient.overrideAttrs (old: {
-#                    patches = old.patches ++ [
-#                        (fetchpatch2 {
-#                            url = "https://github.com/quotient-im/libQuotient/commit/ea83157eed37ff97ab275a5d14c971f0a5a70595.patch";
-#                        })
-#                    ];
-#                });
-#            })
-
             (import ../overlays/default.nix)
 
-            # Disable Vulkan for Chrome — incompatible with --ozone-platform=wayland (NIXOS_OZONE_WL=1).
+            # Disable Vulkan for Chrome — incompatible with
+            # --ozone-platform=wayland (NIXOS_OZONE_WL=1).
             (final: prev: {
                 google-chrome = prev.google-chrome.override {
                     commandLineArgs = "--disable-features=Vulkan";

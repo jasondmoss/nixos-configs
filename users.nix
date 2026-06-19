@@ -1,9 +1,4 @@
-{ identity, ... }:
- # identity now provided via _module.args (configuration.nix).
- # let
- #    identity = import ./identity.nix;
- # in
- {
+{ identity, ... }: {
     users = {
         users = {
             me = {

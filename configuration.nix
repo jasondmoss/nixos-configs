@@ -11,12 +11,12 @@
 ################################################################################
 
 { pkgs, ... }:
+
 let
     identity = import ./identity.nix;
     theme = import ./desktop/theme.nix;
 in {
-    # Provide identity to every imported module so they no longer each need
-    # `import ./identity.nix` (and the brittle ./ vs ../ relative paths).
+    # Provide identity to every imported module.
     _module.args = { inherit identity; };
 
     nix = {
@@ -40,7 +40,8 @@ in {
         gc = {
             automatic = true;
             randomizedDelaySec = "14m";
-            options = "--delete-older-than 2d";
+#            options = "--delete-older-than 2d";
+            options = "--delete-older-than 14d";
             dates = "weekly";
         };
     };

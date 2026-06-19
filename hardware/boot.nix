@@ -1,9 +1,4 @@
-{ lib, pkgs, modulesPath, identity, ... }:
- # identity now provided via _module.args (configuration.nix).
- # let
- #    identity = import ../identity.nix;
- # in
- {
+{ lib, pkgs, modulesPath, identity, ... }: {
     imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
@@ -72,8 +67,6 @@
 
             systemd-boot = {
                 enable = true;
-                # Block the boot-time kernel-cmdline editor so a passer-by can't
-                # append init=/bin/sh at the console for a root shell.
                 editor = false;
                 configurationLimit = 3;
                 memtest86.enable = true;
