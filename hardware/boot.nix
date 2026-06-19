@@ -40,7 +40,10 @@
             "nvidia-drm.fbdev=1"
             "nvidia-drm.modeset=1"
             "pcie_aspm=off"
-            "processor.max_cstate=1"
+            # Disabled 2026-06-19: capping at C1 keeps Ryzen cores out of deep
+            # sleep, which reduces boost headroom (CPB/PBO) and raises idle temps.
+            # Re-enable only if it was fixing a specific audio/DPC-latency glitch.
+            # "processor.max_cstate=1"
         ];
 
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
