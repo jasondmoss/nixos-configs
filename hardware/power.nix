@@ -2,12 +2,15 @@
     hardware.cpu.amd = {
         ryzen-smu.enable = true;
 
-        sev = {
-            enable = true;
-            mode = "0660";
-            group = "sev";
-            user = "root";
-        };
+        # Disabled 2026-06-19: AMD SEV is an EPYC/datacenter feature; the Ryzen 9
+        # 3900X (Zen 2 consumer) has no SEV, so this just exposed a device group
+        # for nothing. ryzen-smu above is the legit consumer-Ryzen driver.
+        # sev = {
+        #     enable = true;
+        #     mode = "0660";
+        #     group = "sev";
+        #     user = "root";
+        # };
 
         updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     };
