@@ -4,7 +4,7 @@
  ##                                                                          ##
  ##          NixOS 26.05                                                     ##
  ##          AMD Ryzen 9 3900X                                               ##
- ##          NVIDIA RTX 2060 -- 32 GiB RAM                                   ##
+ ##          NVIDIA RTX 5060 Ti -- 32 GiB RAM                                ##
  ##          KDE Plasma 6                                                    ##
  ##          Wayland                                                         ##
  ##                                                                          ##

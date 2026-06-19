@@ -1,7 +1,7 @@
 # NixOS Configurations
 
-NixOS 25.11 desktop configuration for **atreides** — an AMD Ryzen 9 3900X workstation
-with an NVIDIA RTX 2060, 32 GiB RAM, running KDE Plasma 6 on Wayland.
+NixOS 26.05 desktop configuration for **atreides** — an AMD Ryzen 9 3900X workstation
+with an NVIDIA RTX 5060 Ti (Blackwell), 32 GiB RAM, running KDE Plasma 6 on Wayland.
 
 This is a **traditional NixOS module system** configuration — no flakes, channel-based
 nixpkgs only. The entry point is `configuration.nix`.
@@ -13,7 +13,7 @@ nixpkgs only. The entry point is `configuration.nix`.
 | Component       | Details                              |
 |-----------------|--------------------------------------|
 | CPU             | AMD Ryzen 9 3900X                    |
-| GPU             | NVIDIA RTX 2060                      |
+| GPU             | NVIDIA RTX 5060 Ti (Blackwell, open) |
 | RAM             | 32 GiB                               |
 | Kernel          | Linux (xanmod-latest)                |
 | Bootloader      | systemd-boot (EFI)                   |
@@ -21,7 +21,7 @@ nixpkgs only. The entry point is `configuration.nix`.
 | Desktop         | KDE Plasma 6                         |
 | Display manager | Ly (TTY-based)                       |
 | Audio           | PipeWire (ALSA + PulseAudio + JACK)  |
-| NixOS channel   | unstable (25.11)                     |
+| NixOS channel   | 26.05                                |
 
 ---
 
@@ -30,8 +30,8 @@ nixpkgs only. The entry point is `configuration.nix`.
 | Mount point         | Device       | FS    | Notes                          |
 |---------------------|--------------|-------|--------------------------------|
 | `/`                 | nvme0n1p2    | ext4  | Root (NVMe)                    |
-| `/home`             | nvme1n1p1    | Btrfs | zstd:1, Snapper snapshots      |
-| `~/Repository`      | sdb2         | Btrfs | zstd:1, Snapper snapshots      |
+| `/home`             | nvme1n1p1    | Btrfs | zstd:1, noatime                |
+| `~/Repository`      | sdb1         | Btrfs | zstd:1, noatime                |
 | `~/Mega`            | sdb2         | ext4  | MEGAsync storage               |
 | `~/Music`           | sdc1         | ext4  | Music library                  |
 | `~/Videos/Movies`   | sda1         | ext4  | Movie library                  |
@@ -48,9 +48,9 @@ nixpkgs only. The entry point is `configuration.nix`.
 | File             | Purpose                                                               |
 |------------------|-----------------------------------------------------------------------|
 | `boot.nix`       | xanmod kernel, systemd initrd, systemd-boot, filesystem mounts, swap |
-| `gpu.nix`        | NVIDIA proprietary driver, VAAPI, Vulkan, DRM modesetting             |
+| `gpu.nix`        | NVIDIA **open** kernel module (bleeding-edge driver), VAAPI, DRM modesetting, `<nixos-hardware>` blackwell profile |
 | `peripherals.nix`| Bluetooth, QMK keyboard firmware, printing, SMART monitoring, udev   |
-| `power.nix`      | AMD CPU microcode, `amd_pstate=active`, TLP power management          |
+| `power.nix`      | AMD CPU microcode, `amd_pstate=active`, static `performance` governor (TLP/power-profiles-daemon disabled) |
 
 **Kernel params:** `amd_iommu=on`, `amd_pstate=active`, `nvidia-drm.modeset=1`, `nvidia-drm.fbdev=1`. nouveau and `i2c-nvidia_gpu` are blacklisted.
 
@@ -85,7 +85,7 @@ rendering backend (`QT_QUICK_BACKEND = rhi`), and XDG portal delegation for KDE/
 | `environment.nix`| Session/env vars, XDG base dirs, GStreamer paths, per-host git configs, 1Password browser allowlist |
 | `programs.nix`   | git (LFS, conditional identity includes), neovim, SSH agent, GnuPG (pinentry-qt), 1Password, Steam, direnv, KDE Connect, nix-index |
 | `packages.nix`   | Central package manifest, organized by category (see below)              |
-| `services.nix`   | PipeWire, Snapper (Btrfs snapshots on `/home` and `~/Repository`), earlyoom, mlocate, systemd user units (megasync, notes, ssh-key-pollen) + system timer (nix-index weekly update) |
+| `services.nix`   | PipeWire (ALSA/Pulse/JACK), earlyoom, mlocate, fstrim, smartd, irqbalance, systemd user units (megasync, notes, ssh-key-pollen) + system timer (nix-index weekly update) |
 
 **Networking:** CoreDNS runs locally on `127.0.0.1` as the system resolver, forwarding
 to Cloudflare and Google. A `local` zone resolves all `*.local` names to `127.0.0.1`.
