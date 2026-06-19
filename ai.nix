@@ -1,7 +1,9 @@
 { config, lib, pkgs, ... }:
-let
-    identity = import ./identity.nix;
-in {
+# identity import removed — it was never referenced in this module.
+# let
+#    identity = import ./identity.nix;
+# in
+{
     environment = {
         variables = {
             CUDA_PATH = "${pkgs.cudaPackages.cudatoolkit}";

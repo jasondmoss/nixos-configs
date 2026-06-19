@@ -1,7 +1,9 @@
-{ lib, pkgs, modulesPath, ... }:
- let
-    identity = import ../identity.nix;
- in {
+{ lib, pkgs, modulesPath, identity, ... }:
+ # identity now provided via _module.args (configuration.nix).
+ # let
+ #    identity = import ../identity.nix;
+ # in
+ {
     imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
     ];

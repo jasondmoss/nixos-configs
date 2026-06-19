@@ -1,7 +1,9 @@
-{ pkgs, ... }:
- let
-    identity = import ./identity.nix;
- in {
+{ pkgs, identity, ... }:
+ # identity now provided via _module.args (configuration.nix).
+ # let
+ #    identity = import ./identity.nix;
+ # in
+ {
     programs = {
         bash.completion.enable = true;
         command-not-found.enable = false;

@@ -15,6 +15,10 @@ let
     identity = import ./identity.nix;
     theme = import ./desktop/theme.nix;
 in {
+    # Provide identity to every imported module so they no longer each need
+    # `import ./identity.nix` (and the brittle ./ vs ../ relative paths).
+    _module.args = { inherit identity; };
+
     nix = {
         package = pkgs.nixVersions.latest;
 

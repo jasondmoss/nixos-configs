@@ -1,7 +1,9 @@
-{ lib, pkgs, ... }:
-let
-    identity = import ./identity.nix;
-in {
+{ lib, pkgs, identity, ... }:
+# identity now provided via _module.args (configuration.nix).
+# let
+#    identity = import ./identity.nix;
+# in
+{
     services = {
         dbus.enable = true;
         devmon.enable = true;
