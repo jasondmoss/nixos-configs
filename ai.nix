@@ -41,6 +41,7 @@
             # https://ollama.com/library
             loadModels = [
                 "deepseek-v4-pro:cloud"
+                "glm-5.2:cloud"
             ];
         };
 
