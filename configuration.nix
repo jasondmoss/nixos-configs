@@ -107,6 +107,7 @@ in {
         ./programs.nix
         ./packages.nix
         ./services.nix
+        ./qbittorrent-vpn.nix
 
         # Development & AI.
         ./development.nix

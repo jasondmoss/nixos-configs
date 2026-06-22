@@ -86,16 +86,7 @@
 
                 serviceConfig = {
                     Type = "simple";
-
-                    # Wait for the ProtonVPN WireGuard interface (proton0) to come
-                    # up before launching, so sync traffic never leaves the tunnel.
-                    # proton0 only exists while the VPN is connected.
-                    ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.iproute2}/bin/ip link show proton0 > /dev/null 2>&1; do sleep 2; done'";
                     ExecStart = "${pkgs.megasync}/bin/megasync";
-
-                    # Allow the VPN as long as it needs to connect.
-                    TimeoutStartSec = "infinity";
-
                     Restart = "on-failure";
                     RestartSec = "5s";
                 };

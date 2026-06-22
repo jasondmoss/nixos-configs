@@ -54,7 +54,7 @@
         ];
 
         kernel.sysctl = {
-            "fs.inotify.max_user_watches" = 1048576;
+            "fs.inotify.max_user_watches" = 2097152;
             "vm.max_map_count" = 2147483642;
             "kernel.unprivileged_bpf_disabled" = 1;
             "net.core.bpf_jit_harden" = 2;

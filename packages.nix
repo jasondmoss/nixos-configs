@@ -226,8 +226,12 @@ let
             mullvad-browser
             openvpn
             proton-vpn
-            qbittorrent
             tor-browser
+            # NOTE: plain `qbittorrent` is intentionally omitted — it is launched
+            # only via the "qBittorrent (VPN)" entry from ./qbittorrent-vpn.nix so
+            # it can never run outside the VPN namespace. The binary is still pulled
+            # into the closure by that module's launcher.
+            wireguard-tools
         ];
 
         office = with pkgs; [
