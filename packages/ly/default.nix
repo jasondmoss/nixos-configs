@@ -10,14 +10,19 @@ let
         owner = "fairyglade";
         repo = "ly";
         rev = "master";
-        hash = "sha256-g5TQcPSdGlF9rGVX0sbZa65v7blmnpZHWYFaWzetX3Y=";
+        hash = "sha256-G0wLxUpEnqma+y2yOlz6xFlVbGc1OJOK0/kk/8DCQRc=";
     };
 
     deps = zig_0_16.fetchDeps {
         pname = "ly";
         version = "master";
         inherit src;
-        hash = "sha256-ZTGQhsDTpWfG4giM0WsfCjlDVr4htC6WWBpSGyKZUr0=";
+        # ly master pulls LuaJIT via zlua as a *lazy* Zig dependency; plain
+        # `zig build --fetch` skips lazy deps, so fetchAll runs `--fetch=all`
+        # to vendor the complete tree (otherwise the build tries to download
+        # LuaJIT at build time, which the sandbox blocks).
+        fetchAll = true;
+        hash = "sha256-MVYtyAIBYPCs6RnMKbK0v8RxZXliek0UtGPYOm4aiVM=";
     };
 in stdenv.mkDerivation {
     pname = "ly";

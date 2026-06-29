@@ -38,10 +38,6 @@
                 "vulkan-tool"
                 "vulkan-validation-layers"
             ];
-
-            permittedInsecurePackages = [
-                "openssl-1.1.1w"
-            ];
         };
 
         overlays = [

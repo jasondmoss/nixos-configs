@@ -132,7 +132,7 @@ let
             phpstorm
             phpunit
             pre-commit
-            sublime4
+            sublime4-dev
 
             # Android
             android-tools
