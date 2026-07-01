@@ -52,6 +52,7 @@ let
             htop
             inetutils
             inxi
+            jq
             killall
             lm_sensors
             lsd
