@@ -173,6 +173,7 @@ let
             qtdeclarative
             qtsvg
             qttools
+            qtwebengine  # Radar tab in Advanced Weather Widget needs the QtWebEngine QML module
         ];
 
         kde-applications = with pkgs.kdePackages; [
