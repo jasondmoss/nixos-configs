@@ -76,7 +76,7 @@ let
             cuetools
             easytag
             ffmpeg-full
-            ffmpegthumbnailer
+            #ffmpegthumbnailer
             figma-linux
             flacon
             imagemagick
