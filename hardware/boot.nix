@@ -139,6 +139,8 @@
         device = "/swapfile";
         size = 16 * 1024;  # 16GB
     }];
+
+    environment.etc."kernel/install.conf".text = "layout=bls\n";
 }
 
 # <> #

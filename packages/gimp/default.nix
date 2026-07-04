@@ -62,22 +62,22 @@ fi
                 '';
         in {
             babl = prev.babl.overrideAttrs (oldAttrs: {
-                version = "0.1.118";
+                version = "0.1.126";
 
                 src = final.fetchurl {
-                    url = "https://download.gimp.org/pub/babl/0.1/babl-0.1.118.tar.xz";
-                    hash = "sha256-w/6+kj4iXCpY+VJomom7HblWeIv+yxin7/b8lNqeJGk=";
+                    url = "https://download.gimp.org/pub/babl/0.1/babl-0.1.126.tar.xz";
+                    hash = "sha256-PwkPSyph/s98jcYKWAS7x3zv2Nd4ry3tBZ8ONnpSkw4=";
                 };
 
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ final.git ];
             });
 
             gegl = prev.gegl.overrideAttrs (oldAttrs: {
-                version = "0.4.66";
+                version = "0.4.70";
 
                 src = final.fetchurl {
-                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.66.tar.xz";
-                    hash = "sha256-krBYVeIZCGiUnXDOpumlCxY6akQSQudApiY5dTefmTs=";
+                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.70.tar.xz";
+                    hash = "sha256-R/UNnDrs03XetIwR6/6tUtFi5PwWKks9RGGCd/H67AI=";
                 };
 
                 postPatch = (oldAttrs.postPatch or "") + ''

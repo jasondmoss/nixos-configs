@@ -10,7 +10,7 @@ let
         owner = "fairyglade";
         repo = "ly";
         rev = "master";
-        hash = "sha256-G0wLxUpEnqma+y2yOlz6xFlVbGc1OJOK0/kk/8DCQRc=";
+        hash = "sha256-o7O8mUXaXycQ5wnul2MKaQwFObkhymp/wRmHQN+oFhg=";
     };
 
     deps = zig_0_16.fetchDeps {

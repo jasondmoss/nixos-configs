@@ -1,6 +1,7 @@
 {
     lib, rustPlatform, fetchFromGitHub, pkg-config, wrapGAppsHook3, gtk3,
-    libxkbcommon, wayland, vulkan-loader, libGL, xorg, libxcb,
+    libxkbcommon, wayland, vulkan-loader, libGL, libxcursor, libxi, libxrandr,
+    libxcb,
 }:
 
 rustPlatform.buildRustPackage rec {
@@ -28,9 +29,9 @@ rustPlatform.buildRustPackage rec {
         libGL
         wayland
         vulkan-loader
-        xorg.libXcursor
-        xorg.libXi
-        xorg.libXrandr
+        libxcursor
+        libxi
+        libxrandr
     ];
 
     # Upstream test suite requires a display; skip.

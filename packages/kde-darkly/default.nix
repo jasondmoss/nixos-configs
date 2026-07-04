@@ -8,7 +8,7 @@ stdenv.mkDerivation rec {
         owner = "Bali10050";
         repo = "Darkly";
         rev = version;
-        hash = "sha256-OT1QEHVcwz10ZUbEgvXnS/o28kvElKvswaJR6rW+PxI=";
+        hash = "sha256-u12imjPk4ZhOen/PgnLiNPML+5NmuKO0Ja4wQKU/Y8E=";
     };
 
     buildInputs = [
@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
     meta = {
         description = "Fork of breeze theme style that aims to be visually modern and minimalistic";
         homepage = "https://github.com/Bali10050/Darkly";
-        changelog = "https://github.com/Bali10050/Darkly/commit/05a945c69f0dd4bec8fc32331ba4d85819af1fcb";
+        changelog = "https://github.com/Bali10050/Darkly/commit/11c27e2d98025f4d4c1598f07a185280b36f35f7";
         license = with lib.licenses; [ bsd3 cc0 fdl12Plus gpl2Only gpl2Plus gpl3Only mit ];
     };
 }
