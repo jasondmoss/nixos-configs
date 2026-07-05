@@ -10,8 +10,10 @@ let
         gh-clone       = pkgs.callPackage ./packages/gh-clone {};
         kde-darkly     = pkgs.callPackage ./packages/kde-darkly {};
         kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
+        kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
         qstickynotes   = pkgs.callPackage ./packages/qstickynotes {};
+        standardnotes  = pkgs.callPackage ./packages/standardnotes {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {};
         wavebox        = pkgs.callPackage ./packages/wavebox-beta {};
@@ -229,7 +231,6 @@ let
         office = with pkgs; [
             libreoffice-qt-fresh
             notes
-            #standardnotes
         ];
 
         utilities = with pkgs; [
