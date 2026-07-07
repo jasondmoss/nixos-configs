@@ -230,7 +230,6 @@ let
 
         office = with pkgs; [
             libreoffice-qt-fresh
-            notes
         ];
 
         utilities = with pkgs; [
