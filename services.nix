@@ -91,21 +91,6 @@
                     RestartSec = "5s";
                 };
             };
-
-            notes = {
-                description = "Notes Desktop Application";
-                wantedBy = [ "graphical-session.target" ];
-                partOf = [ "graphical-session.target" ];
-
-                serviceConfig = {
-                    Type = "simple";
-                    ExecStart = "${pkgs.notes}/bin/notes";
-                    Restart = "on-failure";
-
-                    # Ensures the app finds the Wayland/X11 socket.
-                    PassEnvironment = [ "DISPLAY" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" ];
-                };
-            };
         };
     };
 }
