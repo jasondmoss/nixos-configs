@@ -6,6 +6,9 @@
         gamemode.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;
+        # Run generic dynamically linked binaries (e.g. the `claude` binary
+        # the Claude Code desktop app downloads to ~/.config/Claude).
+        nix-ld.enable = true;
         xwayland.enable = true;
 
         steam = {
