@@ -3,7 +3,7 @@
 		etc = {
 			"1password/custom_allowed_browsers" = {
 				text = ''
-firefox-nightly
+firefox-stable
 google-chrome-stable
 vivaldi-snapshot
 wavebox
@@ -63,7 +63,9 @@ wavebox
             ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
             # Browser setup.
-            DEFAULT_BROWSER = "${lib.getExe pkgs.firefox-nightly}";
+            # firefox-stable is a wrapper installed by packages/firefox-stable,
+            # not a pkgs attribute — reference it via the system profile.
+            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-stable";
 
             GST_PLUGIN_SYSTEM_PATH_1_0 =
                 lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [

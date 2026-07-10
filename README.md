@@ -77,7 +77,7 @@ rendering backend (`QT_QUICK_BACKEND = rhi`), and XDG portal delegation for KDE/
 
 | File             | Purpose                                                                  |
 |------------------|--------------------------------------------------------------------------|
-| `nixpkgs.nix`    | Host platform, unfree allowlist, overlays (Firefox Nightly, PhpStorm, libQuotient) |
+| `nixpkgs.nix`    | Host platform, unfree allowlist, overlays (PhpStorm, libQuotient; Firefox Nightly commented out) |
 | `identity.nix`   | User identity values — plain Nix value, not a module (see below)         |
 | `networking.nix` | iptables firewall (TCP 22/80/443), NetworkManager + OpenVPN, CoreDNS (local resolver), OpenSSH (key-only, root disabled) |
 | `security.nix`   | PAM, polkit rules, sudo configuration                                    |
@@ -130,7 +130,7 @@ Packages are organized into named category lists, flattened into
 | `kde-applications`    | Dolphin, Kate, Kdenlive, KTorrent, Okular, Ark, KDevelop, etc.   |
 | `kde-pim`             | Akonadi stack (calendar, contacts, search, MIME)                  |
 | `gnome-stack`         | Nautilus, GNOME Tweaks, Adwaita icons (for GTK app compatibility) |
-| `network-web`         | Firefox Nightly, Mullvad Browser, Tor Browser, ProtonVPN, megatools, Google Chrome, Microsoft Edge |
+| `network-web`         | Mullvad Browser, Tor Browser, ProtonVPN, megatools, Google Chrome, Microsoft Edge (Firefox Stable — the default browser — is a module import; Firefox Nightly commented out) |
 | `office`              | LibreOffice (Qt/fresh), Notes, Standard Notes                     |
 | `utilities`           | Wezterm, fuzzel, rofi, quickemu, p7zip, rar, conky                |
 | `theming-compat`      | adwaita-qt6, Kvantum, qt6ct, Materia KDE, comixcursors            |
@@ -169,7 +169,7 @@ Local derivations for software not in nixpkgs or requiring customization.
 
 | Package          | Mechanism                                      |
 |------------------|------------------------------------------------|
-| `firefox-nightly`| `overlays/nixpkgs-mozilla/firefox-overlay.nix` |
+| `firefox-nightly`| `overlays/nixpkgs-mozilla/firefox-overlay.nix` — commented out (kept for possible re-enable) |
 | `jetbrains` (PhpStorm) | Inline overlay in `nixpkgs.nix`          |
 | `libquotient`    | Inline overlay in `nixpkgs.nix` (upstream patch) |
 
@@ -197,7 +197,7 @@ In-development KDE applications built locally.
 
 | Overlay              | Purpose                                          |
 |----------------------|--------------------------------------------------|
-| `nixpkgs-mozilla/`   | Mozilla overlay providing `firefox-nightly`      |
+| `nixpkgs-mozilla/`   | Mozilla overlay providing `firefox-nightly` (import commented out in `nixpkgs.nix`) |
 | `default.nix`        | Top-level overlay aggregator                     |
 
 Additional inline overlays in `nixpkgs.nix`: PhpStorm (OpenGL/font deps),

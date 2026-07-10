@@ -40,11 +40,11 @@
     # XDG portals and MIME defaults.
     xdg = {
         mime.defaultApplications = {
-            "text/html" = "firefox-nightly.desktop";
-            "x-scheme-handler/http" = "firefox-nightly.desktop";
-            "x-scheme-handler/https" = "firefox-nightly.desktop";
-            "x-scheme-handler/about" = "firefox-nightly.desktop";
-            "x-scheme-handler/unknown" = "firefox-nightly.desktop";
+            "text/html" = "firefox-stable.desktop";
+            "x-scheme-handler/http" = "firefox-stable.desktop";
+            "x-scheme-handler/https" = "firefox-stable.desktop";
+            "x-scheme-handler/about" = "firefox-stable.desktop";
+            "x-scheme-handler/unknown" = "firefox-stable.desktop";
         };
 
         portal = {

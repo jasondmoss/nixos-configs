@@ -10,7 +10,7 @@ let
         owner = "fairyglade";
         repo = "ly";
         rev = "master";
-        hash = "sha256-o7O8mUXaXycQ5wnul2MKaQwFObkhymp/wRmHQN+oFhg=";
+        hash = "sha256-n352GHuTlco8oVyWAtaEYyvgRzqi3TQ1hIn5dQu7BoU=";
     };
 
     deps = zig_0_16.fetchDeps {
@@ -22,7 +22,7 @@ let
         # to vendor the complete tree (otherwise the build tries to download
         # LuaJIT at build time, which the sandbox blocks).
         fetchAll = true;
-        hash = "sha256-MVYtyAIBYPCs6RnMKbK0v8RxZXliek0UtGPYOm4aiVM=";
+        hash = "sha256-rBr6Zu3mUWSOdscrHh3yW54H6ap0LCV0t0KuUgUbH5s=";
     };
 in stdenv.mkDerivation {
     pname = "ly";
