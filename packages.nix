@@ -13,7 +13,6 @@ let
         kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
         kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
-        qstickynotes   = pkgs.callPackage ./packages/qstickynotes {};
         standardnotes  = pkgs.callPackage ./packages/standardnotes {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {};
