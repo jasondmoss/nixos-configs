@@ -91,6 +91,17 @@
                     RestartSec = "5s";
                 };
             };
+
+            # Masked: if the compositor dies mid-session, any app that crashes
+            # while it's down also fails to reconnect and aborts. DrKonqi then
+            # tries to report that abort, itself fails to reach the (still
+            # down) compositor, aborts, and reports on itself — recursively,
+            # for as long as the compositor is unreachable. This has produced
+            # 100+ cascading crash reports and multiple GB of coredumps in a
+            # single incident. Coredumps are still written to disk normally
+            # (inspect with coredumpctl); only the auto-launched GUI reporter
+            # is disabled.
+            "drkonqi-coredump-launcher@".enable = false;
         };
     };
 }

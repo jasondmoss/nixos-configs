@@ -14,14 +14,16 @@
                 settings = {
                     clear_password = true;
                     clock = "%c";
-                    # animation = "dur_file";
-                    # dur_file_path = "${../packages/ly/animations/blackhole-smooth-240x67.dur}";
-                    # dur_offset_alignment = "center";
-                    animation = "matrix";
-                    # animation = "colormix";
-                    # animation = "doom";
-                    # animation = "gameoflife";
-                    # animation_timeout_sec = "20";
+
+                    #animation = "dur_file";
+                    #dur_file_path = "${../packages/ly/animations/blackhole-smooth-240x67.dur}";
+                    #dur_offset_alignment = "center";
+
+                    #animation = "matrix";
+                    #animation = "colormix";
+                    #animation = "doom";
+                    animation = "gameoflife";
+                    #animation_timeout_sec = "20";
                     full_color = true;
                     input_len = "64";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace.sessions}/share/wayland-sessions";

@@ -10,6 +10,7 @@ let
         desktopName = "Firefox Stable";
         exec = "firefox-stable -P \"Stable\" %u";
         icon = "${identity.userHome}/Mega/Images/Icons/Apps/firefox.png";
+        startupWMClass = "firefox";
         mimeTypes = [
             "application/pdf"
             "application/rdf+xml"
