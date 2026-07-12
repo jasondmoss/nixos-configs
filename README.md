@@ -85,7 +85,7 @@ rendering backend (`QT_QUICK_BACKEND = rhi`), and XDG portal delegation for KDE/
 | `environment.nix`| Session/env vars, XDG base dirs, GStreamer paths, per-host git configs, 1Password browser allowlist |
 | `programs.nix`   | git (LFS, conditional identity includes), neovim, SSH agent, GnuPG (pinentry-qt), 1Password, Steam, direnv, KDE Connect, nix-index |
 | `packages.nix`   | Central package manifest, organized by category (see below)              |
-| `services.nix`   | PipeWire (ALSA/Pulse/JACK), earlyoom, mlocate, fstrim, smartd, irqbalance, systemd user units (megasync, notes, ssh-key-pollen) + system timer (nix-index weekly update) |
+| `services.nix`   | PipeWire (ALSA/Pulse/JACK), earlyoom, mlocate, fstrim, smartd, irqbalance, systemd user units (megasync, ssh-key-pollen) + system timer (nix-index weekly update) |
 
 **Networking:** CoreDNS runs locally on `127.0.0.1` as the system resolver, forwarding
 to Cloudflare and Google. A `local` zone resolves all `*.local` names to `127.0.0.1`.

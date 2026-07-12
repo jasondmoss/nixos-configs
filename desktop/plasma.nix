@@ -14,15 +14,15 @@
                 settings = {
                     clear_password = true;
                     clock = "%c";
-                    animation = "dur_file";
-                    dur_file_path = "${../packages/ly/animations/blackhole-smooth-240x67.dur}";
-                    dur_offset_alignment = "center";
-                    # Must be set explicitly: ly's config migrator treats a config
-                    # that never mentions full_color as predating true-color mode
-                    # and forces 8-color output, which 256-color .dur files reject.
-                    full_color = true;
-                    # animation = "matrix";
+                    # animation = "dur_file";
+                    # dur_file_path = "${../packages/ly/animations/blackhole-smooth-240x67.dur}";
+                    # dur_offset_alignment = "center";
+                    animation = "matrix";
+                    # animation = "colormix";
+                    # animation = "doom";
+                    # animation = "gameoflife";
                     # animation_timeout_sec = "20";
+                    full_color = true;
                     input_len = "64";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace.sessions}/share/wayland-sessions";
                 };
