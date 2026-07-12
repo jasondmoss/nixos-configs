@@ -14,14 +14,10 @@
                     "audio"
                     "docker"
                     "mlocate"
-                    "mysql"
-                    "navidrome"
                     "networkmanager"
-                    "ollama"
                     "power"
                     "video"
                     "wheel"
-                    "wwwrun"
                 ];
 
                 openssh.authorizedKeys.keys = [

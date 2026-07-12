@@ -22,9 +22,9 @@
                     #animation = "matrix";
                     #animation = "colormix";
                     #animation = "doom";
-                    animation = "gameoflife";
+                    #animation = "gameoflife";
                     #animation_timeout_sec = "20";
-                    full_color = true;
+                    #full_color = true;
                     input_len = "64";
                     waylandsessions = "${pkgs.kdePackages.plasma-workspace.sessions}/share/wayland-sessions";
                 };

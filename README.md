@@ -77,29 +77,45 @@ rendering backend (`QT_QUICK_BACKEND = rhi`), and XDG portal delegation for KDE/
 
 | File             | Purpose                                                                  |
 |------------------|--------------------------------------------------------------------------|
-| `nixpkgs.nix`    | Host platform, unfree allowlist, overlays (PhpStorm, libQuotient; Firefox Nightly commented out) |
+| `nixpkgs.nix`    | Host platform, unfree allowlist, overlays (PhpStorm, Conky bump, Chrome Vulkan-disable; Firefox Nightly commented out) |
 | `identity.nix`   | User identity values — plain Nix value, not a module (see below)         |
-| `networking.nix` | iptables firewall (TCP 22/80/443), NetworkManager + OpenVPN, CoreDNS (local resolver), OpenSSH (key-only, root disabled) |
+| `networking.nix` | iptables firewall (TCP 22 + KDE Connect 1714–1764 only), NetworkManager + OpenVPN, CoreDNS (local resolver), OpenSSH (key-only, root disabled) |
 | `security.nix`   | PAM, polkit rules, sudo configuration                                    |
 | `users.nix`      | User account and group memberships                                       |
 | `environment.nix`| Session/env vars, XDG base dirs, GStreamer paths, per-host git configs, 1Password browser allowlist |
 | `programs.nix`   | git (LFS, conditional identity includes), neovim, SSH agent, GnuPG (pinentry-qt), 1Password, Steam, direnv, KDE Connect, nix-index |
 | `packages.nix`   | Central package manifest, organized by category (see below)              |
 | `services.nix`   | PipeWire (ALSA/Pulse/JACK), earlyoom, mlocate, fstrim, smartd, irqbalance, systemd user units (megasync, ssh-key-pollen) + system timer (nix-index weekly update) |
+| `qbittorrent-vpn.nix` | qBittorrent confined to a WireGuard/ProtonVPN network namespace — a kill switch by construction (see below) |
 
 **Networking:** CoreDNS runs locally on `127.0.0.1` as the system resolver, forwarding
 to Cloudflare and Google. A `local` zone resolves all `*.local` names to `127.0.0.1`.
-NetworkManager inserts `127.0.0.1` as the sole nameserver.
+NetworkManager inserts `127.0.0.1` as the sole nameserver. The firewall only opens
+inbound TCP 22 (SSH) plus the KDE Connect range (1714–1764 TCP/UDP) — nothing else is
+exposed. `nftables.enable = false` is intentional: Docker relies on iptables for NAT
+and doesn't coexist cleanly with nftables.
+
+**qBittorrent VPN kill switch (`qbittorrent-vpn.nix`):** qBittorrent runs inside a
+dedicated network namespace (`qbit`) whose only route out is a WireGuard tunnel
+(ProtonVPN config at `/etc/wireguard/qbit.conf`, root:root 0600, never in the nix
+store or git). If the tunnel drops, qBittorrent simply loses network — a kill switch
+by construction. A NAT-PMP refresh loop keeps the forwarded port in sync with
+qBittorrent's Web UI.
 
 **Nix store:** auto-optimise enabled, GC runs weekly (deletes generations older than
-2 days), `experimental-features = nix-command` only (no flakes).
+14 days), `experimental-features = nix-command` only (no flakes).
 
 ---
 
 ### Development (`development.nix`)
 
 Docker (overlay2 storage driver) with weekly auto-prune, docker-compose,
-docker-buildx. PHP/Apache stack via `packages/php`.
+docker-buildx. Pinned to `docker_25` intentionally — newer Docker Compose v2
+releases have known container-naming/compatibility issues with Lando.
+
+`packages/php` (a dormant PHP/Apache module) was removed: it configured
+`services.httpd` but never set `services.httpd.enable`, so Apache never actually
+ran — DDEV/Docker handles real PHP dev work.
 
 ---
 
@@ -107,11 +123,13 @@ docker-buildx. PHP/Apache stack via `packages/php`.
 
 | Component   | Details                                                                    |
 |-------------|----------------------------------------------------------------------------|
-| Ollama      | Local LLM server, CUDA-accelerated, single-GPU, 8 parallel slots, model storage at `~/Repository/ollama/models` |
-| Open WebUI  | Web interface for Ollama (custom package build via `packages/open-webui`)  |
 | CUDA        | `cudatoolkit` + `cudnn`, `CUDA_PATH` exported                              |
-| claude-code | Anthropic Claude CLI                                                        |
+| claude-code | Anthropic Claude CLI (`packages/claude-code`, inline `callPackage`)         |
 | claude-monitor | Usage monitor for Claude Code                                           |
+| realesrgan-ncnn-vulkan | Image upscaling                                                 |
+
+No Ollama/Open WebUI service currently runs on this system — `packages/open-webui`
+was removed as unused.
 
 ---
 
@@ -131,7 +149,7 @@ Packages are organized into named category lists, flattened into
 | `kde-pim`             | Akonadi stack (calendar, contacts, search, MIME)                  |
 | `gnome-stack`         | Nautilus, GNOME Tweaks, Adwaita icons (for GTK app compatibility) |
 | `network-web`         | Mullvad Browser, Tor Browser, ProtonVPN, megatools, Google Chrome, Microsoft Edge (Firefox Stable — the default browser — is a module import; Firefox Nightly commented out) |
-| `office`              | LibreOffice (Qt/fresh), Notes, Standard Notes                     |
+| `office`              | LibreOffice (Qt/fresh)                                             |
 | `utilities`           | Wezterm, fuzzel, rofi, quickemu, p7zip, rar, conky                |
 | `theming-compat`      | adwaita-qt6, Kvantum, qt6ct, Materia KDE, comixcursors            |
 | `custom`              | All local package derivations (see below)                         |
@@ -148,12 +166,17 @@ Local derivations for software not in nixpkgs or requiring customization.
 
 | Package                | Attrset key      |
 |------------------------|------------------|
+| `audacity-beta`        | `audacity-beta`  |
+| `claude-desktop`       | `claude-desktop` |
+| `ferrite`              | `ferrite`        |
 | `gemini-nix-assistant` | `gemini-nix`     |
 | `gemini-cli/wrapper`   | `gemini-wrapped` |
 | `gh-clone`             | `gh-clone`       |
 | `kde-darkly`           | `kde-darkly`     |
 | `kde-klassy`           | `kde-klassy`     |
+| `kde-vinyl`            | `kde-vinyl`      |
 | `nyxt-custom`          | `nyxt-custom`    |
+| `standardnotes`        | `standardnotes`  |
 | `strawberry-master`    | `strawberry`     |
 | `vivaldi-snapshot`     | `vivaldi`        |
 | `wavebox-beta`         | `wavebox`        |
@@ -165,20 +188,25 @@ Local derivations for software not in nixpkgs or requiring customization.
 | `firefox-stable` | `packages.nix`      |
 | `gimp`           | `packages.nix`      |
 
+**Inline `callPackage`** (not part of `customPkgs`):
+
+| Package       | Where            |
+|---------------|------------------|
+| `claude-code` | `ai.nix`         |
+
 **Overlay-based** (registered in `nixpkgs.nix` or `overlays/`):
 
-| Package          | Mechanism                                      |
-|------------------|------------------------------------------------|
-| `firefox-nightly`| `overlays/nixpkgs-mozilla/firefox-overlay.nix` — commented out (kept for possible re-enable) |
-| `jetbrains` (PhpStorm) | Inline overlay in `nixpkgs.nix`          |
-| `libquotient`    | Inline overlay in `nixpkgs.nix` (upstream patch) |
+| Package/change         | Mechanism                                      |
+|-------------------------|------------------------------------------------|
+| `firefox-nightly`       | `overlays/nixpkgs-mozilla/firefox-overlay.nix` — commented out (kept for possible re-enable) |
+| `jetbrains` (PhpStorm)  | Inline overlay in `nixpkgs.nix`, plus a buildInputs fix (nss/nspr/libxkbcommon) |
+| `conky`                 | Inline overlay in `nixpkgs.nix` bumping to 1.24.2 (newer than nixpkgs' 1.22.3) |
+| `google-chrome`         | Inline overlay in `nixpkgs.nix` disabling Vulkan (incompatible with `--ozone-platform=wayland`) |
+| `steam`                 | `packageOverrides` in `nixpkgs.nix` adds `libgdiplus` to `extraPkgs` |
 
-**Inline callPackage** in category lists:
-
-| Package      | Location                    |
-|--------------|-----------------------------|
-| `mkvtoolnix` | `graphics-multimedia` list  |
-| `open-webui` | `ai.nix` services block     |
+**Removed:** `packages/php` (dormant Apache/PHP module — `services.httpd.enable` was never
+set, so Apache never ran; DDEV/Docker covers real PHP dev work) and `packages/open-webui`
+(unused now that no Ollama service runs on this system).
 
 ---
 
@@ -200,8 +228,9 @@ In-development KDE applications built locally.
 | `nixpkgs-mozilla/`   | Mozilla overlay providing `firefox-nightly` (import commented out in `nixpkgs.nix`) |
 | `default.nix`        | Top-level overlay aggregator                     |
 
-Additional inline overlays in `nixpkgs.nix`: PhpStorm (OpenGL/font deps),
-libQuotient (upstream patch).
+Additional inline overlays/overrides in `nixpkgs.nix`: PhpStorm (OpenGL/font deps),
+Conky (version bump to 1.24.2), Google Chrome (Vulkan disabled for Wayland/Ozone),
+Steam (`libgdiplus` added via `packageOverrides`).
 
 ---
 
@@ -212,7 +241,8 @@ libQuotient (upstream patch).
   identity) are imported with `import`, not as NixOS modules. Access their attrs
   directly (e.g. `identity.userHandle`, `theme.colors16`).
 - **`identity.nix` fields** — `userName`, `userHandle`, `userHome`, `emailPersonal`,
-  `emailWork`. See `identity.nix.example` for the template. This file is not committed.
+  `emailWork`, `emailOrigin`. See `identity.nix.example` for the template. This file
+  is not committed.
 - **File endings** — all `.nix` files close with a `# <> #` comment marker.
 - **Adding a package** — add it to the appropriate category list in `packages.nix`. For
   a new custom derivation, add a `pkgs.callPackage ./packages/<name> {}` entry to the

@@ -1,8 +1,4 @@
 { config, pkgs, ... }: {
-    imports = [
-        ./packages/php
-    ];
-
     virtualisation.docker = {
         enable = true;
         enableOnBoot = true;
