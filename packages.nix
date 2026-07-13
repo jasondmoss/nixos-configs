@@ -211,6 +211,7 @@ let
 
         network-web = with pkgs; [
             filezilla
+            firefox
             #firefox-nightly
             google-chrome
             links2
@@ -251,7 +252,7 @@ let
     };
 in {
     imports = [
-        ./packages/firefox-stable
+        #./packages/firefox-stable
         ./packages/gimp
     ];
 

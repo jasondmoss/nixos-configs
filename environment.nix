@@ -3,6 +3,7 @@
 		etc = {
 			"1password/custom_allowed_browsers" = {
 				text = ''
+firefox
 firefox-stable
 google-chrome-stable
 vivaldi-snapshot
@@ -65,7 +66,8 @@ wavebox
             # Browser setup.
             # firefox-stable is a wrapper installed by packages/firefox-stable,
             # not a pkgs attribute — reference it via the system profile.
-            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-stable";
+#            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-stable";
+            DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox";
 
             GST_PLUGIN_SYSTEM_PATH_1_0 =
                 lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [
