@@ -19,7 +19,6 @@
             freeSwapThreshold = 10; # % of swap
         };
 
-
         locate = {
             enable = true;
             interval = "hourly";

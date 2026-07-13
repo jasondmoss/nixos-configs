@@ -10,7 +10,7 @@ let
         desktopName = "Firefox Stable";
         exec = "firefox-stable -P \"Stable\" %u";
         icon = "${identity.userHome}/Mega/Images/Icons/Apps/firefox.png";
-        startupWMClass = "firefox";
+        startupWMClass = "firefox-stable";
         mimeTypes = [
             "application/pdf"
             "application/rdf+xml"
@@ -66,7 +66,8 @@ let
 mkdir -p $out/bin $out/lib/firefox-stable/distribution
 echo '${builtins.toJSON firefoxStablePolicies}' > $out/lib/firefox-stable/distribution/policies.json
 makeWrapper ${pkgs.firefox-bin}/bin/firefox $out/bin/firefox-stable \
- --set MOZ_DISTRIBUTION_DIR "$out/lib/firefox-stable"
+ --set MOZ_DISTRIBUTION_DIR "$out/lib/firefox-stable" \
+ --set MOZ_DESKTOP_FILE_NAME firefox-stable
     '';
 in {
     environment.systemPackages = [

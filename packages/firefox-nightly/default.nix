@@ -10,6 +10,7 @@ let
         desktopName = "Firefox Nightly";
         exec = "firefox-nightly -P \"Nightly\" %u";
         icon = "${identity.userHome}/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
+        startupWMClass = "firefox-nightly";
         mimeTypes = [
             "application/pdf"
             "application/rdf+xml"
@@ -136,6 +137,7 @@ WRAPPER="$out/bin/firefox-nightly"
 grep -v '^exec ' "$src/bin/firefox" > "$WRAPPER"
 
 cat >> "$WRAPPER" <<EOF
+export MOZ_DESKTOP_FILE_NAME=firefox-nightly
 export MOZ_ENABLE_WAYLAND=1
 export LIBVA_DRIVER_NAME=nvidia
 export MOZ_DISABLE_RDD_SANDBOX=1

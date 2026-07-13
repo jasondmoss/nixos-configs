@@ -211,7 +211,7 @@ let
 
         network-web = with pkgs; [
             filezilla
-            firefox-nightly
+            #firefox-nightly
             google-chrome
             links2
             megatools
