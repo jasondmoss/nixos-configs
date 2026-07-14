@@ -12,6 +12,7 @@ let
         kde-darkly     = pkgs.callPackage ./packages/kde-darkly {};
         kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
         kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
+        krema          = pkgs.kdePackages.callPackage ./packages/krema {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
         standardnotes  = pkgs.callPackage ./packages/standardnotes {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
