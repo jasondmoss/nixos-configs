@@ -1,0 +1,92 @@
+diff --git a/src/qml/main.qml b/src/qml/main.qml
+index 7128248..aa8e339 100644
+--- a/src/qml/main.qml
++++ b/src/qml/main.qml
+@@ -340,15 +340,28 @@ Item {
+             return
+         }
+ 
+-        // Rough vertical check: outside the dockRow + zoom extension → reset zoom
+-        let rowTop = dockRow.y
+-        let rowBottom = dockRow.y + dockRow.height
++        // Rough cross-axis check: outside the dockRow + zoom extension → reset zoom.
++        // Vertical docks (left/right) use dockRow's X extent as the cross axis;
++        // horizontal docks (top/bottom) use its Y extent.
+         let maxExt = DockSettings.iconSize * (DockSettings.maxZoomFactor - 1.0)
+-        if (dockPanel.mouseY < rowTop - maxExt || dockPanel.mouseY > rowBottom) {
+-            hoveredIndex = -1
+-            hoveredName = ""
+-            _zoomActive = false
+-            return
++        if (DockView.isVertical) {
++            let rowLeft = dockRow.x
++            let rowRight = dockRow.x + dockRow.width
++            if (dockPanel.mouseY < rowLeft - maxExt || dockPanel.mouseY > rowRight + maxExt) {
++                hoveredIndex = -1
++                hoveredName = ""
++                _zoomActive = false
++                return
++            }
++        } else {
++            let rowTop = dockRow.y
++            let rowBottom = dockRow.y + dockRow.height
++            if (dockPanel.mouseY < rowTop - maxExt || dockPanel.mouseY > rowBottom) {
++                hoveredIndex = -1
++                hoveredName = ""
++                _zoomActive = false
++                return
++            }
+         }
+ 
+         // Find the closest icon whose SCALED 2D bounds contain the mouse.
+@@ -365,19 +378,43 @@ Item {
+             let item = dockRepeater.itemAt(i)
+             if (!item) continue
+ 
+-            // Horizontal: normalized distance (0 = center, 1 = edge of scaled icon)
++            // Primary axis: normalized distance (0 = center, 1 = edge of scaled icon).
++            // dockPanel.mouseX/item.itemCenterX are already remapped to the along-row
++            // axis (Y for vertical docks, X for horizontal), so the size to compare
++            // against must be the along-row dimension too: height when vertical
++            // (icons stack top-to-bottom), width when horizontal.
+             let dist = Math.abs(dockPanel.mouseX - item.itemCenterX)
+-            let scaledHalfWidth = (item.width * item.currentScale) / 2
+-            let normDist = dist / scaledHalfWidth
++            let alongSize = DockView.isVertical ? item.height : item.width
++            let scaledHalfSize = (alongSize * item.currentScale) / 2
++            let normDist = dist / scaledHalfSize
+ 
+             // Hysteresis: currently-hovered icon uses wider exit threshold
+             let maxNorm = (i === hoveredIndex) ? (1.0 + hysteresisFactor) : 1.0
+             if (normDist >= maxNorm) continue
+ 
+-            // Vertical check: Scale origin.y = height → bottom fixed, grows upward
+-            let itemBottom = dockRow.y + item.y + item.height
+-            let itemTop = itemBottom - item.height * item.currentScale
+-            if (dockPanel.mouseY < itemTop || dockPanel.mouseY > itemBottom) continue
++            // Cross-axis check: only bound the side the icon grows toward
++            // (Scale transform's origin in DockItem.qml keeps the screen-edge
++            // side fixed). The strip between the icon and the screen edge stays
++            // claimable so edge-slammed clicks land (Fitts's law).
++            if (DockView.isVertical) {
++                let scaledCross = item.width * item.currentScale
++                if (DockView.edge === 2) {
++                    // Left dock: grows right; keep [screen edge .. scaled right] claimable
++                    if (dockPanel.mouseY > dockRow.x + item.x + scaledCross) continue
++                } else {
++                    // Right dock: grows left
++                    if (dockPanel.mouseY < dockRow.x + item.x + item.width - scaledCross) continue
++                }
++            } else {
++                let scaledCross = item.height * item.currentScale
++                if (DockView.edge === 0) {
++                    // Top dock: grows down
++                    if (dockPanel.mouseY > dockRow.y + item.y + scaledCross) continue
++                } else {
++                    // Bottom dock: grows up
++                    if (dockPanel.mouseY < dockRow.y + item.y + item.height - scaledCross) continue
++                }
++            }
+ 
+             // Comparison: currently-hovered icon gets distance bonus (sticky)
+             let effectiveDist = (i === hoveredIndex) ? normDist * (1.0 - hysteresisFactor) : normDist

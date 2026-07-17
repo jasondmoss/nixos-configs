@@ -1,0 +1,28 @@
+diff --git a/src/shell/dockview.cpp b/src/shell/dockview.cpp
+index 5ad1958..17e8197 100644
+--- a/src/shell/dockview.cpp
++++ b/src/shell/dockview.cpp
+@@ -182,7 +182,8 @@ DockVisibilityController *DockView::visibilityController() const
+ 
+ void DockView::updateSize()
+ {
+-    const int h = krema::surfaceHeight(m_settings->iconSize(), s_padding, m_settings->maxZoomFactor(), s_tooltipReserve, floatingPadding());
++    const int tooltipReserve = isVertical() ? s_tooltipReserveVertical : s_tooltipReserve;
++    const int h = krema::surfaceHeight(m_settings->iconSize(), s_padding, m_settings->maxZoomFactor(), tooltipReserve, floatingPadding());
+     const QRect screenGeo = screen() ? screen()->geometry() : QRect();
+ 
+     if (isVertical()) {
+diff --git a/src/shell/dockview.h b/src/shell/dockview.h
+index 54fb3fe..a65b1ee 100644
+--- a/src/shell/dockview.h
++++ b/src/shell/dockview.h
+@@ -113,6 +113,9 @@ private:
+     static constexpr int s_padding = 8;
+     static constexpr int s_floatingMargin = 8;
+     static constexpr int s_tooltipReserve = 36;
++    // Vertical docks lay the tooltip out beside the panel, so the reserve must
++    // fit horizontal label text rather than one line of it.
++    static constexpr int s_tooltipReserveVertical = 260;
+ };
+ 
+ } // namespace krema

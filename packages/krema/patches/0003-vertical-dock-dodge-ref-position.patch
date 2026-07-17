@@ -1,0 +1,49 @@
+diff --git a/src/shell/dockvisibilitycontroller.cpp b/src/shell/dockvisibilitycontroller.cpp
+index 9896141..acf72be 100644
+--- a/src/shell/dockvisibilitycontroller.cpp
++++ b/src/shell/dockvisibilitycontroller.cpp
+@@ -237,11 +237,14 @@ void DockVisibilityController::setPanelRect(qreal x, qreal y, qreal width, qreal
+     m_panelWidth = static_cast<int>(width);
+     m_panelHeight = static_cast<int>(height);
+ 
+-    // Record the Y coordinate only while the dock is visible (for overlap detection).
+-    // During hide animation m_panelY moves off-screen, but hasOverlappingWindow()
+-    // needs to answer "would there be overlap if the dock were visible?",
+-    // so we must use the last visible-state Y.
++    // Record the coordinates only while the dock is visible (for overlap detection).
++    // During hide animation the panel moves off-screen (Y for horizontal docks,
++    // X for vertical docks), but hasOverlappingWindow() needs to answer "would
++    // there be overlap if the dock were visible?", so we must use the last
++    // visible-state position on the slide axis or the region chases the panel
++    // off-screen and dodge oscillates.
+     if (m_visible) {
++        m_panelRefX = m_panelX;
+         m_panelRefY = m_panelY;
+     }
+ 
+@@ -386,7 +389,7 @@ QRect DockVisibilityController::dockScreenRect() const
+     params.screenHeight = screenGeo.height();
+     params.surfaceWidth = m_dockWindow->width();
+     params.surfaceHeight = m_dockWindow->height();
+-    params.panelX = m_panelX;
++    params.panelX = m_panelRefX;
+     params.panelRefY = m_panelRefY;
+     params.panelWidth = m_panelWidth;
+     params.panelHeight = m_panelHeight;
+diff --git a/src/shell/dockvisibilitycontroller.h b/src/shell/dockvisibilitycontroller.h
+index 6c5c611..505eb43 100644
+--- a/src/shell/dockvisibilitycontroller.h
++++ b/src/shell/dockvisibilitycontroller.h
+@@ -133,8 +133,10 @@ private:
+     int m_panelWidth = 0;
+     int m_panelHeight = 0;
+ 
+-    // Panel Y coordinate when the dock is visible (for overlap detection).
+-    // This value persists even while m_panelY moves off-screen during hide animation.
++    // Panel X/Y coordinates when the dock is visible (for overlap detection).
++    // These persist even while the panel moves off-screen during hide animation:
++    // horizontal docks slide along Y, vertical docks slide along X.
++    int m_panelRefX = 0;
+     int m_panelRefY = 0;
+ 
+     // Zoom overflow height (pixels above the panel that zoomed icons occupy).
