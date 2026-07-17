@@ -254,6 +254,7 @@ let
 in {
     imports = [
         #./packages/firefox-stable
+        ./packages/claudecodebrowser
         ./packages/gimp
     ];
 
