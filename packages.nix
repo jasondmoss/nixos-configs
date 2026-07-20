@@ -5,6 +5,7 @@ let
     customPkgs = {
         audacity-beta  = pkgs.callPackage ./packages/audacity-beta {};
         claude-desktop = pkgs.callPackage ./packages/claude-desktop {};
+        feishin        = pkgs.callPackage ./packages/feishin {};
         ferrite        = pkgs.callPackage ./packages/ferrite {};
         gemini-nix     = pkgs.callPackage ./packages/gemini-nix-assistant {};
         gemini-wrapped = pkgs.callPackage ./packages/gemini-cli/wrapper.nix {};

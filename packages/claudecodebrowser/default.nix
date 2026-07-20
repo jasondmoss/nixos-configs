@@ -21,14 +21,18 @@ let
     pythonEnv = pkgs.python3.withPackages (ps: [ ps.websockets ]);
 
     #-- Launcher for the dedicated "Claude Code" Firefox profile — the only
-    #-- profile with the ClaudeCodeBrowser extension installed. --no-remote
-    #-- lets it run alongside the main profile.
+    #-- profile with the ClaudeCodeBrowser extension installed. It is an
+    #-- in-app profile-groups profile (not in profiles.ini), so it must be
+    #-- launched by path, not with -P. The directory is registered in the
+    #-- group DB (~/.mozilla/firefox/Profile Groups/f53ea869.sqlite).
+    firefoxClaudeProfileDir = "${identity.userHome}/.mozilla/firefox/profile-claude-code";
+
     firefoxClaudeDesktopItem = pkgs.makeDesktopItem {
         type = "Application";
         terminal = false;
         name = "firefox-claude";
         desktopName = "Firefox (Claude Code)";
-        exec = "firefox -P \"Claude Code\" --no-remote %u";
+        exec = "firefox --profile \"${firefoxClaudeProfileDir}\" %u";
         icon = "${identity.userHome}/Mega/Images/Icons/Apps/claude.svg";
         startupWMClass = "firefox-claude";
         categories = [ "Network" "WebBrowser" ];
