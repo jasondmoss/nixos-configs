@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }: {
     qt.enable = true;
     qt.platformTheme = "kde";
 
@@ -41,13 +41,6 @@
 
     # XDG portals and MIME defaults.
     xdg = {
-#        mime.defaultApplications = {
-#            "text/html" = "firefox-stable.desktop";
-#            "x-scheme-handler/http" = "firefox-stable.desktop";
-#            "x-scheme-handler/https" = "firefox-stable.desktop";
-#            "x-scheme-handler/about" = "firefox-stable.desktop";
-#            "x-scheme-handler/unknown" = "firefox-stable.desktop";
-#        };
         mime.defaultApplications = {
             "text/html" = "firefox.desktop";
             "x-scheme-handler/http" = "firefox.desktop";
@@ -70,6 +63,28 @@
                 kdePackages.xdg-desktop-portal-kde
             ];
         };
+    };
+
+    # xdg-desktop-portal can be dbus-activated in the logout/login gap, before
+    # Plasma re-imports DISPLAY/WAYLAND_DISPLAY into the systemd user manager.
+    # It then holds a display-less environment and every OpenURI launch (link
+    # clicks -> browser) dies with "no DISPLAY environment variable specified".
+    # Hold the start until the session environment has landed; give up after
+    # 30 s so headless activation still works.
+    systemd.user.services.xdg-desktop-portal = {
+        path = lib.mkForce [];
+
+        serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-for-session-env" ''
+tries=0
+until ${pkgs.systemd}/bin/systemctl --user show-environment | ${pkgs.gnugrep}/bin/grep -q '^WAYLAND_DISPLAY='; do
+    tries=$((tries + 1))
+    if [ "$tries" -ge 60 ]; then
+        break
+    fi
+    ${pkgs.coreutils}/bin/sleep 0.5
+done
+exit 0
+        '';
     };
 
     # Rebuild KDE sycoca on every nixos-rebuild switch so the app launcher

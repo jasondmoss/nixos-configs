@@ -27,7 +27,8 @@ in {
             allowed-users = [ "root" identity.userHandle "@wheel" ];
             experimental-features = "nix-command";
             auto-optimise-store = true;
-            max-jobs = "auto";
+            max-jobs = 4;
+            cores = 6;
             system-features = [
                 "benchmark"
                 "big-parallel"
