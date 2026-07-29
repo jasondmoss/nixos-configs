@@ -10,6 +10,7 @@ let
         gemini-nix     = pkgs.callPackage ./packages/gemini-nix-assistant {};
         gemini-wrapped = pkgs.callPackage ./packages/gemini-cli/wrapper.nix {};
         gh-clone       = pkgs.callPackage ./packages/gh-clone {};
+        jopdf          = pkgs.callPackage ./packages/jopdf {};
         kde-darkly     = pkgs.callPackage ./packages/kde-darkly {};
         kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
         kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
@@ -19,9 +20,6 @@ let
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {};
         wavebox        = pkgs.callPackage ./packages/wavebox-beta {};
-
-        # Custom workshop applications.
-        #plasma-dock      = pkgs.callPackage ./workshop/plasma-dock {};
     };
 
     # --- Package Categories ---
@@ -70,7 +68,6 @@ let
             cuetools
             easytag
             ffmpeg-full
-            #ffmpegthumbnailer
             figma-linux
             flacon
             imagemagick
@@ -214,7 +211,7 @@ let
         network-web = with pkgs; [
             filezilla
             firefox
-            #firefox-nightly
+            firefox-nightly
             google-chrome
             links2
             megatools
@@ -254,7 +251,6 @@ let
     };
 in {
     imports = [
-        #./packages/firefox-stable
         ./packages/claudecodebrowser
         ./packages/gimp
     ];

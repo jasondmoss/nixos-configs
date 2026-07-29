@@ -23,7 +23,7 @@ let
     vivaldiName = "vivaldi-snapshot";
 in stdenv.mkDerivation rec {
     pname = "vivaldi";
-    version = "8.2.4106.4";
+    version = "8.2.4116.3";
 
     suffix = {
         x86_64-linux = "amd64";
@@ -33,7 +33,7 @@ in stdenv.mkDerivation rec {
     src = fetchurl {
         url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
         hash = {
-            x86_64-linux = "sha256-iDN1m70FB89xIgzGe18lFD+w2ZYz5OnADuY1i/Vq4Ak=";
+            x86_64-linux = "sha256-qWbZ29xM3yRSkAYcq2PvjLWDWOtuixo0AkD9Fx3mC+g=";
         }
         .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
     };
@@ -127,8 +127,10 @@ for f in chrome_crashpad_handler vivaldi-bin vivaldi-sandbox ; do
         opt/vivaldi-snapshot/$f
 done
 
-for f in libGLESv2.so libqt5_shim.so libqt6_shim.so; do
-    patchelf --set-rpath "${libPath}" opt/vivaldi-snapshot/$f
+for f in libGLESv2.so libqt5_shim.so libqt6_shim.so libvk_swiftshader.so; do
+    if [ -f "opt/vivaldi-snapshot/$f" ]; then
+        patchelf --set-rpath "${libPath}" opt/vivaldi-snapshot/$f
+    fi
 done
     ''
     + lib.optionalString proprietaryCodecs ''
