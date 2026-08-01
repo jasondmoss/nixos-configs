@@ -12,7 +12,7 @@ let
         owner = "jeffvli";
         repo = "feishin";
         rev = version;
-        hash = "sha256-SrHJ1bsruXYFQAIdvoNaAu+9v4O6ULG6eOq0snatF7I=";
+        hash = "sha256-Ex2YKIqxoDbV0YZ0oEACUL3+gslDG8O7YQwsGnlxVz8=";
     };
 
     electron = electron_41;
