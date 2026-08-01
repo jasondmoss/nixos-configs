@@ -15,6 +15,7 @@ let
         kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
         kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
         krema          = pkgs.kdePackages.callPackage ./packages/krema {};
+        kwin-spacial   = pkgs.callPackage ./packages/kwin-spacial-desktop {};
         ladybird       = pkgs.callPackage ./packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
         standardnotes  = pkgs.callPackage ./packages/standardnotes {};

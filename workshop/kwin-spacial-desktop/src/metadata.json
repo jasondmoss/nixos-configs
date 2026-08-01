@@ -1,0 +1,15 @@
+{
+    "KPlugin": {
+        "Category": "Window Management",
+        "Description": "Shrink windows along a warp curve as they approach the screen edges and park them there as small, live, interactive windows (Scott Jenson's spatial desktop concept)",
+        "EnabledByDefault": false,
+        "License": "GPL-2.0-or-later",
+        "Name": "Spacial Desktop",
+        "Authors": [
+            {
+                "Name": "jdmlabs"
+            }
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_spacialdesktop_config"
+}

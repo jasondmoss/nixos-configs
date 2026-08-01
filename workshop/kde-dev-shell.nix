@@ -3,7 +3,7 @@
 pkgs.mkShell {
     nativeBuildInputs = with pkgs; [
         cmake
-        extra-cmake-modules
+        kdePackages.extra-cmake-modules
         ninja
         pkg-config
     ];
@@ -16,7 +16,20 @@ pkgs.mkShell {
         kcoreaddons
         kirigami
         kio
-    ];
+
+        # KWin effect development (workshop/kwin-spacial-desktop)
+        kwin
+        kcmutils
+        kwindowsystem
+        kguiaddons
+    ] ++ (with pkgs; [
+        libepoxy
+        libdrm
+        vulkan-headers
+        vulkan-loader
+        wayland
+        wayland-protocols
+    ]);
 
     shellHook = ''
         echo "KDE Plasma 6 Development Environment Loaded"

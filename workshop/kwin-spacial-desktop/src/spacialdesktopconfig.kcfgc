@@ -1,0 +1,5 @@
+File=spacialdesktop.kcfg
+ClassName=SpacialDesktopConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true
