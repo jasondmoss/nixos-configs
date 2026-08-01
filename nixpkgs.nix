@@ -58,7 +58,6 @@
 
             (import ../overlays/default.nix)
 
-            # Conky 1.24.2 — newer than nixpkgs (still at 1.22.3).
             (final: prev: {
                 conky = prev.conky.overrideAttrs (old: rec {
                     version = "1.24.2";

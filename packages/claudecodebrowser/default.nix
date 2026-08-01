@@ -16,8 +16,6 @@
 #-- screenshots in /tmp/claudecodebrowser/screenshots.
 
 let
-    identity = import ../../identity.nix;
-
     pythonEnv = pkgs.python3.withPackages (ps: [ ps.websockets ]);
 
     #-- Launcher for the dedicated "Claude Code" Firefox profile — the only
@@ -25,7 +23,7 @@ let
     #-- in-app profile-groups profile (not in profiles.ini), so it must be
     #-- launched by path, not with -P. The directory is registered in the
     #-- group DB (~/.mozilla/firefox/Profile Groups/f53ea869.sqlite).
-    firefoxClaudeProfileDir = "${identity.userHome}/.mozilla/firefox/profile-claude-code";
+    firefoxClaudeProfileDir = "/home/me/.mozilla/firefox/profile-claude-code";
 
     firefoxClaudeDesktopItem = pkgs.makeDesktopItem {
         type = "Application";
@@ -33,7 +31,7 @@ let
         name = "firefox-claude";
         desktopName = "Firefox (Claude Code)";
         exec = "firefox --profile \"${firefoxClaudeProfileDir}\" %u";
-        icon = "${identity.userHome}/Mega/Images/Icons/Apps/claude.svg";
+        icon = "/home/me/Mega/Images/Icons/Apps/claude.svg";
         startupWMClass = "firefox-claude";
         categories = [ "Network" "WebBrowser" ];
     };

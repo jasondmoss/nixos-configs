@@ -38,34 +38,34 @@ stdenv.mkDerivation (finalAttrs: {
     strictDeps = true;
 
     installPhase = ''
-        runHook preInstall
+runHook preInstall
 
-        installBin $src
+installBin $src
 
-        wrapProgram $out/bin/claude \
-            --set DISABLE_AUTOUPDATER 1 \
-            --set-default FORCE_AUTOUPDATE_PLUGINS 1 \
-            --set DISABLE_INSTALLATION_CHECKS 1 \
-            --set USE_BUILTIN_RIPGREP 0 \
-            ${lib.optionalString stdenv.hostPlatform.isLinux ''
-                --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ alsa-lib ]} \
-            ''}--prefix PATH : ${
-                lib.makeBinPath (
-                    [
-                        # claude-code uses [node-tree-kill](https://github.com/pkrumins/node-tree-kill) which requires procps's pgrep(darwin) or ps(linux)
-                        procps
-                        # https://code.claude.com/docs/en/troubleshooting#search-and-discovery-issues
-                        ripgrep
-                    ]
-                    # the following packages are required for the sandbox to work (Linux only)
-                    ++ lib.optionals stdenv.hostPlatform.isLinux [
-                        bubblewrap
-                        socat
-                    ]
-                )
-            }
+wrapProgram $out/bin/claude \
+ --set DISABLE_AUTOUPDATER 1 \
+ --set-default FORCE_AUTOUPDATE_PLUGINS 1 \
+ --set DISABLE_INSTALLATION_CHECKS 1 \
+ --set USE_BUILTIN_RIPGREP 0 \
+ ${lib.optionalString stdenv.hostPlatform.isLinux ''
+ --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ alsa-lib ]} \
+''}--prefix PATH : ${
+    lib.makeBinPath (
+        [
+            # claude-code uses [node-tree-kill](https://github.com/pkrumins/node-tree-kill) which requires procps's pgrep(darwin) or ps(linux)
+            procps
+            # https://code.claude.com/docs/en/troubleshooting#search-and-discovery-issues
+            ripgrep
+        ]
+        # the following packages are required for the sandbox to work (Linux only)
+        ++ lib.optionals stdenv.hostPlatform.isLinux [
+            bubblewrap
+            socat
+        ]
+    )
+}
 
-        runHook postInstall
+runHook postInstall
     '';
 
     doInstallCheck = true;

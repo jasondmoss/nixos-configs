@@ -23,8 +23,8 @@ in {
         package = pkgs.nixVersions.latest;
 
         settings = {
-            trusted-users = [ "root" identity.userHandle "@wheel" ];
-            allowed-users = [ "root" identity.userHandle "@wheel" ];
+            trusted-users = [ "root" "me" "@wheel" ];
+            allowed-users = [ "root" "me" "@wheel" ];
             experimental-features = "nix-command";
             auto-optimise-store = true;
             max-jobs = 4;

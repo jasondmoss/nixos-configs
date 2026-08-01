@@ -1,21 +1,21 @@
 {
     addDriverRunpath, alsa-lib, at-spi2-core, autoPatchelfHook, cups, dpkg,
     expat, fetchurl, gtk3, lib, libcap_ng, libdrm, libglvnd, libnotify,
-    libseccomp, libsecret,
-    libx11, libxcb, libxcomposite, libxdamage, libxext, libxfixes,
-    libxkbcommon, libxrandr, libxscrnsaver, libxshmfence, libxtst,
+    libseccomp, libsecret, libx11, libxcb, libxcomposite, libxdamage, libxext,
+    libxfixes, libxkbcommon, libxrandr, libxscrnsaver, libxshmfence, libxtst,
     makeWrapper, mesa, nspr, nss, stdenv, systemd, vulkan-loader, xdg-utils
 }:
 with lib;
 
 let
-    version = "1.18286.2";
+    #version = "1.18286.2";
+    version = "1.24012.9";
 
     ## Upstream apt repository (same pool the Debian/Ubuntu install uses):
     ## https://code.claude.com/docs/en/desktop-linux
     src = fetchurl {
         url = "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_${version}_amd64.deb";
-        sha256 = "sha256-Vvpd4FPgpo3HWDZ3hXvtz0IZsZ2QIBQA4CN7fXTVEvE=";
+        sha256 = "sha256-MC5tII3YyOnlIGfaoo7zsRcaFhNYb9DhC+3GQiJbbuE=";
     };
 
     meta = with lib; {

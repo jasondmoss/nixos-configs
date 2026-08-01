@@ -20,10 +20,6 @@ let
         requests
         pyyaml
         psutil
-        # fonts
-        # roboto
-        # roboto-mono
-        # blendmodes
         httpcore
         httpx
         fastapi

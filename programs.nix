@@ -1,4 +1,4 @@
-{ pkgs, identity, ... }: {
+{ pkgs, ... }: {
     programs = {
         bash.completion.enable = true;
         command-not-found.enable = false;
@@ -6,8 +6,6 @@
         gamemode.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;
-        # Run generic dynamically linked binaries (e.g. the `claude` binary
-        # the Claude Code desktop app downloads to ~/.config/Claude).
         nix-ld.enable = true;
         xwayland.enable = true;
 
@@ -76,14 +74,14 @@ Host pantheon.io *.pantheon.io
 
                 includeIf = {
                     # GitHub
-                    "gitdir/i:${identity.userHome}/Repository/work/origin/" .path = "/etc/gitconfig.work";
-                    "gitdir/i:${identity.userHome}/Repository/work/mmgy/" .path = "/etc/gitconfig.bitbucket";
-                    "gitdir/i:${identity.userHome}/Repository/personal/" .path = "/etc/gitconfig.personal";
+                    "gitdir/i:/home/me/Repository/work/origin/" .path = "/etc/gitconfig.work";
+                    "gitdir/i:/home/me/Repository/work/mmgy/" .path = "/etc/gitconfig.bitbucket";
+                    "gitdir/i:/home/me/Repository/personal/" .path = "/etc/gitconfig.personal";
                     # Fallback for your main config repo if it's not in the personal folder.
-                    "gitdir/i:${identity.userHome}/Repository/system/" .path = "/etc/gitconfig.personal";
+                    "gitdir/i:/home/me/Repository/system/" .path = "/etc/gitconfig.personal";
 
                     # GitLab
-                    "gitdir/i:${identity.userHome}/Repository/work/cyan-solutions/" .path = "/etc/gitconfig.gitlab";
+                    "gitdir/i:/home/me/Repository/work/cyan-solutions/" .path = "/etc/gitconfig.gitlab";
                 };
             };
         };

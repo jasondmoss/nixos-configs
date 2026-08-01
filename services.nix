@@ -1,4 +1,4 @@
-{ lib, pkgs, identity, ... }: {
+{ lib, pkgs, ... }: {
     services = {
         dbus.enable = true;
         devmon.enable = true;
@@ -7,7 +7,7 @@
         gnome.gnome-keyring.enable = true;
         gpm.enable = true;
         irqbalance.enable = true;
-        openssh.settings.AllowUsers = [ identity.userHandle ];
+        openssh.settings.AllowUsers = [ "me" ];
         pcscd.enable = true;
         sysstat.enable = true;
         systembus-notify.enable = lib.mkForce true;
@@ -44,7 +44,7 @@
             serviceConfig = {
                 Type = "oneshot";
                 # Run as your user so database is available in ~/.cache/nix-index
-                User = identity.userHandle;
+                User = "me";
                 ExecStart = "${pkgs.nix-index}/bin/nix-index";
             };
         };
@@ -91,15 +91,6 @@
                 };
             };
 
-            # Masked: if the compositor dies mid-session, any app that crashes
-            # while it's down also fails to reconnect and aborts. DrKonqi then
-            # tries to report that abort, itself fails to reach the (still
-            # down) compositor, aborts, and reports on itself — recursively,
-            # for as long as the compositor is unreachable. This has produced
-            # 100+ cascading crash reports and multiple GB of coredumps in a
-            # single incident. Coredumps are still written to disk normally
-            # (inspect with coredumpctl); only the auto-launched GUI reporter
-            # is disabled.
             "drkonqi-coredump-launcher@".enable = false;
         };
     };

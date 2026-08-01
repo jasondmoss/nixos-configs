@@ -1,11 +1,9 @@
 {
-    lib, stdenv, fetchFromGitHub,
-    cmake, extra-cmake-modules, ninja, pkg-config, wrapQtAppsHook, spirv-tools,
-    qtbase, qtdeclarative, qtshadertools,
-    kconfig, kcoreaddons, kdbusaddons, ki18n, kglobalaccel, kcolorscheme,
-    kiconthemes, kcrash, kxmlgui, kservice, kwindowsystem,
-    kirigami, kirigami-addons, layer-shell-qt, plasma-workspace, kpipewire,
-    wayland, wayland-protocols,
+    lib, stdenv, fetchFromGitHub, cmake, extra-cmake-modules, ninja, pkg-config,
+    wrapQtAppsHook, spirv-tools, qtbase, qtdeclarative, qtshadertools, kconfig,
+    kcoreaddons, kdbusaddons, ki18n, kglobalaccel, kcolorscheme, kiconthemes,
+    kcrash, kxmlgui, kservice, kwindowsystem, kirigami, kirigami-addons,
+    layer-shell-qt, plasma-workspace, kpipewire, wayland, wayland-protocols,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -87,9 +85,9 @@ stdenv.mkDerivation (finalAttrs: {
     meta = {
         description = "Lightweight, high-performance dock for KDE Plasma 6, spiritual successor to Latte Dock";
         longDescription = ''
-            Krema is a native KDE Plasma 6 dock built with Qt 6 and KDE Frameworks 6.
-            It provides macOS-style parabolic zoom animations, live window previews via
-            PipeWire, and native Wayland layer-shell integration.
+Krema is a native KDE Plasma 6 dock built with Qt 6 and KDE Frameworks 6.
+It provides macOS-style parabolic zoom animations, live window previews via
+PipeWire, and native Wayland layer-shell integration.
         '';
         homepage   = "https://github.com/isac322/krema";
         changelog  = "https://github.com/isac322/krema/releases/tag/v${finalAttrs.version}";

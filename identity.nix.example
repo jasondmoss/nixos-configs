@@ -1,7 +1,4 @@
 {
-    userName = "My Name";
-    userHandle = "iamuser";
-    userHome = "/home/iamuser";
     emailPersonal = "personal@example.com";
     emailWork = "work@example.com";
     emailOrigin = "origin@example.com";

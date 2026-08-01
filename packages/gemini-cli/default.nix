@@ -2,16 +2,16 @@
 
 pkgs.buildNpmPackage rec {
     pname = "gemini-cli";
-    version = "0.49.0";
+    version = "0.53.1";
 
     src = pkgs.fetchFromGitHub {
         owner = "google-gemini";
         repo = "gemini-cli";
         rev = "v${version}";
-        hash = "sha256-C47U5nTWB0Dq2iPRujRHMDjyyrU0d6xZ3Uv7URcIcg8=";
+        hash = "sha256-c/Mql3r+2c5u9hUO1x7uLRtD0nRs4kOfkabqcPfh/MA=";
     };
 
-    npmDepsHash = "sha256-e3gPyBJg2TPGywpR7iqpDtcRdq6AWlvY725kIGPJmCo=";
+    npmDepsHash = "sha256-uRUUHvFiET+JIdriY4uiO1i6vigrwS+EowkhQ0vRPO4=";
     npmDepsFetcherVersion = 2;
 
     nativeBuildInputs = with pkgs; [
@@ -33,10 +33,10 @@ pkgs.buildNpmPackage rec {
     # were pulled from the npm registry) — align the pins so npm doesn't
     # try to re-resolve offline
     postPatch = ''
-        substituteInPlace packages/cli/package.json packages/a2a-server/package.json \
-            --replace-fail '"tar": "7.5.8"' '"tar": "7.5.11"'
-        substituteInPlace packages/cli/package.json \
-            --replace-fail '"clipboardy": "5.2.0"' '"clipboardy": "5.2.1"'
+substituteInPlace packages/cli/package.json packages/a2a-server/package.json \
+    --replace-fail '"tar": "7.5.8"' '"tar": "7.5.11"'
+substituteInPlace packages/cli/package.json \
+    --replace-fail '"clipboardy": "5.2.0"' '"clipboardy": "5.2.1"'
     '';
 
     preFixup = ''

@@ -1,15 +1,13 @@
 { lib,  stdenv,  makeDesktopItem,  firefox-src }:
 
 let
-    identity = import ../../identity.nix;
-
     firefoxNightlyDesktopItem = makeDesktopItem {
         type = "Application";
         terminal = false;
         name = "firefox-nightly";
         desktopName = "Firefox Nightly";
         exec = "firefox-nightly -P \"Nightly\" %u";
-        icon = "${identity.userHome}/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
+        icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
         startupWMClass = "firefox-nightly";
         mimeTypes = [
             "application/pdf"

@@ -3,8 +3,8 @@
         enable = true;
         enableOnBoot = true;
         storageDriver = "overlay2";
-        package = pkgs.docker_25;
-#        package = pkgs.docker;
+        package = pkgs.docker;
+#        package = pkgs.docker_25;
 
         autoPrune = {
             enable = true;

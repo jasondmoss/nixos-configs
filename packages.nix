@@ -3,10 +3,10 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
-        audacity-beta  = pkgs.callPackage ./packages/audacity-beta {};
+        #audacity-beta  = pkgs.callPackage ./packages/audacity-beta {};
         claude-desktop = pkgs.callPackage ./packages/claude-desktop {};
         feishin        = pkgs.callPackage ./packages/feishin {};
-        ferrite        = pkgs.callPackage ./packages/ferrite {};
+        #ferrite        = pkgs.callPackage ./packages/ferrite {};
         gemini-nix     = pkgs.callPackage ./packages/gemini-nix-assistant {};
         gemini-wrapped = pkgs.callPackage ./packages/gemini-cli/wrapper.nix {};
         gh-clone       = pkgs.callPackage ./packages/gh-clone {};
@@ -15,6 +15,7 @@ let
         kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
         kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
         krema          = pkgs.kdePackages.callPackage ./packages/krema {};
+        ladybird       = pkgs.callPackage ./packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
         standardnotes  = pkgs.callPackage ./packages/standardnotes {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
@@ -164,7 +165,7 @@ let
             qtdeclarative
             qtsvg
             qttools
-            qtwebengine  # Radar tab in Advanced Weather Widget needs the QtWebEngine QML module
+            qtwebengine
         ];
 
         kde-applications = with pkgs.kdePackages; [

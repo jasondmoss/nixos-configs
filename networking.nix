@@ -16,8 +16,18 @@
             allowedUDPPorts = [];
 
             # KDE Connect: discovery (UDP broadcast) + transfers over 1714–1764
-            allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
-            allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
+            allowedTCPPortRanges = [
+                {
+                    from = 1714;
+                    to = 1764;
+                }
+            ];
+            allowedUDPPortRanges = [
+                {
+                    from = 1714;
+                    to = 1764;
+                }
+            ];
         };
 
         networkmanager = {

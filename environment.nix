@@ -4,35 +4,32 @@
 			"1password/custom_allowed_browsers" = {
 				text = ''
 firefox
-firefox-stable
 google-chrome-stable
-vivaldi-snapshot
-wavebox
 				'';
 				mode = "0755";
 			};
 
 			"gitconfig.work".text = ''
 [user]
-	name = ${identity.userName}
+	name = Jason D. Moss
 	email = ${identity.emailOrigin};
 			'';
 
 			"gitconfig.personal".text = ''
 [user]
-	name = ${identity.userName}
+	name = Jason D. Moss
 	email = ${identity.emailPersonal}
 			'';
 
             "gitconfig.gitlab".text = ''
 [user]
-    name = ${identity.userName}
+    name = Jason D. Moss
     email = ${identity.emailWork}
             '';
 
             "gitconfig.bitbucket".text = ''
 [user]
-    name = ${identity.userName}
+    name = Jason D. Moss
     email = ${identity.emailOrigin}
             '';
 		};

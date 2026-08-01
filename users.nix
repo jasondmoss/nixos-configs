@@ -1,13 +1,13 @@
-{ identity, ... }: {
+{ ... }: {
     users = {
         users = {
             me = {
                 isNormalUser = true;
-                home = "${identity.userHome}";
+                home = "/home/me";
                 createHome = false;
                 uid = 1000;
                 group = "users";
-                description = identity.userName;
+                description = "Jason D. Moss";
 
                 extraGroups = [
                     "33"

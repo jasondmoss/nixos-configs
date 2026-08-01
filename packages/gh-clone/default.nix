@@ -1,8 +1,6 @@
 { pkgs }:
 
-let
-    identity = import ../../identity.nix;
-in pkgs.writeShellApplication {
+pkgs.writeShellApplication {
     name = "gh-clone";
     runtimeInputs = [ pkgs.git pkgs.coreutils ];
 
@@ -12,7 +10,7 @@ REPO=$(echo "$1" | sed 's|.*github.com[:/]||; s|\.git$||')
 CURRENT_DIR=$(pwd)
 
 # Match the new organization directory
-WORK_DIR="${identity.userHome}/Repository/work/origin"
+WORK_DIR="/home/me/Repository/work/origin"
 
 if [[ "$CURRENT_DIR" == "$WORK_DIR"* ]]; then
     echo "🏗️  Work directory detected..."

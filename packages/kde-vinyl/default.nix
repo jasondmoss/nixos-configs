@@ -2,12 +2,12 @@
 
 stdenv.mkDerivation rec {
     pname = "vinyl";
-    version = "6.6.3-unstable-2026-07-01";
+    version = "main";
 
     src = fetchFromGitHub {
         owner = "ekaaty";
         repo = "vinyl-theme";
-        rev = "8358bf1639e897d266c479240ac7994a1ee8e2c0";
+        rev = version;
         hash = "sha256-QbivipDNLrdllF8ebC0ix+5vtKkvdnrqC0zsphrWSXQ=";
     };
 
@@ -40,13 +40,13 @@ stdenv.mkDerivation rec {
     # The cursor pipeline runs svgslice.py via /usr/bin/env, which
     # does not exist in the build sandbox.
     postPatch = ''
-        patchShebangs cursors/svgslice.py
+patchShebangs cursors/svgslice.py
     '';
 
     # Upstream icon themes ship symlinks whose targets are not installed
     # (e.g. start-here-kde-plasma.svg), which trips noBrokenSymlinks.
     postInstall = ''
-        find $out/share/icons -xtype l -delete
+find $out/share/icons -xtype l -delete
     '';
 
     cmakeFlags = [

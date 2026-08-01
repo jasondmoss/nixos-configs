@@ -6,16 +6,14 @@
     libXft, libXrender, libxcb, expat, libuuid, libxml2, glib, gtk3, pango,
     gdk-pixbuf, cairo, atk, at-spi2-atk, at-spi2-core, qt6, libdrm, libgbm,
     vulkan-loader, nss, nspr, patchelf, makeWrapper, wayland, pipewire,
+    libpulseaudio, libkrb5, kdePackages,
     proprietaryCodecs ? false,
     vivaldi-ffmpeg-codecs ? null,
     enableWidevine ? false,
     widevine-cdm ? null,
     commandLineArgs ? "",
     pulseSupport ? stdenv.hostPlatform.isLinux,
-    libpulseaudio,
-    kerberosSupport ? true,
-    libkrb5,
-    kdePackages
+    kerberosSupport ? true
 }:
 
 let

@@ -1,15 +1,13 @@
 { pkgs, ... }:
 
 let
-    identity = import ../../identity.nix;
-
     firefoxStableDesktopItem = pkgs.makeDesktopItem rec {
         type = "Application";
         terminal = false;
         name = "firefox-stable";
         desktopName = "Firefox Stable";
         exec = "firefox-stable -P \"Stable\" %u";
-        icon = "${identity.userHome}/Mega/Images/Icons/Apps/firefox.png";
+        icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
         startupWMClass = "firefox-stable";
         mimeTypes = [
             "application/pdf"

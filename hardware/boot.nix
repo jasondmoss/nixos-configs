@@ -1,4 +1,4 @@
-{ lib, pkgs, modulesPath, identity, ... }: {
+{ lib, pkgs, modulesPath, ... }: {
     imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
     ];
@@ -37,10 +37,6 @@
             "nvidia-drm.fbdev=1"
             "nvidia-drm.modeset=1"
             "pcie_aspm=off"
-            # Disabled 2026-06-19: capping at C1 keeps Ryzen cores out of deep
-            # sleep, which reduces boost headroom (CPB/PBO) and raises idle temps.
-            # Re-enable only if it was fixing a specific audio/DPC-latency glitch.
-            # "processor.max_cstate=1"
         ];
 
         extraModprobeConfig = "options nvidia " + lib.concatStringsSep " " [
@@ -100,32 +96,32 @@
     };
 
     # [sdb2]
-    fileSystems."${identity.userHome}/Mega" = {
+    fileSystems."/home/me/Mega" = {
         device = "/dev/disk/by-uuid/ccee2c99-427f-40f1-ad72-af6c81be4379";
         fsType = "ext4";
     };
 
     # [sdc1]
-    fileSystems."${identity.userHome}/Music" = {
+    fileSystems."/home/me/Music" = {
         device = "/dev/disk/by-uuid/bf9410ed-bf55-4341-97f5-5576f80ce071";
         fsType = "ext4";
     };
 
     # [sdb1]
-    fileSystems."${identity.userHome}/Repository" = {
+    fileSystems."/home/me/Repository" = {
         device = "/dev/disk/by-uuid/2cf8ca9d-43ab-4ef5-99ff-0a909e765c5e";
         fsType = "btrfs";
         options = [ "compress=zstd:1" "noatime" ];
     };
 
     # [sda1]
-    fileSystems."${identity.userHome}/Videos/Movies" = {
+    fileSystems."/home/me/Videos/Movies" = {
         device = "/dev/disk/by-uuid/52dfd9d6-7557-45fd-83c6-a6bfff2c0c83";
         fsType = "ext4";
     };
 
     # [sdd]
-     fileSystems."${identity.userHome}/Videos/Television" = {
+     fileSystems."/home/me/Videos/Television" = {
          device = "/dev/disk/by-uuid/a7007b9d-f315-4dec-83cd-ef883729e3c0";
          fsType = "ext4";
      };
