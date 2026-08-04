@@ -234,8 +234,10 @@ let
             fuzzel
             p7zip-rar
             pandoc
+            python3Packages.weasyprint
             quickemu
             rar
+            tectonic
             unrar
             unzip
             wezterm
