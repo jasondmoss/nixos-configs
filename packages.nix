@@ -16,7 +16,7 @@ let
         kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
         krema          = pkgs.kdePackages.callPackage ./packages/krema {};
         kwin-spacial   = pkgs.callPackage ./packages/kwin-spacial-desktop {};
-        ladybird       = pkgs.callPackage ./packages/ladybird {};
+        #ladybird       = pkgs.callPackage ./packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
         standardnotes  = pkgs.callPackage ./packages/standardnotes {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};

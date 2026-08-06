@@ -8,7 +8,7 @@ stdenv.mkDerivation rec {
         owner = "ekaaty";
         repo = "vinyl-theme";
         rev = version;
-        hash = "sha256-QbivipDNLrdllF8ebC0ix+5vtKkvdnrqC0zsphrWSXQ=";
+        hash = "sha256-mJ59zxuQV8oRDDud0/ykXYd09NiNdEr7Dn0bprj00gc=";
     };
 
     buildInputs = [
