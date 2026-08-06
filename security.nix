@@ -35,6 +35,12 @@ polkit.addRule(function(action, subject) {
             };
         };
 
+        pki = {
+            certificateFiles = [
+                /home/me/.lando/certs/LandoCA.crt
+            ];
+        };
+
         sudo = {
             enable = true;
             extraConfig = ''
