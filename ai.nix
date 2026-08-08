@@ -12,8 +12,13 @@
             # AI tools.
             (pkgs.callPackage ./packages/claude-code {})
             claude-monitor
+            goose-cli
             opencode
             realesrgan-ncnn-vulkan
+
+            # Voice pipeline (models live in ~/Repository/ai/).
+            whisper-cpp
+            piper-tts
         ];
     };
 
@@ -55,6 +60,21 @@
 
     # Read access to model files.
     users.users.me.extraGroups = [ "ollama" ];
+
+    # Private ChatGPT-style web UI over Ollama — chat, RAG over documents,
+    # model comparison. Localhost only; single-user (no login).
+    services.open-webui = {
+        enable = true;
+        port = 8180;
+        environment = {
+            OLLAMA_BASE_URL = "http://127.0.0.1:11434";
+            WEBUI_AUTH = "False";
+            ENABLE_OPENAI_API = "False";
+            ANONYMIZED_TELEMETRY = "False";
+            DO_NOT_TRACK = "True";
+            SCARF_NO_ANALYTICS = "True";
+        };
+    };
 }
 
 # <> #
