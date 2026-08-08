@@ -56,6 +56,9 @@ google-chrome-stable
             Qt6_DIR = "${pkgs.kdePackages.qtbase.dev}/lib/cmake/Qt6";
 #            EDITOR = "nvim";
 
+            # AI — HuggingFace-based tools cache models on the Repository drive.
+            HF_HOME = "/home/me/Repository/ai/huggingface";
+
             # Electron/Ozone.
             NIXOS_OZONE_WL = "1";
             ELECTRON_OZONE_PLATFORM_HINT = "auto";
