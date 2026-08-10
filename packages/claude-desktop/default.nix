@@ -8,14 +8,13 @@
 with lib;
 
 let
-    #version = "1.18286.2";
-    version = "1.24012.9";
+    version = "1.26832.0";
 
     ## Upstream apt repository (same pool the Debian/Ubuntu install uses):
     ## https://code.claude.com/docs/en/desktop-linux
     src = fetchurl {
         url = "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_${version}_amd64.deb";
-        sha256 = "sha256-MC5tII3YyOnlIGfaoo7zsRcaFhNYb9DhC+3GQiJbbuE=";
+        sha256 = "sha256-K8bw1BCbtDswdpbhEo31P785PvmPlHp4aZSGQkUCRdc=";
     };
 
     meta = with lib; {
