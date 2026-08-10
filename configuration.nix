@@ -109,6 +109,8 @@ in {
         ./packages.nix
         ./services.nix
         ./qbittorrent-vpn.nix
+        ./pcp.nix
+        ./pcp-grafana.nix
 
         # Development & AI.
         ./development.nix
