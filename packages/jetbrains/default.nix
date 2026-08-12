@@ -18,12 +18,12 @@ let
 in
 {
   phpstorm = unstable.jetbrains.phpstorm.overrideAttrs (old: {
-    version = "2026.2.0.1";
-    buildNumber = "262.8665.325";
+    version = "2026.2.1";
+    buildNumber = "262.9437.196";
 
     src = pkgs.fetchurl {
-      url = "https://download.jetbrains.com/webide/PhpStorm-2026.2.0.1.tar.gz";
-      sha256 = "sha256-SZr1Qd3ISuTsMuuoLFc0O79kvPMrSz26PmLeKvRJLbQ=";
+      url = "https://download.jetbrains.com/webide/PhpStorm-2026.2.1.tar.gz";
+      sha256 = "sha256-lhMfiYE5qLlkgjoGioS/6g15MDrMdMNxIdnlB85shVk=";
     };
 
     # 2026.2 bundles JCEF as an IDE plugin (jcef-plugin) instead of shipping it
