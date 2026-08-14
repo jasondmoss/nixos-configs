@@ -3,10 +3,12 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
+        antigravity    = pkgs.callPackage ./packages/antigravity-cli {};
         #audacity-beta  = pkgs.callPackage ./packages/audacity-beta {};
         claude-desktop = pkgs.callPackage ./packages/claude-desktop {};
-        gemini-nix     = pkgs.callPackage ./packages/gemini-nix-assistant {};
-        gemini-wrapped = pkgs.callPackage ./packages/gemini-cli/wrapper.nix {};
+        # gemini-wrapped removed — Gemini CLI dropped Google AI Pro/Ultra support
+        # (June 18 2026); replaced by Antigravity CLI (see `antigravity` above).
+        # Package sources (packages/gemini-cli) deleted along with it.
         gh-clone       = pkgs.callPackage ./packages/gh-clone {};
         jopdf          = pkgs.callPackage ./packages/jopdf {};
         kde-darkly     = pkgs.callPackage ./packages/kde-darkly {};

@@ -79,6 +79,25 @@
                     commandLineArgs = "--disable-features=Vulkan";
                 };
             })
+
+            # TEMPORARY (remove once nixos-unstable advances past PR #552075):
+            # GitHub regenerated the nanoemoji v0.16.0 tarball, changing its
+            # hash. The fix is already on nixpkgs master but has not reached the
+            # nixos-unstable channel branch yet (channel lag). This overrides the
+            # src hash to master's corrected value so the font toolchain
+            # (nanoemoji -> gftools -> jetbrains-mono) builds now. Verify with
+            # `nxin 552075`; once contained, delete this overlay + update channel.
+            (final: prev: {
+                pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+                    (pyfinal: pyprev: {
+                        nanoemoji = pyprev.nanoemoji.overridePythonAttrs (o: {
+                            src = o.src.overrideAttrs (_: {
+                                outputHash = "sha256-FysyKC01XBnRiur5RR9fcsTxQqE8x0JJHSoe3q6JtKc=";
+                            });
+                        });
+                    })
+                ];
+            })
         ];
     };
 }
