@@ -6,9 +6,6 @@ let
         antigravity    = pkgs.callPackage ./packages/antigravity-cli {};
         #audacity-beta  = pkgs.callPackage ./packages/audacity-beta {};
         claude-desktop = pkgs.callPackage ./packages/claude-desktop {};
-        # gemini-wrapped removed — Gemini CLI dropped Google AI Pro/Ultra support
-        # (June 18 2026); replaced by Antigravity CLI (see `antigravity` above).
-        # Package sources (packages/gemini-cli) deleted along with it.
         gh-clone       = pkgs.callPackage ./packages/gh-clone {};
         jopdf          = pkgs.callPackage ./packages/jopdf {};
         kde-darkly     = pkgs.callPackage ./packages/kde-darkly {};
@@ -18,6 +15,7 @@ let
         kwin-spacial   = pkgs.callPackage ./packages/kwin-spacial-desktop {};
         #ladybird       = pkgs.callPackage ./packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
+        proton-drive   = pkgs.callPackage ./packages/proton-drive-cli {};
         standardnotes  = pkgs.callPackage ./packages/standardnotes {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
         vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {};
