@@ -125,6 +125,11 @@ let
             pre-commit
             sublime4-dev
 
+            # PHP Quality Tools (global — wired into PhpStorm)
+            phpPackages.php-codesniffer   # phpcs + phpcbf
+            phpPackages.php-cs-fixer       # php-cs-fixer
+            phpstan                        # static analysis
+
             # Android
             android-tools
         ];
