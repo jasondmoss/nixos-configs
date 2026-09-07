@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile arg="true"/>
+    <group name="Effect-stagemanager">
+        <entry name="ParkLeft" type="Bool">
+            <label>Enable the park zone on the left side of the screen.</label>
+            <default>false</default>
+        </entry>
+        <entry name="ParkRight" type="Bool">
+            <label>Enable the park zone on the right side of the screen.</label>
+            <default>true</default>
+        </entry>
+        <entry name="StageMode" type="Bool">
+            <label>Stage manager: group parked windows by application into piles; activating a pile swaps it with the windows in the center.</label>
+            <default>true</default>
+        </entry>
+        <entry name="MiniatureTilt" type="Double">
+            <label>Perspective tilt of parked miniatures about their vertical axis, in degrees (0 = flat).</label>
+            <default>25.0</default>
+            <min>0.0</min>
+            <max>60.0</max>
+        </entry>
+        <entry name="StageMiniatureWidth" type="Double">
+            <label>Maximum width of a strip miniature as a fraction of the screen width.</label>
+            <default>0.06</default>
+            <min>0.02</min>
+            <max>0.40</max>
+        </entry>
+        <entry name="StageMiniatureHeight" type="Double">
+            <label>Maximum height of a strip miniature as a fraction of the screen height.</label>
+            <default>0.14</default>
+            <min>0.04</min>
+            <max>0.60</max>
+        </entry>
+        <entry name="WarpDeadZone" type="Double">
+            <label>Fraction of the half-screen (0..1) that stays full scale before a park zone begins.</label>
+            <default>0.72</default>
+            <min>0.05</min>
+            <max>0.95</max>
+        </entry>
+        <entry name="WarpPower" type="Double">
+            <label>Exponent of the warp curve; 3.0 gives a smooth cubic bend.</label>
+            <default>3.0</default>
+            <min>1.0</min>
+            <max>6.0</max>
+        </entry>
+        <entry name="WarpStrength" type="Double">
+            <label>Compression strength toward the screen edges.</label>
+            <default>1.33</default>
+            <min>0.1</min>
+            <max>4.0</max>
+        </entry>
+        <entry name="MinScale" type="Double">
+            <label>Minimum window scale during a drag.</label>
+            <default>0.20</default>
+            <min>0.05</min>
+            <max>0.9</max>
+        </entry>
+        <entry name="ColumnInner" type="Double">
+            <label>Inner parking column position as a fraction of the park zone (0 = its inner edge, 1 = screen edge).</label>
+            <default>0.35</default>
+            <min>0.0</min>
+            <max>1.0</max>
+        </entry>
+        <entry name="ColumnOuter" type="Double">
+            <label>Outer parking column position as a fraction of the park zone (0 = its inner edge, 1 = screen edge).</label>
+            <default>0.75</default>
+            <min>0.0</min>
+            <max>1.0</max>
+        </entry>
+        <entry name="GridMode" type="Int">
+            <label>Warped grid background: 0 = off, 1 = always visible, 2 = only while dragging.</label>
+            <default>1</default>
+            <min>0</min>
+            <max>2</max>
+        </entry>
+        <entry name="GridColor" type="Color">
+            <label>Grid line color.</label>
+            <default>#5a6acf</default>
+        </entry>
+        <entry name="GridCellSize" type="Int">
+            <label>Baseline grid cell size in pixels (before warp compression).</label>
+            <default>86</default>
+            <min>20</min>
+            <max>400</max>
+        </entry>
+        <entry name="GridIntensity" type="Double">
+            <label>Overall grid line brightness.</label>
+            <default>0.5</default>
+            <min>0.05</min>
+            <max>1.0</max>
+        </entry>
+        <entry name="GridBackdrop" type="Double">
+            <label>How much to darken the wallpaper behind the grid (0 = untouched wallpaper, 1 = black backdrop).</label>
+            <default>0.0</default>
+            <min>0.0</min>
+            <max>1.0</max>
+        </entry>
+        <entry name="MiniatureParking" type="Bool">
+            <label>Park windows as live scaled miniatures (minimized + painted) instead of really resizing them.</label>
+            <default>true</default>
+        </entry>
+        <entry name="ShakeToStash" type="Bool">
+            <label>Shaking a dragged window horizontally parks all other windows into the columns.</label>
+            <default>true</default>
+        </entry>
+        <entry name="DragRails" type="Bool">
+            <label>Highlight the horizontal grid lines behind a dragged window.</label>
+            <default>true</default>
+        </entry>
+        <entry name="AnimationsEnabled" type="Bool">
+            <label>Animate the park/restore geometry commit.</label>
+            <default>true</default>
+        </entry>
+        <entry name="AnimationDuration" type="Int">
+            <label>Duration of the park/restore animation in milliseconds.</label>
+            <default>250</default>
+            <min>0</min>
+            <max>2000</max>
+        </entry>
+    </group>
+</kcfg>

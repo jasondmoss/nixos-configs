@@ -1,0 +1,5 @@
+File=stagemanager.kcfg
+ClassName=StageManagerConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

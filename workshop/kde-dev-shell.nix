@@ -17,7 +17,7 @@ pkgs.mkShell {
         kirigami
         kio
 
-        # KWin effect development (workshop/kwin-spacial-desktop)
+        # KWin effect development (workshop/stage-manager)
         kwin
         kcmutils
         kwindowsystem
