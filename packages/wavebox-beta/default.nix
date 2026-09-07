@@ -6,12 +6,15 @@
 with lib;
 
 let
-    version = "152.2.159-3";
-    tarball = "Wavebox_${version}.tar.gz";
+    ## Upstream beta tarball channel: https://wavebox.io/download
+    ## Version + checksum come from manifest.json — refresh it with
+    ## ./update.sh (same workflow as packages/claude-code), then rebuild.
+    baseUrl = "https://download.wavebox.app/beta/linux/tar";
+    manifest = lib.importJSON ./manifest.json;
 
     src = fetchurl {
-        url = "https://download.wavebox.app/beta/linux/tar/${tarball}";
-        sha256 = "sha256-YJGz8dxF5GTirEstcevImpfh8YotBvAhWPwqpV99Fws=";
+        url = "${baseUrl}/${manifest.filename}";
+        sha256 = manifest.sha256;
     };
 
     desktopItem = makeDesktopItem rec {
@@ -43,7 +46,7 @@ let
 in
 stdenv.mkDerivation rec {
     pname = "wavebox";
-    inherit version;
+    inherit (manifest) version;
     inherit meta;
     inherit src;
 
@@ -75,6 +78,8 @@ stdenv.mkDerivation rec {
     ];
 
     runtimeDependencies = [ (getLib udev) libnotify gtk4 ];
+
+    passthru.updateScript = ./update.sh;
 
     installPhase = ''
 mkdir -p $out/bin $out/opt/wavebox

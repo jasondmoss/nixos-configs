@@ -1,49 +1,39 @@
-#!/usr/bin/env nix-shell
-#!nix-shell -i bash -p libarchive curl common-updater-scripts
+#!/usr/bin/env nix
+#!nix shell --ignore-environment .#cacert .#coreutils .#curl .#gawk .#bash --command bash
 
-set -eu -o pipefail
+set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
-root=../../../../..
-export NIXPKGS_ALLOW_UNFREE=1
 
-version() {
-  (cd "$root" && nix-instantiate --eval --strict -A "$1.version" | tr -d '"')
+BASE_URL="https://repo.vivaldi.com/snapshot/deb"
+
+## Same manifest pattern as packages/claude-code and packages/claude-desktop:
+## derive version + checksum from the apt index the Debian/Ubuntu install
+## uses. The index also lists vivaldi-stable, hence the Package filter.
+entries=$(curl -fsSL "$BASE_URL/dists/stable/main/binary-amd64/Packages" | awk '
+    /^Package:/  { pkg  = $2 }
+    /^Version:/  { ver  = $2 }
+    /^Filename:/ { file = $2 }
+    /^SHA256:/   { if (pkg == "vivaldi-snapshot") print ver, file, $2 }
+')
+
+## Accepts the version with or without the Debian revision (8.2.x.y[-1]).
+VERSION="${1:-$(printf '%s\n' "$entries" | awk '{print $1}' | sort -V | tail -1)}"
+
+line=$(printf '%s\n' "$entries" | awk -v v="$VERSION" '$1 == v || $1 == v "-1" { print; exit }')
+if [ -z "$line" ]; then
+    echo "vivaldi-snapshot $VERSION not found in apt index" >&2
+    exit 1
+fi
+
+## The nix version drops the Debian revision suffix.
+set -- $line
+cat > manifest.json <<JSON
+{
+  "version": "${1%-*}",
+  "filename": "$2",
+  "sha256": "$3"
 }
+JSON
 
-vivaldi_version_old=$(version vivaldi)
-vivaldi_version=$(curl -sS https://vivaldi.com/download/ | sed -rne 's/.*vivaldi-snapshot_([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)-1_amd64\.deb.*/\1/p')
-
-if [[ ! "$vivaldi_version" = "$vivaldi_version_old" ]]; then
-  echo "vivaldi is not up-to-date, not updating codecs"
-  (cd "$root" && nix-shell maintainers/scripts/update.nix --argstr package vivaldi)
-  exit
-fi
-
-echo "vivaldi is up-to-date, updating codecs"
-
-# Download vivaldi and save file path.
-url="https://downloads.vivaldi.com/snapshot/vivaldi-snapshot_${vivaldi_version}-1_amd64.deb"
-mapfile -t prefetch < <(nix-prefetch-url --print-path "$url")
-path=${prefetch[1]}
-
-nixpkgs="$(git rev-parse --show-toplevel)"
-default_nix="$nixpkgs/pkgs/applications/networking/browsers/vivaldi/default.nix"
-ffmpeg_nix="$nixpkgs/pkgs/applications/networking/browsers/vivaldi/ffmpeg-codecs.nix"
-
-# Check vivaldi-ffmpeg-codecs version.
-chromium_version_old=$(version vivaldi-ffmpeg-codecs)
-ffmpeg_update_script=$(bsdtar xOf "$path" data.tar.xz | bsdtar xOf - ./opt/vivaldi/update-ffmpeg)
-chromium_version=$(sed -rne 's/^FFMPEG_VERSION_DEB\=([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/p' <<< $ffmpeg_update_script)
-download_subdir=$(sed -rne 's/.*FFMPEG_URL_DEB\=https:\/\/launchpadlibrarian\.net\/([0-9]+)\/.*_amd64\.deb/\1/p' <<< $ffmpeg_update_script)
-
-if [[ "$chromium_version" != "$chromium_version_old" ]]; then
-  # replace the download prefix
-  sed -i $ffmpeg_nix -e "s/\(https:\/\/launchpadlibrarian\.net\/\)[0-9]\+/\1$download_subdir/g"
-  (cd "$root" && update-source-version vivaldi-ffmpeg-codecs "$chromium_version")
-
-  git add "${ffmpeg_nix}"
-  git commit -m "vivaldi-ffmpeg-codecs: $chromium_version_old -> $chromium_version"
-fi
-
-# <> #
+echo "vivaldi-snapshot: ${1%-*}"

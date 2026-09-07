@@ -8,13 +8,12 @@
 with lib;
 
 let
-    version = "1.26832.0";
+    baseUrl = "https://downloads.claude.ai/claude-desktop/apt/stable";
+    manifest = lib.importJSON ./manifest.json;
 
-    ## Upstream apt repository (same pool the Debian/Ubuntu install uses):
-    ## https://code.claude.com/docs/en/desktop-linux
     src = fetchurl {
-        url = "https://downloads.claude.ai/claude-desktop/apt/stable/pool/main/c/claude-desktop/claude-desktop_${version}_amd64.deb";
-        sha256 = "sha256-K8bw1BCbtDswdpbhEo31P785PvmPlHp4aZSGQkUCRdc=";
+        url = "${baseUrl}/${manifest.filename}";
+        sha256 = manifest.sha256;
     };
 
     meta = with lib; {
@@ -35,7 +34,7 @@ let
 in
 stdenv.mkDerivation {
     pname = "claude-desktop";
-    inherit version;
+    inherit (manifest) version;
     inherit meta;
     inherit src;
 
@@ -68,6 +67,8 @@ stdenv.mkDerivation {
     ];
 
     runtimeDependencies = [ (getLib systemd) libnotify ];
+
+    passthru.updateScript = ./update.sh;
 
     ## chrome-sandbox ships setuid root, which tar cannot recreate inside
     ## the build sandbox — strip ownership/permission bits on extract.

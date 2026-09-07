@@ -17,23 +17,19 @@
 }:
 
 let
-    branch = "snapshot";
-    vivaldiName = "vivaldi-snapshot";
+    ## Upstream apt repository (snapshot branch; amd64 only — see
+    ## meta.platforms). Version + checksum come from manifest.json — refresh
+    ## it with ./update.sh (same workflow as packages/claude-code and
+    ## packages/claude-desktop), then rebuild.
+    baseUrl = "https://repo.vivaldi.com/snapshot/deb";
+    manifest = lib.importJSON ./manifest.json;
 in stdenv.mkDerivation rec {
     pname = "vivaldi";
-    version = "8.2.4133.24";
-
-    suffix = {
-        x86_64-linux = "amd64";
-    }
-    .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
+    inherit (manifest) version;
 
     src = fetchurl {
-        url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}-1_${suffix}.deb";
-        hash = {
-            x86_64-linux = "sha256-M7YOD+QZB7J3XWR3PmQ8UsKnQA2dzqzuzwPNVNT4aWY=";
-        }
-        .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
+        url = "${baseUrl}/${manifest.filename}";
+        sha256 = manifest.sha256;
     };
 
     unpackPhase = ''
@@ -175,7 +171,7 @@ ln -sf ${widevine-cdm}/share/google/chrome/WidevineCdm $out/opt/vivaldi-snapshot
 runHook postInstall
     '';
 
-    passthru.updateScript = ./update-vivaldi.sh;
+    passthru.updateScript = ./update.sh;
 
     meta = {
         description = "Browser for our Friends, powerful and personal";
