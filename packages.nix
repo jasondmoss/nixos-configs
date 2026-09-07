@@ -229,7 +229,7 @@ let
         ];
 
         office = with pkgs; [
-            libreoffice-qt-fresh
+            libreoffice-qt-stable
         ];
 
         utilities = with pkgs; [
