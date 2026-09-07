@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Id": "org.jdmlabs.systempanel",
+        "Name": "System Panel",
+        "Description": "Conky-style system information panel: clock, host, versions, temperatures and network — a native Wayland desktop widget.",
+        "Icon": "utilities-system-monitor",
+        "Category": "System Information",
+        "Authors": [
+            {
+                "Name": "Jason D. Moss <jason@jdmlabs.com>"
+            }
+        ],
+        "License": "GPL-2.0-or-later",
+        "Version": "0.1",
+        "EnabledByDefault": true
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

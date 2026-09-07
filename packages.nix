@@ -12,12 +12,13 @@ let
         kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
         kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
         krema          = pkgs.kdePackages.callPackage ./packages/krema {};
-        kwin-spacial   = pkgs.callPackage ./packages/kwin-spacial-desktop {};
         #ladybird       = pkgs.callPackage ./packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
         proton-drive   = pkgs.callPackage ./packages/proton-drive-cli {};
+        stage-manager  = pkgs.callPackage ./packages/stage-manager {};
         standardnotes  = pkgs.callPackage ./packages/standardnotes {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
+        system-panel   = pkgs.callPackage ./packages/system-panel {};
         vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {};
         wavebox        = pkgs.callPackage ./packages/wavebox-beta {};
     };
@@ -233,7 +234,6 @@ let
         ];
 
         utilities = with pkgs; [
-            conky
             fuzzel
             p7zip-rar
             pandoc

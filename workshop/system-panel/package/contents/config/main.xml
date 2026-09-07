@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <group name="General">
+        <entry name="colorMode" type="Enum">
+            <label>How the text color is chosen.</label>
+            <choices>
+                <choice name="Auto"><label>Automatic from wallpaper</label></choice>
+                <choice name="White"><label>Always white</label></choice>
+                <choice name="Black"><label>Always black</label></choice>
+                <choice name="Custom"><label>Custom color</label></choice>
+            </choices>
+            <default>0</default>
+        </entry>
+        <entry name="customColor" type="String">
+            <label>Custom text color (hex, e.g. #ffffff).</label>
+            <default>#ffffff</default>
+        </entry>
+        <entry name="textShadow" type="Bool">
+            <label>Draw a subtle contrasting shadow behind the text for legibility.</label>
+            <default>true</default>
+        </entry>
+        <entry name="netInterface" type="String">
+            <label>Network interface for the download-speed readout.</label>
+            <default>wlp5s0</default>
+        </entry>
+        <entry name="updateInterval" type="Int">
+            <label>Seconds between sensor/network refreshes.</label>
+            <default>2</default>
+        </entry>
+    </group>
+</kcfg>
