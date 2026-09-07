@@ -25,7 +25,7 @@ in {
         settings = {
             trusted-users = [ "root" "me" "@wheel" ];
             allowed-users = [ "root" "me" "@wheel" ];
-            experimental-features = "nix-command";
+            experimental-features = [ "nix-command" ];
             auto-optimise-store = true;
             max-jobs = 4;
             cores = 6;
