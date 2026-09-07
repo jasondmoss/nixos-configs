@@ -107,7 +107,13 @@ in {
     # Local image generation/editing (CUDA torch). Web UI + API on
     # 127.0.0.1:8188; also wired into Open WebUI's image engine.
     services.comfyui = {
-        enable = true;
+        # TEMP (2026-09-06): disabled to unblock nixos-rebuild. nixos-unstable
+        # advanced to python3.14 + torch 2.13.0, which cuda-maintainers /
+        # nix-community haven't cached yet (404 in all substituters), forcing a
+        # failing from-source torch compile. Re-enable once the CUDA cache
+        # catches up (recheck: nix-store --query the torch .drv output against
+        # cuda-maintainers.cachix.org).
+        enable = false;
         # Module default also binds ::1, which crash-loops the service on
         # this system (IPv6 disabled in networking.nix).
         listen = [ "127.0.0.1" ];
