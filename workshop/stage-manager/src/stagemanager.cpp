@@ -570,7 +570,7 @@ RectF StageManagerEffect::tiltedBounds(const RectF &frameRect, double tiltDeg) c
 
 void StageManagerEffect::clampTiltedIntoArea(
     RectF &rect,
-    double tiltDeg.
+    double tiltDeg,
     const RectF &area
 ) const {
     // Shift `rect` so its projected (tilted) footprint stays inside `area`.
