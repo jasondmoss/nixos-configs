@@ -6,10 +6,14 @@ let
   unstable = import /nix/var/nix/profiles/per-user/root/channels/nixpkgs {
     config = {
       allowUnfree = true;
+      # WLToolkit: run the IDE as a native Wayland client (no XWayland). Declared
+      # here so it no longer depends on the per-version custom vmoptions file in
+      # ~/.config/JetBrains/PhpStorm<ver>/phpstorm64.vmoptions.
       jetbrains.vmopts = ''
 -server
 -Xms6144m
 -Xmx6144m
+-Dawt.toolkit.name=WLToolkit
 -Dide.browser.jcef.gpu.disable=true
       '';
     };

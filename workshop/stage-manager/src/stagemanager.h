@@ -62,8 +62,9 @@ public Q_SLOTS:
     Q_SCRIPTABLE void restoreAll();
     Q_SCRIPTABLE void stageActiveWindowAlone(); // park every other window
     Q_SCRIPTABLE void stageActiveWindow();      // park the focused window
-    Q_SCRIPTABLE void nextGroup();              // round-robin through the piles
+    Q_SCRIPTABLE void nextGroup();              // round-robin through the piles (swap mode)
     Q_SCRIPTABLE void previousGroup();
+    Q_SCRIPTABLE void restoreLastStaged();      // bring back the most recently staged window
 
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data) override;
@@ -307,6 +308,7 @@ private:
     quint64 m_parkSerial = 0;     // bumped on every elevate(true)
 
     bool m_stageMode = true;
+    bool m_stageSwap = false;     // activating a pile swaps stages (macOS) vs. restores just that window
     bool m_swapping = false;      // a stage swap is reshuffling windows — ignore activations
     bool m_parkNewGroupsAtBottom = false; // reverse cycling parks the old stage at the strip's end.
     QList<StageGroup> m_strip;    // top-to-bottom, most recent first.

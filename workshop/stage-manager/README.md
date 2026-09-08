@@ -50,7 +50,8 @@ All dials are in System Settings → Desktop Effects → Stage Manager (gear ico
 | Dial | Default | Meaning |
 |---|---|---|
 | Park zone left / right | off / on | Per-side park zones; a disabled side has normal geometry |
-| Stage manager | on | Pile parked windows by application; activating a pile swaps it with the center windows (macOS Stage Manager model; implies live miniatures). Windows with keep-below or skip-taskbar (Conky, monitoring overlays) are never managed and stay beneath. Mission Control = KWin's own Overview effect. |
+| Stage manager | on | Pile parked windows by application in a strip (implies live miniatures). Windows with keep-below or skip-taskbar (Conky, monitoring overlays) are never managed and stay beneath. Mission Control = KWin's own Overview effect. |
+| Swap stages on activate | off | On: clicking a pile or Alt+Tabbing to a member brings the whole application group back and parks the current windows in its place (macOS model); Next/Previous group cycle stages. Off (default): only that one window comes back and nothing else moves — the strip behaves like a live shelf. |
 | Miniature tilt | 25° | Perspective rotation of parked miniatures about their vertical axis (Flip Switch look); the edge toward the screen center comes forward. 0 = flat. |
 | Strip miniature max width / height | 0.06 / 0.14 | Box every strip miniature is fitted into, as fractions of the screen; the warp scale at the strip is the ceiling so small windows stay small. |
 | Live miniatures | on | Park as painted miniatures (off = real resize) |
@@ -78,16 +79,21 @@ Shortcuts → KWin, or in the effect's own settings dialog (shortcut editor at t
 | Stage active window alone | Meta+Shift+S | Every other window goes to the strip (macOS: pick a window) |
 | Stage all windows | Meta+Ctrl+S | Empty the stage; everything to the strip |
 | Bring all windows back | Meta+Shift+R | Restore every parked miniature |
-| Stage the active window | Meta+Shift+M | Send just the focused window to its pile |
-| Next stage group | Meta+] | Oldest pile comes to the stage, the current stage is parked on top — round-robin |
-| Previous stage group | Meta+[ | Newest pile comes to the stage, the current stage is parked at the bottom — the exact reverse |
+| Stage the active window | Meta+Shift+M | Send just the focused window to its pile; everything else stays |
+| Bring back the last staged window | Meta+Shift+B | The most recently staged window returns and gets focus; everything else stays |
+| Next stage group | Meta+] | *Swap mode only.* Oldest pile comes to the stage, the current stage is parked on top — round-robin |
+| Previous stage group | Meta+[ | *Swap mode only.* Newest pile comes to the stage, the current stage is parked at the bottom — the exact reverse |
+
+With *Swap stages on activate* off (the default), clicking a miniature, Alt+Tabbing or clicking
+the taskbar entry of a staged window restores exactly that window. Pile members behind the
+front one can be clicked on their visible cascade edge.
 
 ### Scripting
 
 The same actions are on the session bus while the effect is loaded (`org.kde.KWin`, object
 `/org/kde/KWin/Effect/StageManager1`, interface `org.kde.KWin.Effect.StageManager1`):
-`stash`, `restoreAll`, `stageActiveWindowAlone`, `stageActiveWindow`, `nextGroup`,
-`previousGroup`.
+`stash`, `restoreAll`, `stageActiveWindowAlone`, `stageActiveWindow`, `restoreLastStaged`,
+`nextGroup`, `previousGroup`.
 
 ```sh
 qdbus org.kde.KWin /org/kde/KWin/Effect/StageManager1 org.kde.KWin.Effect.StageManager1.nextGroup

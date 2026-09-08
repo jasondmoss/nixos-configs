@@ -235,7 +235,17 @@
    <item row="14" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_StageMode">
      <property name="text">
-      <string>Stage manager: pile parked windows by application; activate a pile to swap stages</string>
+      <string>Stage manager: pile parked windows by application in a strip</string>
+     </property>
+    </widget>
+   </item>
+   <item row="22" column="0" colspan="2">
+    <widget class="QCheckBox" name="kcfg_StageSwap">
+     <property name="text">
+      <string>Activating a staged window swaps its application group with the current stage (macOS model)</string>
+     </property>
+     <property name="toolTip">
+      <string>Off: clicking a miniature, Alt+Tab, or the shortcut brings back only that window and leaves everything else where it is.</string>
      </property>
     </widget>
    </item>

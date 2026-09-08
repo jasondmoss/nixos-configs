@@ -170,6 +170,7 @@ void StageManagerEffect::setupShortcuts()
         &StageManagerEffect::stageActiveWindow,
         &StageManagerEffect::nextGroup,
         &StageManagerEffect::previousGroup,
+        &StageManagerEffect::restoreLastStaged,
     };
 
     for (size_t i = 0; i < Actions.size(); ++i) {
@@ -230,6 +231,7 @@ void StageManagerEffect::reconfigure(ReconfigureFlags)
     m_shakeToStash = StageManagerConfig::shakeToStash();
     m_dragRails = StageManagerConfig::dragRails();
     m_stageMode = StageManagerConfig::stageMode();
+    m_stageSwap = StageManagerConfig::stageSwap();
     if (m_stageMode) {
         // The stage strip is built on live miniatures.
         m_miniatureParking = true;
@@ -841,7 +843,7 @@ void StageManagerEffect::slotMinimizedChanged(EffectWindow *w)
             it->visibleRef = EffectWindowVisibleRef();
             releaseMiniatureTexture(*it);
             w->elevate(false);
-        } else if (m_stageMode && !m_swapping && stripGroupIndexOf(w) >= 0) {
+        } else if (m_stageMode && m_stageSwap && !m_swapping && stripGroupIndexOf(w) >= 0) {
             /**
              * External restore (alt-tab, taskbar) of a pile member: bring its
              * whole stage over, not just this window. The window itself is
@@ -887,11 +889,12 @@ void StageManagerEffect::slotMouseChanged(
             m_pendingGrab = PendingGrab();
         } else if (!(buttons & Qt::LeftButton)) {
             m_pendingGrab = PendingGrab();
-            if (m_stageMode) {
+            if (m_stageMode && m_stageSwap) {
                 // Click on a pile = swap it with the current stage.
                 swapToWindowGroup(w);
             } else {
-                setMinimizedQuietly(w, false); // slotMinimizedChanged does the rest.
+                // Just this window comes back; slotMinimizedChanged does the rest.
+                setMinimizedQuietly(w, false);
                 effects->activateWindow(w);
             }
 
@@ -1193,7 +1196,7 @@ void StageManagerEffect::nextGroup()
      * and the current stage is parked at the top as the newest — repeated
      * presses walk through every stage in order.
      */
-    if (m_drag.window || m_strip.isEmpty() || m_strip.last().windows.isEmpty()) {
+    if (m_drag.window || !m_stageSwap || m_strip.isEmpty() || m_strip.last().windows.isEmpty()) {
         return;
     }
 
@@ -1206,11 +1209,40 @@ void StageManagerEffect::previousGroup()
      * The exact reverse: the newest pile (top) comes to the stage and the
      * current stage is parked at the bottom as the oldest.
      */
-    if (m_drag.window || m_strip.isEmpty() || m_strip.first().windows.isEmpty()) {
+    if (m_drag.window || !m_stageSwap || m_strip.isEmpty() || m_strip.first().windows.isEmpty()) {
         return;
     }
 
     swapToWindowGroup(m_strip.first().windows.first(), /*parkCenterAtBottom=*/ true);
+}
+
+void StageManagerEffect::restoreLastStaged()
+{
+    if (m_drag.window) {
+        return;
+    }
+
+    // The most recently staged miniature is the one with the highest park serial.
+    EffectWindow *latest = nullptr;
+    quint64 serial = 0;
+    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
+        if (it->miniature && it->parkSerial >= serial) {
+            serial = it->parkSerial;
+            latest = it.key();
+        }
+    }
+
+    if (!latest) {
+        return;
+    }
+
+    /**
+     * Leave the strip before unminimizing so slotMinimizedChanged restores just
+     * this window (never a stage swap), then give it focus.
+     */
+    removeFromStrip(latest);
+    setMinimizedQuietly(latest, false);
+    effects->activateWindow(latest);
 }
 
 void StageManagerEffect::restoreAll()
@@ -2152,7 +2184,7 @@ void StageManagerEffect::swapToWindowGroup(
 
 void StageManagerEffect::slotWindowActivated(EffectWindow *w)
 {
-    if (!m_stageMode || m_swapping || !w) {
+    if (!m_stageMode || !m_stageSwap || m_swapping || !w) {
         return;
     }
 

@@ -23,7 +23,7 @@ struct Action {
 };
 
 // clang-format off
-inline const std::array<Action, 6> Actions = {{
+inline const std::array<Action, 7> Actions = {{
     {
         "StageManagerStageAlone",
         "Stage Manager: Stage active window alone",
@@ -53,6 +53,11 @@ inline const std::array<Action, 6> Actions = {{
         "StageManagerPreviousGroup",
         "Stage Manager: Previous stage group",
         QKeySequence(Qt::META | Qt::Key_BracketLeft)
+    },
+    {
+        "StageManagerRestoreLast",
+        "Stage Manager: Bring back the last staged window",
+        QKeySequence(Qt::META | Qt::SHIFT | Qt::Key_B)
     }
 }};
 // clang-format on
@@ -64,6 +69,7 @@ enum Index {
     StageWindow,
     NextGroup,
     PreviousGroup,
+    RestoreLast,
 };
 
 } // namespace KWin::StageManagerShortcuts

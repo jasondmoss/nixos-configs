@@ -17,6 +17,10 @@
             <label>Stage manager: group parked windows by application into piles; activating a pile swaps it with the windows in the center.</label>
             <default>true</default>
         </entry>
+        <entry name="StageSwap" type="Bool">
+            <label>Activating a staged window brings its whole application group back and parks the current windows in its place (macOS swap model). Off: only that window comes back and nothing else moves.</label>
+            <default>false</default>
+        </entry>
         <entry name="MiniatureTilt" type="Double">
             <label>Perspective tilt of parked miniatures about their vertical axis, in degrees (0 = flat).</label>
             <default>25.0</default>
