@@ -22,6 +22,8 @@ pkgs.mkShell {
         kcmutils
         kwindowsystem
         kguiaddons
+        kglobalaccel
+        kxmlgui
     ] ++ (with pkgs; [
         libepoxy
         libdrm

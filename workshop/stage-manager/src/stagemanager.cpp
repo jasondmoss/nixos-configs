@@ -4,6 +4,7 @@
 
 #include "stagemanager.h"
 #include "gridshader.h"
+#include "shortcuts.h"
 #include "stagemanagerconfig.h"
 
 #include "core/colorspace.h"
@@ -21,6 +22,10 @@
 #include "scene/itemgeometry.h"
 #include "window.h"
 
+#include <KGlobalAccel>
+#include <KLocalizedString>
+
+#include <QAction>
 #include <QDBusConnection>
 #include <QEasingCurve>
 #include <QLineF>
@@ -145,11 +150,41 @@ StageManagerEffect::StageManagerEffect()
         this,
         QDBusConnection::ExportScriptableSlots
     );
+
+    setupShortcuts();
+}
+
+void StageManagerEffect::setupShortcuts()
+{
+    /**
+     * Global shortcuts live in the "kwin" KGlobalAccel component (this runs
+     * inside kwin_wayland), so they show up under System Settings → Shortcuts
+     * → KWin and in the effect's own KCM. Object names are the config keys.
+     */
+    using namespace StageManagerShortcuts;
+
+    const std::array<void (StageManagerEffect::*)(), Actions.size()> handlers = {
+        &StageManagerEffect::stageActiveWindowAlone,
+        &StageManagerEffect::stash,
+        &StageManagerEffect::restoreAll,
+        &StageManagerEffect::stageActiveWindow,
+        &StageManagerEffect::nextGroup,
+        &StageManagerEffect::previousGroup,
+    };
+
+    for (size_t i = 0; i < Actions.size(); ++i) {
+        QAction *action = new QAction(this);
+        action->setObjectName(QString::fromLatin1(Actions[i].objectName));
+        action->setText(i18n(Actions[i].text));
+        KGlobalAccel::self()->setGlobalShortcut(action, Actions[i].defaultShortcut);
+        connect(action, &QAction::triggered, this, handlers[i]);
+    }
 }
 
 StageManagerEffect::~StageManagerEffect()
 {
-    QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/org/kde/KWin/Effect/StageManager1"));
+    QDBusConnection::sessionBus()
+        .unregisterObject(QStringLiteral("/org/kde/KWin/Effect/StageManager1"));
 
     /**
      * Don't leave windows stranded as minimized miniatures when the effect is
@@ -184,7 +219,9 @@ void StageManagerEffect::reconfigure(ReconfigureFlags)
     m_columnOuter = StageManagerConfig::columnOuter();
     m_animate = StageManagerConfig::animationsEnabled();
     m_miniatureParking = StageManagerConfig::miniatureParking();
-    m_duration = Effect::animationTime(std::chrono::milliseconds(StageManagerConfig::animationDuration()));
+    m_duration = Effect::animationTime(
+        std::chrono::milliseconds(StageManagerConfig::animationDuration())
+    );
     m_gridMode = StageManagerConfig::gridMode();
     m_gridColor = StageManagerConfig::gridColor();
     m_gridCellPx = StageManagerConfig::gridCellSize();
@@ -274,6 +311,9 @@ void StageManagerEffect::slotWindowAdded(EffectWindow *w)
             this, &StageManagerEffect::slotWindowFrameGeometryChanged);
     connect(w, &EffectWindow::windowDamaged,
             this, &StageManagerEffect::slotWindowDamaged);
+    connect(w, &EffectWindow::windowOpacityChanged, this, [this, w]() {
+        slotWindowDamaged(w); // opacity is baked into the offscreen copy
+    });
     connect(w, &EffectWindow::minimizedChanged,
             this, &StageManagerEffect::slotMinimizedChanged);
 }
@@ -393,7 +433,10 @@ QMatrix4x4 StageManagerEffect::miniatureMatrix(
     }
 
     m.scale(float(frameScale));
-    m.translate(float(originOffset.x() * devScale), float(originOffset.y() * devScale));
+    m.translate(
+        float(originOffset.x() * devScale),
+        float(originOffset.y() * devScale)
+    );
 
     return m;
 }
@@ -415,6 +458,7 @@ std::array<QPointF, 4> StageManagerEffect::projectQuad(
     for (size_t i = 0; i < corners.size(); ++i) {
         const QVector4D v = m * QVector4D(float(corners[i].x()), float(corners[i].y()), 0.0f, 1.0f);
         const double w = (std::abs(v.w()) > 1e-6) ? v.w() : 1.0;
+
         out[i] = QPointF(v.x() / w / devScale, v.y() / w / devScale);
     }
 
@@ -434,14 +478,19 @@ RectF StageManagerEffect::quadBounds(const std::array<QPointF, 4> &quad)
     return RectF(l, t, r - l, b - t);
 }
 
-bool StageManagerEffect::quadContains(const std::array<QPointF, 4> &quad, const QPointF &p)
-{
+bool StageManagerEffect::quadContains(
+    const std::array<QPointF, 4> &quad,
+    const QPointF &p
+) {
     // Convex quad: the point must be on the same side of all four edges.
     int sign = 0;
     for (size_t i = 0; i < quad.size(); ++i) {
         const QPointF &a = quad[i];
         const QPointF &b = quad[(i + 1) % quad.size()];
-        const double cross = (b.x() - a.x()) * (p.y() - a.y()) - (b.y() - a.y()) * (p.x() - a.x());
+        const double cross = (b.x() - a.x())
+            * (p.y() - a.y())
+            - (b.y() - a.y())
+            * (p.x() - a.x());
         const int s = (cross > 0.0) ? 1 : ((cross < 0.0) ? -1 : 0);
         if (s == 0) {
             continue;
@@ -465,9 +514,19 @@ std::array<QPointF, 4> StageManagerEffect::miniatureFrameQuad(
     const RectF frame = w->frameGeometry();
     const RectF cur = currentMiniRect(st);
     const double frameScale = cur.width() / frame.width();
-    const QMatrix4x4 m = miniatureMatrix(cur, QPointF(0.0, 0.0), frameScale, currentTilt(st), devScale);
+    const QMatrix4x4 m = miniatureMatrix(
+        cur,
+        QPointF(0.0, 0.0),
+        frameScale,
+        currentTilt(st),
+        devScale
+    );
 
-    return projectQuad(m, RectF(0.0, 0.0, frame.width() * devScale, frame.height() * devScale), devScale);
+    return projectQuad(
+        m,
+        RectF(0.0, 0.0, frame.width() * devScale, frame.height() * devScale),
+        devScale
+    );
 }
 
 RectF StageManagerEffect::miniatureExtents(EffectWindow *w, const WindowState &st) const
@@ -483,7 +542,13 @@ RectF StageManagerEffect::miniatureExtents(EffectWindow *w, const WindowState &s
     const RectF cur = currentMiniRect(st);
     const double frameScale = cur.width() / frame.width();
     const QPointF originOffset = expanded.topLeft() - frame.topLeft();
-    const QMatrix4x4 m = miniatureMatrix(cur, originOffset, frameScale, currentTilt(st), devScale);
+    const QMatrix4x4 m = miniatureMatrix(
+        cur,
+        originOffset,
+        frameScale,
+        currentTilt(st),
+        devScale
+    );
     const auto quad = projectQuad(
         m,
         RectF(0.0, 0.0, expanded.width() * devScale, expanded.height() * devScale),
@@ -498,7 +563,37 @@ RectF StageManagerEffect::tiltedBounds(const RectF &frameRect, double tiltDeg) c
     // Logical bounding box of a frame rect once tilted in place.
     const QMatrix4x4 m = miniatureMatrix(frameRect, QPointF(0.0, 0.0), 1.0, tiltDeg, 1.0);
 
-    return quadBounds(projectQuad(m, RectF(0.0, 0.0, frameRect.width(), frameRect.height()), 1.0));
+    return quadBounds(
+        projectQuad(m, RectF(0.0, 0.0, frameRect.width(), frameRect.height()), 1.0)
+    );
+}
+
+void StageManagerEffect::clampTiltedIntoArea(
+    RectF &rect,
+    double tiltDeg.
+    const RectF &area
+) const {
+    // Shift `rect` so its projected (tilted) footprint stays inside `area`.
+    constexpr double Pad = 4.0;
+    RectF b = tiltedBounds(rect, tiltDeg);
+    if (b.right() > area.right() - Pad) {
+        rect.moveLeft(rect.left() - (b.right() - (area.right() - Pad)));
+        b = tiltedBounds(rect, tiltDeg);
+    }
+
+    if (b.left() < area.left() + Pad) {
+        rect.moveLeft(rect.left() + ((area.left() + Pad) - b.left()));
+        b = tiltedBounds(rect, tiltDeg);
+    }
+
+    if (b.bottom() > area.bottom() - Pad) {
+        rect.moveTop(rect.top() - (b.bottom() - (area.bottom() - Pad)));
+        b = tiltedBounds(rect, tiltDeg);
+    }
+
+    if (b.top() < area.top() + Pad) {
+        rect.moveTop(rect.top() + ((area.top() + Pad) - b.top()));
+    }
 }
 
 void StageManagerEffect::releaseMiniatureTexture(WindowState &st)
@@ -546,7 +641,9 @@ void StageManagerEffect::updateMiniatureTexture(EffectWindow *w, WindowState &st
         st.fbo.reset();
         st.texture.reset();
 
-        const int levels = 1 + int(std::floor(std::log2(std::max(texSize.width(), texSize.height()))));
+        const int levels = 1 + int(
+            std::floor(std::log2(std::max(texSize.width(), texSize.height())))
+        );
         st.texture = GLTexture::allocate(GL_RGBA8, texSize, std::max(levels, 1));
         if (!st.texture) {
             return;
@@ -614,7 +711,13 @@ bool StageManagerEffect::paintMiniature(
     const RectF cur = currentMiniRect(st);
     const double frameScale = cur.width() / frame.width();
     const QPointF originOffset = st.textureRect.topLeft() - frame.topLeft();
-    const QMatrix4x4 model = miniatureMatrix(cur, originOffset, frameScale, currentTilt(st), devScale);
+    const QMatrix4x4 model = miniatureMatrix(
+        cur,
+        originOffset,
+        frameScale,
+        currentTilt(st),
+        devScale
+    );
 
     GLShader *shader = ShaderManager::instance()->shader(
         ShaderTrait::MapTexture
@@ -638,7 +741,10 @@ bool StageManagerEffect::paintMiniature(
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
+    vbo->setAttribLayout(
+        std::span(GLVertexBuffer::GLVertex2DLayout),
+        sizeof(GLVertex2D)
+    );
     const auto map = vbo->map<GLVertex2D>(geometry.size());
     if (!map) {
         return false;
@@ -651,13 +757,34 @@ bool StageManagerEffect::paintMiniature(
     const qreal a = data.opacity();
     const auto toXYZ = renderTarget.colorDescription()->containerColorimetry().toXYZ();
 
-    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix() * model);
-    shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-    shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
-    shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-    shader->setUniform(GLShader::IntUniform::TextureWidth, st.texture->width());
-    shader->setUniform(GLShader::IntUniform::TextureHeight, st.texture->height());
-    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+    shader->setUniform(
+        GLShader::Mat4Uniform::ModelViewProjectionMatrix,
+        viewport.projectionMatrix() * model
+    );
+    shader->setUniform(
+        GLShader::Vec4Uniform::ModulationConstant,
+        QVector4D(rgb, rgb, rgb, a)
+    );
+    shader->setUniform(
+        GLShader::FloatUniform::Saturation,
+        data.saturation()
+    );
+    shader->setUniform(
+        GLShader::Vec3Uniform::PrimaryBrightness,
+        QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2))
+    );
+    shader->setUniform(
+        GLShader::IntUniform::TextureWidth,
+        st.texture->width()
+    );
+    shader->setUniform(
+        GLShader::IntUniform::TextureHeight,
+        st.texture->height()
+    );
+    shader->setColorspaceUniforms(
+        ColorDescription::sRGB,
+        renderTarget.colorDescription(), RenderingIntent::Perceptual
+    );
 
     // Damage-only frames hand us a finite region: scissor to it like the renderer would.
     const bool clipping = deviceRegion != Region::infinite();
@@ -709,7 +836,10 @@ void StageManagerEffect::slotMinimizedChanged(EffectWindow *w)
              * branches instead of the plain-move early return.
              */
             it->miniature = false;
+            it->tiltFrom = 0.0;
+            it->tiltTo = 0.0;
             it->visibleRef = EffectWindowVisibleRef();
+            releaseMiniatureTexture(*it);
             w->elevate(false);
         } else if (m_stageMode && !m_swapping && stripGroupIndexOf(w) >= 0) {
             /**
@@ -779,13 +909,31 @@ void StageManagerEffect::slotMouseChanged(
         return;
     }
 
-    // Iterate topmost-first so overlapping miniatures resolve like windows do.
-    const auto order = effects->stackingOrder();
-    for (auto it = order.crbegin(); it != order.crend(); ++it) {
-        const auto st = m_windows.constFind(*it);
+    /**
+     * Resolve overlaps in paint order: every miniature is elevated when parked
+     * and KWin paints elevated items in elevation order, so the most recently
+     * parked one is on top (front of a pile, cascade offset 0).
+     */
+    QList<EffectWindow *> candidates;
+    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
+        if (it->miniature) {
+            candidates.append(it.key());
+        }
+    }
+
+    std::sort(
+        candidates.begin(),
+        candidates.end(),
+        [this](EffectWindow *a, EffectWindow *b) {
+            return m_windows[a].parkSerial > m_windows[b].parkSerial;
+        }
+    );
+
+    for (EffectWindow *w : std::as_const(candidates)) {
+        const auto st = m_windows.constFind(w);
         if (st != m_windows.constEnd() && st->miniature
-            && quadContains(miniatureFrameQuad(*it, *st), pos)) {
-            m_pendingGrab.window = *it;
+            && quadContains(miniatureFrameQuad(w, *st), pos)) {
+            m_pendingGrab.window = w;
             m_pendingGrab.pressPos = pos;
             m_pendingGrab.grabFrac = QPointF(
                 std::clamp((pos.x() - st->miniRect.x()) / st->miniRect.width(), 0.0, 1.0),
@@ -865,10 +1013,15 @@ void StageManagerEffect::slotWindowStartUserMovedResized(EffectWindow *w)
     if (!w->isUserMove() || w->isUserResize()) {
         /**
          * A user-initiated resize of a parked window means the user takes
-         * ownership of its size again — stop tracking it as parked.
+         * ownership of its size again — stop tracking it as parked. (A
+         * miniature is minimized and cannot be user-resized; keep its state.)
          */
         if (w->isUserResize()) {
-            m_windows.remove(w);
+            const auto it = m_windows.find(w);
+            if (it != m_windows.end() && !it->miniature) {
+                releaseMiniatureTexture(*it);
+                m_windows.erase(it);
+            }
         }
 
         return;
@@ -997,6 +1150,69 @@ void StageManagerEffect::stash()
     stashAll(nullptr);
 }
 
+void StageManagerEffect::stageActiveWindowAlone()
+{
+    if (m_drag.window) {
+        return;
+    }
+
+    /**
+     * macOS "click the desktop / choose a window" model: the focused window
+     * stays, everything else goes to the strip. Without a stageable focused
+     * window this is the same as staging everything.
+     */
+    EffectWindow *active = effects->activeWindow();
+    stashAll(isRelevant(active) && !active->isMinimized() ? active : nullptr);
+}
+
+void StageManagerEffect::stageActiveWindow()
+{
+    if (m_drag.window || !m_stageMode) {
+        return;
+    }
+
+    EffectWindow *active = effects->activeWindow();
+    if (!isRelevant(active) || active->isMinimized()) {
+        return;
+    }
+
+    const auto it = m_windows.constFind(active);
+    if (it != m_windows.constEnd() && it->parked) {
+        return;
+    }
+
+    // Minimizing hands focus to the next window, so the stage stays usable.
+    stripParkWindow(active, m_windows[active], active->frameGeometry());
+    effects->addRepaintFull();
+}
+
+void StageManagerEffect::nextGroup()
+{
+    /**
+     * Round-robin: the oldest pile (bottom of the strip) comes to the stage
+     * and the current stage is parked at the top as the newest — repeated
+     * presses walk through every stage in order.
+     */
+    if (m_drag.window || m_strip.isEmpty() || m_strip.last().windows.isEmpty()) {
+        return;
+    }
+
+    swapToWindowGroup(m_strip.last().windows.first(), /*parkCenterAtBottom=*/ false);
+}
+
+void StageManagerEffect::previousGroup()
+{
+    /**
+     * The exact reverse: the newest pile (top) comes to the stage and the
+     * current stage is parked at the bottom as the oldest.
+     */
+    if (m_drag.window || m_strip.isEmpty() || m_strip.first().windows.isEmpty()) {
+        return;
+    }
+
+    swapToWindowGroup(m_strip.first().windows.first(), /*parkCenterAtBottom=*/ true);
+}
+
 void StageManagerEffect::restoreAll()
 {
     const QList<EffectWindow *> parked = m_windows.keys();
@@ -1006,8 +1222,10 @@ void StageManagerEffect::restoreAll()
             continue;
         }
 
-        // Unpark first so slotMinimizedChanged sees a plain window.
-        unparkMiniature(w, *it);
+        /**
+         * Leave the strip first so slotMinimizedChanged takes the plain
+         * restore branch (unpark + our animation) rather than a stage swap.
+         */
         removeFromStrip(w);
         setMinimizedQuietly(w, false);
     }
@@ -1117,7 +1335,11 @@ void StageManagerEffect::stashAll(EffectWindow *exclude)
             }
 
             const double sc = Warp::windowScale(col->colXNorm, m_warp);
-            const double colX = Warp::xPixel(col->colXNorm, screen.x(), screen.width());
+            const double colX = Warp::xPixel(
+                col->colXNorm,
+                screen.x(),
+                screen.width()
+            );
             double total = -StashGapPx;
 
             for (EffectWindow *w : col->windows) {
@@ -1138,16 +1360,24 @@ void StageManagerEffect::stashAll(EffectWindow *exclude)
 
                 QSizeF size = st.naturalGeometry.size() * sc;
                 RectF target(QPointF(colX - size.width() / 2.0, y), size);
-                if (target.bottom() > workArea.bottom()) {
-                    target.moveBottom(workArea.bottom());
-                }
+                if (m_miniatureParking) {
+                    clampTiltedIntoArea(
+                        target,
+                        tiltSign(target, w) * m_stageTilt,
+                        workArea
+                    );
+                } else {
+                    if (target.bottom() > workArea.bottom()) {
+                        target.moveBottom(workArea.bottom());
+                    }
 
-                if (target.right() > workArea.right() - 4.0) {
-                    target.moveRight(workArea.right() - 4.0);
-                }
+                    if (target.right() > workArea.right() - 4.0) {
+                        target.moveRight(workArea.right() - 4.0);
+                    }
 
-                if (target.left() < workArea.left() + 4.0) {
-                    target.moveLeft(workArea.left() + 4.0);
+                    if (target.left() < workArea.left() + 4.0) {
+                        target.moveLeft(workArea.left() + 4.0);
+                    }
                 }
 
                 if (m_miniatureParking) {
@@ -1269,7 +1499,9 @@ void StageManagerEffect::paintWindow(
          */
         AnimationEffect::paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 
-        const double opacity = (m_gridMode == GridAlways) ? 1.0 : m_gridTimeline.value();
+        const double opacity = (m_gridMode == GridAlways)
+            ? 1.0
+            : m_gridTimeline.value();
         if (opacity > 0.0) {
             renderGrid(viewport, opacity);
         }
@@ -1292,9 +1524,9 @@ void StageManagerEffect::paintWindow(
     if (w == m_drag.window) {
         const auto it = m_windows.constFind(w);
         const RectF frame = w->frameGeometry();
-        const QSizeF naturalSize = (it != m_windows.constEnd() && !it->naturalGeometry.isEmpty())
-            ? it->naturalGeometry.size()
-            : frame.size();
+        const QSizeF naturalSize = (it != m_windows.constEnd()
+            && !it->naturalGeometry.isEmpty()
+        ) ? it->naturalGeometry.size() : frame.size();
 
         /**
          * m_drag.scale is relative to the NATURAL size; the live buffer is the
@@ -1328,7 +1560,8 @@ void StageManagerEffect::paintWindow(
             const double ls = 1.0 / Warp::warpForwardDeriv(m_drag.centerXNorm, m_warp);
             const double cY = screen.center().y();
             const double idxTop = (topLeft.y() - cY) / (ls * m_gridCellPx);
-            const double idxBottom = (topLeft.y() + paintedSize.height() - cY) / (ls * m_gridCellPx);
+            const double idxBottom = (topLeft.y() + paintedSize.height() - cY)
+                / (ls * m_gridCellPx);
 
             m_railBand = QVector2D(float(idxTop), float(idxBottom));
         }
@@ -1466,7 +1699,9 @@ void StageManagerEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
         return;
     }
 
-    if (m_gridMode == GridDuringDrag && m_gridTimeline.direction() != TimeLine::Backward) {
+    if (m_gridMode == GridDuringDrag
+        && m_gridTimeline.direction() != TimeLine::Backward
+    ) {
         m_gridTimeline.toggleDirection();
         effects->addRepaintFull();
     }
@@ -1572,26 +1807,13 @@ void StageManagerEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
         }
 
         if (m_miniatureParking) {
-            RectF mini = target;
-            if (mini.bottom() > workArea.bottom()) {
-                mini.moveBottom(workArea.bottom());
-            }
-
-            if (mini.top() < workArea.top()) {
-                mini.moveTop(workArea.top());
-            }
-
             /**
              * Wide windows at the outer columns can poke past the screen edge
-             * (visible as a cropped miniature) — keep them fully on-screen.
+             * (visible as a cropped miniature) — keep the tilted footprint
+             * fully on-screen.
              */
-            if (mini.right() > workArea.right() - 4.0) {
-                mini.moveRight(workArea.right() - 4.0);
-            }
-
-            if (mini.left() < workArea.left() + 4.0) {
-                mini.moveLeft(workArea.left() + 4.0);
-            }
+            RectF mini = target;
+            clampTiltedIntoArea(mini, tiltSign(mini, w) * m_stageTilt, workArea);
 
             parkMiniature(w, st, from, mini);
             effects->addRepaintFull();
@@ -1663,8 +1885,11 @@ void StageManagerEffect::removeFromStrip(EffectWindow *w)
     }
 }
 
-void StageManagerEffect::stripParkWindow(EffectWindow *w, WindowState &st, const RectF &from)
-{
+void StageManagerEffect::stripParkWindow(
+    EffectWindow *w,
+    WindowState &st,
+    const RectF &from
+) {
     if (stripSideSign() == 0.0) {
         return;
     }
@@ -1680,8 +1905,13 @@ void StageManagerEffect::stripParkWindow(EffectWindow *w, WindowState &st, const
     }
 
     if (gi < 0) {
-        m_strip.prepend(StageGroup{cls, {}});
-        gi = 0;
+        if (m_parkNewGroupsAtBottom) {
+            m_strip.append(StageGroup{cls, {}});
+            gi = m_strip.size() - 1;
+        } else {
+            m_strip.prepend(StageGroup{cls, {}});
+            gi = 0;
+        }
     }
 
     if (!m_strip[gi].windows.contains(w)) {
@@ -1714,6 +1944,7 @@ void StageManagerEffect::stripParkWindow(EffectWindow *w, WindowState &st, const
          * Elevate so the miniature composites above below-layer windows
          * regardless of its minimized stacking position.
          */
+        st.parkSerial = ++m_parkSerial;
         w->elevate(true);
         setMinimizedQuietly(w, true);
 
@@ -1800,7 +2031,12 @@ void StageManagerEffect::relayoutStrip()
             const auto it = m_windows.constFind(w);
             if (it != m_windows.constEnd()) {
                 const double s = stripScaleFor(*it, ref, sc);
-                const RectF flat(0.0, 0.0, it->naturalGeometry.width() * s, it->naturalGeometry.height() * s);
+                const RectF flat(
+                    0.0,
+                    0.0,
+                    it->naturalGeometry.width() * s,
+                    it->naturalGeometry.height() * s
+                );
                 const RectF b = tiltedBounds(flat, tilt);
                 pileH = std::max(pileH, b.height());
                 topPad = std::max(topPad, -b.top());
@@ -1816,24 +2052,14 @@ void StageManagerEffect::relayoutStrip()
 
             const double off = PileOffset * std::min(i, 2);
             const double s = stripScaleFor(*it, ref, sc);
-            const QSizeF size(it->naturalGeometry.width() * s, it->naturalGeometry.height() * s);
+            const QSizeF size(
+                it->naturalGeometry.width() * s,
+                it->naturalGeometry.height() * s
+            );
             RectF slot(QPointF(stripX - size.width() / 2.0 + off, y + topPad + off), size);
 
             // Keep the projected footprint on screen.
-            RectF b = tiltedBounds(slot, tilt);
-            if (b.right() > workArea.right() - 4.0) {
-                slot.moveLeft(slot.left() - (b.right() - (workArea.right() - 4.0)));
-                b = tiltedBounds(slot, tilt);
-            }
-
-            if (b.left() < workArea.left() + 4.0) {
-                slot.moveLeft(slot.left() + ((workArea.left() + 4.0) - b.left()));
-                b = tiltedBounds(slot, tilt);
-            }
-
-            if (b.bottom() > workArea.bottom() - 4.0) {
-                slot.moveTop(slot.top() - (b.bottom() - (workArea.bottom() - 4.0)));
-            }
+            clampTiltedIntoArea(slot, tilt, workArea);
 
             const bool tiltChanged = std::abs(it->tiltTo - tilt) > 0.01;
             if (slot != it->miniRect || tiltChanged) {
@@ -1856,14 +2082,17 @@ void StageManagerEffect::relayoutStrip()
     effects->addRepaintFull();
 }
 
-void StageManagerEffect::swapToWindowGroup(EffectWindow *activated)
-{
+void StageManagerEffect::swapToWindowGroup(
+    EffectWindow *activated,
+    bool parkCenterAtBottom
+) {
     const int gi = stripGroupIndexOf(activated);
     if (gi < 0) {
         return;
     }
 
     m_swapping = true;
+    m_parkNewGroupsAtBottom = parkCenterAtBottom;
 
     const QList<EffectWindow *> group = m_strip[gi].windows;
 
@@ -1895,6 +2124,7 @@ void StageManagerEffect::swapToWindowGroup(EffectWindow *activated)
     for (EffectWindow *w : center) {
         stripParkWindow(w, m_windows[w], w->frameGeometry());
     }
+    m_parkNewGroupsAtBottom = false;
 
     // Bring the whole group to the stage.
     for (EffectWindow *w : group) {
@@ -1987,6 +2217,7 @@ void StageManagerEffect::parkMiniature(
      * it above below-layer windows.
      */
     st.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
+    st.parkSerial = ++m_parkSerial;
     w->elevate(true);
     setMinimizedQuietly(w, true);
 
@@ -2002,7 +2233,11 @@ void StageManagerEffect::parkMiniature(
 
 void StageManagerEffect::unparkMiniature(EffectWindow *w, WindowState &st)
 {
-    const RectF from = st.miniRect;
+    /**
+     * Start from the last PAINTED rect: a relayout just before (strip member
+     * removed) may have retargeted miniRect without a frame in between.
+     */
+    const RectF from = currentMiniRect(st);
     const RectF to = st.naturalGeometry; // real geometry never left here.
     st.parked = false;
     st.miniature = false;
@@ -2048,8 +2283,11 @@ void StageManagerEffect::unparkMiniature(EffectWindow *w, WindowState &st)
     effects->addRepaintFull();
 }
 
-void StageManagerEffect::commitGeometry(EffectWindow *w, const RectF &from, const RectF &to)
-{
+void StageManagerEffect::commitGeometry(
+    EffectWindow *w,
+    const RectF &from,
+    const RectF &to
+) {
     Window *window = w->window();
     if (!window) {
         return;
@@ -2061,9 +2299,20 @@ void StageManagerEffect::commitGeometry(EffectWindow *w, const RectF &from, cons
      * wobbly windows is loaded — both effects redirect the window in the
      * drawWindow chain and the loser's snapshot silently vanishes.
      */
-    const bool crossFade = m_animate && !effects->isEffectLoaded(QStringLiteral("wobblywindows"));
+    const bool crossFade = m_animate && !effects->isEffectLoaded(
+        QStringLiteral("wobblywindows")
+    );
     if (crossFade) {
-        animate(w, CrossFadePrevious, 0, m_duration, FPx2(1.0), QEasingCurve(QEasingCurve::OutCubic), 0, FPx2(0.0));
+        animate(
+            w,
+            CrossFadePrevious,
+            0,
+            m_duration,
+            FPx2(1.0),
+            QEasingCurve(QEasingCurve::OutCubic),
+            0,
+            FPx2(0.0)
+        );
     }
 
     window->moveResize(to);
@@ -2106,7 +2355,22 @@ void StageManagerEffect::slotWindowFrameGeometryChanged(
     }
 
     if (it->miniature) {
-        it->textureDirty = true; // decoration/shadow extents may have changed
+        /**
+         * A miniature's real frame never moves by us; a client-side resize
+         * while parked just changes what the miniature shows. Adopt it as the
+         * new natural size (a pile relayout follows) — never drop the state,
+         * which would strand the window minimized and elevated.
+         */
+        it->textureDirty = true;
+        // Follow any relocation (output changes) so the restore lands on the real frame.
+        it->naturalGeometry = w->frameGeometry();
+        if (w->frameGeometry().size() != oldGeometry.size()
+            && stripGroupIndexOf(w) >= 0
+        ) {
+            relayoutStrip();
+        }
+
+        return;
     }
 
     if (it->awaitingCommit) {

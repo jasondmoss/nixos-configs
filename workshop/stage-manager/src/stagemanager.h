@@ -60,6 +60,10 @@ public Q_SLOTS:
      */
     Q_SCRIPTABLE void stash();
     Q_SCRIPTABLE void restoreAll();
+    Q_SCRIPTABLE void stageActiveWindowAlone(); // park every other window
+    Q_SCRIPTABLE void stageActiveWindow();      // park the focused window
+    Q_SCRIPTABLE void nextGroup();              // round-robin through the piles
+    Q_SCRIPTABLE void previousGroup();
 
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data) override;
@@ -118,6 +122,7 @@ private:
         TimeLine miniTimeline;  // park-in transition progress.
         double tiltFrom = 0.0;  // signed tilt (degrees) at transition start.
         double tiltTo = 0.0;    // signed tilt (degrees) at rest.
+        quint64 parkSerial = 0; // elevation order: higher = painted on top
 
         EffectWindowVisibleRef visibleRef;
 
@@ -192,7 +197,8 @@ private:
     void stripParkWindow(EffectWindow *w, WindowState &st, const RectF &from);
     void removeFromStrip(EffectWindow *w);
     void relayoutStrip();
-    void swapToWindowGroup(EffectWindow *activated);
+    void swapToWindowGroup(EffectWindow *activated, bool parkCenterAtBottom = false);
+    void setupShortcuts();
 
     bool hasMiniatures() const;
     static RectF currentMiniRect(const WindowState &st);
@@ -230,6 +236,7 @@ private:
     ) const;
     RectF miniatureExtents(EffectWindow *w, const WindowState &st) const;
     RectF tiltedBounds(const RectF &frameRect, double tiltDeg) const;
+    void clampTiltedIntoArea(RectF &rect, double tiltDeg, const RectF &area) const;
     void updateMiniatureTexture(EffectWindow *w, WindowState &st);
     void releaseMiniatureTexture(WindowState &st);
     bool paintMiniature(
@@ -297,8 +304,11 @@ private:
     bool m_quietMinimize = false; // suppressing other effects' minimize animation right now.
     bool m_unparkByDrag = false;  // miniature is being grabbed back out — skip the restore animation.
 
+    quint64 m_parkSerial = 0;     // bumped on every elevate(true)
+
     bool m_stageMode = true;
-    bool m_swapping = false;      // a stage swap is reshuffling windows — ignore activations.
+    bool m_swapping = false;      // a stage swap is reshuffling windows — ignore activations
+    bool m_parkNewGroupsAtBottom = false; // reverse cycling parks the old stage at the strip's end.
     QList<StageGroup> m_strip;    // top-to-bottom, most recent first.
 
     // Strip miniature look.

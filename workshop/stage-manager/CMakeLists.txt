@@ -16,11 +16,13 @@ find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Gui Widgets DBus)
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     Config
     CoreAddons
+    GlobalAccel
     KCMUtils
     I18n
     WindowSystem
     GuiAddons
     WidgetsAddons
+    XmlGui
 )
 find_package(KWin REQUIRED)
 

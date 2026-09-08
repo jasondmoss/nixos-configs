@@ -19,6 +19,8 @@ target_link_libraries(stagemanager PRIVATE
     KWin::kwin
     KF6::ConfigGui
     KF6::CoreAddons
+    KF6::GlobalAccel
+    KF6::I18n
     Qt::DBus
 )
 
@@ -45,8 +47,10 @@ kcoreaddons_add_plugin(kwin_stagemanager_config
 target_link_libraries(kwin_stagemanager_config PRIVATE
     KF6::KCMUtils
     KF6::CoreAddons
+    KF6::GlobalAccel
     KF6::I18n
     KF6::WidgetsAddons
+    KF6::XmlGui
     Qt::DBus
     Qt::Widgets
 )

@@ -19,6 +19,8 @@ stdenv.mkDerivation {
         kdePackages.ki18n
         kdePackages.kwindowsystem
         kdePackages.kguiaddons
+        kdePackages.kglobalaccel
+        kdePackages.kxmlgui
         libepoxy
         libdrm
         vulkan-headers

@@ -68,21 +68,32 @@ All dials are in System Settings → Desktop Effects → Stage Manager (gear ico
 
 Config group: `[Effect-stagemanager]` in `kwinrc`.
 
-### Scripting / shortcuts
+### Keyboard shortcuts
 
-The effect exposes a small D-Bus interface on the session bus while loaded
-(`org.kde.KWin`, object `/org/kde/KWin/Effect/StageManager1`, interface
-`org.kde.KWin.Effect.StageManager1`):
+Registered as global shortcuts in the KWin component; rebind them under System Settings →
+Shortcuts → KWin, or in the effect's own settings dialog (shortcut editor at the bottom).
+
+| Action | Default | What it does |
+|---|---|---|
+| Stage active window alone | Meta+Shift+S | Every other window goes to the strip (macOS: pick a window) |
+| Stage all windows | Meta+Ctrl+S | Empty the stage; everything to the strip |
+| Bring all windows back | Meta+Shift+R | Restore every parked miniature |
+| Stage the active window | Meta+Shift+M | Send just the focused window to its pile |
+| Next stage group | Meta+] | Oldest pile comes to the stage, the current stage is parked on top — round-robin |
+| Previous stage group | Meta+[ | Newest pile comes to the stage, the current stage is parked at the bottom — the exact reverse |
+
+### Scripting
+
+The same actions are on the session bus while the effect is loaded (`org.kde.KWin`, object
+`/org/kde/KWin/Effect/StageManager1`, interface `org.kde.KWin.Effect.StageManager1`):
+`stash`, `restoreAll`, `stageActiveWindowAlone`, `stageActiveWindow`, `nextGroup`,
+`previousGroup`.
 
 ```sh
-# Park every managed window on the active screen into the strip
-qdbus org.kde.KWin /org/kde/KWin/Effect/StageManager1 org.kde.KWin.Effect.StageManager1.stash
-# Bring all parked miniatures back
-qdbus org.kde.KWin /org/kde/KWin/Effect/StageManager1 org.kde.KWin.Effect.StageManager1.restoreAll
+qdbus org.kde.KWin /org/kde/KWin/Effect/StageManager1 org.kde.KWin.Effect.StageManager1.nextGroup
 ```
 
-Bind either to a global shortcut via System Settings → Shortcuts → Add Command. The same
-calls drive the nested-session test below, where no pointer drag is possible.
+These calls also drive the nested-session test below, where no pointer drag is possible.
 
 ## Building
 
