@@ -40,7 +40,7 @@ PlasmoidItem {
         : Qt.rgba(1, 1, 1, 0.6)
     readonly property int textStyle: cfgShadow ? Text.Outline : Text.Normal
 
-    // Live data
+    // Live data.
     property string vHost: ""
     property string vNixFull: ""
     property string vNix: ""
@@ -60,8 +60,10 @@ PlasmoidItem {
 
     preferredRepresentation: fullRepresentation
 
-    // Show a standard widget background, toggleable via the hover toolbar's
-    // "Show Background" button (like the monitor widgets).
+    /**
+     * Show a standard widget background, toggleable via the hover toolbar's
+     * "Show Background" button (like the monitor widgets).
+     */
     Plasmoid.backgroundHints: PlasmaCore.Types.DefaultBackground
         | PlasmaCore.Types.ConfigurableBackground
 
@@ -111,7 +113,8 @@ PlasmoidItem {
         }
     }
 
-    function refreshVersions() {
+    function refreshVersions()
+    {
         exec.connectSource(
             "printf '%s\\001%s\\001%s\\001%s\\001%s\\001%s\\001%s\\001%s\\001%s'" +
             " \"$(hostname)\"" +
@@ -125,7 +128,8 @@ PlasmoidItem {
             " \"$(echo ${XDG_SESSION_TYPE^})\" #versions");
     }
 
-    function refreshSensors() {
+    function refreshSensors()
+    {
         /**
          * Fields are SOH-delimited: CPU temp, GPU temp, uptime, rx bytes. Uses
          * shell arithmetic instead of awk to avoid nested-quote escaping
@@ -140,7 +144,8 @@ PlasmoidItem {
             " #sensors" + Date.now());
     }
 
-    function refreshLuma() {
+    function refreshLuma()
+    {
         exec.connectSource(
             "p=$(grep -m1 '^Image=' ~/.config/plasma-org.kde.plasma.desktop-appletsrc | cut -d= -f2- | sed 's#^file://##'); " +
             "[ -f \"$p\" ] && magick \"$p\" -gravity NorthEast -crop 22%x55%+0+3% +repage -resize 1x1 -colorspace Gray -format '%[fx:mean]' info: 2>/dev/null || echo -1" +
@@ -151,7 +156,8 @@ PlasmoidItem {
      * Qt's QML toLocaleTimeString ignores the timeZone option, so a second
      * timezone is fetched from the shell (correct across DST).
      */
-    function refreshVanc() {
+    function refreshVanc()
+    {
         exec.connectSource(
             "TZ='America/Vancouver' date '+%-I:%M %p' #vanc" + Date.now()
         );
@@ -170,18 +176,21 @@ PlasmoidItem {
         repeat: true;
         onTriggered: root.refreshSensors()
     }
+
     Timer {
         interval: 3600000;
         running: true;
         repeat: true;
         onTriggered: root.refreshVersions()
     }
+
     Timer {
         interval: 30000;
         running: true;
         repeat: true;
         onTriggered: root.refreshLuma()
     }
+
     Timer {
         interval: 15000;
         running: true;
@@ -207,11 +216,11 @@ PlasmoidItem {
 
     fullRepresentation: Item {
         id: rep
-        implicitWidth: 320
+        implicitWidth: 300
         implicitHeight: column.implicitHeight
         Layout.minimumWidth: 160
         Layout.minimumHeight: column.implicitHeight
-        Layout.preferredWidth: 320
+        Layout.preferredWidth: 300
         Layout.preferredHeight: column.implicitHeight
 
         component InfoLine: RowLayout {
@@ -219,6 +228,7 @@ PlasmoidItem {
             property alias label: l.text
             property alias value: v.text
             property int fs: 11
+
             PlasmaComponents.Label {
                 id: l
                 color: root.txtColor
@@ -226,9 +236,11 @@ PlasmoidItem {
                 style: root.textStyle
                 styleColor: root.shadowColor
             }
+
             Item {
                 Layout.fillWidth: true
             }
+
             PlasmaComponents.Label {
                 id: v
                 color: root.txtColor
@@ -256,6 +268,7 @@ PlasmoidItem {
                 style: root.textStyle
                 styleColor: root.shadowColor
             }
+
             PlasmaComponents.Label {
                 Layout.fillWidth: true
                 Layout.topMargin: 6
@@ -267,6 +280,7 @@ PlasmoidItem {
                 style: root.textStyle
                 styleColor: root.shadowColor
             }
+
             PlasmaComponents.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
@@ -289,6 +303,7 @@ PlasmoidItem {
                 label: "Host:";
                 value: root.vHost
             }
+
             PlasmaComponents.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
@@ -299,22 +314,73 @@ PlasmoidItem {
                 style: root.textStyle
                 styleColor: root.shadowColor
             }
-            Item { Layout.preferredHeight: 10 }
 
-            InfoLine { label: "NixOS:"; value: root.vNix }
-            InfoLine { label: "Kernel:"; value: root.vKernel + " (64-bit)" }
-            InfoLine { label: "NVIDIA Driver:"; value: root.vNvidia }
-            InfoLine { label: "KDE Plasma:"; value: root.vPlasma }
-            InfoLine { label: "KDE Frameworks:"; value: root.vFrameworks }
-            InfoLine { label: "Qt:"; value: root.vQt }
-            InfoLine { label: "Platform:"; value: root.vPlatform }
+            Item {
+                Layout.preferredHeight: 10
+            }
 
-            Item { Layout.preferredHeight: 14 }
+            InfoLine {
+                label: "NixOS:";
+                value: root.vNix
+            }
 
-            InfoLine { label: "AMD Ryzen 9 3900X:"; value: root.sCpu + "°C"; fs: 13 }
-            InfoLine { label: "RTX 5060 Ti:"; value: root.sGpu + "°C"; fs: 13 }
-            InfoLine { label: "Uptime:"; value: root.sUptime; fs: 13 }
-            InfoLine { label: "Download:"; value: root.sDown + " Kb/sec"; fs: 13 }
+            InfoLine {
+                label: "Kernel:";
+                value: root.vKernel + " (64-bit)"
+            }
+
+            InfoLine {
+                label: "NVIDIA Driver:";
+                value: root.vNvidia
+            }
+
+            InfoLine {
+                label: "KDE Plasma:";
+                value: root.vPlasma
+            }
+
+            InfoLine {
+                label: "KDE Frameworks:";
+                value: root.vFrameworks
+            }
+
+            InfoLine {
+                label: "Qt:";
+                value: root.vQt
+            }
+
+            InfoLine {
+                label: "Platform:";
+                value: root.vPlatform
+            }
+
+            Item {
+                Layout.preferredHeight: 14
+            }
+
+            InfoLine {
+                label: "AMD Ryzen 9 3900X:";
+                value: root.sCpu + "°C";
+                fs: 13
+            }
+
+            InfoLine {
+                label: "RTX 5060 Ti:";
+                value: root.sGpu + "°C";
+                fs: 13
+            }
+
+            InfoLine {
+                label: "Uptime:";
+                value: root.sUptime;
+                fs: 13
+            }
+
+            InfoLine {
+                label: "Download:";
+                value: root.sDown + " Kb/sec";
+                fs: 13
+            }
         }
     }
 }

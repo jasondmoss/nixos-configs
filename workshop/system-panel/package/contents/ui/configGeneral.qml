@@ -26,12 +26,14 @@ Kirigami.FormLayout {
     RowLayout {
         Kirigami.FormData.label: i18n("Custom color:")
         enabled: colorModeCombo.currentIndex === 3
+
         QQC2.TextField {
             id: hexField
             placeholderText: "#ffffff"
             inputMask: "\\#HHHHHH"
             Layout.preferredWidth: Kirigami.Units.gridUnit * 6
         }
+
         Rectangle {
             width: Kirigami.Units.gridUnit * 1.5
             height: width
@@ -50,7 +52,9 @@ Kirigami.FormLayout {
         text: i18n("Contrasting text shadow")
     }
 
-    Item { Kirigami.FormData.isSection: true }
+    Item {
+        Kirigami.FormData.isSection: true
+    }
 
     QQC2.TextField {
         id: netField
