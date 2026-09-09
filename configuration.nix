@@ -52,24 +52,12 @@ in {
     system.stateVersion = "26.05";
     time.timeZone = "America/Toronto";
 
-    i18n = {
-        defaultLocale = "en_CA.UTF-8";
-
-        inputMethod = {
-            enable = true;
-            type = "fcitx5";
-
-            fcitx5 = {
-                waylandFrontend = true;
-
-                addons = with pkgs; [
-                    fcitx5-gtk
-                    qt6Packages.fcitx5-chinese-addons
-                    kdePackages.fcitx5-configtool
-                ];
-            };
-        };
-    };
+    # No input-method framework: US layout only, handled by KWin's own xkb
+    # keymap. fcitx5 was removed 2026-09-09 because KWin routed every key of
+    # text-input-aware Wayland clients (JetBrains WLToolkit) through it and the
+    # handshake desynced on focus changes (KDE bug 493098), leaving PhpStorm
+    # without typed input after Alt+Tab.
+    i18n.defaultLocale = "en_CA.UTF-8";
 
     console = {
         earlySetup = true;

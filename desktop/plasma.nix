@@ -37,6 +37,15 @@
            enable = true;
            enableQt5Integration = false;
         };
+
+        # No screen reader. The plasma6 module defaults services.orca.enable to
+        # true and graphical-desktop.nix defaults speechd on; kaccess then
+        # launches Orca at login whenever kaccessrc [ScreenReader] Enabled=true,
+        # and KWin routes every key through the a11y keyboard monitor. That
+        # desynced on focus changes (2026-09-07..09) and swallowed typed input in
+        # all apps. Disabling both also turns off at-spi2-core (NO_AT_BRIDGE=1).
+        orca.enable = false;
+        speechd.enable = false;
     };
 
     # XDG portals and MIME defaults.
