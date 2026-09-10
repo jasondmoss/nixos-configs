@@ -62,7 +62,7 @@ nixpkgs only. The entry point is `configuration.nix`.
 
 | File        | Purpose                                                                    |
 |-------------|----------------------------------------------------------------------------|
-| `plasma.nix`| KDE Plasma 6, Ly display manager, XDG portals, Wayland/Qt session vars    |
+| `plasma.nix`| KDE Plasma 6, SDDM display manager (Ly commented out), XDG portals, Wayland/Qt session vars    |
 | `fonts.nix` | Font packages and fontconfig rules                                         |
 | `theme.nix` | 16-color terminal palette (plain Nix value, imported by `configuration.nix`) |
 

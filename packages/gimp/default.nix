@@ -2,7 +2,7 @@
 
 let
     gimpPublicDeps = with pkgs; [
-        gegl babl gexiv2 lcms2 libarchive poppler
+        gegl babl gexiv2_0_10 lcms2 libarchive poppler
         gtk3 cairo pango glib
     ];
 in {
@@ -96,7 +96,7 @@ chmod +x tools/defcheck.py
 
                 postBuild = ''
 wrapProgram $out/bin/gimp-3.2 \
- --set GDK_BACKEND x11 \
+ --set GDK_BACKEND wayland \
  --set BABL_PATH "${final.babl}/lib/babl-0.1" \
  --set GEGL_PATH "${final.gegl}/lib/gegl-0.4" \
  --prefix XDG_DATA_DIRS : "${final.adwaita-icon-theme}/share"

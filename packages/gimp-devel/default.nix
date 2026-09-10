@@ -6,7 +6,7 @@
   ghostscript, aalib, shared-mime-info, python3, libexif, gettext,
   wrapGAppsHook3, libxslt, gobject-introspection, vala, gi-docgen, perl,
   appstream, desktop-file-utils, xorg, glib-networking, json-glib, libmypaint,
-  gexiv2, mypaint-brushes, libwebp, libheif, gjs, libgudev, openexr, xvfb-run,
+  gexiv2_0_10, mypaint-brushes, libwebp, libheif, gjs, libgudev, openexr, xvfb-run,
   dbus, adwaita-icon-theme, alsa-lib, libunwind, bash-completion, glibcLocales
 }:
 
@@ -30,7 +30,7 @@ in stdenv.mkDerivation (finalAttrs: {
     ] ++ lib.optionals stdenv.hostPlatform.isLinux [ dbus xvfb-run ];
 
     buildInputs = [
-        babl gegl gtk3 glib json-glib gdk-pixbuf gexiv2 openexr lcms isocodes
+        babl gegl gtk3 glib json-glib gdk-pixbuf gexiv2_0_10 openexr lcms isocodes
         libmypaint mypaint-brushes libjxl cfitsio libwebp libheif libexif luajit
         shared-mime-info pango cairo freetype glib-networking libarchive libtiff
         libpng librsvg libiff libwmf libgudev zlib xz libzip graphviz gjs

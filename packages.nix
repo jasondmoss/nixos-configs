@@ -15,11 +15,17 @@ let
         #ladybird       = pkgs.callPackage ./packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
         proton-drive   = pkgs.callPackage ./packages/proton-drive-cli {};
+        # Local SDDM greeter theme; selected by name in desktop/plasma.nix.
+        sddm-persev    = pkgs.callPackage ./packages/sddm-perseverance {};
         stage-manager  = pkgs.callPackage ./packages/stage-manager {};
         standardnotes  = pkgs.callPackage ./packages/standardnotes {};
         strawberry     = pkgs.callPackage ./packages/strawberry-master {};
         system-panel   = pkgs.callPackage ./packages/system-panel {};
-        vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {};
+        vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {
+            # Custom package: nothing wires NIXOS_OZONE_WL in, so force ozone
+            # Wayland here or Vivaldi silently runs on XWayland.
+            commandLineArgs = "--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations";
+        };
         wavebox        = pkgs.callPackage ./packages/wavebox-beta {};
     };
 

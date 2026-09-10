@@ -6,29 +6,82 @@
         displayManager = {
             enable = true;
 
-            ly = {
+            sddm = {
                 enable = true;
-                package = pkgs.callPackage ../packages/ly {};
-                x11Support = false;
+
+                # plasma6.nix sets this whole attrset with mkDefault. Pinned
+                # explicitly so a channel bump can never quietly drop the
+                # greeter back to Weston (the module's own default) or X11.
+                wayland = {
+                    enable = true;
+                    compositor = "kwin";
+                };
+
+                # Local theme: ../packages/sddm-perseverance, installed via the
+                # customPkgs attrset in ../packages.nix. Leaving "breeze" also
+                # drops the CursorTheme/CursorSize pair the module attaches
+                # only for that theme.
+                #theme = "breeze";
+                theme = "Perseverance";
+
+                # Merged with plasma6.nix's list, not replacing it.
+                # Perseverance additionally needs:
+                #   qt5compat        -> Qt5Compat.GraphicalEffects
+                #   plasma-workspace -> org.kde.breeze.components,
+                #                       org.kde.plasma.workspace.components
+                # A missing QML module = blank greeter with no on-screen error.
+                extraPackages = with pkgs.kdePackages; [
+                    plasma-workspace
+                    qt5compat
+                ];
+
+                # Module default, restated so it's visible at the call site.
+                enableHidpi = true;
+
+                # Off: the Keychron Q3 Pro is a TKL board — no numpad to lock.
+                autoNumlock = false;
 
                 settings = {
-                    clear_password = true;
-                    clock = "%c";
+                    Users = {
+                        # SDDM's compiled-in default is the FHS trio
+                        # (/usr/local/bin:/usr/bin:/bin), none of which exist
+                        # here, and the NixOS module never overrides it. This is
+                        # the PATH handed to the greeter process; the user
+                        # session gets a correct one regardless, because
+                        # share/sddm/scripts/wayland-session sources
+                        # /etc/profile -> /etc/set-environment.
+                        DefaultPath = "/run/current-system/sw/bin";
 
-                    #animation = "dur_file";
-                    #dur_file_path = "${../packages/ly/animations/blackhole-smooth-240x67.dur}";
-                    #dur_offset_alignment = "center";
-
-                    #animation = "matrix";
-                    #animation = "colormix";
-                    #animation = "doom";
-                    #animation = "gameoflife";
-                    #animation_timeout_sec = "20";
-                    #full_color = true;
-                    input_len = "64";
-                    waylandsessions = "${pkgs.kdePackages.plasma-workspace.sessions}/share/wayland-sessions";
+                        # Single-user desktop: preselect me and my last session.
+                        RememberLastUser = true;
+                        RememberLastSession = true;
+                    };
                 };
             };
+
+            #ly = {
+            #    enable = true;
+            #    package = pkgs.callPackage ../packages/ly {};
+            #    x11Support = false;
+            #
+            #    settings = {
+            #        clear_password = true;
+            #        clock = "%c";
+            #
+            #        #animation = "dur_file";
+            #        #dur_file_path = "${../packages/ly/animations/blackhole-smooth-240x67.dur}";
+            #        #dur_offset_alignment = "center";
+            #
+            #        #animation = "matrix";
+            #        #animation = "colormix";
+            #        #animation = "doom";
+            #        #animation = "gameoflife";
+            #        #animation_timeout_sec = "20";
+            #        #full_color = true;
+            #        input_len = "64";
+            #        waylandsessions = "${pkgs.kdePackages.plasma-workspace.sessions}/share/wayland-sessions";
+            #    };
+            #};
 
             defaultSession = "plasma";
         };
@@ -38,12 +91,6 @@
            enableQt5Integration = false;
         };
 
-        # No screen reader. The plasma6 module defaults services.orca.enable to
-        # true and graphical-desktop.nix defaults speechd on; kaccess then
-        # launches Orca at login whenever kaccessrc [ScreenReader] Enabled=true,
-        # and KWin routes every key through the a11y keyboard monitor. That
-        # desynced on focus changes (2026-09-07..09) and swallowed typed input in
-        # all apps. Disabling both also turns off at-spi2-core (NO_AT_BRIDGE=1).
         orca.enable = false;
         speechd.enable = false;
     };

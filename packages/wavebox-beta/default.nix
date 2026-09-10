@@ -95,7 +95,7 @@ ln -s $out/opt/wavebox/product_logo_128.png $out/share/icons/hicolor/128x128/app
 makeWrapper $out/opt/wavebox/wavebox-launcher $out/bin/wavebox \
  --prefix PATH : ${xdg-utils}/bin \
  --prefix LD_LIBRARY_PATH : "${gpuLibPath}" \
- --add-flags "--disable-features=Vulkan"
+ --add-flags "--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --disable-features=Vulkan"
     '';
 }
 

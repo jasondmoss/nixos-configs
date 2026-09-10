@@ -1,0 +1,16 @@
+[SddmGreeterTheme]
+Name=Perseverance
+Description=Perseverance SDDM theme for atreides — Plasma 6 / Qt 6
+Author=Jason Moss
+Copyright=(c) 2020-2024, Eliver Lara; (c) 2026, Jason Moss
+License=GPL 3+
+Type=sddm-theme
+Version=0.1
+Website=https://github.com/EliverLara/Juno/tree/ocean/kde/sddm
+Screenshot=preview.png
+MainScript=Main.qml
+ConfigFile=theme.conf
+TranslationsDirectory=translations
+Theme-Id=Perseverance
+Theme-API=2.0
+QtVersion=6
