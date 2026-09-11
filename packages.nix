@@ -265,6 +265,7 @@ let
 in {
     imports = [
         ./packages/claudecodebrowser
+        ./packages/gps-signature
         ./packages/gimp
     ];
 
