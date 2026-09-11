@@ -1,5 +1,13 @@
 self: pkgs:
 let
+  # Version, build number and checksum come from manifest.json — refresh it
+  # with ./update.sh (same workflow as packages/claude-desktop and
+  # packages/vivaldi-snapshot), then rebuild. Unattended refreshes stay inside
+  # the pinned feature series because the JCEF fixup below is series-specific;
+  # see the comment in update.sh.
+  manifest = pkgs.lib.importJSON ./manifest.json;
+  baseUrl = "https://download.jetbrains.com/webide";
+
   # <nixpkgs> in NIX_PATH is permanently mapped to the stable nixos channel
   # (nixpkgs=/nix/.../channels/nixos), so we use the explicit path to root's
   # nixpkgs channel (nixpkgs-unstable) which carries JBR 25.0.2.
@@ -22,12 +30,12 @@ let
 in
 {
   phpstorm = unstable.jetbrains.phpstorm.overrideAttrs (old: {
-    version = "2026.2.2";
-    buildNumber = "262.10315.130";
+    inherit (manifest) version;
+    buildNumber = manifest.build;
 
     src = pkgs.fetchurl {
-      url = "https://download.jetbrains.com/webide/PhpStorm-2026.2.2.tar.gz";
-      sha256 = "sha256-ZBDGKpoDzcYu54p+v1o+UIUxSpEh53XzWKNTEpVidyg=";
+      url = "${baseUrl}/${manifest.filename}";
+      inherit (manifest) sha256;
     };
 
     # 2026.2 bundles JCEF as an IDE plugin (jcef-plugin) instead of shipping it

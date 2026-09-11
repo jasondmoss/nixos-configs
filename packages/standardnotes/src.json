@@ -1,9 +1,0 @@
-{
-    "version": "3.201.35",
-    "deb": {
-        "x86_64-linux": {
-            "url": "https://github.com/standardnotes/app/releases/download/%40standardnotes/desktop%403.201.31/standard-notes-3.201.31-linux-amd64.deb",
-            "hash": "sha256-sm5HKCZgp3gYjyzPLoUgA8vwnjHemI51lI8AAuzYa8E="
-        }
-    }
-}

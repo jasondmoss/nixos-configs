@@ -36,15 +36,32 @@ in {
 
     # Binary caches for CUDA builds (torch, magma, triton, ...) — avoid
     # multi-hour local compiles of the PyTorch stack.
+    #
+    # The CUDA cache moved off Cachix (Nov 2025) to the Hydra-backed
+    # cache.nixos-cuda.org. The retired cuda-maintainers.cachix.org now
+    # answers *every* narinfo lookup with HTTP 401 instead of 404, and nix
+    # treats 401 as a hard error rather than a cache miss — so any build that
+    # happened to query it aborted with "Binary cache cuda-maintainers doesn't
+    # exist or you're not authorized to access it", even for paths it never
+    # held. Not a private cache we lost access to: it serves nothing at all.
     nix.settings = {
         substituters = [
             "https://nix-community.cachix.org"
-            "https://cuda-maintainers.cachix.org"
+            "https://cache.nixos-cuda.org"
         ];
         trusted-public-keys = [
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+            "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
         ];
+
+        # cache.nixos-cuda.org is a single self-hosted Hydra box, not a CDN,
+        # and it drops connections mid-transfer. Nix's default 300s stall
+        # timeout doesn't always catch it: a socket left in CLOSE-WAIT with
+        # unread bytes doesn't look stalled, so a fetch of the multi-GiB torch
+        # closure can park in poll() indefinitely. Fail fast and retry instead
+        # — a spurious retry costs seconds, a hang costs the whole rebuild.
+        stalled-download-timeout = 60;
+        connect-timeout = 15;
     };
 
     # Local LLM inference server (OpenAI-compatible API on 127.0.0.1:11434).
@@ -107,13 +124,7 @@ in {
     # Local image generation/editing (CUDA torch). Web UI + API on
     # 127.0.0.1:8188; also wired into Open WebUI's image engine.
     services.comfyui = {
-        # TEMP (2026-09-06): disabled to unblock nixos-rebuild. nixos-unstable
-        # advanced to python3.14 + torch 2.13.0, which cuda-maintainers /
-        # nix-community haven't cached yet (404 in all substituters), forcing a
-        # failing from-source torch compile. Re-enable once the CUDA cache
-        # catches up (recheck: nix-store --query the torch .drv output against
-        # cuda-maintainers.cachix.org).
-        enable = false;
+        enable = true;
         # Module default also binds ::1, which crash-loops the service on
         # this system (IPv6 disabled in networking.nix).
         listen = [ "127.0.0.1" ];

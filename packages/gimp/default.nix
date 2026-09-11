@@ -5,6 +5,12 @@ let
         gegl babl gexiv2_0_10 lcms2 libarchive poppler
         gtk3 cairo pango glib
     ];
+
+    ## babl and gegl are overridden here only to satisfy gimp-devel, so they
+    ## are pinned alongside it in that package's manifest.json rather than in
+    ## a second manifest of their own. Refresh all three together with
+    ## ../gimp-devel/update.sh.
+    manifest = lib.importJSON ../gimp-devel/manifest.json;
 in {
     nixpkgs.overlays = [
         (final: prev: let
@@ -62,22 +68,22 @@ fi
                 '';
         in {
             babl = prev.babl.overrideAttrs (oldAttrs: {
-                version = "0.1.126";
+                inherit (manifest.babl) version;
 
                 src = final.fetchurl {
-                    url = "https://download.gimp.org/pub/babl/0.1/babl-0.1.126.tar.xz";
-                    hash = "sha256-PwkPSyph/s98jcYKWAS7x3zv2Nd4ry3tBZ8ONnpSkw4=";
+                    url = "https://download.gimp.org/pub/babl/${lib.versions.majorMinor manifest.babl.version}/${manifest.babl.filename}";
+                    hash = manifest.babl.sha256;
                 };
 
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ final.git ];
             });
 
             gegl = prev.gegl.overrideAttrs (oldAttrs: {
-                version = "0.4.70";
+                inherit (manifest.gegl) version;
 
                 src = final.fetchurl {
-                    url = "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.70.tar.xz";
-                    hash = "sha256-R/UNnDrs03XetIwR6/6tUtFi5PwWKks9RGGCd/H67AI=";
+                    url = "https://download.gimp.org/pub/gegl/${lib.versions.majorMinor manifest.gegl.version}/${manifest.gegl.filename}";
+                    hash = manifest.gegl.sha256;
                 };
 
                 postPatch = (oldAttrs.postPatch or "") + ''
@@ -87,6 +93,14 @@ chmod +x tools/defcheck.py
                 '';
 
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ final.git ];
+
+                ## 0.4.72 added an sdl3-display op, and its meson run hard-fails
+                ## when SDL3 is missing — nixpkgs' expression is still on 0.4.70
+                ## and only knows to pass -Dsdl2=disabled. Supplying the
+                ## dependency (rather than adding -Dsdl3=disabled) keeps this
+                ## override building across the whole 0.4.x series: older
+                ## releases have no sdl3 option and reject the flag outright.
+                buildInputs = (oldAttrs.buildInputs or []) ++ [ final.sdl3 ];
             });
 
             gimp-devel = final.symlinkJoin {

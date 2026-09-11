@@ -6,21 +6,31 @@
   ghostscript, aalib, shared-mime-info, python3, libexif, gettext,
   wrapGAppsHook3, libxslt, gobject-introspection, vala, gi-docgen, perl,
   appstream, desktop-file-utils, xorg, glib-networking, json-glib, libmypaint,
-  gexiv2_0_10, mypaint-brushes, libwebp, libheif, gjs, libgudev, openexr, xvfb-run,
-  dbus, adwaita-icon-theme, alsa-lib, libunwind, bash-completion, glibcLocales
+  gexiv2_0_10, mypaint-brushes, libwebp, libheif, gjs, libgudev, openexr,
+  xvfb-run, dbus, adwaita-icon-theme, alsa-lib, libunwind, bash-completion,
+  glibcLocales
 }:
 
 let
     python = python3.withPackages (pp: with pp; [ pygobject3 ]);
+
+    ## Version + checksum come from manifest.json — refresh it with
+    ## ./update.sh (same workflow as packages/claude-desktop and
+    ## packages/vivaldi-snapshot), then rebuild. The manifest also carries the
+    ## matching babl/gegl pins, which ../gimp/default.nix reads back out of
+    ## it; update.sh refuses to bump past a release the patches below no
+    ## longer apply to, and stays inside the 3.2 series.
+    manifest = lib.importJSON ./manifest.json;
 in stdenv.mkDerivation (finalAttrs: {
     pname = "gimp";
-    version = "3.2.4";
+
+    inherit (manifest) version;
 
     outputs = [ "out" "dev" "man" ];
 
     src = fetchurl {
-        url = "https://download.gimp.org/gimp/v${lib.versions.majorMinor finalAttrs.version}/gimp-${finalAttrs.version}.tar.xz";
-        hash = "sha256-cxK8U+nG0tAFbKe5PxxrmHB5Rt2TT3FMIbh0bstgFYg=";
+        url = "https://download.gimp.org/gimp/v${lib.versions.majorMinor finalAttrs.version}/${manifest.filename}";
+        hash = manifest.sha256;
     };
 
     nativeBuildInputs = [

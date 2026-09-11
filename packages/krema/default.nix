@@ -6,15 +6,23 @@
     layer-shell-qt, plasma-workspace, kpipewire, wayland, wayland-protocols,
 }:
 
-stdenv.mkDerivation (finalAttrs: {
+let
+    ## Upstream release tags on GitHub. Version + hash come from manifest.json
+    ## — refresh it with ./update.sh (same workflow as packages/claude-desktop
+    ## and packages/vivaldi-snapshot), then rebuild. update.sh dry-runs the
+    ## patches below against each candidate tag and refuses to bump past a tag
+    ## they no longer apply to.
+    manifest = lib.importJSON ./manifest.json;
+in stdenv.mkDerivation (finalAttrs: {
     pname = "krema";
-    version = "0.7.0";
+
+    inherit (manifest) version;
 
     src = fetchFromGitHub {
         owner = "isac322";
         repo  = "krema";
         tag   = "v${finalAttrs.version}";
-        hash  = "sha256-ppAUIUIR0mlUd8BbyNLvXuVAVq0+otSMjS32v/+Ftx0=";
+        inherit (manifest) hash;
     };
 
     # Upstream bugs (unreported as of v0.7.0):

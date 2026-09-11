@@ -1,16 +1,26 @@
 {
     lib, stdenv, fetchurl, dpkg, makeWrapper, electron, libsecret, asar,
-    python3, glib, desktop-file-utils, callPackage,
+    python3, glib, desktop-file-utils,
 }:
 
 let
-    srcjson = builtins.fromJSON (builtins.readFile ./src.json);
-    throwSystem = throw "Unsupported system: ${stdenv.hostPlatform.system}";
+    ## Upstream GitHub releases (amd64 only — see meta.platforms). Version +
+    ## checksum come from manifest.json — refresh it with ./update.sh (same
+    ## workflow as packages/claude-desktop and packages/vivaldi-snapshot),
+    ## then rebuild.
+    baseUrl = "https://github.com/standardnotes/app/releases/download";
+    manifest = lib.importJSON ./manifest.json;
 in stdenv.mkDerivation {
     pname = "standardnotes";
-    src = fetchurl(srcjson.deb.${stdenv.hostPlatform.system} or throwSystem);
 
-    inherit (srcjson) version;
+    inherit (manifest) version;
+
+    src = fetchurl {
+        ## Release tag is the URL-encoded monorepo tag
+        ## "@standardnotes/desktop@<version>".
+        url = "${baseUrl}/%40standardnotes/desktop%40${manifest.version}/${manifest.filename}";
+        inherit (manifest) sha256;
+    };
 
     dontConfigure = true;
     dontBuild = true;
@@ -40,13 +50,6 @@ cp -R opt/Standard\ Notes/resources/app.asar.unpacked $out/share/standardnotes/
 rm $out/share/standardnotes/app.asar.unpacked/node_modules/cbor-extract/build/node_gyp_bins/python3
 ln -s ${python3.interpreter} $out/share/standardnotes/app.asar.unpacked/node_modules/cbor-extract/build/node_gyp_bins/python3
 
-${lib.optionalString stdenv.hostPlatform.isAarch64
-    ''
-rm $out/share/standardnotes/app.asar.unpacked/node_modules/microtime/build/node_gyp_bins/python3
-ln -s ${python3.interpreter} $out/share/standardnotes/app.asar.unpacked/node_modules/microtime/build/node_gyp_bins/python3
-    ''
-}
-
 asar e $out/share/standardnotes/app.asar asar-unpacked
 find asar-unpacked -name '*.node' -exec patchelf \
  --add-rpath "${libPath}" \
@@ -62,8 +65,6 @@ ${desktop-file-utils}/bin/desktop-file-install --dir $out/share/applications \
 runHook postInstall
             '';
 
-    passthru.updateScript = callPackage ./update.nix { };
-
     meta = {
         description = "Simple and private notes app";
         longDescription = ''
@@ -78,7 +79,7 @@ runHook postInstall
             squalus
         ];
         sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
-        platforms = builtins.attrNames srcjson.deb;
+        platforms = [ "x86_64-linux" ];
         mainProgram = "standardnotes";
     };
 }
