@@ -1,10 +1,30 @@
 { pkgs, ... }:
 
 #-- ClaudeCodeBrowser — Firefox browser automation for Claude Code.
-#-- Source reviewed at the pinned commit (2026-05-11): localhost-only servers
-#-- (HTTP 8765 / WS 8766), token auth in ~/.claudecodebrowser/api_token,
-#-- no external network calls or telemetry. The AMO-signed extension
-#-- (claudecodebrowser@ligandal.com) matches upstream commit c3cfd10.
+#--
+#-- Review history:
+#--   d5f6bbe (2026-05-11) — full source review: localhost-only servers
+#--     (HTTP 8765 / WS 8766), token auth in ~/.claudecodebrowser/api_token,
+#--     no external network calls or telemetry. The AMO-signed extension
+#--     (claudecodebrowser@ligandal.com) matched upstream commit c3cfd10.
+#--   96a7fd3 (2026-08-26, v1.4.0) — CURRENT PIN. Diff-level review of the
+#--     19 commits since d5f6bbe, not a fresh full-source review. Confirmed:
+#--     no new outbound network calls in runtime code (added external URLs are
+#--     docs, badges and the release/packaging scripts only), servers still
+#--     bind loopback, nothing binds 0.0.0.0. Adds mcp-server/safety.py (guard
+#--     layer: protected-URL patterns, human approval, rate limits, one-shot
+#--     approval tokens, audit log, CLAUDE_BROWSER_ALLOW_SCRIPTS=0 kill
+#--     switch), a URL-scheme guard (http/https/about:blank only) and
+#--     WebSocket auth on the first frame.
+#--     Not re-verified at this pin: whether the installed AMO-signed XPI
+#--     still corresponds to this commit — the extension version moved
+#--     1.0.0 -> 1.4.0 and gained the "notifications" permission.
+#--     Behaviour change worth knowing: content.js now wraps window.fetch and
+#--     XMLHttpRequest on every page (<all_urls>) to log request/response
+#--     traffic for browser_get_network_logs. Local-only, but broad.
+#--     Note the repo's extension/manifest.json also gained an update_url
+#--     pointing at GitHub Releases; it does not affect this derivation, which
+#--     packages only native-host, mcp-server and agent — never the extension.
 #--
 #-- Components installed:
 #--   claudecodebrowser-host   — native messaging host (launched by Firefox)
@@ -36,15 +56,24 @@ let
         categories = [ "Network" "WebBrowser" ];
     };
 
-    claudecodebrowser = pkgs.stdenv.mkDerivation rec {
+    #-- Commit + hash come from manifest.json. This package is deliberately
+    #-- NOT part of the nxmanifest auto-update sweep: its updater is named
+    #-- repin.sh rather than update.sh, and nxmanifest only picks up
+    #-- directories holding both manifest.json and update.sh. Upstream
+    #-- publishes no tags, so automatic updating would mean tracking main and
+    #-- silently discarding the source review noted above. Re-pin by hand with
+    #-- ./repin.sh <rev> after reading the diff.
+    manifest = pkgs.lib.importJSON ./manifest.json;
+
+    claudecodebrowser = pkgs.stdenv.mkDerivation {
         pname = "claudecodebrowser";
-        version = "1.0.0-unstable-2026-05-11";
+
+        inherit (manifest) version;
 
         src = pkgs.fetchFromGitHub {
             owner = "nanogenomic";
             repo = "ClaudeCodeBrowser";
-            rev = "d5f6bbe9fef2cfe82474722320af7e04499fb10d";
-            hash = "sha256-Hbj3i+DezUcctRi18+WyJjkfsq2GxN8EtCX+WBxo30A=";
+            inherit (manifest) rev hash;
         };
 
         nativeBuildInputs = [ pkgs.makeWrapper ];

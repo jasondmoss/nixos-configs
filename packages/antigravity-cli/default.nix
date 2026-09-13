@@ -3,13 +3,21 @@
     libsecret, glib,
 }:
 
-stdenv.mkDerivation rec {
+let
+    ## Upstream GitHub releases. Version + checksum come from manifest.json —
+    ## refresh it with ./update.sh (same workflow as packages/claude-desktop
+    ## and packages/vivaldi-snapshot), then rebuild.
+    baseUrl = "https://github.com/google-antigravity/antigravity-cli/releases/download";
+    manifest = lib.importJSON ./manifest.json;
+in stdenv.mkDerivation rec {
+    ## `rec` is still needed: installPhase interpolates runtimeLibs below.
     pname = "antigravity-cli";
-    version = "1.1.12";
+
+    inherit (manifest) version;
 
     src = fetchurl {
-        url = "https://github.com/google-antigravity/antigravity-cli/releases/download/${version}/agy_cli_linux_x64.tar.gz";
-        hash = "sha256-x3iuT9EeXcLb3f1xCO4ZdK5g/VMa+yRr5BxuS7Scgco=";
+        url = "${baseUrl}/${manifest.version}/${manifest.filename}";
+        inherit (manifest) sha256;
     };
 
     # Tarball holds a single bare `antigravity` binary with no top-level dir.

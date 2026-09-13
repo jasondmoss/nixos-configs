@@ -27,15 +27,21 @@ let
         rich
     ]);
 
+    ## Version + hash come from manifest.json — refresh it with ./update.sh
+    ## (same workflow as packages/claude-desktop and packages/vivaldi-snapshot),
+    ## then rebuild.
+    manifest = lib.importJSON ./manifest.json;
+
     src = fetchFromGitHub {
         owner  = "AUTOMATIC1111";
         repo   = "stable-diffusion-webui";
-        rev    = "v1.10.1";
-        sha256 = "sha256-lY+fZQ9yzFBVX5hrmvaIAm/FaRnsIkB2z4WpcJMmL3w=";
+        rev    = "v${manifest.version}";
+        inherit (manifest) hash;
     };
 in pkgs.stdenv.mkDerivation {
     pname   = "automatic1111-webui";
-    version = "1.10.1";
+
+    inherit (manifest) version;
 
     inherit src;
 

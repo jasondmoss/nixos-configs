@@ -166,7 +166,6 @@ Local derivations for software not in nixpkgs or requiring customization.
 
 | Package                | Attrset key      |
 |------------------------|------------------|
-| `audacity-beta`        | `audacity-beta`  |
 | `claude-desktop`       | `claude-desktop` |
 | `ferrite`              | `ferrite`        |
 | `gemini-nix-assistant` | `gemini-nix`     |

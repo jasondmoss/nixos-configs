@@ -12,17 +12,23 @@
 # so the signature stays valid and Grafana loads it without
 # `allow_loading_unsigned_plugins`.
 #
-# Version bump: change `version` + `hash`.
+# Version bump: run ./update.sh (same workflow as packages/claude-desktop and
+# packages/vivaldi-snapshot), which rewrites manifest.json, then rebuild. The
+# recorded hash is a fetchzip hash, i.e. of the *unpacked* tree.
 #
 { pkgs }:
 
+let
+  manifest = pkgs.lib.importJSON ./manifest.json;
+in
 pkgs.stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "performancecopilot-pcp-app";
-  version = "6.0.1";
+
+  inherit (manifest) version;
 
   src = pkgs.fetchzip {
-    url = "https://github.com/performancecopilot/grafana-pcp/releases/download/v${finalAttrs.version}/performancecopilot-pcp-app-${finalAttrs.version}.zip";
-    hash = "sha256-FmH/GYWMOtf8eUtf2V2dgcZwaHyxvp33rVax3xk/yuc=";
+    url = "https://github.com/performancecopilot/grafana-pcp/releases/download/v${finalAttrs.version}/${manifest.filename}";
+    inherit (manifest) hash;
   };
 
   dontConfigure = true;

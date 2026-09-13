@@ -4,11 +4,18 @@
 }:
 
 let
-    version = "2.2.0";
+    ## Version + checksum come from manifest.json — refresh it with
+    ## ./update.sh (same workflow as packages/claude-desktop and
+    ## packages/vivaldi-snapshot), then rebuild. Upstream serves one rolling
+    ## "latest" URL with no version in the path and publishes no version
+    ## index, so update.sh has to fetch the .deb and read the version back out
+    ## of its control file — hence no filename key here.
+    manifest = lib.importJSON ./manifest.json;
+    inherit (manifest) version;
 
     src = fetchurl {
         url = "https://cdn.jopdf.com/download/jopdf/jopdf-linux-amd64_setup.deb";
-        sha256 = "sha256-G993GJOUOh6WsbXcxir1MKrsUFmqCfqA4BtuAyKMsyc=";
+        inherit (manifest) sha256;
     };
 
     ## Bundled Qt5 platform plugin needs GLX/EGL dispatch libs; the NVIDIA

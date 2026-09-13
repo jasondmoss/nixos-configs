@@ -424,6 +424,28 @@ pkgs.stdenv.mkDerivation rec {
   # PYTHONPATH: PCP's Python modules in site-packages.
   # LD_LIBRARY_PATH: ctypes.util.find_library("pcp") can't use ldconfig on
   #   NixOS; the python-libpcp-nix patch falls back to LD_LIBRARY_PATH.
+  # PCP builds its man pages from *.1.in templates in a step this packaging
+  # does not run, so share/man/man1 is empty in every output. Harmless until
+  # 7.2.0, where src/pcp/htop/GNUmakefile started unconditionally installing
+  # "pmtop.1 -> pcp-htop.1" with `install -S`, which happily creates a symlink
+  # to a target that was never generated. nixpkgs' noBrokenSymlinks check then
+  # fails the build on that one dangling link.
+  #
+  # Drop any dangling symlink under share/man rather than switching the check
+  # off wholesale, so a genuinely broken link elsewhere still fails loudly.
+  # This must be preFixup, not postFixup: noBrokenSymlinks runs in the
+  # per-output fixupOutput loop, which is after preFixup but before postFixup.
+  preFixup = ''
+    for output in $(getAllOutputNames); do
+      manRoot="''${!output}/share/man"
+      [ -d "$manRoot" ] || continue
+      while IFS= read -r -d ''' link; do
+        echo "pcp: removing dangling man symlink $link -> $(readlink "$link")"
+        rm -f "$link"
+      done < <(find "$manRoot" -type l ! -exec test -e {} \; -print0)
+    done
+  '';
+
   postFixup = ''
     # Wrap Python scripts in libexec/pcp/bin
     for script in $out/libexec/pcp/bin/pcp-*; do

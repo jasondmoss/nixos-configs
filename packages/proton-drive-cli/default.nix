@@ -17,13 +17,23 @@
 #                    Needed because Drive is E2E-encrypted: uploads are never
 #                    compressed server-side, so archiving locally is the only
 #                    way to save Drive space.
-stdenv.mkDerivation rec {
+let
+    ## Version + checksum come from manifest.json — refresh it with
+    ## ./update.sh (same workflow as packages/claude-desktop and
+    ## packages/vivaldi-snapshot), then rebuild. The hash is SHA-512 because
+    ## that is what Proton publishes in its release feed
+    ## (proton.me/download/drive/cli/version.json): the recorded checksum is
+    ## upstream's own, not one computed from bytes we happened to receive.
+    manifest = lib.importJSON ./manifest.json;
+in stdenv.mkDerivation rec {
+    ## `rec` is still needed: installPhase interpolates runtimeLibs below.
     pname = "proton-drive-cli";
-    version = "0.8.0";
+
+    inherit (manifest) version;
 
     src = fetchurl {
         url = "https://proton.me/download/drive/cli/${version}/linux-x64/proton-drive";
-        hash = "sha256-lEPXcXGciSeQ2xfm8C7Nma18U1kzKfOmfHdnfc5XdzU=";
+        inherit (manifest) hash;
     };
 
     # `src` is a single bare executable, not an archive — nothing to unpack.

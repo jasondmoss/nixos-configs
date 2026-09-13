@@ -4,7 +4,6 @@ let
     # --- Custom Package Definitions ---
     customPkgs = {
         antigravity    = pkgs.callPackage ./packages/antigravity-cli {};
-        #audacity-beta  = pkgs.callPackage ./packages/audacity-beta {};
         claude-desktop = pkgs.callPackage ./packages/claude-desktop {};
         gh-clone       = pkgs.callPackage ./packages/gh-clone {};
         jopdf          = pkgs.callPackage ./packages/jopdf {};
@@ -70,6 +69,7 @@ let
             gst_all_1.gst-plugins-base
             gst_all_1.gst-plugins-good
 
+            audacity_3
             audacity
             cairo
             cuetools
@@ -264,7 +264,7 @@ let
     };
 in {
     imports = [
-        ./packages/claudecodebrowser
+        ./packages/claude-code-browser
         ./packages/gps-signature
         ./packages/gimp
     ];
