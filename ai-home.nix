@@ -23,7 +23,7 @@
 #   │ recollindex  →  /var/lib/ai-home/recoll/xapiandb                   │
 #   └────────────────────────────────────────────────────────────────────┘
 #   ┌────────────────────── ai-home-semantic-index.service (timer) ──────┐
-#   │ home-semantic index → Ollama nomic-embed-text @ 127.0.0.1:11434    │
+#   │ home-semantic index → Ollama qwen3-embedding:0.6b-8k @ 127.0.0.1:11434    │
 #   │                     → /var/lib/ai-home/semantic/index.sqlite3      │
 #   └────────────────────────────────────────────────────────────────────┘
 #
@@ -36,8 +36,9 @@
 # both indexes are built from inside the same namespace, so hidden paths
 # are never indexed. Edit `services.ai-home.hiddenPaths` (below) to change
 # what the AI can see; `unindexedPaths` keeps a tree readable but out of the
-# indexes (big media trees); `semanticPaths` picks the folders whose
-# documents are embedded (the whole home would be too much for vectors).
+# indexes (media trees, client upload trees; fnmatch patterns where `*` also
+# crosses `/`); `semanticPaths` picks the folders whose documents are
+# embedded (the whole home would be too much for vectors).
 #
 # The semantic index is a passage store (sqlite-vec, a file under the state
 # directory) rather than a vector database daemon on purpose: an in-process
@@ -138,7 +139,10 @@ textfilemaxmbs = 20
 compressedfilemaxkbs = 100000
 membermaxkbs = 50000
 idxabsmlen = 300
-skippedPaths = ${concatStringsSep " " (hiddenAbs ++ unindexedAbs)}
+# Entries are quoted (some contain spaces) and are fnmatch patterns; with
+# FNM_PATHNAME off a "*" also matches "/", so one pattern covers any depth.
+skippedPaths = ${concatMapStringsSep " " (p: "\"${p}\"") (hiddenAbs ++ unindexedAbs)}
+skippedPathsFnmPathname = 0
 skippedNames+ = ${concatStringsSep " " cfg.skippedNames}
 noContentSuffixes+ = ${concatStringsSep " " cfg.noContentSuffixes}
     '';
@@ -307,11 +311,28 @@ in {
         unindexedPaths = mkOption {
             type = types.listOf types.str;
             description = ''
-                Readable through the filesystem tools but left out of the
-                full-text index (large binary trees; filenames are still
-                reachable with the filesystem `search_files` glob tool).
+                Readable through the filesystem tools but left out of both
+                indexes (large binary trees; filenames are still reachable
+                with the filesystem `search_files` glob tool). Entries are
+                fnmatch patterns in which `*` also matches `/`, so
+                `Repository/work/*/sites/*/files` covers a Drupal upload
+                tree at any depth.
             '';
-            default = [ "Videos" "Mega/Camera Uploads" "Repository/ai" ];
+            default = [
+                "Videos" "Mega/Camera Uploads" "Repository/ai"
+                # Client sites' user uploads (Drupal public and private
+                # files: images, derivatives, attachments) — hundreds of
+                # thousands of files that are not ours to search.
+                "Repository/work/*/sites/*/files"
+                "Repository/work/*/private"
+                # Third-party Drupal code vendored per project (a copy of
+                # core and the contrib modules/themes/libraries in each of
+                # ~40 client checkouts, >1M files); custom code stays in.
+                "Repository/work/*/web/core"
+                "Repository/work/*/web/libraries"
+                "Repository/work/*/modules/contrib"
+                "Repository/work/*/themes/contrib"
+            ];
         };
 
         skippedNames = mkOption {
@@ -383,7 +404,8 @@ in {
 
         semanticModel = mkOption {
             type = types.str;
-            default = "nomic-embed-text";
+            # 8k-context variant declared in ai.nix (ollama-embed-variant).
+            default = "qwen3-embedding:0.6b-8k";
             description = ''
                 Ollama embedding model (must already be pulled:
                 `ollama pull <model>`). Changing it rebuilds the index on the
@@ -396,8 +418,8 @@ in {
             default = cfg.indexSchedule;
             defaultText = literalExpression "config.services.ai-home.indexSchedule";
             description = ''
-                systemd OnCalendar for the incremental embedding pass (ordered
-                after the Recoll pass when both fire together). Run
+                systemd OnCalendar for the incremental embedding pass
+                (independent of the Recoll pass). Run
                 `systemctl start ai-home-semantic-index` for an immediate one.
             '';
         };
@@ -485,10 +507,11 @@ install -m 0644 ${recollConf} ${cfg.stateDir}/recoll/recoll.conf
         systemd.services.ai-home-semantic-index = mkIf semanticEnabled {
             description = "Local-AI home directory semantic index (Ollama embeddings → sqlite-vec, sandboxed)";
             unitConfig.RequiresMountsFor = homeMounts;
-            # Ollama does the embedding work; run after the Recoll pass when
-            # both timers fire together so the two indexers don't compete.
-            after = [ "ai-home-index.service" ]
-                ++ optional config.services.ollama.enable "ollama.service";
+            # Ollama does the embedding work. Deliberately *not* ordered after
+            # ai-home-index: a first Recoll pass over the whole home takes
+            # hours, and a start job queued behind it looks like a hung
+            # indexer (nothing in the journal, no database).
+            after = optional config.services.ollama.enable "ollama.service";
             wants = optional config.services.ollama.enable "ollama.service";
             environment = sandboxEnv;
             path = [ pkgs.coreutils ];

@@ -187,8 +187,20 @@ def _backend_errors() -> tuple[type[BaseException], ...]:
 
 # ─── file discovery ────────────────────────────────────────────────────────
 
+_GLOB = re.compile(r"[*?\[]")
+
+
 def _under(path: str, prefixes: list[str]) -> bool:
-    return any(path == p or path.startswith(p + "/") for p in prefixes)
+    """Is `path` one of `prefixes` or below one? Entries may be fnmatch
+    patterns, matched like Recoll's skippedPaths with FNM_PATHNAME off: a
+    `*` also crosses `/`, so one pattern covers any depth."""
+    for p in prefixes:
+        if _GLOB.search(p):
+            if fnmatch.fnmatchcase(path, p) or fnmatch.fnmatchcase(path, p + "/*"):
+                return True
+        elif path == p or path.startswith(p + "/"):
+            return True
+    return False
 
 
 def _skipped_name(name: str) -> bool:

@@ -85,10 +85,11 @@ in {
 
         environmentVariables = {
             OLLAMA_KEEP_ALIVE = "10m";      # Free VRAM shortly after use.
-            # Chat model + the small embedding model (nomic-embed-text, used
-            # by Open WebUI's RAG) resident together; otherwise every
-            # retrieval swaps the 9 GiB chat model out and back in.
-            OLLAMA_MAX_LOADED_MODELS = "2";
+            # Main model + the small assistant model (KRunner/talk) + the
+            # embedding model resident together; otherwise every retrieval or
+            # quick question swaps the 12 GiB main model out and back in.
+            # Ollama only co-loads what fits, evicting least-recently-used.
+            OLLAMA_MAX_LOADED_MODELS = "3";
             OLLAMA_NUM_PARALLEL = "1";
             OLLAMA_FLASH_ATTENTION = "1";
             # 8-bit K/V cache halves context memory at no visible quality
@@ -119,6 +120,39 @@ in {
         "d /home/ollama/models 0775 ollama ollama -"
     ];
 
+    # Embedding model variant with an 8k context. Ollama sizes a model's K/V
+    # cache from its context length, and with OLLAMA_CONTEXT_LENGTH=32768 the
+    # 639 MB embedder claimed 4 GiB of VRAM (measured 2026-09-13); RAG chunks
+    # are a few hundred tokens, so 8k is ample: the variant loads at 2.4 GiB
+    # (f16 cache; ~2 GiB with the q8 cache above).
+    # `ollama create` only writes a manifest that shares the pulled blobs;
+    # re-run on every boot (idempotent) so the name always exists.
+    systemd.services.ollama-embed-variant = {
+        description = "Declare the qwen3-embedding:0.6b-8k Ollama variant";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "ollama.service" ];
+        requires = [ "ollama.service" ];
+        environment.OLLAMA_HOST = "127.0.0.1:11434";
+        serviceConfig = {
+            Type = "oneshot";
+            DynamicUser = true;
+            Restart = "on-failure";
+            RestartSec = "30s";
+            IPAddressDeny = "any";
+            IPAddressAllow = "localhost";
+        };
+        unitConfig = {
+            StartLimitIntervalSec = "10min";
+            StartLimitBurst = 5;
+        };
+        script = ''
+${pkgs.ollama-cuda}/bin/ollama create qwen3-embedding:0.6b-8k -f ${pkgs.writeText "Modelfile.qwen3-embedding-8k" ''
+FROM qwen3-embedding:0.6b
+PARAMETER num_ctx 8192
+''}
+        '';
+    };
+
     # Read access to model files (ollama) and generated images (comfyui).
     users.users.me.extraGroups = [ "ollama" "comfyui" ];
 
@@ -136,8 +170,10 @@ in {
             WEBUI_AUTH = "False";
             ENABLE_OPENAI_API = "False";
             ENABLE_DIRECT_CONNECTIONS = "False";
-            # Never default to the embeddings-only model (can't chat).
-            DEFAULT_MODELS = "qwen3:14b";
+            # Default chat model: gpt-oss:20b measured 2x faster than qwen3:14b
+            # at 32k context and fully on-GPU (2026-09-13). gemma4:12b is the
+            # multimodal candidate to compare against in the UI.
+            DEFAULT_MODELS = "gpt-oss:20b";
             WHISPER_LANGUAGE = "en";
 
             # RAG embeddings on the GPU through Ollama instead of the default
@@ -146,7 +182,11 @@ in {
             # switching the engine.
             RAG_EMBEDDING_ENGINE = "ollama";
             RAG_OLLAMA_BASE_URL = "http://127.0.0.1:11434";
-            RAG_EMBEDDING_MODEL = "nomic-embed-text";
+            # qwen3-embedding:0.6b (1024 dims; nomic-embed-text cut chunks at
+            # 2k tokens) through the 8k-context variant declared below.
+            # Existing Knowledge must be re-indexed after the switch
+            # (Admin → Settings → Documents).
+            RAG_EMBEDDING_MODEL = "qwen3-embedding:0.6b-8k";
 
             # Image generation/editing through the local ComfyUI (below).
             ENABLE_IMAGE_GENERATION = "True";
@@ -168,7 +208,9 @@ in {
     # action button opens the question in Open WebUI. Module + package in
     # packages/krunner-ollama (systemd user unit, loopback-only client).
     services.krunner-ollama = {
-        model = "qwen3:14b";
+        # Small multimodal model: sub-second first token, co-resident with
+        # the main model (see OLLAMA_MAX_LOADED_MODELS).
+        model = "qwen3.5:4b";
         ollamaUrl = "http://127.0.0.1:11434";
         webuiUrl = "http://localhost:8180";
         triggerWords = [ "ai" "?" ];
