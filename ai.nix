@@ -11,6 +11,11 @@ let
         };
     };
 in {
+    imports = [
+        # KRunner → Ollama runner (services.krunner-ollama, configured below).
+        ./packages/krunner-ollama
+    ];
+
     environment = {
         variables = {
             CUDA_PATH = "${pkgs.cudaPackages.cudatoolkit}";
@@ -28,8 +33,10 @@ in {
             opencode
             realesrgan-ncnn-vulkan
 
-            # Voice pipeline (models live in ~/Repository/ai/).
-            whisper-cpp
+            # Voice pipeline (models live in ~/Repository/ai/). Vulkan build:
+            # runs transcription on the GPU (works on the NVIDIA driver) and is
+            # in the binary cache, unlike a CUDA-enabled whisper-cpp.
+            whisper-cpp-vulkan
             piper-tts
         ];
     };
@@ -78,8 +85,20 @@ in {
 
         environmentVariables = {
             OLLAMA_KEEP_ALIVE = "10m";      # Free VRAM shortly after use.
-            OLLAMA_MAX_LOADED_MODELS = "1"; # One model at a time on 16 GiB.
+            # Chat model + the small embedding model (nomic-embed-text, used
+            # by Open WebUI's RAG) resident together; otherwise every
+            # retrieval swaps the 9 GiB chat model out and back in.
+            OLLAMA_MAX_LOADED_MODELS = "2";
+            OLLAMA_NUM_PARALLEL = "1";
             OLLAMA_FLASH_ATTENTION = "1";
+            # 8-bit K/V cache halves context memory at no visible quality
+            # cost (needs flash attention); 32k context so agent/RAG turns
+            # don't silently truncate. qwen3:14b + 32k q8 KV ≈ 12 GiB.
+            OLLAMA_KV_CACHE_TYPE = "q8_0";
+            OLLAMA_CONTEXT_LENGTH = "32768";
+            # Never proxy to ollama.com cloud models or web search: every
+            # request this server answers is answered on this GPU.
+            OLLAMA_NO_CLOUD = "1";
         };
     };
 
@@ -108,17 +127,53 @@ in {
     services.open-webui = {
         enable = true;
         port = 8180;
+        # NOTE: most of these are Open WebUI "PersistentConfig" values — they
+        # seed a fresh database and are then owned by Admin → Settings in the
+        # UI. Change them there once the instance exists (or set
+        # ENABLE_PERSISTENT_CONFIG=False to make this block authoritative).
         environment = {
             OLLAMA_BASE_URL = "http://127.0.0.1:11434";
             WEBUI_AUTH = "False";
             ENABLE_OPENAI_API = "False";
+            ENABLE_DIRECT_CONNECTIONS = "False";
             # Never default to the embeddings-only model (can't chat).
             DEFAULT_MODELS = "qwen3:14b";
             WHISPER_LANGUAGE = "en";
+
+            # RAG embeddings on the GPU through Ollama instead of the default
+            # CPU sentence-transformers model (which is also a HuggingFace
+            # download at first use). Re-index existing Knowledge after
+            # switching the engine.
+            RAG_EMBEDDING_ENGINE = "ollama";
+            RAG_OLLAMA_BASE_URL = "http://127.0.0.1:11434";
+            RAG_EMBEDDING_MODEL = "nomic-embed-text";
+
+            # Image generation/editing through the local ComfyUI (below).
+            ENABLE_IMAGE_GENERATION = "True";
+            IMAGE_GENERATION_ENGINE = "comfyui";
+            COMFYUI_BASE_URL = "http://127.0.0.1:8188";
+
+            # No phoning home: no update check, no community sharing, no
+            # analytics.
+            ENABLE_VERSION_UPDATE_CHECK = "False";
+            ENABLE_COMMUNITY_SHARING = "False";
             ANONYMIZED_TELEMETRY = "False";
             DO_NOT_TRACK = "True";
             SCARF_NO_ANALYTICS = "True";
         };
+    };
+
+    # Ask the local model from KRunner: "ai <question>" (or "? <question>")
+    # shows the first line of the answer; Enter copies the full answer, the
+    # action button opens the question in Open WebUI. Module + package in
+    # packages/krunner-ollama (systemd user unit, loopback-only client).
+    services.krunner-ollama = {
+        model = "qwen3:14b";
+        ollamaUrl = "http://127.0.0.1:11434";
+        webuiUrl = "http://localhost:8180";
+        triggerWords = [ "ai" "?" ];
+        onActivate = "copy";        # copy | open | both
+        think = false;              # skip qwen3's thinking phase: answers in seconds
     };
 
     # Local image generation/editing (CUDA torch). Web UI + API on

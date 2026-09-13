@@ -103,6 +103,7 @@ in {
         # Development & AI.
         ./development.nix
         ./ai.nix
+        ./ai-home.nix
     ];
 }
 

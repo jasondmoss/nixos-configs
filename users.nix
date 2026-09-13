@@ -10,10 +10,8 @@
                 description = "Jason D. Moss";
 
                 extraGroups = [
-                    "33"
                     "audio"
                     "docker"
-                    "mlocate"
                     "networkmanager"
                     "power"
                     "video"

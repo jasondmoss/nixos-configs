@@ -1,6 +1,10 @@
 { config, ... }: {
 	security = {
         rtkit.enable = true;
+
+        # No kexec / kernel image replacement at runtime. Hibernation is not
+        # used (16 GiB swap < 32 GiB RAM), so nothing is lost.
+        protectKernelImage = true;
         polkit = {
             enable = true;
 
@@ -54,6 +58,8 @@ polkit.addRule(function(action, subject) {
 
         sudo = {
             enable = true;
+            # Only members of wheel can even execute the sudo binary.
+            execWheelOnly = true;
             extraConfig = ''
 # Keep SSH_AUTH_SOCK so that pam_ssh_agent_auth.so can do its magic.
 Defaults env_keep+=SSH_AUTH_SOCK

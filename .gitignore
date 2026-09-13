@@ -6,3 +6,4 @@
 CLAUDE.md
 identity.nix
 result
+__pycache__/

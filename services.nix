@@ -5,10 +5,15 @@
         fstrim.enable = true;
         gnome.gcr-ssh-agent.enable = false;
         gnome.gnome-keyring.enable = true;
-        gpm.enable = true;
         irqbalance.enable = true;
-        openssh.settings.AllowUsers = [ "me" ];
         pcscd.enable = true;
+
+        # Firmware updates via LVFS (fwupdmgr refresh && fwupdmgr update):
+        # Samsung NVMe, Logitech receivers and UEFI dbx all ship there.
+        fwupd.enable = true;
+
+        # Cap the journal; it had grown to ~4 GiB.
+        journald.settings.Journal.SystemMaxUse = "1G";
         sysstat.enable = true;
         systembus-notify.enable = lib.mkForce true;
 
@@ -22,7 +27,10 @@
         locate = {
             enable = true;
             interval = "hourly";
-            package = pkgs.mlocate;
+            # plocate: io_uring-based, a fraction of mlocate's updatedb time and
+            # near-instant queries. The binary is setgid `plocate` via
+            # security.wrappers, so no group membership is needed.
+            package = pkgs.plocate;
         };
 
         pipewire = {
@@ -45,7 +53,18 @@
                 Type = "oneshot";
                 # Run as your user so database is available in ~/.cache/nix-index
                 User = "me";
-                ExecStart = "${pkgs.nix-index}/bin/nix-index";
+                Environment = "HOME=/home/me";
+                # Download nix-community's prebuilt weekly index instead of
+                # indexing all of nixpkgs locally (~20–30 min of CPU and a
+                # narinfo fetch per store path, every week).
+                ExecStart = pkgs.writeShellScript "nix-index-fetch" ''
+set -euo pipefail
+dir="$HOME/.cache/nix-index"
+mkdir -p "$dir"
+${pkgs.curl}/bin/curl -fsSL --retry 3 --retry-delay 10 -o "$dir/files.tmp" \
+    https://github.com/nix-community/nix-index-database/releases/latest/download/index-x86_64-linux
+mv "$dir/files.tmp" "$dir/files"
+                '';
             };
         };
 

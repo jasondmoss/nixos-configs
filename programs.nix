@@ -11,7 +11,8 @@
 
         steam = {
             enable = true;
-            dedicatedServer.openFirewall = true;
+            # No game servers are hosted here — keep 27015 closed.
+            dedicatedServer.openFirewall = false;
             remotePlay.openFirewall = true;
         };
 
@@ -100,10 +101,37 @@ Host pantheon.io *.pantheon.io
             withPython3 = true;
         };
 
+        # The nixpkgs Firefox (the `firefox.desktop` MIME default in
+        # desktop/plasma.nix). Installed here rather than in packages.nix so
+        # it carries the same policies as the Nightly wrapper: hardware video
+        # decode on the NVIDIA VAAPI path, and the AI chatbot sidebar pointed
+        # at the local Open WebUI (ai.nix) instead of a cloud provider.
+        firefox = {
+            enable = true;
+            policies.DisableAppUpdate = true;
+            # "default": applied at startup, still editable in about:config.
+            preferencesStatus = "default";
+            preferences = {
+                "media.ffmpeg.vaapi.enabled" = true;
+                "media.hardware-video-decoding.force-enabled" = true;
+                "media.rdd-ffvpx.enabled" = false;
+                "media.navigator.mediadatadecoder_vpx_enabled" = true;
+                "media.ffvpx.enabled" = false;
+                "gfx.webrender.all" = true;
+                "layers.acceleration.force-enabled" = true;
+                "widget.dmabuf.force-enabled" = true;
+                "browser.ml.chat.enabled" = true;
+                "browser.ml.chat.provider" = "http://localhost:8180";
+                "browser.ml.chat.hideLocalhost" = false;
+            };
+        };
+
         _1password.enable = true;
         _1password-gui = {
             enable = true;
-            polkitPolicyOwners = [ "team-originoutside" ];
+            # Local unix user(s) allowed to use 1Password's polkit policy
+            # (system-authentication unlock). Must be a real account here.
+            polkitPolicyOwners = [ "me" ];
             package = pkgs._1password-gui;
         };
     };

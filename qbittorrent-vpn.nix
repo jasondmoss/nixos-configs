@@ -74,10 +74,13 @@ in
         pkgs.libnatpmp
     ];
 
+    # Passwordless entry into the namespace, but only through `runuser -u me`,
+    # i.e. the command always drops back to the unprivileged user. A bare
+    # `ip netns exec qbit *` would have been a passwordless root shell.
     security.sudo.extraRules = [{
         users = [ user ];
         commands = [{
-            command = "${pkgs.iproute2}/bin/ip netns exec ${ns} *";
+            command = "${pkgs.iproute2}/bin/ip netns exec ${ns} ${pkgs.util-linux}/bin/runuser -u ${user} -- *";
             options = [ "NOPASSWD" ];
         }];
     }];

@@ -56,6 +56,17 @@
             "net.core.bpf_jit_harden" = 2;
             "kernel.kptr_restrict" = 2;
             "kernel.yama.ptrace_scope" = 1;
+
+            # Not a router: never emit ICMP redirects; drop RFC 1337 TIME-WAIT
+            # assassination; no on-demand line-discipline module autoload.
+            "net.ipv4.conf.all.send_redirects" = 0;
+            "net.ipv4.conf.default.send_redirects" = 0;
+            "net.ipv4.tcp_rfc1337" = 1;
+            "dev.tty.ldisc_autoload" = 0;
+
+            # zram swap: no readahead of swap pages (each is decompressed
+            # individually anyway).
+            "vm.page-cluster" = 0;
         };
 
         loader = {
@@ -135,6 +146,24 @@
         device = "/swapfile";
         size = 16 * 1024;  # 16GB
     }];
+
+    # Compressed in-RAM swap ahead of the NVMe swapfile (priority 100 vs -1):
+    # cold pages from browsers/IDEs get squeezed instead of hitting the disk
+    # when a model spills out of VRAM. ~8 GiB of zram on 32 GiB.
+    zramSwap = {
+        enable = true;
+        algorithm = "zstd";
+        memoryPercent = 25;
+        priority = 100;
+    };
+
+    # Monthly btrfs scrub on the two btrfs volumes: the only way to detect
+    # silent corruption before a file is read back wrong.
+    services.btrfs.autoScrub = {
+        enable = true;
+        interval = "monthly";
+        fileSystems = [ "/home" "/home/me/Repository" ];
+    };
 
     environment.etc."kernel/install.conf".text = "layout=bls\n";
 }

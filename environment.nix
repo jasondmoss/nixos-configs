@@ -39,7 +39,6 @@ google-chrome-stable
 			SSH_ASKPASS_REQUIRE = "prefer";
 		};
 		pathsToLink = [
-            "/home/me/Mega/Images/Icons/Apps/"
             "/share/applications"
             "/share/icons"
             "/share/pixmaps"
@@ -58,6 +57,21 @@ google-chrome-stable
 
             # AI — HuggingFace-based tools cache models on the Repository drive.
             HF_HOME = "/home/me/Repository/ai/huggingface";
+            HF_HUB_DISABLE_TELEMETRY = "1";
+
+            # Telemetry opt-outs honoured by common dev tooling. None of these
+            # change functionality; they only stop usage/crash reporting.
+            DO_NOT_TRACK = "1";
+            DISABLE_TELEMETRY = "1";                # claude-code (Statsig) + others
+            DISABLE_ERROR_REPORTING = "1";          # claude-code (Sentry)
+            DOTNET_CLI_TELEMETRY_OPTOUT = "1";
+            NEXT_TELEMETRY_DISABLED = "1";
+            NUXT_TELEMETRY_DISABLED = "1";
+            ASTRO_TELEMETRY_DISABLED = "1";
+            GATSBY_TELEMETRY_DISABLED = "1";
+            STORYBOOK_DISABLE_TELEMETRY = "1";
+            TURBO_TELEMETRY_DISABLED = "1";
+            CHECKPOINT_DISABLE = "1";               # prisma
 
             # Electron/Ozone.
             NIXOS_OZONE_WL = "1";

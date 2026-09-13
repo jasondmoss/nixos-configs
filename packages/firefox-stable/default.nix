@@ -42,19 +42,33 @@ let
         };
     };
 
+    # Firefox enterprise policy. The prefs go through the `Preferences`
+    # policy with Status = "default": applied at startup, still user-editable
+    # in about:config. (An earlier `UserPreferences` key here was not a real
+    # policy name and was silently ignored, so none of these had ever taken
+    # effect.)
+    firefoxStablePrefs = {
+        "media.ffmpeg.vaapi.enabled" = true;
+        "media.hardware-video-decoding.force-enabled" = true;
+        "media.rdd-ffvpx.enabled" = false;
+        "media.navigator.mediadatadecoder_vpx_enabled" = true;
+        "media.ffvpx.enabled" = false;
+        "gfx.webrender.all" = true;
+        "layers.acceleration.force-enabled" = true;
+        "widget.dmabuf.force-enabled" = true;
+
+        # Firefox's AI chatbot sidebar → the local Open WebUI (ai.nix), not a
+        # cloud provider. Selected-text prompts arrive as ?q=, which Open WebUI
+        # accepts; nothing leaves the machine.
+        "browser.ml.chat.enabled" = true;
+        "browser.ml.chat.provider" = "http://localhost:8180";
+        "browser.ml.chat.hideLocalhost" = false;
+    };
+
     firefoxStablePolicies = {
         policies = {
             DisableAppUpdate = true;
-            UserPreferences = {
-                "media.ffmpeg.vaapi.enabled" = true;
-                "media.hardware-video-decoding.force-enabled" = true;
-                "media.rdd-ffvpx.enabled" = false;
-                "media.navigator.mediadatadecoder_vpx_enabled" = true;
-                "media.ffvpx.enabled" = false;
-                "gfx.webrender.all" = true;
-                "layers.acceleration.force-enabled" = true;
-                "widget.dmabuf.force-enabled" = true;
-            };
+            Preferences = pkgs.lib.mapAttrs (_: v: { Value = v; Status = "default"; }) firefoxStablePrefs;
         };
     };
 

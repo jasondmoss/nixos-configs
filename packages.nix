@@ -45,8 +45,6 @@ let
             diffutils
             dmidecode
             dysk
-            fwupd
-            fwupd-efi
             htop
             inetutils
             inxi
@@ -222,7 +220,7 @@ let
 
         network-web = with pkgs; [
             filezilla
-            firefox
+            # firefox itself comes from programs.firefox (programs.nix).
             firefox-nightly
             google-chrome
             links2
