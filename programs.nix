@@ -101,14 +101,22 @@ Host pantheon.io *.pantheon.io
             withPython3 = true;
         };
 
-        # The nixpkgs Firefox (the `firefox.desktop` MIME default in
-        # desktop/plasma.nix). Installed here rather than in packages.nix so
-        # it carries the same policies as the Nightly wrapper: hardware video
-        # decode on the NVIDIA VAAPI path, and the AI chatbot sidebar pointed
-        # at the local Open WebUI (ai.nix) instead of a cloud provider.
+        # The nixpkgs Firefox (`firefox.desktop`): the Stable profile, and the
+        # binary behind the Claude Code profile launcher in
+        # packages/claude-code-browser. Not the default browser — that is
+        # Firefox Nightly (MIME defaults in desktop/plasma.nix). Installed here
+        # rather than in packages.nix so it carries the same policies as the
+        # Nightly wrapper: hardware video decode on the NVIDIA VAAPI path, and
+        # the AI chatbot sidebar pointed at the local Open WebUI (ai.nix)
+        # instead of a cloud provider.
         firefox = {
             enable = true;
             policies.DisableAppUpdate = true;
+            # Never offer to become the default browser. On 2026-09-13 the
+            # Claude Code profile took over http/https/text/html in
+            # ~/.config/mimeapps.list this way, so every app (Wavebox, KDE)
+            # opened links in it instead of Nightly.
+            policies.DontCheckDefaultBrowser = true;
             # "default": applied at startup, still editable in about:config.
             preferencesStatus = "default";
             preferences = {

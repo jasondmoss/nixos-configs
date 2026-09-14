@@ -163,7 +163,10 @@ noContentSuffixes+ = ${concatStringsSep " " cfg.noContentSuffixes}
         # Home directory: everything visible, read-only, minus hiddenPaths.
         ProtectHome = "tmpfs";
         BindReadOnlyPaths = [ cfg.home ];
-        InaccessiblePaths = map (p: "-${p}") hiddenAbs;
+        # Quoted (toJSON) because systemd splits this value on whitespace and a
+        # few entries contain spaces (".config/Proton Mail"); unquoted, the tail
+        # word is rejected as relative and the path is silently left visible.
+        InaccessiblePaths = map (p: builtins.toJSON "-${p}") hiddenAbs;
 
         # No network egress: loopback only (MCP listener + nothing else).
         IPAddressDeny = "any";

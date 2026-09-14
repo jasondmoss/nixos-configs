@@ -132,10 +132,17 @@ in {
         wantedBy = [ "multi-user.target" ];
         after = [ "ollama.service" ];
         requires = [ "ollama.service" ];
-        environment.OLLAMA_HOST = "127.0.0.1:11434";
+        environment = {
+            OLLAMA_HOST = "127.0.0.1:11434";
+            # The CLI derives its default models dir from $HOME on startup and
+            # panics without one; DynamicUser sets no HOME. Give it a private,
+            # writable runtime dir (RuntimeDirectory below; %t expands to /run).
+            HOME = "%t/ollama-embed-variant";
+        };
         serviceConfig = {
             Type = "oneshot";
             DynamicUser = true;
+            RuntimeDirectory = "ollama-embed-variant";
             Restart = "on-failure";
             RestartSec = "30s";
             IPAddressDeny = "any";

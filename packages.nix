@@ -56,6 +56,7 @@ let
             nvme-cli
             pciutils
             smartmontools
+            stressapptest
             systemctl-tui
             usbutils
             wget
