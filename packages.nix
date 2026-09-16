@@ -103,6 +103,7 @@ let
             cmake
             ddev
             gcc
+            gh
             git
             gnumake
             mkcert

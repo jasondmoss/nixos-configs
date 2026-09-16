@@ -51,7 +51,9 @@ let
         name = "firefox-claude";
         desktopName = "Firefox (Claude Code)";
         exec = "firefox --profile \"${firefoxClaudeProfileDir}\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/claude.svg";
+        # Theme icon name, not a file path — Krema cannot render absolute Icon=
+        # paths (see packages/firefox-nightly). SVG in ~/.icons/hicolor/scalable/apps.
+        icon = "custom-firefox-claude";
         startupWMClass = "firefox-claude";
         categories = [ "Network" "WebBrowser" ];
     };

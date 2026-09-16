@@ -7,7 +7,9 @@ let
         name = "firefox-stable";
         desktopName = "Firefox Stable";
         exec = "firefox-stable -P \"Stable\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox.png";
+        # Theme icon name, not a file path — Krema cannot render absolute Icon=
+        # paths (see packages/firefox-nightly). PNG in ~/.icons/hicolor/256x256/apps.
+        icon = "custom-firefox-stable";
         startupWMClass = "firefox-stable";
         mimeTypes = [
             "application/pdf"
@@ -63,6 +65,16 @@ let
         "browser.ml.chat.enabled" = true;
         "browser.ml.chat.provider" = "http://localhost:8180";
         "browser.ml.chat.hideLocalhost" = false;
+
+        # Smart Window's "Custom: Use your own LLM" assistant → Ollama's
+        # OpenAI-compatible API (Firefox appends /chat/completions), not Open
+        # WebUI: its frontend answers POST with 405 and its own API
+        # (/api/chat/completions) wants a bearer token. Chat model only:
+        # Ollama refuses embedding models ("does not support chat").
+        # Status "default": a value saved on the Smart Window settings page
+        # is a user pref and shadows this one until changed there.
+        "browser.smartwindow.customEndpoint" = "http://127.0.0.1:11434/v1";
+        "browser.smartwindow.model" = "qwen3.5:4b";
     };
 
     firefoxStablePolicies = {

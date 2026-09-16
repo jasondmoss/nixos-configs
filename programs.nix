@@ -106,9 +106,9 @@ Host pantheon.io *.pantheon.io
         # packages/claude-code-browser. Not the default browser — that is
         # Firefox Nightly (MIME defaults in desktop/plasma.nix). Installed here
         # rather than in packages.nix so it carries the same policies as the
-        # Nightly wrapper: hardware video decode on the NVIDIA VAAPI path, and
-        # the AI chatbot sidebar pointed at the local Open WebUI (ai.nix)
-        # instead of a cloud provider.
+        # Nightly wrapper: hardware video decode on the NVIDIA VAAPI path, the
+        # AI chatbot sidebar pointed at the local Open WebUI (ai.nix) instead
+        # of a cloud provider, and Smart Window's assistant on local Ollama.
         firefox = {
             enable = true;
             policies.DisableAppUpdate = true;
@@ -131,6 +131,11 @@ Host pantheon.io *.pantheon.io
                 "browser.ml.chat.enabled" = true;
                 "browser.ml.chat.provider" = "http://localhost:8180";
                 "browser.ml.chat.hideLocalhost" = false;
+
+                # Smart Window's custom assistant → Ollama's OpenAI-compatible
+                # API, not Open WebUI (why: packages/firefox-nightly).
+                "browser.smartwindow.customEndpoint" = "http://127.0.0.1:11434/v1";
+                "browser.smartwindow.model" = "qwen3.5:4b";
             };
         };
 

@@ -134,7 +134,8 @@ directory is sent to any cloud model.
 | **krunner-ollama** | KRunner runner: `ai <question>` (or `? <question>`) shows the first line of the local model's answer as a match; Enter copies the full answer to the clipboard, the action button opens the question in Open WebUI (`/?q=…`). `services.krunner-ollama.*` — module + package in `packages/krunner-ollama`; hardened systemd user unit whose only network client is pinned to the loopback Ollama URL |
 
 Firefox's AI chatbot sidebar is pointed at the local Open WebUI in both installed Firefoxes
-(`programs.firefox` and the Nightly wrapper).
+(`programs.firefox` and the Nightly wrapper), and Smart Window's *Custom* assistant at Ollama's
+OpenAI-compatible API (`http://127.0.0.1:11434/v1`, model `qwen3.5:4b`).
 
 ---
 

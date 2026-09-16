@@ -7,7 +7,10 @@ let
         name = "firefox-nightly";
         desktopName = "Firefox Nightly";
         exec = "firefox-nightly -P \"Nightly\" %u";
-        icon = "/home/me/Mega/Images/Icons/Apps/firefox-developer-edition-alt.png";
+        # A theme icon name, not a file path: Krema builds image://icon/<name>
+        # URLs from QIcon::name(), so an absolute Icon= path renders as the
+        # letter placeholder. The PNG lives in ~/.icons/hicolor/512x512/apps.
+        icon = "custom-firefox-nightly";
         startupWMClass = "firefox-nightly";
         mimeTypes = [
             "application/pdf"
@@ -66,6 +69,16 @@ let
         "browser.ml.chat.enabled" = true;
         "browser.ml.chat.provider" = "http://localhost:8180";
         "browser.ml.chat.hideLocalhost" = false;
+
+        # Smart Window's "Custom: Use your own LLM" assistant → Ollama's
+        # OpenAI-compatible API (Firefox appends /chat/completions), not Open
+        # WebUI: its frontend answers POST with 405 and its own API
+        # (/api/chat/completions) wants a bearer token. Chat model only:
+        # Ollama refuses embedding models ("does not support chat").
+        # Status "default": a value saved on the Smart Window settings page
+        # is a user pref and shadows this one until changed there.
+        "browser.smartwindow.customEndpoint" = "http://127.0.0.1:11434/v1";
+        "browser.smartwindow.model" = "qwen3.5:4b";
     };
 
     firefoxNightlyPolicies = {
