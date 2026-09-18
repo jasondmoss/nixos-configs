@@ -87,6 +87,7 @@
         };
 
         swraid.enable = false;
+        tmp.cleanOnBoot = true;
     };
 
     #

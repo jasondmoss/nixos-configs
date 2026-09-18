@@ -284,7 +284,7 @@ in {
                 ".local/share/nvim/shada"
 
                 # Browser profiles: cookies, sessions, saved logins.
-                ".mozilla" ".tor" ".mullvad"
+                ".mozilla" ".config/mozilla" ".tor" ".mullvad"
                 ".config/google-chrome" ".config/google-chrome-beta"
                 ".config/google-chrome-unstable" ".config/google-chrome-headless"
                 ".config/chromium" ".config/BraveSoftware" ".config/opera"
@@ -318,23 +318,35 @@ in {
                 indexes (large binary trees; filenames are still reachable
                 with the filesystem `search_files` glob tool). Entries are
                 fnmatch patterns in which `*` also matches `/`, so
-                `Repository/work/*/sites/*/files` covers a Drupal upload
+                `Repository/*/sites/*/files` covers a Drupal upload
                 tree at any depth.
             '';
             default = [
                 "Videos" "Mega/Camera Uploads" "Repository/ai"
+                # Media libraries, theme packs, backups and staging areas:
+                # reachable by name through the filesystem tools, not indexed.
+                "Mega/Media" "Mega/System/Themes" "Mega/System/Backups"
+                "Music/Processing"
                 # Client sites' user uploads (Drupal public and private
                 # files: images, derivatives, attachments) — hundreds of
                 # thousands of files that are not ours to search.
-                "Repository/work/*/sites/*/files"
+                "Repository/*/sites/*/files"
                 "Repository/work/*/private"
                 # Third-party Drupal code vendored per project (a copy of
                 # core and the contrib modules/themes/libraries in each of
-                # ~40 client checkouts, >1M files); custom code stays in.
-                "Repository/work/*/web/core"
-                "Repository/work/*/web/libraries"
-                "Repository/work/*/modules/contrib"
-                "Repository/work/*/themes/contrib"
+                # ~40 client checkouts and the personal Drupal labs, >1M
+                # files); custom code stays in.
+                "Repository/*/web/core"
+                "Repository/*/web/libraries"
+                "Repository/*/modules/contrib"
+                "Repository/*/themes/contrib"
+                # Laravel runtime output: Debugbar request dumps (1.5k JSON
+                # files carrying ~29M terms) and compiled views/cache.
+                "Repository/*/storage/debugbar"
+                "Repository/*/storage/framework"
+                # Desktop noise: icon/theme packs (SVG is text), editor
+                # package caches, NVM's Node installs.
+                ".icons" ".themes" ".config/sublime-text" ".config/node/nvm"
             ];
         };
 
@@ -342,6 +354,10 @@ in {
             type = types.listOf types.str;
             description = "Directory/file name patterns skipped by the indexer, anywhere in the tree (appended to Recoll's defaults).";
             default = [
+                # btrfs/snapper snapshot trees duplicate everything beneath them
+                # and sidestep the path patterns above: Repository/.snapshots/1
+                # alone held ~1.1M of the 1.95M indexed documents (2026-09-18).
+                ".snapshots"
                 "node_modules" "vendor" "bower_components" ".idea" ".vscode"
                 ".mypy_cache" ".ruff_cache" ".venv" "venv" "dist" "build" "out"
                 "target" ".next" ".nuxt" ".turbo" ".parcel-cache" ".gradle" ".npm"
@@ -368,6 +384,12 @@ in {
                 ".db" ".sqlite" ".sqlite3" ".ldb"
                 ".woff" ".woff2" ".ttf" ".otf" ".eot"
                 ".psd" ".xcf" ".kra" ".blend"
+                # Raster and vector images: recoll-nox's image handler (rclimg
+                # via Image::ExifTool) dies on every file because the package
+                # lacks the Perl JSON module, so extraction only produced one
+                # failed process per image (183k errors per pass, 2026-09-18).
+                ".jpg" ".jpeg" ".png" ".gif" ".webp" ".bmp" ".tif" ".tiff"
+                ".heic" ".avif" ".svg" ".ico"
             ];
         };
 

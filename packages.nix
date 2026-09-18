@@ -133,6 +133,7 @@ let
             sublime4-dev
 
             # PHP Quality Tools (global — wired into PhpStorm)
+            php83                          # host PHP CLI: PhpStorm interpreter + runs project-local vendor/bin tools
             phpPackages.php-codesniffer   # phpcs + phpcbf
             phpPackages.php-cs-fixer       # php-cs-fixer
             phpstan                        # static analysis
