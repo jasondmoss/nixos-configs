@@ -16,15 +16,34 @@
 #--     approval tokens, audit log, CLAUDE_BROWSER_ALLOW_SCRIPTS=0 kill
 #--     switch), a URL-scheme guard (http/https/about:blank only) and
 #--     WebSocket auth on the first frame.
-#--     Not re-verified at this pin: whether the installed AMO-signed XPI
-#--     still corresponds to this commit — the extension version moved
-#--     1.0.0 -> 1.4.0 and gained the "notifications" permission.
+#--     Extension/server mismatch — RESOLVED 2026-09-19. The AMO-signed XPI
+#--     does not correspond to this commit, and cannot: upstream has published
+#--     no GitHub releases and no tags (the releases API returns [], and
+#--     releases/latest 404s), while AMO's only public build is still 1.0.0
+#--     (claudecodebrowser-1.0.0.xpi). extension/manifest.json at this commit
+#--     declares 1.4.0 and gained the "notifications" permission, so the
+#--     extension half of this pin exists only as source — there is no 1.4.0
+#--     asset to install anywhere.
+#--     Practical effect: the installed 1.0.0 extension does not implement
+#--     every action the 1.4.0 mcp-server exposes. browser_get_text fails with
+#--     "Unknown action: getText"; browser_navigate, browser_get_tabs,
+#--     browser_get_page_info, browser_screenshot and browser_safety_status all
+#--     work (verified against a live profile). safety.py is server-side, so
+#--     the guard layer above applies regardless of extension version.
+#--     Closing the gap would mean building an unsigned XPI from extension/ and
+#--     setting xpinstall.signatures.required=false on the profile (possible on
+#--     Nightly, not on release/beta) — deliberately NOT done: that profile's
+#--     extension already holds <all_urls> and wraps fetch/XHR on every page,
+#--     which is the last place to switch off signature enforcement.
 #--     Behaviour change worth knowing: content.js now wraps window.fetch and
 #--     XMLHttpRequest on every page (<all_urls>) to log request/response
 #--     traffic for browser_get_network_logs. Local-only, but broad.
 #--     Note the repo's extension/manifest.json also gained an update_url
-#--     pointing at GitHub Releases; it does not affect this derivation, which
-#--     packages only native-host, mcp-server and agent — never the extension.
+#--     pointing at GitHub Releases (releases/latest/download/updates.json —
+#--     itself a 404, per the mismatch note above, so the extension's auto-
+#--     update channel is dead on arrival); it does not affect this derivation,
+#--     which packages only native-host, mcp-server and agent — never the
+#--     extension.
 #--
 #-- Components installed:
 #--   claudecodebrowser-host   — native messaging host (launched by Firefox)
@@ -38,19 +57,27 @@
 let
     pythonEnv = pkgs.python3.withPackages (ps: [ ps.websockets ]);
 
-    #-- Launcher for the dedicated "Claude Code" Firefox profile — the only
+    #-- Launcher for the dedicated "Claude" Firefox profile — the only
     #-- profile with the ClaudeCodeBrowser extension installed. It is an
     #-- in-app profile-groups profile (not in profiles.ini), so it must be
     #-- launched by path, not with -P. The directory is registered in the
-    #-- group DB (~/.mozilla/firefox/Profile Groups/f53ea869.sqlite).
-    firefoxClaudeProfileDir = "/home/me/.mozilla/firefox/profile-claude-code";
+    #-- group DB (~/.mozilla/firefox/Profile Groups/62c9e87a.sqlite).
+    #--
+    #-- Moved from Firefox Stable to Nightly on 2026-09-19 (Stable is down to
+    #-- a single "Default" profile). Nightly generated an opaque directory name
+    #-- for it ("5VdNiNrN.Profile 4"); renamed the same day to match the profile
+    #-- name. A rename means updating Profiles.path in the group DB plus the
+    #-- profile's own extensions.json, pkcs11.txt and addonStartup.json.lz4,
+    #-- which all record the absolute path — so re-read this from the group DB
+    #-- rather than assuming the convention held.
+    firefoxClaudeProfileDir = "/home/me/.mozilla/firefox/profile-claude";
 
     firefoxClaudeDesktopItem = pkgs.makeDesktopItem {
         type = "Application";
         terminal = false;
         name = "firefox-claude";
         desktopName = "Firefox (Claude Code)";
-        exec = "firefox --profile \"${firefoxClaudeProfileDir}\" %u";
+        exec = "firefox-nightly --profile \"${firefoxClaudeProfileDir}\" %u";
         # Theme icon name, not a file path — Krema cannot render absolute Icon=
         # paths (see packages/firefox-nightly). SVG in ~/.icons/hicolor/scalable/apps.
         icon = "custom-firefox-claude";
