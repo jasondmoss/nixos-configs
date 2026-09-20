@@ -233,6 +233,12 @@ let
             openvpn
             proton-vpn
             tor-browser
+            # Browser extension built from source (overlays/default.nix →
+            # packages/unclutter). Nightly ships it as a distribution add-on,
+            # Chrome via environment.etc below; the package itself is here so
+            # /run/current-system/sw/share/unclutter/ exposes the XPI, CRX
+            # and unpacked chrome-mv3 build at a stable path.
+            unclutter
             wireguard-tools
         ];
 
@@ -292,6 +298,13 @@ in {
 
     # Flatten the attribute set of lists into a single list.
     environment.systemPackages = lib.flatten (builtins.attrValues pkgsByCategories);
+
+    # Google Chrome external extensions. The Chrome package (nixpkgs.nix)
+    # points its <install dir>/extensions/ at this directory; every <id>.json
+    # in it names a local CRX that Chrome installs and keeps up to date with
+    # external_version. Only Unclutter for now.
+    environment.etc."opt/chrome/extensions".source =
+        "${pkgs.unclutter}/share/unclutter/chrome-external";
 }
 
 # <> #

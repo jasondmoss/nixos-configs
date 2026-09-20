@@ -1,4 +1,4 @@
-{ lib,  stdenv,  makeDesktopItem,  firefox-src }:
+{ lib,  stdenv,  makeDesktopItem,  firefox-src,  unclutter }:
 
 let
     firefoxNightlyDesktopItem = makeDesktopItem {
@@ -52,6 +52,15 @@ let
     # in about:config. (An earlier `UserPreferences` key here was not a real
     # policy name and was silently ignored, so none of these had ever taken
     # effect.)
+    #
+    # Caveat (strace, 2026-09-20): on Linux Firefox reads
+    # /etc/firefox/policies/policies.json *instead of* distribution/
+    # policies.json whenever the system file exists — and programs.firefox
+    # (programs.nix) writes it. Nightly shares MOZ_APP_NAME=firefox, so today
+    # this file is skipped and the prefs below only apply because
+    # programs.firefox.preferences carries the same set. Anything that must
+    # reach Nightly *only* cannot go through policies; the Unclutter add-on
+    # below therefore uses the distribution/extensions mechanism instead.
     firefoxNightlyPrefs = {
         "media.ffmpeg.vaapi.enabled" = true;
         "media.hardware-video-decoding.force-enabled" = true;
@@ -133,6 +142,35 @@ chmod -R +w "$LIB_DIR"
 # Policies
 mkdir -p "$LIB_DIR/distribution"
 echo '${builtins.toJSON firefoxNightlyPolicies}' > "$LIB_DIR/distribution/policies.json"
+
+# Unclutter (packages/unclutter) as a distribution add-on: Firefox copies
+# distribution/extensions/<add-on id>.xpi into every profile, enabled, the
+# first time it sees it — the same mechanism Tor/Mullvad Browser ship NoScript
+# with. Two autoconfig prefs make it work for an unsigned, locally built XPI:
+#  - xpinstall.signatures.required=false: the build is not Mozilla-signed.
+#    Nightly (MOZ_REQUIRE_SIGNING=false) honours the pref; the release Firefox
+#    from programs.firefox would not, which is why it gets no copy.
+#  - clearPref(extensions.installedDistroAddon.<id>): once installed, Firefox
+#    only re-reads the distribution dir after an *app version* change, i.e.
+#    monthly on Nightly. Clearing that marker at every start makes it compare
+#    versions each launch and pick up a newer XPI on the next restart
+#    (verified 158.0a1: 0.3.0.8 → 0.3.0.9). Uninstalling the add-on in
+#    about:addons only lasts until the next start for the same reason; drop
+#    it from the config to remove it.
+# Default prefs, not locked: still overridable in about:config.
+mkdir -p "$LIB_DIR/distribution/extensions"
+cp ${unclutter}/share/unclutter/unclutter.xpi \
+    "$LIB_DIR/distribution/extensions/${unclutter.geckoId}.xpi"
+cat > "$LIB_DIR/defaults/pref/autoconfig.js" <<EOF
+//
+pref("general.config.filename", "mozilla.cfg");
+pref("general.config.obscure_value", 0);
+EOF
+cat > "$LIB_DIR/mozilla.cfg" <<EOF
+// First line must be a comment. Autoconfig for the Unclutter distribution add-on.
+defaultPref("xpinstall.signatures.required", false);
+clearPref("extensions.installedDistroAddon.${unclutter.geckoId}");
+EOF
 
 # Desktop Item
 mkdir -p "$out/share/applications"

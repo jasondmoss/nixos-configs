@@ -184,8 +184,10 @@ version + checksum in a `manifest.json` refreshed by a sibling `update.sh`.
 **Inline `callPackage`:** `claude-code` (`ai.nix`).
 
 **Overlay-based:** `firefox-nightly` (nixpkgs-mozilla + wrapper in `../overlays/default.nix`),
-`jetbrains` (PhpStorm), `google-chrome` (Vulkan disabled), `steam` (`libgdiplus`), `drkonqi`
-(GDB preamble patch).
+`unclutter` (browser extension built from source with bun/WXT; shipped to Firefox Nightly as a
+distribution add-on and to Google Chrome as an external CRX via `/etc/opt/chrome/extensions`),
+`jetbrains` (PhpStorm), `google-chrome` (Vulkan disabled, external-extensions symlink), `steam`
+(`libgdiplus`), `drkonqi` (GDB preamble patch).
 
 ---
 

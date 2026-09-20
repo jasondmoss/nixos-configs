@@ -48,10 +48,24 @@
 
             # Disable Vulkan for Chrome — incompatible with
             # --ozone-platform=wayland (NIXOS_OZONE_WL=1).
+            #
+            # Chrome reads "external extension" descriptors (<id>.json →
+            # local CRX) from <install dir>/extensions/, i.e.
+            # $out/share/google/chrome/extensions here; Linux Chrome installs
+            # them enabled, without a prompt (verified 153, headless). The
+            # directory is a symlink to /etc/opt/chrome/extensions, filled by
+            # environment.etc in packages.nix from the unclutter package, so
+            # an extension update never rebuilds the 430 MB Chrome closure.
+            # (--load-extension is ignored by branded Chrome since 137, and
+            # ExtensionInstallForcelist needs an http(s) update manifest.)
             (final: prev: {
-                google-chrome = prev.google-chrome.override {
+                google-chrome = (prev.google-chrome.override {
                     commandLineArgs = "--disable-features=Vulkan";
-                };
+                }).overrideAttrs (old: {
+                    postInstall = (old.postInstall or "") + ''
+                        ln -s /etc/opt/chrome/extensions "$out/share/google/chrome/extensions"
+                    '';
+                });
             })
         ];
     };
