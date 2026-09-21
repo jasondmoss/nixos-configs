@@ -56,7 +56,7 @@ let
     # Caveat (strace, 2026-09-20): on Linux Firefox reads
     # /etc/firefox/policies/policies.json *instead of* distribution/
     # policies.json whenever the system file exists — and programs.firefox
-    # (programs.nix) writes it. Nightly shares MOZ_APP_NAME=firefox, so today
+    # (desktop/browsers.nix) writes it. Nightly shares MOZ_APP_NAME=firefox, so today
     # this file is skipped and the prefs below only apply because
     # programs.firefox.preferences carries the same set. Anything that must
     # reach Nightly *only* cannot go through policies; the Unclutter add-on

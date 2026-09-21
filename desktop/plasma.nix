@@ -18,7 +18,7 @@
                 };
 
                 # Local theme: ../packages/sddm-perseverance, installed via the
-                # customPkgs attrset in ../packages.nix. Leaving "breeze" also
+                # customPkgs attrset in ../system/packages.nix. Leaving "breeze" also
                 # drops the CursorTheme/CursorSize pair the module attaches
                 # only for that theme.
                 #theme = "breeze";
@@ -95,30 +95,21 @@
         speechd.enable = false;
     };
 
-    # XDG portals and MIME defaults.
-    xdg = {
-        mime.defaultApplications = {
-            "text/html" = "firefox-nightly.desktop";
-            "x-scheme-handler/http" = "firefox-nightly.desktop";
-            "x-scheme-handler/https" = "firefox-nightly.desktop";
-            "x-scheme-handler/about" = "firefox-nightly.desktop";
-            "x-scheme-handler/unknown" = "firefox-nightly.desktop";
+    # XDG portals. The browser MIME defaults (http/https/html → Firefox
+    # Nightly) live in ./browsers.nix.
+    xdg.portal = {
+        enable = true;
+        xdgOpenUsePortal = true;
+        config = {
+            kde.default = [ "kde" "gtk" "gnome" ];
+            kde."org.freedesktop.portal.FileChooser" = [ "kde" ];
+            kde."org.freedesktop.portal.OpenURI" = [ "kde" ];
         };
-
-        portal = {
-            enable = true;
-            xdgOpenUsePortal = true;
-            config = {
-                kde.default = [ "kde" "gtk" "gnome" ];
-                kde."org.freedesktop.portal.FileChooser" = [ "kde" ];
-                kde."org.freedesktop.portal.OpenURI" = [ "kde" ];
-            };
-            extraPortals = with pkgs; [
-                xdg-desktop-portal
-                xdg-desktop-portal-termfilechooser
-                kdePackages.xdg-desktop-portal-kde
-            ];
-        };
+        extraPortals = with pkgs; [
+            xdg-desktop-portal
+            xdg-desktop-portal-termfilechooser
+            kdePackages.xdg-desktop-portal-kde
+        ];
     };
 
     # xdg-desktop-portal can be dbus-activated in the logout/login gap, before

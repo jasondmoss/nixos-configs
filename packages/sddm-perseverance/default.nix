@@ -8,7 +8,7 @@
 # against ThemeDir = /run/current-system/sw/share/sddm/themes, which the sddm
 # module populates via `environment.pathsToLink = [ "/share/sddm" ]` — so this
 # package only has to land in environment.systemPackages (it goes through the
-# customPkgs attrset in ../../packages.nix) for `theme = "Perseverance"` to
+# customPkgs attrset in ../../system/packages.nix) for `theme = "Perseverance"` to
 # find it.
 #
 # src is a local path, so every edit under ./theme changes the derivation hash

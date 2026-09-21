@@ -1,7 +1,5 @@
 { config, ... }: {
-	security = {
-        rtkit.enable = true;
-
+    security = {
         # No kexec / kernel image replacement at runtime. Hibernation is not
         # used (16 GiB swap < 32 GiB RAM), so nothing is lost.
         protectKernelImage = true;
@@ -38,7 +36,7 @@ polkit.addRule(function(action, subject) {
                 };
 
                 # Ly's PAM service — re-enable alongside the ly block in
-                # desktop/plasma.nix. Harmless if left on, but the service is
+                # ../desktop/plasma.nix. Harmless if left on, but the service is
                 # dead weight while SDDM is the greeter.
                 #ly = {
                 #    kwallet.enable = true;

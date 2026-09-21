@@ -68,7 +68,7 @@ let
         runtimeInputs = [ homeSearchPython ];
         runtimeEnv.PYTHONPATH = "${cfg.recollPackage}/${pkgs.python3.sitePackages}";
         text = ''
-exec python3 ${./packages/ai-home/home-search-mcp.py} "$@"
+exec python3 ${../packages/ai-home/home-search-mcp.py} "$@"
         '';
     };
 
@@ -114,7 +114,7 @@ exec recollq -c ${cfg.stateDir}/recoll -A -n "''${AI_SEARCH_MAX:-20}" "$@"
         runtimeInputs = [ semanticPython ];
         runtimeEnv.AI_HOME_SEMANTIC_CONFIG = "${semanticConfig}";
         text = ''
-exec python3 ${./packages/ai-home/home-semantic.py} "$@"
+exec python3 ${../packages/ai-home/home-semantic.py} "$@"
         '';
     };
 

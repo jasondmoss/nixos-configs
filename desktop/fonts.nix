@@ -1,5 +1,5 @@
 { config, pkgs, ... }: {
-	fonts = {
+    fonts = {
         fontDir = {
             enable = true;
             decompressFonts = config.programs.xwayland.enable;

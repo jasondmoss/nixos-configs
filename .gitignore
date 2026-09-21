@@ -3,6 +3,7 @@
 **/secret.txt
 .claude
 .idea
+.junie
 CLAUDE.md
 identity.nix
 result

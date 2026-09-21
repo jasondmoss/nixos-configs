@@ -1,4 +1,4 @@
-{ pkgs, fetchpatch2, ... }: {
+{ pkgs, ... }: {
     nixpkgs = {
         hostPlatform = {
             #gcc.arch = "znver2";
@@ -30,10 +30,10 @@
 
         overlays = [
             # Firefox Nightly.
-            (import ../overlays/nixpkgs-mozilla/firefox-overlay.nix)
+            (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
             # PhpStorm.
-            (import ./packages/jetbrains)
+            (import ../packages/jetbrains)
             (final: prev: {
                 phpstorm = prev.phpstorm.overrideAttrs (old: {
                     buildInputs = old.buildInputs ++ [
@@ -44,7 +44,7 @@
                 });
             })
 
-            (import ../overlays/default.nix)
+            (import ../../overlays/default.nix)
 
             # Disable Vulkan for Chrome — incompatible with
             # --ozone-platform=wayland (NIXOS_OZONE_WL=1).
@@ -54,7 +54,7 @@
             # $out/share/google/chrome/extensions here; Linux Chrome installs
             # them enabled, without a prompt (verified 153, headless). The
             # directory is a symlink to /etc/opt/chrome/extensions, filled by
-            # environment.etc in packages.nix from the unclutter package, so
+            # environment.etc in ../desktop/browsers.nix from the unclutter package, so
             # an extension update never rebuilds the 430 MB Chrome closure.
             # (--load-extension is ignored by branded Chrome since 137, and
             # ExtensionInstallForcelist needs an http(s) update manifest.)

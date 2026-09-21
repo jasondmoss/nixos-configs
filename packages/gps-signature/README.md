@@ -8,7 +8,7 @@ inserted into new Proton Mail messages composed in Wavebox.
 | Piece | Where | Role |
 |---|---|---|
 | `gps-signature-server.py` | systemd user service `gps-signature` | Serves `http://127.0.0.1:47121/location.txt` |
-| `default.nix` | NixOS module (imported from `packages.nix`) | Installs the daemon, enables GeoClue2 |
+| `default.nix` | NixOS module (imported from `system/packages.nix`) | Installs the daemon, enables GeoClue2 |
 | `proton-gps-signature.user.js` | Violentmonkey in Wavebox | Swaps `[[GPS]]` in the signature when the composer opens |
 
 ## Browser setup (one time, manual)

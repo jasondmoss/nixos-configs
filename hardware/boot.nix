@@ -64,8 +64,8 @@
             "net.ipv4.tcp_rfc1337" = 1;
             "dev.tty.ldisc_autoload" = 0;
 
-            # zram swap: no readahead of swap pages (each is decompressed
-            # individually anyway).
+            # zram swap (./filesystems.nix): no readahead of swap pages
+            # (each is decompressed individually anyway).
             "vm.page-cluster" = 0;
         };
 
@@ -88,82 +88,6 @@
 
         swraid.enable = false;
         tmp.cleanOnBoot = true;
-    };
-
-    #
-    # Filesystems.
-    #
-
-    # [nvme0n1p2]
-    fileSystems."/" = {
-        device = "/dev/disk/by-uuid/f3e63afc-6602-4f46-845d-bd6d5bc6afe3";
-        fsType = "ext4";
-    };
-
-    # [nvme1n1p1]
-    fileSystems."/home" = {
-        device = "/dev/disk/by-uuid/4d656a69-dc46-46b6-bec3-934e12415711";
-        fsType = "btrfs";
-        options = [ "compress=zstd:1" "noatime" ];
-    };
-
-    # [sdb2]
-    fileSystems."/home/me/Mega" = {
-        device = "/dev/disk/by-uuid/ccee2c99-427f-40f1-ad72-af6c81be4379";
-        fsType = "ext4";
-    };
-
-    # [sdc1]
-    fileSystems."/home/me/Music" = {
-        device = "/dev/disk/by-uuid/bf9410ed-bf55-4341-97f5-5576f80ce071";
-        fsType = "ext4";
-    };
-
-    # [sdb1]
-    fileSystems."/home/me/Repository" = {
-        device = "/dev/disk/by-uuid/2cf8ca9d-43ab-4ef5-99ff-0a909e765c5e";
-        fsType = "btrfs";
-        options = [ "compress=zstd:1" "noatime" ];
-    };
-
-    # [sda1]
-    fileSystems."/home/me/Videos/Movies" = {
-        device = "/dev/disk/by-uuid/52dfd9d6-7557-45fd-83c6-a6bfff2c0c83";
-        fsType = "ext4";
-    };
-
-    # [sdd]
-     fileSystems."/home/me/Videos/Television" = {
-         device = "/dev/disk/by-uuid/a7007b9d-f315-4dec-83cd-ef883729e3c0";
-         fsType = "ext4";
-     };
-
-    fileSystems."/boot/efi" = {
-        device = "/dev/disk/by-uuid/3430-092D";
-        fsType = "vfat";
-    };
-
-    swapDevices = [{
-        device = "/swapfile";
-        size = 16 * 1024;  # 16GB
-    }];
-
-    # Compressed in-RAM swap ahead of the NVMe swapfile (priority 100 vs -1):
-    # cold pages from browsers/IDEs get squeezed instead of hitting the disk
-    # when a model spills out of VRAM. ~8 GiB of zram on 32 GiB.
-    zramSwap = {
-        enable = true;
-        algorithm = "zstd";
-        memoryPercent = 25;
-        priority = 100;
-    };
-
-    # Monthly btrfs scrub on the two btrfs volumes: the only way to detect
-    # silent corruption before a file is read back wrong.
-    services.btrfs.autoScrub = {
-        enable = true;
-        interval = "monthly";
-        fileSystems = [ "/home" "/home/me/Repository" ];
     };
 
     environment.etc."kernel/install.conf".text = "layout=bls\n";

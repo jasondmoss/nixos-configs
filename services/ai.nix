@@ -13,12 +13,18 @@ let
 in {
     imports = [
         # KRunner → Ollama runner (services.krunner-ollama, configured below).
-        ./packages/krunner-ollama
+        ../packages/krunner-ollama
     ];
 
     environment = {
         variables = {
             CUDA_PATH = "${pkgs.cudaPackages.cudatoolkit}";
+        };
+
+        sessionVariables = {
+            # HuggingFace-based tools cache models on the Repository drive.
+            HF_HOME = "/home/me/Repository/ai/huggingface";
+            HF_HUB_DISABLE_TELEMETRY = "1";
         };
 
         systemPackages = with pkgs; [
@@ -27,7 +33,7 @@ in {
             cudaPackages.cudnn
 
             # AI tools.
-            (pkgs.callPackage ./packages/claude-code {})
+            (pkgs.callPackage ../packages/claude-code {})
             claude-monitor
             goose-cli
             opencode
@@ -230,7 +236,7 @@ PARAMETER num_ctx 8192
     services.comfyui = {
         enable = true;
         # Module default also binds ::1, which crash-loops the service on
-        # this system (IPv6 disabled in networking.nix).
+        # this system (IPv6 disabled in ../system/networking.nix).
         listen = [ "127.0.0.1" ];
         # Un-pin ComfyUI's cudaPackages_13: its libnvshmem is broken on the
         # current channel commit (CCCL header errors), and the CUDA-13 torch

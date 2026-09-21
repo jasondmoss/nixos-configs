@@ -76,10 +76,11 @@ in {
     # Configurations.
     #
     imports = [
-        ./nixpkgs.nix
+        ./system/nixpkgs.nix
 
         # Hardware.
         ./hardware/boot.nix
+        ./hardware/filesystems.nix
         ./hardware/gpu.nix
         ./hardware/peripherals.nix
         ./hardware/power.nix
@@ -87,23 +88,26 @@ in {
         # Desktop.
         ./desktop/plasma.nix
         ./desktop/fonts.nix
+        ./desktop/audio.nix
+        ./desktop/browsers.nix
 
         # System.
-        ./networking.nix
-        ./security.nix
-        ./users.nix
-        ./environment.nix
-        ./programs.nix
-        ./packages.nix
-        ./services.nix
-        ./qbittorrent-vpn.nix
-        ./pcp.nix
-        ./pcp-grafana.nix
+        ./system/networking.nix
+        ./system/security.nix
+        ./system/users.nix
+        ./system/environment.nix
+        ./system/programs.nix
+        ./system/development.nix
+        ./system/packages.nix
 
-        # Development & AI.
-        ./development.nix
-        ./ai.nix
-        ./ai-home.nix
+        # Services.
+        ./services/base.nix
+        ./services/qbittorrent-vpn.nix
+        ./services/pcp.nix
+        ./services/pcp-grafana.nix
+        ./services/docker.nix
+        ./services/ai.nix
+        ./services/ai-home.nix
     ];
 }
 

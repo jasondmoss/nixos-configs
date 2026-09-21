@@ -1,4 +1,8 @@
-{ config, pkgs, ... }: {
+# docker.nix
+#
+# Docker Engine for the Compose/DDEV/Lando based client projects (overlay2,
+# weekly auto-prune) plus the buildx and compose CLI plugins.
+{ pkgs, ... }: {
     virtualisation.docker = {
         enable = true;
         enableOnBoot = true;

@@ -13,7 +13,7 @@ and documents are always embedded by the same code:
                                          mcp-proxy as /servers/semantic/mcp
     home-semantic query TEXT [-n N] [-d DIR]   shell helper (`ai-semantic`)
 
-Everything runs inside the ai-home sandbox (see ../../ai-home.nix): paths in
+Everything runs inside the ai-home sandbox (see ../../services/ai-home.nix): paths in
 services.ai-home.hiddenPaths do not exist in the mount namespace, and the
 only reachable network address is loopback, so nothing can leave the machine.
 Configuration is the JSON file named by $AI_HOME_SEMANTIC_CONFIG (generated

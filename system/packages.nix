@@ -3,30 +3,36 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
-        antigravity    = pkgs.callPackage ./packages/antigravity-cli {};
-        claude-desktop = pkgs.callPackage ./packages/claude-desktop {};
-        gh-clone       = pkgs.callPackage ./packages/gh-clone {};
-        jopdf          = pkgs.callPackage ./packages/jopdf {};
-        kde-darkly     = pkgs.callPackage ./packages/kde-darkly {};
-        kde-klassy     = pkgs.callPackage ./packages/kde-klassy {};
-        kde-vinyl      = pkgs.callPackage ./packages/kde-vinyl {};
-        krema          = pkgs.kdePackages.callPackage ./packages/krema {};
-        #ladybird       = pkgs.callPackage ./packages/ladybird {};
-        nyxt-custom    = pkgs.callPackage ./packages/nyxt-custom { };
-        proton-drive   = pkgs.callPackage ./packages/proton-drive-cli {};
-        # Local SDDM greeter theme; selected by name in desktop/plasma.nix.
-        sddm-persev    = pkgs.callPackage ./packages/sddm-perseverance {};
-        stage-manager  = pkgs.callPackage ./packages/stage-manager {};
-        standardnotes  = pkgs.callPackage ./packages/standardnotes {};
-        strawberry     = pkgs.callPackage ./packages/strawberry-master {};
-        system-panel   = pkgs.callPackage ./packages/system-panel {};
-        vivaldi        = pkgs.callPackage ./packages/vivaldi-snapshot {
+        antigravity    = pkgs.callPackage ../packages/antigravity-cli {};
+        claude-desktop = pkgs.callPackage ../packages/claude-desktop {};
+        gh-clone       = pkgs.callPackage ../packages/gh-clone {};
+        jopdf          = pkgs.callPackage ../packages/jopdf {};
+        kde-darkly     = pkgs.callPackage ../packages/kde-darkly {};
+        kde-klassy     = pkgs.callPackage ../packages/kde-klassy {};
+        kde-vinyl      = pkgs.callPackage ../packages/kde-vinyl {};
+        krema          = pkgs.kdePackages.callPackage ../packages/krema {};
+        #ladybird       = pkgs.callPackage ../packages/ladybird {};
+        nyxt-custom    = pkgs.callPackage ../packages/nyxt-custom { };
+        proton-drive   = pkgs.callPackage ../packages/proton-drive-cli {};
+        # Local SDDM greeter theme; selected by name in ../desktop/plasma.nix.
+        sddm-persev    = pkgs.callPackage ../packages/sddm-perseverance {};
+        stage-manager  = pkgs.callPackage ../packages/stage-manager {};
+        standardnotes  = pkgs.callPackage ../packages/standardnotes {};
+        strawberry     = pkgs.callPackage ../packages/strawberry-master {};
+        system-panel   = pkgs.callPackage ../packages/system-panel {};
+        vivaldi        = pkgs.callPackage ../packages/vivaldi-snapshot {
             # Custom package: nothing wires NIXOS_OZONE_WL in, so force ozone
             # Wayland here or Vivaldi silently runs on XWayland.
             commandLineArgs = "--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations";
         };
-        wavebox        = pkgs.callPackage ./packages/wavebox-beta {};
+        wavebox        = pkgs.callPackage ../packages/wavebox-beta {};
     };
+
+    # --- System Python ---
+    # One declared interpreter for shebangs, one-liners, Claude Code sessions
+    # and PhpStorm's Python Portable plugin (exposed at /etc/jetbrains/python
+    # below).
+    systemPython = pkgs.python3.withPackages (p: [ p.cryptography p.pip ]);
 
     # --- Package Categories ---
     pkgsByCategories = {
@@ -112,6 +118,9 @@ let
             pkg-config
             rustc
             yarn
+
+            # Python — the declared env from the let block above
+            systemPython
 
             # KDE/Qt Specific Development
             clazy
@@ -223,7 +232,7 @@ let
 
         network-web = with pkgs; [
             filezilla
-            # firefox itself comes from programs.firefox (programs.nix).
+            # firefox itself comes from programs.firefox (../desktop/browsers.nix).
             firefox-nightly
             google-chrome
             links2
@@ -235,9 +244,10 @@ let
             tor-browser
             # Browser extension built from source (overlays/default.nix →
             # packages/unclutter). Nightly ships it as a distribution add-on,
-            # Chrome via environment.etc below; the package itself is here so
-            # /run/current-system/sw/share/unclutter/ exposes the XPI, CRX
-            # and unpacked chrome-mv3 build at a stable path.
+            # Chrome via environment.etc in ../desktop/browsers.nix; the package
+            # itself is here so
+            # /run/current-system/sw/share/unclutter/ exposes the XPI, CRX and
+            # unpacked chrome-mv3 build at a stable path.
             unclutter
             wireguard-tools
         ];
@@ -271,9 +281,9 @@ let
     };
 in {
     imports = [
-        ./packages/claude-code-browser
-        ./packages/gps-signature
-        ./packages/gimp
+        ../packages/claude-code-browser
+        ../packages/gps-signature
+        ../packages/gimp
     ];
 
     # KDE exclude list.
@@ -299,12 +309,11 @@ in {
     # Flatten the attribute set of lists into a single list.
     environment.systemPackages = lib.flatten (builtins.attrValues pkgsByCategories);
 
-    # Google Chrome external extensions. The Chrome package (nixpkgs.nix)
-    # points its <install dir>/extensions/ at this directory; every <id>.json
-    # in it names a local CRX that Chrome installs and keeps up to date with
-    # external_version. Only Unclutter for now.
-    environment.etc."opt/chrome/extensions".source =
-        "${pkgs.unclutter}/share/unclutter/chrome-external";
+    # PhpStorm's Python Portable plugin takes an interpreter *folder*
+    # (anything with bin/python3) and stores that path, so hand it a
+    # symlink that follows rebuilds instead of a raw /nix/store path.
+    # Settings ▸ Python Portable ▸ Add from Disk… → /etc/jetbrains/python
+    environment.etc."jetbrains/python".source = systemPython;
 }
 
 # <> #

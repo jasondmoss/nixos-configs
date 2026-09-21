@@ -2,7 +2,7 @@
 """home-search — MCP server: full-text search over the home directory.
 
 Backed by the Recoll (Xapian) index that ai-home-index.service maintains.
-Runs inside the ai-home sandbox (see ../../ai-home.nix): paths listed in
+Runs inside the ai-home sandbox (see ../../services/ai-home.nix): paths listed in
 services.ai-home.hiddenPaths do not exist in this mount namespace, and the
 index is built inside the same namespace, so it never contains them either.
 

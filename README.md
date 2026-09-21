@@ -49,11 +49,29 @@ Grafana's secret key live under `/var/lib` and `/etc` on the machine only.
 
 ## Module Structure
 
+`configuration.nix` holds the host basics (hostname, locale, console, Nix daemon settings)
+and imports one module per concern from four directories. Modules are grouped by *feature*,
+not by option namespace: a file owns every option its feature needs (`desktop/audio.nix`
+sets both `services.pipewire` and `security.rtkit`).
+
+| Directory   | Holds                                                                  |
+|-------------|------------------------------------------------------------------------|
+| `hardware/` | The physical machine: kernel and boot, mounts, GPU, peripherals, power |
+| `desktop/`  | The graphical session: Plasma, fonts, audio, browsers, colour palette  |
+| `system/`   | OS plumbing, one file per NixOS namespace (nixpkgs, networking, security, users, environment, programs, packages) plus git/SSH identity routing |
+| `services/` | Self-contained service stacks, each removable as a unit: base daemons, qBittorrent VPN, PCP + Grafana, Docker, local AI |
+| `packages/` | Custom package derivations and package-level modules (see below) — always here |
+| `workshop/` | In-development KDE projects, built by `packages/stage-manager` and `packages/system-panel` |
+
+`identity.nix` (gitignored, templated by `identity.nix.example`) sits next to
+`configuration.nix` and is imported as a plain value.
+
 ### Hardware (`hardware/`)
 
 | File              | Purpose                                                              |
 |-------------------|----------------------------------------------------------------------|
-| `boot.nix`        | xanmod kernel, systemd initrd, systemd-boot, filesystems, swap + zram, btrfs scrub, kernel sysctl hardening |
+| `boot.nix`        | xanmod kernel, systemd initrd (NVIDIA modules early), kernel params, modprobe options, blacklist, sysctl hardening, systemd-boot |
+| `filesystems.nix` | Mounts (ext4 root, Btrfs `/home` + `~/Repository` with zstd, media drives), 16 GiB swapfile, zram, monthly Btrfs scrub |
 | `gpu.nix`         | NVIDIA **open** kernel module (bleeding-edge driver), VAAPI, DRM modesetting, `<nixos-hardware>` blackwell profile |
 | `peripherals.nix` | Bluetooth, QMK keyboard firmware, printing, SMART monitoring, udev  |
 | `power.nix`       | AMD microcode, `amd_pstate=active`, static `performance` governor (TLP/power-profiles-daemon disabled) |
@@ -66,33 +84,31 @@ Grafana's secret key live under `/var/lib` and `/etc` on the machine only.
 
 ### Desktop (`desktop/`)
 
-| File         | Purpose                                                                     |
-|--------------|-----------------------------------------------------------------------------|
-| `plasma.nix` | KDE Plasma 6, SDDM (Wayland greeter, local *Perseverance* theme; Ly kept commented out), XDG portals, Wayland/Qt session vars |
-| `fonts.nix`  | Font packages and fontconfig rules                                          |
-| `theme.nix`  | 16-color terminal palette (plain Nix value, imported by `configuration.nix`) |
+| File           | Purpose                                                                   |
+|----------------|---------------------------------------------------------------------------|
+| `plasma.nix`   | KDE Plasma 6, SDDM (Wayland greeter, local *Perseverance* theme; Ly kept commented out), XDG portals, Wayland/Qt session vars |
+| `fonts.nix`    | Font packages and fontconfig rules                                        |
+| `audio.nix`    | PipeWire (ALSA + 32-bit, PulseAudio, JACK) and rtkit                      |
+| `browsers.nix` | `programs.firefox` (nixpkgs Firefox with VAAPI + local-AI sidebar prefs), Firefox Nightly as the MIME default and `DEFAULT_BROWSER`, 1Password browser allowlist, Chrome external-extension directory (Unclutter) |
+| `theme.nix`    | 16-color terminal palette (plain Nix value, imported by `configuration.nix`) |
 
 **Plasma 6** is configured Qt 6 only (`enableQt5Integration = false`), RHI rendering
 backend, XDG portal delegation for KDE/GTK. No input-method framework (US layout via KWin).
 
 ---
 
-### System
+### System (`system/`)
 
-| File                  | Purpose                                                              |
-|-----------------------|----------------------------------------------------------------------|
-| `nixpkgs.nix`         | Host platform, `allowUnfree`, overlays (Firefox Nightly, PhpStorm, Chrome Vulkan-disable, Steam `libgdiplus`) |
-| `identity.nix`        | E-mail addresses only — plain Nix value, not a module, **not committed** |
-| `networking.nix`      | iptables firewall (nothing open to the world; SSH from the LAN only), NetworkManager + OpenVPN, CoreDNS on loopback with DNS-over-TLS, OpenSSH (key-only, root disabled) |
-| `security.nix`        | PAM (KWallet, ssh-agent auth), polkit, sudo (`execWheelOnly`), `protectKernelImage`, fail2ban |
-| `users.nix`           | User account and group memberships                                    |
-| `environment.nix`     | Session/env vars, XDG base dirs, GStreamer paths, per-host git configs, 1Password browser allowlist, telemetry opt-outs |
-| `programs.nix`        | git (LFS, conditional identity includes), neovim, SSH agent, GnuPG, 1Password, Steam, direnv, KDE Connect, nix-index |
-| `packages.nix`        | Central package manifest, organized by category (see below)           |
-| `services.nix`        | PipeWire, earlyoom, plocate, fwupd, journald cap, systemd user units (megasync, ssh-key-pollen), weekly prebuilt nix-index database fetch |
-| `qbittorrent-vpn.nix` | qBittorrent confined to a WireGuard/ProtonVPN network namespace — a kill switch by construction |
-| `pcp.nix`             | Performance Co-Pilot (pmcd/pmlogger/pmie/pmproxy) — always-on metrics with replayable archives, loopback only |
-| `pcp-grafana.nix`     | Grafana + Redis/pmseries front-end for PCP, loopback only             |
+| File              | Purpose                                                                |
+|-------------------|------------------------------------------------------------------------|
+| `nixpkgs.nix`     | Host platform, `allowUnfree`, overlays (Firefox Nightly, PhpStorm, Chrome Vulkan-disable + extensions dir, Steam `libgdiplus`) |
+| `networking.nix`  | iptables firewall (nothing open to the world; SSH from the LAN only), NetworkManager + OpenVPN, CoreDNS on loopback with DNS-over-TLS, OpenSSH (key-only, root disabled) |
+| `security.nix`    | PAM (KWallet, ssh-agent auth), polkit, sudo (`execWheelOnly`), `protectKernelImage`, Lando CA, fail2ban |
+| `users.nix`       | User account and group memberships                                      |
+| `environment.nix` | Session/env vars: XDG base dirs, `Qt6_DIR`, telemetry opt-outs, Electron/Ozone Wayland, GStreamer plugin path |
+| `programs.nix`    | Program toggles: bash completion, direnv, gamemode, KDE Connect, mtr, nix-ld, xwayland, Steam, GnuPG agent, neovim, 1Password, nix-index + weekly prebuilt-database fetch |
+| `development.nix` | Source-control identity routing: git `includeIf` per repository tree → `/etc/gitconfig.*`, one SSH key per host alias, `ssh-key-pollen` loads them at login |
+| `packages.nix`    | Central package manifest organized by category (see below), `customPkgs` wiring, KDE/GNOME exclude lists, `systemPython` (exposed at `/etc/jetbrains/python`) |
 
 **Networking:** CoreDNS on `127.0.0.1` is the system resolver, forwarding over **DNS-over-TLS**
 to Cloudflare. A `local` zone resolves `*.local` to `127.0.0.1`. The firewall opens nothing
@@ -100,25 +116,30 @@ globally: SSH (22) is admitted from the LAN subnet only, KDE Connect (1714–176
 Remote Play open their own ports through their program modules. `nftables.enable = false`
 is intentional: Docker relies on iptables for NAT.
 
+**Nix store:** auto-optimise enabled, GC runs weekly (deletes generations older than
+14 days), `experimental-features = nix-command` only (no flakes).
+
+---
+
+### Services (`services/`)
+
+| File                  | Purpose                                                            |
+|-----------------------|--------------------------------------------------------------------|
+| `base.nix`            | dbus, devmon, fstrim, gnome-keyring, irqbalance, pcscd, fwupd, journald cap (1 GiB), sysstat, earlyoom, plocate (hourly); user units: megasync autostart, DrKonqi coredump launcher off |
+| `qbittorrent-vpn.nix` | qBittorrent confined to a WireGuard/ProtonVPN network namespace — a kill switch by construction |
+| `pcp.nix`             | Performance Co-Pilot (pmcd/pmlogger/pmie/pmproxy) — always-on metrics with replayable archives, loopback only |
+| `pcp-grafana.nix`     | Grafana + Redis/pmseries front-end for PCP, loopback only             |
+| `docker.nix`          | Docker (overlay2, unpinned `pkgs.docker`, weekly auto-prune), docker-compose, docker-buildx. DDEV handles PHP/Drupal dev work |
+| `ai.nix`              | CUDA toolkit, Ollama, Open WebUI, ComfyUI, KRunner → Ollama, voice pipeline, AI CLIs, CUDA binary caches, `HF_HOME` |
+| `ai-home.nix`         | Sandboxed read-only home-directory access + full-text/semantic search for local models (`services.ai-home.*`) |
+
 **qBittorrent VPN kill switch:** qBittorrent runs inside a dedicated network namespace
 (`qbit`) whose only route out is a WireGuard tunnel (config at `/etc/wireguard/qbit.conf`,
 root-only, never in the nix store or git). If the tunnel drops, qBittorrent simply loses
 network. The passwordless sudo rule for entering the namespace requires `runuser -u me`, so
 it cannot yield a root shell.
 
-**Nix store:** auto-optimise enabled, GC runs weekly (deletes generations older than
-14 days), `experimental-features = nix-command` only (no flakes).
-
----
-
-### Development (`development.nix`)
-
-Docker (overlay2 storage driver, unpinned `pkgs.docker`) with weekly auto-prune,
-docker-compose, docker-buildx. DDEV handles PHP/Drupal dev work.
-
----
-
-### AI (`ai.nix`, `ai-home.nix`)
+#### Local AI (`ai.nix`, `ai-home.nix`)
 
 Everything below is **local and loopback-only**. Nothing about the user or the home
 directory is sent to any cloud model.
@@ -130,16 +151,17 @@ directory is sent to any cloud model.
 | ComfyUI         | Image generation/editing (CUDA torch), `127.0.0.1:8188`, models bind-mounted read-only from `~/Repository/ai/comfyui/models` |
 | Voice           | `whisper-cpp-vulkan` (GPU transcription) + `piper-tts`, driven by the `talk` script |
 | Agents          | `opencode` (local models via Ollama), `goose-cli`; `claude-code` for cloud-assisted coding |
-| **ai-home**     | Sandboxed, read-only view of `/home/me` for local models via MCP (`127.0.0.1:8300`): filesystem tools, Recoll full-text search, meaning-based search (Ollama `nomic-embed-text` embeddings of the document folders in an in-process sqlite-vec store), git, document-to-Markdown. Hidden paths are enforced by systemd `InaccessiblePaths` and never indexed; the units have no network egress. Edit `services.ai-home.hiddenPaths` to change what the AI can see |
+| **ai-home**     | Sandboxed, read-only view of `/home/me` for local models via MCP (`127.0.0.1:8300`): filesystem tools, Recoll full-text search, meaning-based search (Ollama `qwen3-embedding:0.6b-8k` embeddings of the document folders in an in-process sqlite-vec store), git, document-to-Markdown. Hidden paths are enforced by systemd `InaccessiblePaths` and never indexed; the units have no network egress. Edit `services.ai-home.hiddenPaths` to change what the AI can see |
 | **krunner-ollama** | KRunner runner: `ai <question>` (or `? <question>`) shows the first line of the local model's answer as a match; Enter copies the full answer to the clipboard, the action button opens the question in Open WebUI (`/?q=…`). `services.krunner-ollama.*` — module + package in `packages/krunner-ollama`; hardened systemd user unit whose only network client is pinned to the loopback Ollama URL |
 
 Firefox's AI chatbot sidebar is pointed at the local Open WebUI in both installed Firefoxes
-(`programs.firefox` and the Nightly wrapper), and Smart Window's *Custom* assistant at Ollama's
-OpenAI-compatible API (`http://127.0.0.1:11434/v1`, model `qwen3.5:4b`).
+(`programs.firefox` in `desktop/browsers.nix` and the Nightly wrapper), and Smart Window's
+*Custom* assistant at Ollama's OpenAI-compatible API (`http://127.0.0.1:11434/v1`, model
+`qwen3.5:4b`).
 
 ---
 
-## Package Categories (`packages.nix`)
+## Package Categories (`system/packages.nix`)
 
 Packages are organized into named category lists, flattened into
 `environment.systemPackages` at build time.
@@ -171,17 +193,17 @@ gnome-tour, gnome-weather.
 Local derivations for software not in nixpkgs or requiring customization. Most pin their
 version + checksum in a `manifest.json` refreshed by a sibling `update.sh`.
 
-**`customPkgs` attrset** (via `pkgs.callPackage` in `packages.nix`): `antigravity-cli`,
+**`customPkgs` attrset** (via `pkgs.callPackage ../packages/<name>` in `system/packages.nix`): `antigravity-cli`,
 `claude-desktop`, `gh-clone`, `jopdf`, `kde-darkly`, `kde-klassy`, `kde-vinyl`, `krema`,
 `nyxt-custom`, `proton-drive-cli`, `sddm-perseverance`, `stage-manager`, `standardnotes`,
 `strawberry-master`, `system-panel`, `vivaldi-snapshot`, `wavebox-beta`.
 
-**Module imports:** `gimp` (+ `gimp-devel`), `claude-code-browser`,
-`gps-signature`, `vaapi` (from `hardware/gpu.nix`), `pcp` (via `pcp.nix`), `grafana-pcp`
-(via `pcp-grafana.nix`), `ai-home` (full-text and semantic search server scripts, via `ai-home.nix`),
-`krunner-ollama` (KRunner runner module + package, via `ai.nix`).
+**Module imports** (from `system/packages.nix` unless noted): `gimp` (+ `gimp-devel`),
+`claude-code-browser`, `gps-signature`, `vaapi` (from `hardware/gpu.nix`), `pcp` (via `services/pcp.nix`), `grafana-pcp`
+(via `services/pcp-grafana.nix`), `ai-home` (full-text and semantic search server scripts, via `services/ai-home.nix`),
+`krunner-ollama` (KRunner runner module + package, via `services/ai.nix`).
 
-**Inline `callPackage`:** `claude-code` (`ai.nix`).
+**Inline `callPackage`:** `claude-code` (`services/ai.nix`).
 
 **Overlay-based:** `firefox-nightly` (nixpkgs-mozilla + wrapper in `../overlays/default.nix`),
 `unclutter` (browser extension built from source with bun/WXT; shipped to Firefox Nightly as a
@@ -206,6 +228,10 @@ In-development KDE projects: `stage-manager` (KWin effect), `system-panel` (plas
 - **`identity.nix` fields** — `emailPersonal`, `emailWork`, `emailOrigin` only. See
   `identity.nix.example`. Never committed.
 - **File endings** — all `.nix` files close with a `# <> #` comment marker.
-- **Adding a package** — add it to the appropriate category list in `packages.nix`. For a
-  new custom derivation, add a `pkgs.callPackage ./packages/<name> {}` entry to `customPkgs`.
+- **Adding a package** — add it to the appropriate category list in `system/packages.nix`.
+  For a new custom derivation, add a `pkgs.callPackage ../packages/<name> {}` entry to
+  `customPkgs`. Custom derivations always live in `packages/`, never in the module directories.
+- **One module per feature** — a file owns every option its feature needs (`desktop/audio.nix`
+  sets both `services.pipewire` and `security.rtkit`); `system/` files map to a NixOS
+  namespace, `services/` files are stacks that can be switched off as a unit.
 - **Unfree packages** — `allowUnfree = true` globally.
