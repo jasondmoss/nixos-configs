@@ -42,6 +42,20 @@
                 autoNumlock = false;
 
                 settings = {
+                    Theme = {
+                        # Greeter cursor and font. Previously came from
+                        # /etc/sddm.conf.d/kde_settings.conf, written by the
+                        # System Settings "Login Screen" page (Feb 2024). That
+                        # file sorts after 00-nixos.conf and overrides it, and
+                        # its Current=materia-dark (Qt5, no greeter binary
+                        # anymore) forced SDDM's fallback theme instead of
+                        # Perseverance. Deleted; keep these here, and don't
+                        # press Apply on that page again or it comes back.
+                        # Cursor package: comixcursors in ../system/packages.nix.
+                        CursorTheme = "ComixCursors";
+                        Font = "Noto Sans,10,-1,0,50,0,0,0,0,0";
+                    };
+
                     Users = {
                         # SDDM's compiled-in default is the FHS trio
                         # (/usr/local/bin:/usr/bin:/bin), none of which exist
