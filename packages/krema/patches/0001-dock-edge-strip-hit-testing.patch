@@ -1,0 +1,58 @@
+diff --git a/src/qml/main.qml b/src/qml/main.qml
+index 870db54..81a5078 100644
+--- a/src/qml/main.qml
++++ b/src/qml/main.qml
+@@ -359,6 +359,21 @@ Item {
+         return { near: restNear, far: restNear + extent * scale }
+     }
+ 
++    // Hit-test span on the SECONDARY axis: the scaled extent, with the
++    // screen-edge (pinned) side left unbounded. The strip between the icons
++    // and the screen edge (panel padding) stays claimable so edge-slammed
++    // clicks land (Fitts's law); the input zone mapping already stops at the
++    // panel's edge-side bound.
++    function _hitSpan(item, scale) {
++        let span = _secondarySpan(item, scale)
++        if (DockView.edge === 1 || DockView.edge === 3) {
++            span.far = Infinity
++        } else {
++            span.near = -Infinity
++        }
++        return span
++    }
++
+     function updateHoveredItem() {
+         if (dockPanel.mouseX < 0) {
+             hoveredIndex = -1
+@@ -380,10 +395,13 @@ Item {
+         }
+         // Edge 1 = Bottom, 3 = Right: far side pinned; icons grow toward "near".
+         // Edge 0 = Top, 2 = Left: near side pinned; icons grow toward "far".
++        // The pinned side is unbounded so the screen-edge strip stays live (see _hitSpan).
+         if (DockView.edge === 0 || DockView.edge === 2) {
++            rowNear = -Infinity
+             rowFar += maxExt
+         } else {
+             rowNear -= maxExt
++            rowFar = Infinity
+         }
+         if (dockPanel.mouseY < rowNear || dockPanel.mouseY > rowFar) {
+             hoveredIndex = -1
+@@ -410,7 +428,7 @@ Item {
+             let hit = false
+             if (slotItem) {
+                 // Secondary axis: scaled extent honours the edge-pinned Scale origin
+-                let span = _secondarySpan(slotItem, slotItem.currentScale)
++                let span = _hitSpan(slotItem, slotItem.currentScale)
+                 hit = dockPanel.mouseY >= span.near && dockPanel.mouseY <= span.far
+             }
+             if (hit) {
+@@ -456,7 +474,7 @@ Item {
+ 
+             // Secondary-axis check: scaled extent honours the edge-pinned
+             // Scale origin (grows away from the screen edge)
+-            let span = _secondarySpan(item, item.currentScale)
++            let span = _hitSpan(item, item.currentScale)
+             if (dockPanel.mouseY < span.near || dockPanel.mouseY > span.far) continue
+ 
+             // Comparison: currently-hovered icon gets distance bonus (sticky)

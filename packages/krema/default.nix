@@ -25,24 +25,20 @@ in stdenv.mkDerivation (finalAttrs: {
         inherit (manifest) hash;
     };
 
-    # Upstream bugs (unreported as of v0.7.0):
-    #  0001 — updateHoveredItem() in main.qml hard-codes horizontal-dock axes for
-    #         its hit-test bounds checks, so on a vertical (left/right) dock only
-    #         the first icon is ever clickable/hoverable. Also keeps the strip
-    #         between the icons and the screen edge claimable on every edge
-    #         (edge-slammed clicks previously fell in a ~4px dead zone).
-    #  0002 — vertical docks size the surface cross-axis with the horizontal
-    #         tooltip reserve (36px), clipping tooltips at the surface edge;
-    #         reserve enough width for label text instead.
-    #  0003 — DodgeWindows: the overlap-detection rect only anchors Y while the
+    # Upstream bugs (unreported as of v0.9.0; v0.9.0 fixed the vertical-dock
+    # hit-test axes and side-tooltip clipping that earlier patches carried):
+    #  0001 — updateHoveredItem() in main.qml bounds both sides of the icon on
+    #         the cross axis, so the strip between the icons and the screen
+    #         edge (panel padding, ~8px) is a dead zone and edge-slammed clicks
+    #         miss. Leave the screen-edge side unbounded on every edge.
+    #  0002 — DodgeWindows: the overlap-detection rect only anchors Y while the
     #         dock hides (m_panelRefY). Vertical docks slide along X, so the
     #         rect chased the panel off-screen → overlap vanished → dock came
     #         back → infinite hide/show oscillation. Anchor X the same way.
     # Remove once fixed upstream.
     patches = [
-        ./patches/0001-fix-vertical-dock-hit-testing.patch
-        ./patches/0002-vertical-dock-tooltip-reserve.patch
-        ./patches/0003-vertical-dock-dodge-ref-position.patch
+        ./patches/0001-dock-edge-strip-hit-testing.patch
+        ./patches/0002-vertical-dock-dodge-ref-position.patch
     ];
 
     # Qt's QML disk cache can serve stale compiled QML from ~/.cache/krema/qmlcache

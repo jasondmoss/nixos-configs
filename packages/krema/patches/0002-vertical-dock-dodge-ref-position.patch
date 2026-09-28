@@ -1,8 +1,8 @@
 diff --git a/src/shell/dockvisibilitycontroller.cpp b/src/shell/dockvisibilitycontroller.cpp
-index 9896141..acf72be 100644
+index 21ce0cb..0048b75 100644
 --- a/src/shell/dockvisibilitycontroller.cpp
 +++ b/src/shell/dockvisibilitycontroller.cpp
-@@ -237,11 +237,14 @@ void DockVisibilityController::setPanelRect(qreal x, qreal y, qreal width, qreal
+@@ -242,11 +242,14 @@ void DockVisibilityController::setPanelRect(qreal x, qreal y, qreal width, qreal
      m_panelWidth = static_cast<int>(width);
      m_panelHeight = static_cast<int>(height);
  
@@ -21,7 +21,7 @@ index 9896141..acf72be 100644
          m_panelRefY = m_panelY;
      }
  
-@@ -386,7 +389,7 @@ QRect DockVisibilityController::dockScreenRect() const
+@@ -391,7 +394,7 @@ QRect DockVisibilityController::dockScreenRect() const
      params.screenHeight = screenGeo.height();
      params.surfaceWidth = m_dockWindow->width();
      params.surfaceHeight = m_dockWindow->height();
@@ -31,10 +31,10 @@ index 9896141..acf72be 100644
      params.panelWidth = m_panelWidth;
      params.panelHeight = m_panelHeight;
 diff --git a/src/shell/dockvisibilitycontroller.h b/src/shell/dockvisibilitycontroller.h
-index 6c5c611..505eb43 100644
+index 38488e8..1c0699f 100644
 --- a/src/shell/dockvisibilitycontroller.h
 +++ b/src/shell/dockvisibilitycontroller.h
-@@ -133,8 +133,10 @@ private:
+@@ -135,8 +135,10 @@ private:
      int m_panelWidth = 0;
      int m_panelHeight = 0;
  
