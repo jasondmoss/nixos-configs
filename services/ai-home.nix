@@ -28,10 +28,11 @@
 #   └────────────────────────────────────────────────────────────────────┘
 #
 # Every unit runs as the real user ("me") inside a systemd mount namespace:
-#   ProtectHome=tmpfs + BindReadOnlyPaths=/home/me  → all of $HOME, read-only
-#   InaccessiblePaths=<hiddenPaths>                  → excluded paths do not
-#                                                      exist at all
-#   IPAddressDeny=any / IPAddressAllow=localhost     → no egress, ever
+#   ProtectHome=tmpfs + BindReadOnlyPaths=/home/me → all of $HOME, read-only
+#   InaccessiblePaths=<hiddenPaths>                → excluded paths do not
+#                                                    exist at all
+#   IPAddressDeny=any / IPAddressAllow=localhost   → no egress, ever
+#
 # The exclusion is enforced by the kernel, not by tool configuration, and
 # both indexes are built from inside the same namespace, so hidden paths
 # are never indexed. Edit `services.ai-home.hiddenPaths` (below) to change
@@ -61,8 +62,6 @@ let
 
     homeSearchPython = pkgs.python3.withPackages (ps: [ ps.fastmcp ]);
 
-    # Recoll's Python module ships inside the recoll package for the same
-    # pkgs.python3 that fastmcp is built against.
     homeSearchMcp = pkgs.writeShellApplication {
         name = "home-search-mcp";
         runtimeInputs = [ homeSearchPython ];
@@ -86,9 +85,6 @@ exec recollq -c ${cfg.stateDir}/recoll -A -n "''${AI_SEARCH_MAX:-20}" "$@"
     unindexedAbs = map abs cfg.unindexedPaths;
 
     # ─── Semantic (embedding) search ───────────────────────────────────────
-    # One script, three entry points (index / serve / query), so documents
-    # and queries are always embedded by the same code. Off when
-    # semanticPaths is empty.
     semanticEnabled = cfg.semanticPaths != [];
 
     semanticPython = pkgs.python3.withPackages (ps: with ps; [
@@ -118,7 +114,6 @@ exec python3 ${../packages/ai-home/home-semantic.py} "$@"
         '';
     };
 
-    # Shell convenience: `ai-semantic "what I am looking for" [-n 10] [-d dir]`.
     aiSemantic = pkgs.writeShellApplication {
         name = "ai-semantic";
         text = ''
@@ -163,9 +158,6 @@ noContentSuffixes+ = ${concatStringsSep " " cfg.noContentSuffixes}
         # Home directory: everything visible, read-only, minus hiddenPaths.
         ProtectHome = "tmpfs";
         BindReadOnlyPaths = [ cfg.home ];
-        # Quoted (toJSON) because systemd splits this value on whitespace and a
-        # few entries contain spaces (".config/Proton Mail"); unquoted, the tail
-        # word is rejected as relative and the path is silently left visible.
         InaccessiblePaths = map (p: builtins.toJSON "-${p}") hiddenAbs;
 
         # No network egress: loopback only (MCP listener + nothing else).
@@ -201,8 +193,11 @@ noContentSuffixes+ = ${concatStringsSep " " cfg.noContentSuffixes}
         XDG_CACHE_HOME = "/var/cache/ai-home";
         RECOLL_CONFDIR = "${cfg.stateDir}/recoll";
         AI_HOME_ROOT = cfg.home;
-        # fastmcp servers: no startup banner on stderr and no release check
-        # against PyPI (it would be blocked by IPAddressDeny anyway).
+        # nixpkgs wraps recoll's rclimg filter with Image::ExifTool only, but
+        # the script also does `use JSON` at compile time, so every image died
+        # before a tag was read. The wrapper prefixes PERL5LIB, so supplying
+        # JSON here fixes it without rebuilding recoll from source.
+        PERL5LIB = pkgs.perlPackages.makeFullPerlPath [ pkgs.perlPackages.JSON ];
         FASTMCP_SHOW_SERVER_BANNER = "false";
         FASTMCP_CHECK_FOR_UPDATES = "off";
     };
@@ -354,9 +349,6 @@ in {
             type = types.listOf types.str;
             description = "Directory/file name patterns skipped by the indexer, anywhere in the tree (appended to Recoll's defaults).";
             default = [
-                # btrfs/snapper snapshot trees duplicate everything beneath them
-                # and sidestep the path patterns above: Repository/.snapshots/1
-                # alone held ~1.1M of the 1.95M indexed documents (2026-09-18).
                 ".snapshots"
                 "node_modules" "vendor" "bower_components" ".idea" ".vscode"
                 ".mypy_cache" ".ruff_cache" ".venv" "venv" "dist" "build" "out"
@@ -384,12 +376,11 @@ in {
                 ".db" ".sqlite" ".sqlite3" ".ldb"
                 ".woff" ".woff2" ".ttf" ".otf" ".eot"
                 ".psd" ".xcf" ".kra" ".blend"
-                # Raster and vector images: recoll-nox's image handler (rclimg
-                # via Image::ExifTool) dies on every file because the package
-                # lacks the Perl JSON module, so extraction only produced one
-                # failed process per image (183k errors per pass, 2026-09-18).
-                ".jpg" ".jpeg" ".png" ".gif" ".webp" ".bmp" ".tif" ".tiff"
-                ".heic" ".avif" ".svg" ".ico"
+                # Images without a useful handler: webp/bmp/ico have none, SVG
+                # only yields <title>/<text> of icons and theme assets. jpg,
+                # png, gif, tiff, heic and avif are indexed with their EXIF/XMP
+                # tags through rclimg (see PERL5LIB in sandboxEnv).
+                ".webp" ".bmp" ".svg" ".ico"
             ];
         };
 
@@ -532,10 +523,6 @@ install -m 0644 ${recollConf} ${cfg.stateDir}/recoll/recoll.conf
         systemd.services.ai-home-semantic-index = mkIf semanticEnabled {
             description = "Local-AI home directory semantic index (Ollama embeddings → sqlite-vec, sandboxed)";
             unitConfig.RequiresMountsFor = homeMounts;
-            # Ollama does the embedding work. Deliberately *not* ordered after
-            # ai-home-index: a first Recoll pass over the whole home takes
-            # hours, and a start job queued behind it looks like a hung
-            # indexer (nothing in the journal, no database).
             after = optional config.services.ollama.enable "ollama.service";
             wants = optional config.services.ollama.enable "ollama.service";
             environment = sandboxEnv;

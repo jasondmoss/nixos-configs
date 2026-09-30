@@ -1,7 +1,5 @@
 { config, ... }: {
     security = {
-        # No kexec / kernel image replacement at runtime. Hibernation is not
-        # used (16 GiB swap < 32 GiB RAM), so nothing is lost.
         protectKernelImage = true;
         polkit = {
             enable = true;
@@ -23,14 +21,6 @@ polkit.addRule(function(action, subject) {
             };
 
             services = {
-                # Also carries KWallet for SDDM: the sddm PAM stack is defined
-                # entirely by the display-manager module with
-                # useDefaultRules = false, and it substacks/includes "login" for
-                # all four rule types. That means pam_kwallet5 runs from here at
-                # greeter login — and, conversely, that setting
-                # `services.sddm.kwallet.enable` would be silently ignored,
-                # since useDefaultRules = false suppresses the generated rules
-                # those booleans feed.
                 login = {
                     enableKwallet = true;
                 };
@@ -56,7 +46,6 @@ polkit.addRule(function(action, subject) {
 
         sudo = {
             enable = true;
-            # Only members of wheel can even execute the sudo binary.
             execWheelOnly = true;
             extraConfig = ''
 # Keep SSH_AUTH_SOCK so that pam_ssh_agent_auth.so can do its magic.

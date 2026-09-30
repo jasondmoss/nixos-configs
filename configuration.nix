@@ -51,12 +51,6 @@ in {
 #    system.stateVersion = "25.11";
     system.stateVersion = "26.05";
     time.timeZone = "America/Toronto";
-
-    # No input-method framework: US layout only, handled by KWin's own xkb
-    # keymap. fcitx5 was removed 2026-09-09 because KWin routed every key of
-    # text-input-aware Wayland clients (JetBrains WLToolkit) through it and the
-    # handshake desynced on focus changes (KDE bug 493098), leaving PhpStorm
-    # without typed input after Alt+Tab.
     i18n.defaultLocale = "en_CA.UTF-8";
 
     console = {

@@ -9,64 +9,30 @@
             sddm = {
                 enable = true;
 
-                # plasma6.nix sets this whole attrset with mkDefault. Pinned
-                # explicitly so a channel bump can never quietly drop the
-                # greeter back to Weston (the module's own default) or X11.
                 wayland = {
                     enable = true;
                     compositor = "kwin";
                 };
 
-                # Local theme: ../packages/sddm-perseverance, installed via the
-                # customPkgs attrset in ../system/packages.nix. Leaving "breeze" also
-                # drops the CursorTheme/CursorSize pair the module attaches
-                # only for that theme.
-                #theme = "breeze";
                 theme = "Perseverance";
 
-                # Merged with plasma6.nix's list, not replacing it.
-                # Perseverance additionally needs:
-                #   qt5compat        -> Qt5Compat.GraphicalEffects
-                #   plasma-workspace -> org.kde.breeze.components,
-                #                       org.kde.plasma.workspace.components
-                # A missing QML module = blank greeter with no on-screen error.
                 extraPackages = with pkgs.kdePackages; [
                     plasma-workspace
                     qt5compat
                 ];
 
-                # Module default, restated so it's visible at the call site.
                 enableHidpi = true;
-
-                # Off: the Keychron Q3 Pro is a TKL board — no numpad to lock.
                 autoNumlock = false;
 
                 settings = {
                     Theme = {
-                        # Greeter cursor and font. Previously came from
-                        # /etc/sddm.conf.d/kde_settings.conf, written by the
-                        # System Settings "Login Screen" page (Feb 2024). That
-                        # file sorts after 00-nixos.conf and overrides it, and
-                        # its Current=materia-dark (Qt5, no greeter binary
-                        # anymore) forced SDDM's fallback theme instead of
-                        # Perseverance. Deleted; keep these here, and don't
-                        # press Apply on that page again or it comes back.
-                        # Cursor package: comixcursors in ../system/packages.nix.
                         CursorTheme = "ComixCursors";
                         Font = "Noto Sans,10,-1,0,50,0,0,0,0,0";
                     };
 
                     Users = {
-                        # SDDM's compiled-in default is the FHS trio
-                        # (/usr/local/bin:/usr/bin:/bin), none of which exist
-                        # here, and the NixOS module never overrides it. This is
-                        # the PATH handed to the greeter process; the user
-                        # session gets a correct one regardless, because
-                        # share/sddm/scripts/wayland-session sources
-                        # /etc/profile -> /etc/set-environment.
                         DefaultPath = "/run/current-system/sw/bin";
 
-                        # Single-user desktop: preselect me and my last session.
                         RememberLastUser = true;
                         RememberLastSession = true;
                     };
@@ -109,8 +75,6 @@
         speechd.enable = false;
     };
 
-    # XDG portals. The browser MIME defaults (http/https/html → Firefox
-    # Nightly) live in ./browsers.nix.
     xdg.portal = {
         enable = true;
         xdgOpenUsePortal = true;
@@ -126,12 +90,6 @@
         ];
     };
 
-    # xdg-desktop-portal can be dbus-activated in the logout/login gap, before
-    # Plasma re-imports DISPLAY/WAYLAND_DISPLAY into the systemd user manager.
-    # It then holds a display-less environment and every OpenURI launch (link
-    # clicks -> browser) dies with "no DISPLAY environment variable specified".
-    # Hold the start until the session environment has landed; give up after
-    # 30 s so headless activation still works.
     systemd.user.services.xdg-desktop-portal = {
         path = lib.mkForce [];
 
@@ -148,8 +106,6 @@ exit 0
         '';
     };
 
-    # Rebuild KDE sycoca on every nixos-rebuild switch so the app launcher
-    # picks up newly installed/removed .desktop files immediately.
     system.userActivationScripts.rebuildKdeSycoca = ''
 ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental
     '';
@@ -158,12 +114,8 @@ ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental
     environment.sessionVariables = {
         KDE_SESSION_VERSION = "6";
         QT_QPA_PLATFORM = "wayland;xcb";
-        # Transition from 'software' to 'rhi' (Render Hardware Interface).
         QT_QUICK_BACKEND = "rhi";
         PLASMA_USE_QT_SCENE_GRAPH_BACKEND = "opengl";
-        # Silence the harmless KF icon-theme fallback warning emitted by Qt/KF
-        # helpers such as ksshaskpass (e.g. "kf.iconthemes: Icon theme
-        # \"gnome\" not found." during git/ssh over SSH).
         QT_LOGGING_RULES = "kf.iconthemes.warning=false";
     };
 }

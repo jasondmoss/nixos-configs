@@ -59,9 +59,6 @@
         size = 16 * 1024;  # 16GB
     }];
 
-    # Compressed in-RAM swap ahead of the NVMe swapfile (priority 100 vs -1):
-    # cold pages from browsers/IDEs get squeezed instead of hitting the disk
-    # when a model spills out of VRAM. ~8 GiB of zram on 32 GiB.
     zramSwap = {
         enable = true;
         algorithm = "zstd";
@@ -69,8 +66,6 @@
         priority = 100;
     };
 
-    # Monthly btrfs scrub on the two btrfs volumes: the only way to detect
-    # silent corruption before a file is read back wrong.
     services.btrfs.autoScrub = {
         enable = true;
         interval = "monthly";

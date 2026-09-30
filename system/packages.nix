@@ -232,22 +232,14 @@ let
 
         network-web = with pkgs; [
             filezilla
-            # firefox itself comes from programs.firefox (../desktop/browsers.nix).
             firefox-nightly
             google-chrome
-            links2
             megatools
             microsoft-edge
             mullvad-browser
             openvpn
             proton-vpn
             tor-browser
-            # Browser extension built from source (overlays/default.nix →
-            # packages/unclutter). Nightly ships it as a distribution add-on,
-            # Chrome via environment.etc in ../desktop/browsers.nix; the package
-            # itself is here so
-            # /run/current-system/sw/share/unclutter/ exposes the XPI, CRX and
-            # unpacked chrome-mv3 build at a stable path.
             unclutter
             wireguard-tools
         ];

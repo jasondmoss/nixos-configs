@@ -38,21 +38,16 @@
         _1password.enable = true;
         _1password-gui = {
             enable = true;
-            # Local unix user(s) allowed to use 1Password's polkit policy
-            # (system-authentication unlock). Must be a real account here.
             polkitPolicyOwners = [ "me" ];
             package = pkgs._1password-gui;
         };
     };
 
-    # nix-index database: download nix-community's prebuilt weekly index
-    # instead of indexing all of nixpkgs locally.
     systemd = {
         services.nix-index-database-update = {
             description = "Update nix-index database";
             serviceConfig = {
                 Type = "oneshot";
-                # Run as your user so database is available in ~/.cache/nix-index
                 User = "me";
                 Environment = "HOME=/home/me";
                 # Download nix-community's prebuilt weekly index instead of
@@ -74,7 +69,7 @@ mv "$dir/files.tmp" "$dir/files"
 
             timerConfig = {
                 OnCalendar = "weekly";
-                Persistent = true; # Run immediately if the system was off during scheduled time
+                Persistent = true;
             };
 
             wantedBy = [ "timers.target" ];

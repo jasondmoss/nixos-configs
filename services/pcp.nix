@@ -301,17 +301,7 @@ in
                     command = "${cfg.package}/libexec/pcp/pmdas/proc/pmdaproc -d 3";
                 };
 
-                # Track just the compositor/shell in the hotproc.* tree. NixOS wraps
-                # these binaries, so /proc comm is truncated to 15 chars with a leading
-                # dot (".kwin_wayland-w" = the real compositor, ".plasmashell-wr"); the
-                # separate ".kwin_wayland_w" is only the small launcher wrapper.
-                # Matching MUST be exact `fname ==` on that comm. Two things that look
-                # right but silently match nothing (verified: nprocs stays 0): a
-                # `psargs ~ /…/` regex never reaches the binary name, which sits past the
-                # /nix/store/<hash>- prefix that hotproc only inspects the head of; and
-                # hotproc's `~` operator is itself broken here — it fails even on a
-                # leading fname substring while `==` works. Wayland session only; an X11
-                # run would additionally need the truncated ".kwin_x11-wrapp" comm.
+                # Track just the compositor/shell in the hotproc.* tree.
                 hotprocPredicate = mkDefault
                     ''(fname == ".plasmashell-wr" || fname == ".kwin_wayland-w")'';
 
