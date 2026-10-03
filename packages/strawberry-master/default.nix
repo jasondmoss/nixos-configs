@@ -1,7 +1,7 @@
 {
     alsa-lib, boost, chromaprint, cmake, fetchFromGitHub, fftw, glib-networking,
     gnutls, gst_all_1, kdePackages, kdsingleapplication, lib, libXdmcp, libcdio,
-    libebur128, libidn2, libmtp, libpthreadstubs, libpulseaudio, libselinux,
+    libebur128, libidn2, libmtp, libuchardet, libpthreadstubs, libpulseaudio, libsecret, libselinux,
     libsepol, libtasn1, ninja, nix-update-script, p11-kit, pkg-config,
     rapidjson, sparsehash, sqlite, stdenv, taglib, util-linux
 }:
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
         owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
-        hash = "sha256-UJDelIVB30C9ADYOAEhh7PVPkgkqPZxg0RmeX4zhMCM=";
+        hash = "sha256-Hg3yQskugHyqr9uPWTljx1zU8pEns9cFFSyg+81kJFA=";
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,
@@ -41,6 +41,7 @@ substituteInPlace src/context/contextalbum.cpp \
         libmtp
         libpthreadstubs
         libtasn1
+        libuchardet
         kdePackages.qtbase
         rapidjson
         sparsehash
@@ -48,6 +49,7 @@ substituteInPlace src/context/contextalbum.cpp \
         taglib
     ] ++ optionals stdenv.hostPlatform.isLinux [
         libpulseaudio
+        libsecret
         libselinux
         libsepol
         p11-kit

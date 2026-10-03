@@ -265,6 +265,14 @@ pkgs.stdenv.mkDerivation rec {
         substituteInPlace "$f" --replace '/var/tmp' "$TMPDIR"
       fi
     done
+
+    # glibc 2.43+ makes strstr/strchr return const char * for const input
+    # (C23 _Generic macros); the vendored libbpf builds with -Werror, so GCC 16
+    # rejects its char * assignments. EXTRA_CFLAGS reaches the gcc-built
+    # libbpf/bpftool objects only, not the clang BPF compiles (clang has no
+    # -Wdiscarded-qualifiers and would fail on the unknown option).
+    substituteInPlace vendor/GNUmakefile \
+      --replace-fail 'EXTRA_CFLAGS=-fPIC' 'EXTRA_CFLAGS="-fPIC -Wno-error=discarded-qualifiers"'
   '';
 
   preConfigure = ''
