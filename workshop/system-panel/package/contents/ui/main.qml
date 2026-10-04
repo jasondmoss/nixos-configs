@@ -55,6 +55,7 @@ PlasmoidItem {
     property string sUptime: "—"
     property string sDown: "0.0"
     property string sVanc: ""
+    property string sWita: ""
     property double _lastRx: -1
     property double _lastT: 0
 
@@ -107,8 +108,10 @@ PlasmoidItem {
                 if (!isNaN(v) && v >= 0) {
                     root.autoLuma = v;
                 }
-            } else if (source.indexOf("#vanc") !== -1) {
-                root.sVanc = out;
+            } else if (source.indexOf("#zones") !== -1) {
+                const f = out.split(root.sep);
+                root.sVanc = f[0] || "";
+                root.sWita = f[1] || "";
             }
         }
     }
@@ -153,13 +156,18 @@ PlasmoidItem {
     }
 
     /**
-     * Qt's QML toLocaleTimeString ignores the timeZone option, so a second
-     * timezone is fetched from the shell (correct across DST).
+     * Qt's QML toLocaleTimeString ignores the timeZone option, so the other
+     * timezones are fetched from the shell (correct across DST). Fields are
+     * SOH-delimited: Vancouver, Indonesia (WITA, UTC+8, no DST). WITA shows
+     * its weekday since it runs 11-12 hours ahead (often already tomorrow).
      */
-    function refreshVanc()
+    function refreshZones()
     {
         exec.connectSource(
-            "TZ='America/Vancouver' date '+%-I:%M %p' #vanc" + Date.now()
+            "printf '%s\\001%s'" +
+            " \"$(TZ='America/Vancouver' date '+%-I:%M %p %Z')\"" +
+            " \"$(TZ='Asia/Makassar' date '+%-I:%M %p %Z · %a')\"" +
+            " #zones" + Date.now()
         );
     }
 
@@ -167,7 +175,7 @@ PlasmoidItem {
         refreshVersions();
         refreshSensors();
         refreshLuma();
-        refreshVanc();
+        refreshZones();
     }
 
     Timer {
@@ -195,7 +203,7 @@ PlasmoidItem {
         interval: 15000;
         running: true;
         repeat: true;
-        onTriggered: root.refreshVanc()
+        onTriggered: root.refreshZones()
     }
 
     property var now: new Date()
@@ -269,6 +277,20 @@ PlasmoidItem {
                 styleColor: root.shadowColor
             }
 
+            /**
+             * Qt's QML toLocaleDateString ignores a JS options object (it
+             * rendered "2026-10-04"), so use the locale's long format.
+             */
+            PlasmaComponents.Label {
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignRight
+                text: root.now.toLocaleDateString(Qt.locale(), Locale.LongFormat)
+                color: root.txtColor
+                font.pointSize: 13
+                style: root.textStyle
+                styleColor: root.shadowColor
+            }
+
             PlasmaComponents.Label {
                 Layout.fillWidth: true
                 Layout.topMargin: 6
@@ -284,13 +306,10 @@ PlasmoidItem {
             PlasmaComponents.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
-                text: root.now.toLocaleDateString("en-CA", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric"
-                })
+                text: root.sWita
+                visible: root.sWita !== ""
                 color: root.txtColor
-                font.pixelSize: 14
+                font.pixelSize: 20
                 style: root.textStyle
                 styleColor: root.shadowColor
             }

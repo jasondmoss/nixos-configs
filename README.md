@@ -57,7 +57,7 @@ sets both `services.pipewire` and `security.rtkit`).
 | Directory   | Holds                                                                  |
 |-------------|------------------------------------------------------------------------|
 | `hardware/` | The physical machine: kernel and boot, mounts, GPU, peripherals, power |
-| `desktop/`  | The graphical session: Plasma, fonts, audio, browsers, colour palette  |
+| `desktop/`  | The graphical session: Plasma (+ an opt-in Hyprland session), fonts, audio, browsers, colour palette |
 | `system/`   | OS plumbing, one file per NixOS namespace (nixpkgs, networking, security, users, environment, programs, packages) plus git/SSH identity routing |
 | `services/` | Self-contained service stacks, each removable as a unit: base daemons, qBittorrent VPN, PCP + Grafana, Docker, local AI |
 | `packages/` | Custom package derivations and package-level modules (see below) — always here |
@@ -90,6 +90,7 @@ sets both `services.pipewire` and `security.rtkit`).
 | `fonts.nix`    | Font packages and fontconfig rules                                        |
 | `audio.nix`    | PipeWire (ALSA + 32-bit, PulseAudio, JACK) and rtkit                      |
 | `browsers.nix` | `programs.firefox` (nixpkgs Firefox with VAAPI + local-AI sidebar prefs), Firefox Nightly as the MIME default and `DEFAULT_BROWSER`, 1Password browser allowlist, Chrome external-extension directory (Unclutter) |
+| `hyprland.nix` | Opt-in second session next to Plasma: Hyprland under UWSM ("Hyprland (uwsm-managed)" in SDDM), Waybar/rofi/mako/hyprpaper/hyprlock/nwg-dock, the Hyprland portal config and the UWSM env that lets KDE apps (Dolphin etc.) work outside Plasma. Dotfiles live outside this repo |
 | `theme.nix`    | 16-color terminal palette (plain Nix value, imported by `configuration.nix`) |
 
 **Plasma 6** is configured Qt 6 only (`enableQt5Integration = false`), RHI rendering

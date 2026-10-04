@@ -84,6 +84,7 @@ in {
         ./desktop/fonts.nix
         ./desktop/audio.nix
         ./desktop/browsers.nix
+        ./desktop/hyprland.nix
 
         # System.
         ./system/networking.nix
