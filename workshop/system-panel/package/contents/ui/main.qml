@@ -279,14 +279,18 @@ PlasmoidItem {
 
             /**
              * Qt's QML toLocaleDateString ignores a JS options object (it
-             * rendered "2026-10-04"), so use the locale's long format.
+             * rendered "2026-10-04"), so use the locale's long format. Sized
+             * like the timezone lines; the longest dates ("Wednesday,
+             * September 30, 2026" ≈ 308px) shrink to fit the panel width.
              */
             PlasmaComponents.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: root.now.toLocaleDateString(Qt.locale(), Locale.LongFormat)
                 color: root.txtColor
-                font.pointSize: 13
+                font.pixelSize: 20
+                fontSizeMode: Text.HorizontalFit
+                minimumPixelSize: 14
                 style: root.textStyle
                 styleColor: root.shadowColor
             }

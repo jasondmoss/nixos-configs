@@ -45,9 +45,13 @@
 
             # Disable Vulkan for Chrome — incompatible with
             # --ozone-platform=wayland (NIXOS_OZONE_WL=1).
+            # plasmaSupport puts Qt 6 + plasma-integration on the wrapper's
+            # LD_LIBRARY_PATH/QT_PLUGIN_PATH; without it the bundled
+            # libqt6_shim.so cannot load and "Use QT" silently stays Classic.
             (final: prev: {
                 google-chrome = (prev.google-chrome.override {
                     commandLineArgs = "--disable-features=Vulkan";
+                    plasmaSupport = true;
                 }).overrideAttrs (old: {
                     postInstall = (old.postInstall or "") + ''
                         ln -s /etc/opt/chrome/extensions "$out/share/google/chrome/extensions"
