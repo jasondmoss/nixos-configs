@@ -3,7 +3,8 @@
     expat, fetchurl, gtk3, lib, libcap_ng, libdrm, libglvnd, libnotify,
     libseccomp, libsecret, libx11, libxcb, libxcomposite, libxdamage, libxext,
     libxfixes, libxkbcommon, libxrandr, libxscrnsaver, libxshmfence, libxtst,
-    makeWrapper, mesa, nspr, nss, stdenv, systemd, vulkan-loader, xdg-utils
+    makeWrapper, mesa, nspr, nss, pipewire, stdenv, systemd, vulkan-loader,
+    xdg-utils
 }:
 with lib;
 
@@ -64,6 +65,7 @@ stdenv.mkDerivation {
         mesa
         nspr
         nss
+        pipewire
     ];
 
     runtimeDependencies = [ (getLib systemd) libnotify ];

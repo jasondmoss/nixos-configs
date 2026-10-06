@@ -1,4 +1,9 @@
 { lib, pkgs, ... }: {
+    imports = [
+        # Panel icons switch light/dark with the wallpaper (services.panel-contrast).
+        ../packages/panel-contrast
+    ];
+
     qt.enable = true;
     qt.platformTheme = "kde";
 

@@ -20,6 +20,15 @@ let
     vpnDNS  = "10.2.0.1";  # Proton DNS — only reachable inside the tunnel
     user    = "me";
 
+    # The tunnel's encrypted UDP leaves through the ROOT namespace (see the
+    # wg-qbit script). While the Proton VPN app is connected, its own WireGuard
+    # rules (31282/31283) send every unmarked packet there into its tunnel, so
+    # torrents would ride app server -> qbit server. Marking the transport
+    # socket and routing that mark through the main table ahead of those rules
+    # sends it straight out the NIC whether the app is connected or not.
+    wgMark     = "0x7162";  # "qb"
+    wgRulePrio = "10000";
+
     # NAT-PMP port forwarding (the Proton config has it enabled). natpmpGateway
     # is Proton's gateway inside the tunnel; qbtWebPort is qBittorrent's Web UI
     # port, reached on the namespace's own loopback by the refresh loop below.
@@ -120,6 +129,11 @@ ip link set ${wgIface} netns ${ns}
 # the Address/DNS/MTU lines that `wg setconf` does not understand.
 ip netns exec ${ns} wg setconf ${wgIface} <(wg-quick strip ${wgConf})
 
+# Keep the transport socket out of the Proton VPN app's tunnel (see wgMark).
+ip netns exec ${ns} wg set ${wgIface} fwmark ${wgMark}
+ip rule del priority ${wgRulePrio} 2>/dev/null || true
+ip rule add fwmark ${wgMark} lookup main priority ${wgRulePrio}
+
 # Address, bring up, and route ALL traffic in the namespace via the tunnel.
 ip -n ${ns} addr add ${vpnAddr} dev ${wgIface}
 ip -n ${ns} link set ${wgIface} up
@@ -127,6 +141,7 @@ ip -n ${ns} route add default dev ${wgIface}
         '';
 
         preStop = ''
+${pkgs.iproute2}/bin/ip rule del priority ${wgRulePrio} 2>/dev/null || true
 ${pkgs.iproute2}/bin/ip -n ${ns} link del ${wgIface} 2>/dev/null || true
 ${pkgs.iproute2}/bin/ip netns del ${ns} 2>/dev/null || true
         '';

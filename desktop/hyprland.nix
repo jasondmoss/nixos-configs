@@ -9,9 +9,9 @@
 # from configuration.nix to drop the experiment entirely.
 #
 # UWSM runs the session: it starts graphical-session.target (ssh-key-pollen,
-# megasync, krunner-ollama, gps-signature) and xdg-desktop-autostart.target
-# (KDE Connect, pam_kwallet_init, gnome-keyring, ~/.config/autostart), which
-# Hyprland 0.56 does not do on its own.
+# megasync, protonvpn, krunner-ollama, gps-signature) and
+# xdg-desktop-autostart.target (KDE Connect, pam_kwallet_init, gnome-keyring,
+# ~/.config/autostart), which Hyprland 0.56 does not do on its own.
 #
 # Dotfiles (hyprland.lua, waybar, rofi, mako, hyprlock, hyprpaper) are not
 # managed here; they live in ~/Mega/System/Configurations/<app>, symlinked

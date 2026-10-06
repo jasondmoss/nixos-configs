@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <style id="current-color-scheme" type="text/css">.ColorScheme-Text { color: #232629; }</style>
+  <!-- MEGAsync tray icon, monochrome: disc with the M cut out. -->
+  <path class="ColorScheme-Text" fill="currentColor" fill-rule="evenodd"
+        d="M11 1a10 10 0 1 0 0 20a10 10 0 1 0 0-20z
+           M6.3 14.6V7.6h2l2.7 2.9l2.7-2.9h2v7h-1.9v-4l-1.9 2h-1.8l-1.9-2v4z"/>
+</svg>

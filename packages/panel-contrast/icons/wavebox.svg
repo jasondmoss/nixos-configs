@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <style id="current-color-scheme" type="text/css">.ColorScheme-Text { color: #232629; }</style>
+  <!-- Wavebox tray icon, monochrome: rounded square with the tick cut out. -->
+  <path class="ColorScheme-Text" fill="currentColor" fill-rule="evenodd"
+        d="M4.2 2h13.6a2.2 2.2 0 0 1 2.2 2.2v13.6a2.2 2.2 0 0 1-2.2 2.2h-13.6a2.2 2.2 0 0 1-2.2-2.2v-13.6a2.2 2.2 0 0 1 2.2-2.2z
+           M5.3 11.4l1.7-1.7l2.4 2.4l5.6-5.6l1.7 1.7l-7.3 7.3z"/>
+</svg>
