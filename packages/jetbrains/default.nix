@@ -17,9 +17,11 @@ let
       # WLToolkit: run the IDE as a native Wayland client (no XWayland). Declared
       # here so it no longer depends on the per-version custom vmoptions file in
       # ~/.config/JetBrains/PhpStorm<ver>/phpstorm64.vmoptions.
+      # Small -Xms: the heap grows on demand up to -Xmx instead of pinning
+      # the full 6 GiB from launch.
       jetbrains.vmopts = ''
 -server
--Xms6144m
+-Xms1024m
 -Xmx6144m
 -Dawt.toolkit.name=WLToolkit
 -Dide.browser.jcef.gpu.disable=true

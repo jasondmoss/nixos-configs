@@ -62,7 +62,9 @@
     zramSwap = {
         enable = true;
         algorithm = "zstd";
-        memoryPercent = 25;
+        # Uncompressed capacity; zstd packs swapped pages ~4:1, so this costs
+        # ~4 GiB of real RAM when full and keeps overflow off /swapfile.
+        memoryPercent = 50;
         priority = 100;
     };
 

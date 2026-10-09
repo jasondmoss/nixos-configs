@@ -49,11 +49,22 @@ in {
             megasync = {
                 description = "MEGAsync Cloud Sync application";
                 after = [ "graphical-session.target" ];
+                partOf = [ "graphical-session.target" ];  # stop at logout, not crash-loop without a display
                 wantedBy = [ "graphical-session.target" ];
 
                 serviceConfig = {
                     Type = "simple";
                     ExecStart = "${pkgs.megasync}/bin/megasync";
+                    # MEGAsync is Qt 5. The session's QML2_IMPORT_PATH also lists
+                    # Plasma's qt-6/qml trees, whose qmldirs Qt 5 rejects ("invalid
+                    # version auto"), so its QML dialogs never build and opening one
+                    # segfaults in QmlDialogWrapperBase::show. The wrapper's
+                    # NIXPKGS_QT5_QML_IMPORT_PATH already carries its own modules.
+                    UnsetEnvironment = "QML2_IMPORT_PATH";
+                    # IPv4 only: over the Proton VPN, MEGA's API never answers on its
+                    # IPv6 addresses and libcurl does not fall back, so MEGAsync hangs
+                    # at "logging in". Without AF_INET6 every IPv6 attempt fails at once.
+                    RestrictAddressFamilies = "AF_UNIX AF_INET AF_NETLINK";
                     Restart = "on-failure";
                     RestartSec = "5s";
                 };

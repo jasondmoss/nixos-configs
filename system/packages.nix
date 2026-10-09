@@ -19,6 +19,8 @@ let
         stage-manager  = pkgs.callPackage ../packages/stage-manager {};
         standardnotes  = pkgs.callPackage ../packages/standardnotes {};
         strawberry     = pkgs.callPackage ../packages/strawberry-master {};
+        # Calendar widget with a panel icon in the panel's text colour.
+        symbolic-cal   = pkgs.callPackage ../packages/symbolic-calendar {};
         system-panel   = pkgs.callPackage ../packages/system-panel {};
         vivaldi        = pkgs.callPackage ../packages/vivaldi-snapshot {
             # Custom package: nothing wires NIXOS_OZONE_WL in, so force ozone

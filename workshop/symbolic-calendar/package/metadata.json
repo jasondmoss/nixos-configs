@@ -1,0 +1,24 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Id": "org.jdmlabs.symboliccalendar",
+        "Name": "Calendar (Symbolic)",
+        "Description": "Month calendar whose panel icon is drawn in the panel's text colour, so it follows light and dark panels.",
+        "Icon": "office-calendar",
+        "Category": "Date and Time",
+        "Authors": [
+            {
+                "Name": "Jason D. Moss"
+            }
+        ],
+        "License": "GPL-2.0-or-later",
+        "Version": "0.1",
+        "EnabledByDefault": true,
+        "FormFactors": [
+            "tablet",
+            "handset",
+            "desktop"
+        ]
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

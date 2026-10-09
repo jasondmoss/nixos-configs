@@ -1,9 +1,9 @@
 {
-  "version": "0.3.0.8",
+  "version": "0.3.0.9",
   "upstreamVersion": "0.3.0",
-  "rev": "9ef9beccc1e57b4e3115ae68644b8fc9c19c29f6",
-  "revCount": 8,
-  "date": "2026-09-18",
-  "hash": "sha256-MpmdNDGz5Gba7QrPtCYeifkCOWSma6wDfeBns9olKy0=",
+  "rev": "18dfb597e17a060ce853ff8d31048fb18ab0e442",
+  "revCount": 9,
+  "date": "2026-10-09",
+  "hash": "sha256-LQ5QTnsjhsyze+G1c1PN0STaqsr2A4uSwUhRWhneYlc=",
   "depsHash": "sha256-00PIsbs4xP0VePa2nAbmUQYFVlx7yZ8xDwedVNvrXgw="
 }
