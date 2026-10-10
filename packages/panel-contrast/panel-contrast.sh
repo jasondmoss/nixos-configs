@@ -1,22 +1,26 @@
 # panel-contrast — keep Plasma panel icons legible over the wallpaper.
 #
-# Samples the wallpaper region behind the panel and tells Panel Colorizer to
-# load the light-icons preset (dark wallpaper) or the dark-icons preset
-# (light wallpaper). Re-evaluates when Plasma rewrites its applet config (a
-# wallpaper change), when the activity changes, and when a Panel Colorizer
-# instance (re)appears on the session bus (login, plasmashell restart).
+# Samples the wallpaper region behind the panel and sets Panel Colorizer's
+# foreground colour to the light colour (dark wallpaper) or the dark colour
+# (light wallpaper), editing only those fields of its settings so changes made
+# in its own settings window stay. Re-evaluates when Plasma rewrites its applet
+# config (a wallpaper change, or a Panel Colorizer settings change that reset
+# the colour), when the activity changes, and when plasmashell (re)appears on
+# the session bus (login, restart). Both Plasma scripts write only on a
+# difference, so their own config write settles on the next pass.
 #
 #   panel-contrast            watch and apply (the user unit)
 #   panel-contrast --once     evaluate and apply once
 #   panel-contrast --dry-run  print the decision, apply nothing
 #
-# Before each delivery it also brings Panel Colorizer's tray-icon settings
-# (replacement icons, masked items) in line with PANEL_CONTRAST_WIDGET_SCRIPT,
-# a generated Plasma script that only writes values that differ.
+# Before the colour it brings the widget settings (Panel Colorizer tray icons,
+# sensor face, …) in line with PANEL_CONTRAST_WIDGET_SCRIPT.
 #
 # Settings come from PANEL_CONTRAST_* (see the NixOS module).
 
-presets=${PANEL_CONTRAST_PRESETS:?PANEL_CONTRAST_PRESETS must point at the preset directory}
+light_color=${PANEL_CONTRAST_LIGHT_COLOR:-#ffffff}
+dark_color=${PANEL_CONTRAST_DARK_COLOR:-#000000}
+color_script=${PANEL_CONTRAST_COLOR_SCRIPT:?PANEL_CONTRAST_COLOR_SCRIPT must point at the colour script}
 threshold=${PANEL_CONTRAST_THRESHOLD:-0.5}
 region=${PANEL_CONTRAST_REGION:-2%x40%+0+0}
 gravity=${PANEL_CONTRAST_GRAVITY:-NorthEast}
@@ -27,11 +31,11 @@ widget_script=${PANEL_CONTRAST_WIDGET_SCRIPT:-}
 config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
 appletsrc_name=plasma-org.kde.plasma.desktop-appletsrc
 appletsrc=$config_dir/$appletsrc_name
-colorizer_prefix=luisbocanegra.panel.colorizer.
 
-# "<preset>|<colorizer instances>" last delivered; a restarted instance has a
-# new PID, so it gets the preset again.
-last_delivered=""
+plasma_script() {
+    busctl --user call org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell \
+        evaluateScript s "$1" 2>&1
+}
 
 current_activity() {
     busctl --user call org.kde.ActivityManager /ActivityManager/Activities \
@@ -111,12 +115,6 @@ region_luma() {
         -colorspace Gray -format '%[fx:mean]' info: 2>/dev/null
 }
 
-# Running Panel Colorizer D-Bus services as "name:pid", one per panel instance.
-colorizer_instances() {
-    busctl --user list --no-legend --acquired 2>/dev/null \
-        | awk -v prefix="$colorizer_prefix" 'index($1, prefix) == 1 { print $1 ":" $2 }'
-}
-
 # Write the widget settings (Panel Colorizer tray icons, sensor face, …)
 # into the panel widgets; sets widgets_changed=1 when anything was written.
 widgets_changed=0
@@ -124,8 +122,7 @@ apply_widget_settings() {
     local result
     widgets_changed=0
     [[ -n $widget_script && -f $widget_script ]] || return 0
-    if ! result=$(busctl --user call org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell \
-        evaluateScript s "$(<"$widget_script")" 2>&1); then
+    if ! result=$(plasma_script "$(<"$widget_script")"); then
         echo "could not apply widget settings: $result"
         return 0
     fi
@@ -136,18 +133,23 @@ apply_widget_settings() {
     return 0
 }
 
-# Hand a preset directory to every Panel Colorizer instance.
-deliver() {
-    local name
-    for name in $2; do
-        name=${name%:*}
-        busctl --user call "$name" /preset "$name" preset s "$presets/$1" >/dev/null \
-            || echo "could not reach $name"
-    done
+# Set the foreground colour in every Panel Colorizer widget; sets
+# color_changed=1 when a widget was actually rewritten.
+color_changed=0
+apply_color() {
+    local result
+    color_changed=0
+    if ! result=$(plasma_script "var color = \"$1\";
+$(<"$color_script")"); then
+        echo "could not set the panel colour: $result"
+        return 0
+    fi
+    [[ $result == *recoloured* ]] && color_changed=1
+    return 0
 }
 
 evaluate() {
-    local mode=$1 activity setting image luma preset instances key
+    local mode=$1 activity setting image luma preset color other
 
     activity=$(current_activity)
     setting=$(wallpaper_setting "$activity")
@@ -165,9 +167,9 @@ evaluate() {
     fi
 
     if awk -v l="$luma" -v t="$threshold" 'BEGIN { exit !(l < t) }'; then
-        preset=light-icons
+        preset=light-icons color=$light_color other=$dark_color
     else
-        preset=dark-icons
+        preset=dark-icons color=$dark_color other=$light_color
     fi
 
     if [[ $mode == dry-run ]]; then
@@ -175,28 +177,18 @@ evaluate() {
         return 0
     fi
 
-    instances=$(colorizer_instances)
-    if [[ -z $instances ]]; then
-        echo "$preset wanted, but no Panel Colorizer instance is running"
-        last_delivered=""
-        return 0
-    fi
-
-    key="$preset|$instances"
-    [[ $key == "$last_delivered" ]] && return 0
-
     apply_widget_settings
     if [[ $widgets_changed == 1 ]]; then
         # A widget that rebuilt its content (a new sensor face) shows the
         # theme's colours until Panel Colorizer recolours it, which it only
-        # does when the colour changes: pass through the other preset. Its
-        # widget hears one signal at a time, hence the pause.
-        if [[ $preset == light-icons ]]; then deliver dark-icons "$instances"; else deliver light-icons "$instances"; fi
-        sleep 1.5
+        # does when the colour changes: pass through the other colour.
+        apply_color "$other"
+        sleep 1
     fi
-    deliver "$preset" "$instances"
-    echo "$image: luma $luma -> $preset"
-    last_delivered=$key
+    apply_color "$color"
+    if [[ $color_changed == 1 || $widgets_changed == 1 ]]; then
+        echo "$image: luma $luma -> $preset"
+    fi
 }
 
 events() {
@@ -204,7 +196,7 @@ events() {
         --format 'file %f' "$config_dir" &
     dbus-monitor --session \
         "type='signal',interface='org.kde.ActivityManager.Activities',member='CurrentActivityChanged'" \
-        "type='signal',sender='org.freedesktop.DBus',interface='org.freedesktop.DBus',member='NameOwnerChanged',arg0namespace='${colorizer_prefix%.}'" &
+        "type='signal',sender='org.freedesktop.DBus',interface='org.freedesktop.DBus',member='NameOwnerChanged',arg0='org.kde.plasmashell'" &
     # Either source ending leaves the watch incomplete: stop both and let
     # systemd restart the unit.
     wait -n || true
@@ -226,8 +218,8 @@ while IFS= read -r line; do
         "file $appletsrc_name" | *member=CurrentActivityChanged* | *member=NameOwnerChanged*) ;;
         *) continue ;;
     esac
-    # Plasma writes in bursts and a fresh Panel Colorizer needs a moment
-    # before its widget listens: settle first.
+    # Plasma writes in bursts, and a fresh plasmashell needs a moment to load
+    # its widgets: settle first.
     while IFS= read -r -t 2 line; do :; done
     evaluate apply || true
 done < <(events)

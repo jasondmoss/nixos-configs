@@ -92,6 +92,15 @@ DEFAULTS = {
         "interval": 120,
         "workflow_limit": 10,
     },
+    # "At work" = a PhpStorm window shows a project under one of the work roots,
+    # or one of these programs is running. Otherwise the CircleCI and Pantheon
+    # cards show an off-the-clock placeholder and the agent polls both rarely.
+    "work": {
+        "enabled": True,
+        "roots": [],                    # empty: project_roots
+        "processes": ["google-chrome"],  # matched against /proc/<pid>/exe and argv[0]
+        "idle_interval": 900,
+    },
 }
 
 CONFIG_DIR = Path(os.environ.get("DECK_CONFIG_DIR", "~/.config/deck")).expanduser()
@@ -949,10 +958,12 @@ def parse_iso(value):
 
 
 class CircleCIPoller(threading.Thread):
-    def __init__(self, cfg, secrets):
+    def __init__(self, cfg, secrets, work=None):
         super().__init__(name="circleci", daemon=True)
         self.cfg = cfg["circleci"]
         self.secrets = secrets
+        self.work = work
+        self.idle_interval = cfg["work"]["idle_interval"]
         self.wake = threading.Event()
         self._lock = threading.Lock()
         self.state = {"configured": False, "pipelines": []}
@@ -984,6 +995,8 @@ class CircleCIPoller(threading.Thread):
             except Exception as exc:  # noqa: BLE001
                 log(f"circleci: {exc!r}")
                 self._error(str(exc))
+            if self.work is not None and not self.work.is_active():
+                interval = max(interval, self.idle_interval)
             self.wake.wait(interval)
             self.wake.clear()
 
@@ -1151,10 +1164,12 @@ class SiteMap:
 class PantheonPoller(threading.Thread):
     ENV_ORDER = {"dev": 0, "test": 1, "live": 2}
 
-    def __init__(self, cfg, secrets, tracker, circleci, sitemap):
+    def __init__(self, cfg, secrets, tracker, circleci, sitemap, work=None):
         super().__init__(name="pantheon", daemon=True)
         self.cfg = cfg["pantheon"]
         self.secrets = secrets
+        self.work = work
+        self.idle_interval = cfg["work"]["idle_interval"]
         self.tracker = tracker
         self.circleci = circleci
         self.sitemap = sitemap
@@ -1269,7 +1284,10 @@ class PantheonPoller(threading.Thread):
                 log(f"pantheon: {exc!r}")
                 with self._lock:
                     self.state = {**self.state, "error": str(exc), "updated_at": now_iso()}
-            self.wake.wait(self.cfg["interval"])
+            interval = self.cfg["interval"]
+            if self.work is not None and not self.work.is_active():
+                interval = max(interval, self.idle_interval)
+            self.wake.wait(interval)
             self.wake.clear()
 
     def collect(self):
@@ -1362,6 +1380,121 @@ class PantheonPoller(threading.Thread):
 
 
 # --------------------------------------------------------------------------
+# At work?
+# --------------------------------------------------------------------------
+
+class WorkDetector(threading.Thread):
+    """Working = a work project is open in PhpStorm (any window, reported by the
+    cards) or a work-only program (Google Chrome) is running."""
+
+    def __init__(self, cfg, tracker):
+        super().__init__(name="work", daemon=True)
+        self.cfg = cfg["work"]
+        self.roots = [os.path.expanduser(r).rstrip("/") for r in (self.cfg["roots"] or cfg["project_roots"])]
+        self.tracker = tracker
+        self.windows = []        # project paths of all PhpStorm windows
+        self.windows_at = 0
+        self.processes = []
+        self.processes_at = 0
+        self.active = None
+        self.changed_at = None
+        self.listeners = []
+        self._lock = threading.Lock()
+        self.wake = threading.Event()
+
+    def is_work_path(self, path):
+        path = (path or "").rstrip("/")
+        return any(path == root or path.startswith(root + "/") for root in self.roots)
+
+    def set_windows(self, items):
+        """Project paths ("/…" or "~/…") or whole captions ("Title [~/…] – file")."""
+        paths = []
+        for item in items or []:
+            item = str(item or "")
+            path = item if item.startswith(("/", "~")) else parse_caption(item)[0]
+            if path:
+                paths.append(os.path.expanduser(path).rstrip("/"))
+        with self._lock:
+            self.windows = sorted(set(paths))
+            self.windows_at = time.time()
+        self.evaluate()  # so the reply to this report already carries the new state
+
+    def scan_processes(self):
+        patterns = [p for p in self.cfg["processes"] if p]
+        if not patterns:
+            return []
+        found = set()
+        for entry in os.scandir("/proc"):
+            if not entry.name.isdigit():
+                continue
+            try:
+                exe = os.readlink(f"/proc/{entry.name}/exe")
+            except OSError:
+                exe = ""
+            try:
+                with open(f"/proc/{entry.name}/cmdline", "rb") as fh:
+                    argv0 = fh.read().split(b"\0", 1)[0].decode("utf-8", "replace")
+            except OSError:
+                argv0 = ""
+            for pattern in patterns:
+                if pattern in exe or pattern in argv0:
+                    found.add(pattern)
+        return sorted(found)
+
+    def evaluate(self):
+        processes = self.scan_processes()
+        with self._lock:
+            self.processes, self.processes_at = processes, time.time()
+            work_project = next((w for w in self.windows if self.is_work_path(w)), None)
+            if work_project is None and self.windows_at == 0:
+                # No card has reported windows yet: fall back to the active project.
+                active_path = self.tracker.snapshot()["path"]
+                work_project = active_path if self.is_work_path(active_path) else None
+            active = (not self.cfg["enabled"]) or bool(work_project) or bool(processes)
+            flipped = active != self.active
+            self.active = active
+            if flipped:
+                self.changed_at = now_iso()
+        if flipped:
+            log(f"work: {'on the clock' if active else 'off the clock'}"
+                + (f" (project {work_project})" if work_project else "")
+                + (f" (running: {', '.join(processes)})" if processes else ""))
+            for listener in self.listeners:
+                try:
+                    listener(active)
+                except Exception as exc:  # noqa: BLE001
+                    log(f"work listener: {exc}")
+        return active
+
+    def is_active(self):
+        if self.active is None or time.time() - self.processes_at > 10:
+            return self.evaluate()
+        return self.active
+
+    def run(self):
+        while True:
+            try:
+                self.evaluate()
+            except Exception as exc:  # noqa: BLE001
+                log(f"work: {exc!r}")
+            self.wake.wait(10)
+            self.wake.clear()
+
+    def snapshot(self):
+        with self._lock:
+            work_project = next((w for w in self.windows if self.is_work_path(w)), None)
+            return {
+                "enabled": bool(self.cfg["enabled"]),
+                "active": bool(self.active) if self.active is not None else True,
+                "work_project": work_project,
+                "windows": len(self.windows),
+                "processes": list(self.processes),
+                "roots": [r.replace(str(Path.home()), "~", 1) for r in self.roots],
+                "changed_at": self.changed_at,
+            }
+
+
+# --------------------------------------------------------------------------
 # HTTP
 # --------------------------------------------------------------------------
 
@@ -1370,22 +1503,25 @@ class Agent:
         self.cfg = cfg
         self.secrets = Secrets()
         self.tracker = ProjectTracker(cfg)
+        self.work = WorkDetector(cfg, self.tracker)
         self.git = GitPoller(cfg, self.tracker)
         self.gulp = GulpManager(cfg, self.tracker)
-        self.circleci = CircleCIPoller(cfg, self.secrets)
+        self.circleci = CircleCIPoller(cfg, self.secrets, self.work)
         self.sitemap = SiteMap(cfg["project_roots"])
-        self.pantheon = PantheonPoller(cfg, self.secrets, self.tracker, self.circleci, self.sitemap)
+        self.pantheon = PantheonPoller(cfg, self.secrets, self.tracker, self.circleci, self.sitemap, self.work)
+        # Back on the clock → refresh both remote cards right away.
+        self.work.listeners.append(lambda active: active and (self.circleci.wake.set(), self.pantheon.wake.set()))
 
     def start(self):
         self.tracker.seed_from_recent_projects()
-        for thread in (self.git, self.circleci, self.pantheon):
+        for thread in (self.git, self.circleci, self.pantheon, self.work):
             thread.start()
         threading.Thread(target=self.sitemap.scan, daemon=True).start()
 
     def health(self):
         return {
             "ok": True, "version": VERSION, "uptime": int(time.time() - STARTED), "port": self.cfg["port"],
-            "project": self.tracker.snapshot(), "secrets": self.secrets.status(),
+            "project": self.tracker.snapshot(), "work": self.work.snapshot(), "secrets": self.secrets.status(),
             "terminus": find_bin("terminus") is not None,
             "node": find_bin(self.cfg["gulp"]["node"] or "node"),
             "phpstorm": find_bin(self.cfg["phpstorm"]["bin"]),
@@ -1433,7 +1569,7 @@ class Handler(BaseHTTPRequestHandler):
         query = urllib.parse.parse_qs(url.query)
         route = url.path.rstrip("/") or "/"
         if route == "/":
-            text = "deck-agent %s\nGET  /health /project /git /gulp?since=N /circleci /pantheon /state\nPOST /project /git/fetch /gulp/{start,stop,restart,clear} /circleci/refresh /pantheon/{refresh,clear-cache,follow} /open\n" % VERSION
+            text = "deck-agent %s\nGET  /health /project /work /git /gulp?since=N /circleci /pantheon /state\nPOST /project /git/fetch /gulp/{start,stop,restart,clear} /circleci/refresh /pantheon/{refresh,clear-cache,follow} /open\n" % VERSION
             return self._send(text.encode(), content_type="text/plain")
         if route == "/health":
             return self._send(agent.health())
@@ -1444,10 +1580,12 @@ class Handler(BaseHTTPRequestHandler):
         if route == "/gulp":
             since = int(query.get("since", ["0"])[0] or 0)
             return self._send(agent.gulp.snapshot(query.get("path", [None])[0], since))
+        if route == "/work":
+            return self._send(agent.work.snapshot())
         if route == "/circleci":
-            return self._send(agent.circleci.snapshot())
+            return self._send({**agent.circleci.snapshot(), "work": agent.work.snapshot()})
         if route == "/pantheon":
-            return self._send(agent.pantheon.snapshot())
+            return self._send({**agent.pantheon.snapshot(), "work": agent.work.snapshot()})
         if route == "/state":
             return self._send({
                 "health": agent.health(), "git": agent.git.snapshot(), "gulp": agent.gulp.snapshot(),
@@ -1466,10 +1604,13 @@ class Handler(BaseHTTPRequestHandler):
             return self._send({"error": "bad JSON"}, 400)
         route = urllib.parse.urlsplit(self.path).path.rstrip("/")
         if route == "/project":
+            if isinstance(body.get("windows"), list):
+                agent.work.set_windows(body["windows"])
             path, title = body.get("path"), body.get("title")
             if not path and body.get("caption"):
                 path, title = parse_caption(body["caption"])
-            return self._send(agent.tracker.report(path, title, active=bool(body.get("active", True))))
+            result = agent.tracker.report(path, title, active=bool(body.get("active", True))) if path else agent.tracker.snapshot()
+            return self._send({**result, "work": agent.work.snapshot()})
         if route == "/git/fetch":
             agent.git.fetch_now.set()
             agent.git.wake.set()

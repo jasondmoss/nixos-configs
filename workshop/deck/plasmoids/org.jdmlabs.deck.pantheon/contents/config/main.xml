@@ -30,5 +30,13 @@
             <label>Recent workflows listed.</label>
             <default>6</default>
         </entry>
+        <entry name="trackPhpStorm" type="Bool">
+            <label>Report PhpStorm's open projects to the agent (also used for the off-the-clock test).</label>
+            <default>true</default>
+        </entry>
+        <entry name="idleWhenOffWork" type="Bool">
+            <label>Show a placeholder instead of data while no work project is open and no work program runs.</label>
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

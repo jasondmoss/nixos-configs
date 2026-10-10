@@ -24,6 +24,7 @@ Cards poll GET /git /gulp?since= /circleci /pantheon  ◀─── 127.0.0.1:476
   `deck-agent` user service (`packages/deck/default.nix`). `GET /` lists the
   endpoints; `GET /state` dumps everything; `deck-agent --print-config` shows
   the merged configuration.
+* `GET /work` — on/off the clock and the reason.
 * `plasmoids/<id>/` — one KPackage per card. `plasmoids/common/` holds the
   shared QML (`DeckClient` polling, `ProjectTracker`, `CardHeader`, `Pill`,
   `StatusDot`, `Offline`, `Utils.js`), symlinked into each package and
@@ -44,6 +45,16 @@ second one.
 Repository → Pantheon site comes from the `.lando.yml` files under the
 configured project roots (`config.site`, `config.id`, plus `git remote
 get-url origin`).
+
+## Off the clock
+
+The agent decides you are working when any PhpStorm window shows a project
+under one of the `project_roots` (every card reports the full window list),
+or when one of `work.processes` (default: Google Chrome, used for work only)
+is running. Otherwise the CircleCI and Pantheon cards show a placeholder
+("Off the clock") and the agent polls both services every `work.idle_interval`
+seconds instead of every minute or two. `GET /work` shows the verdict and why.
+Each of the two cards can opt out in its settings.
 
 ## Configuration and secrets
 
@@ -70,6 +81,18 @@ from `env:info` (dev/test/live only, cached half an hour).
 The systemd user unit has NixOS's minimal PATH; the wrapper appends
 `/run/wrappers/bin:/run/current-system/sw/bin` so node (the one PhpStorm uses),
 phpstorm, op and ssh are found.
+
+## After a rebuild
+
+`nxr` installs new builds but does not restart user-level things:
+
+```
+systemctl --user restart deck-agent            # new agent code
+systemctl --user restart plasma-plasmashell    # widgets reload their QML from the new store path
+```
+
+Widgets already on the desktop keep the QML they were created with until
+plasmashell restarts, so a card can look one version behind the agent.
 
 ## Developing
 

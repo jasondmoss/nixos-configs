@@ -25,10 +25,13 @@ PlasmoidItem {
         ? ci.pipelines.slice(0, Math.max(1, Plasmoid.configuration.maxPipelines))
         : []
     readonly property int runningCount: root.configured ? (ci.running || 0) : 0
+    // Off the clock: no work project open in PhpStorm, no work-only program running.
+    readonly property bool offWork: Plasmoid.configuration.idleWhenOffWork && client.online
+        && ci !== null && !!ci.work && ci.work.enabled === true && ci.work.active === false
     property double now: Date.now()
 
     readonly property string statusWord: {
-        if (!root.configured) return "muted";
+        if (!root.configured || root.offWork) return "muted";
         if (root.ci.error) return "error";
         if (root.runningCount > 0) return "running";
         return root.pipelines.length ? root.pipelines[0].status : "muted";
@@ -46,6 +49,11 @@ PlasmoidItem {
         port: Plasmoid.configuration.port
         endpoint: "/circleci"
         interval: Math.max(2, Plasmoid.configuration.interval) * 1000
+    }
+
+    Loader {
+        active: Plasmoid.configuration.trackPhpStorm
+        sourceComponent: ProjectTracker { client: client }
     }
 
     Timer {
@@ -76,7 +84,7 @@ PlasmoidItem {
                 icon: Qt.resolvedUrl("../icons/circleci.svg")
                 maskIcon: true
                 title: i18n("CircleCI")
-                subtitle: root.configured
+                subtitle: root.offWork ? i18n("off the clock") : root.configured
                     ? i18n("%1 · your pipelines · %2", String(root.ci.org || "").replace(/^gh\//, ""), Utils.relTime(root.ci.updated_at, root.now))
                     : ""
                 status: root.statusWord
@@ -103,14 +111,22 @@ PlasmoidItem {
             Offline {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: !root.configured || (root.ci.error && root.pipelines.length === 0)
+                visible: root.offWork
+                icon: "system-suspend"
+                message: i18n("Off the clock\nPipelines show up again when a work project is open in PhpStorm or Chrome is running.")
+            }
+
+            Offline {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: !root.offWork && (!root.configured || (root.ci.error && root.pipelines.length === 0))
                 icon: client.online ? "dialog-password" : "network-disconnect"
                 message: client.online ? (root.ci ? (root.ci.error || i18n("Waiting for pipelines…")) : i18n("Waiting for the agent…")) : client.error
             }
 
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
-                visible: root.configured && !!root.ci.error && root.pipelines.length > 0
+                visible: !root.offWork && root.configured && !!root.ci.error && root.pipelines.length > 0
                 text: root.configured && root.ci.error ? root.ci.error : ""
                 font: Kirigami.Theme.smallFont
                 color: Utils.palette.error
@@ -120,7 +136,7 @@ PlasmoidItem {
             PlasmaComponents3.ScrollView {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: root.configured && root.pipelines.length > 0
+                visible: !root.offWork && root.configured && root.pipelines.length > 0
 
                 ListView {
                     id: pipelineView

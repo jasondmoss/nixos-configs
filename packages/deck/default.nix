@@ -15,6 +15,8 @@
 #-- lists the pipelines you triggered across the organisation (API v2,
 #-- mine=true); Pantheon follows the site your latest pipeline deploys to
 #-- (repository → site from the projects' .lando.yml files) through terminus.
+#-- Both go quiet "off the clock": no PhpStorm window on a work project and
+#-- no work-only program (Google Chrome) running.
 #--
 #-- Secrets never enter this repository: the agent reads CIRCLE_TOKEN and
 #-- TERMINUS_TOKEN from ~/.config/deck/secrets.env (plain values or op://
@@ -72,6 +74,14 @@ in {
                     stop_others = false;  # keep other projects' watchers running
                 };
                 pantheon.follow = "pipeline";  # pipeline | phpstorm | pinned
+                # Off the clock (no PhpStorm window on a project under project_roots,
+                # none of these programs running): CircleCI and Pantheon cards show a
+                # placeholder and the agent polls both every idle_interval seconds.
+                work = {
+                    enabled = true;
+                    processes = [ "google-chrome" ];
+                    idle_interval = 900;
+                };
             };
             description = ''
                 Agent configuration, merged over the defaults in deck-agent.py;

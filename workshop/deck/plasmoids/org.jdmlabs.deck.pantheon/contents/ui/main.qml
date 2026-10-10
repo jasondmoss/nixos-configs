@@ -27,7 +27,9 @@ PlasmoidItem {
     readonly property var workflows: root.configured && pan.workflows
         ? pan.workflows.slice(0, Math.max(1, Plasmoid.configuration.maxWorkflows))
         : []
-    readonly property bool hasData: root.site !== null && root.envs.length > 0
+    readonly property bool offWork: Plasmoid.configuration.idleWhenOffWork && client.online
+        && pan !== null && !!pan.work && pan.work.enabled === true && pan.work.active === false
+    readonly property bool hasData: !root.offWork && root.site !== null && root.envs.length > 0
     property string selectedEnv: "dev"
     readonly property var env: {
         for (const e of root.envs) {
@@ -40,7 +42,7 @@ PlasmoidItem {
     property string actionMessage: ""
 
     readonly property string statusWord: {
-        if (!root.configured) return "muted";
+        if (!root.configured || root.offWork) return "muted";
         // "Waiting for a pipeline" is not an error; a failing terminus call for a known site is.
         if (root.pan.error) return root.site ? "error" : "muted";
         for (const wf of root.workflows) {
@@ -73,6 +75,11 @@ PlasmoidItem {
         endpoint: "/pantheon"
         interval: Math.max(3, Plasmoid.configuration.interval) * 1000
         onOnlineChanged: if (online) root.pushFollow()
+    }
+
+    Loader {
+        active: Plasmoid.configuration.trackPhpStorm
+        sourceComponent: ProjectTracker { client: client }
     }
 
     function pushFollow()
@@ -131,6 +138,7 @@ PlasmoidItem {
     }
 
     fullRepresentation: Item {
+        id: rep
         Layout.minimumWidth: Kirigami.Units.gridUnit * 18
         Layout.minimumHeight: Kirigami.Units.gridUnit * 10
         Layout.preferredWidth: Kirigami.Units.gridUnit * 28
@@ -144,8 +152,8 @@ PlasmoidItem {
                 Layout.fillWidth: true
                 icon: Qt.resolvedUrl("../icons/pantheon.svg")
                 maskIcon: true
-                title: root.site ? root.site.label : i18n("Pantheon")
-                subtitle: root.site
+                title: root.site && !root.offWork ? root.site.label : i18n("Pantheon")
+                subtitle: root.offWork ? i18n("off the clock") : root.site
                     ? [root.site.plan, root.site.organization_name
                         || (/^[0-9a-f-]{36}$/.test(root.site.organization || "") ? "" : root.site.organization)]
                         .filter(Boolean).join(" · ")
@@ -174,7 +182,15 @@ PlasmoidItem {
             Offline {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: !root.hasData
+                visible: root.offWork
+                icon: "system-suspend"
+                message: i18n("Off the clock\nThe site shows up again when a work project is open in PhpStorm or Chrome is running.")
+            }
+
+            Offline {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: !root.hasData && !root.offWork
                 icon: client.online ? (root.configured && root.pan.error && root.site ? "dialog-warning" : "network-server") : "network-disconnect"
                 message: client.online
                     ? (root.pan ? (root.pan.error || i18n("Waiting for terminus…")) : i18n("Waiting for the agent…"))
@@ -291,7 +307,7 @@ PlasmoidItem {
                     font: Kirigami.Theme.smallFont
                     color: Kirigami.Theme.disabledTextColor
                     elide: Text.ElideLeft
-                    Layout.maximumWidth: parent.width * 0.5
+                    Layout.maximumWidth: rep.width * 0.5
                 }
             }
 
@@ -341,7 +357,7 @@ PlasmoidItem {
                             font: Kirigami.Theme.smallFont
                             color: Kirigami.Theme.disabledTextColor
                             elide: Text.ElideRight
-                            Layout.maximumWidth: wfRow.width * 0.25
+                            Layout.maximumWidth: rep.width * 0.25
                         }
 
                         PlasmaComponents3.Label {
@@ -364,7 +380,7 @@ PlasmoidItem {
 
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
-                visible: root.configured
+                visible: root.configured && !root.offWork
                 text: root.followText + (root.site && root.site.guessed ? i18n(" · site name guessed from the repository") : "")
                 font: Kirigami.Theme.smallFont
                 color: Kirigami.Theme.disabledTextColor

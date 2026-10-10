@@ -7,6 +7,8 @@ Kirigami.FormLayout {
     id: page
 
     property alias cfg_port: portSpin.value
+    property alias cfg_trackPhpStorm: trackCheck.checked
+    property alias cfg_idleWhenOffWork: idleCheck.checked
     property alias cfg_interval: intervalSpin.value
     property alias cfg_maxPipelines: maxSpin.value
     property alias cfg_showJobs: jobsCheck.checked
@@ -49,6 +51,19 @@ Kirigami.FormLayout {
     QQC2.CheckBox {
         id: subjectCheck
         text: i18n("Show the commit subject")
+    }
+
+    Item { Kirigami.FormData.isSection: true }
+
+    QQC2.CheckBox {
+        id: idleCheck
+        Kirigami.FormData.label: i18n("Off the clock:")
+        text: i18n("Show a placeholder while no work project is open and Chrome is not running")
+    }
+
+    QQC2.CheckBox {
+        id: trackCheck
+        text: i18n("Report PhpStorm's open projects to the agent")
     }
 
     QQC2.Label {

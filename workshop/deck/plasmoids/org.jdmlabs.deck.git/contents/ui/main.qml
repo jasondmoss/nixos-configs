@@ -102,6 +102,7 @@ PlasmoidItem {
     }
 
     fullRepresentation: Item {
+        id: rep
         Layout.minimumWidth: Kirigami.Units.gridUnit * 16
         Layout.minimumHeight: Kirigami.Units.gridUnit * 9
         Layout.preferredWidth: Kirigami.Units.gridUnit * 24
@@ -171,7 +172,7 @@ PlasmoidItem {
                         : ""
                     font.weight: Font.DemiBold
                     elide: Text.ElideMiddle
-                    Layout.maximumWidth: parent.width * 0.5
+                    Layout.maximumWidth: rep.width * 0.5
                 }
 
                 Pill {
@@ -202,7 +203,7 @@ PlasmoidItem {
                     font: Kirigami.Theme.smallFont
                     color: Kirigami.Theme.disabledTextColor
                     elide: Text.ElideMiddle
-                    Layout.maximumWidth: parent.width * 0.4
+                    Layout.maximumWidth: rep.width * 0.4
                 }
             }
 

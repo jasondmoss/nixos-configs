@@ -2,8 +2,6 @@
     lib,
     writeShellApplication,
     writeText,
-    writeTextDir,
-    symlinkJoin,
     coreutils,
     dbus,
     findutils,
@@ -20,39 +18,60 @@
 }:
 
 let
-    #-- A Panel Colorizer preset that sets only the foreground colour of panel
-    #-- widgets and system-tray items. Panel Colorizer merges a loaded preset
-    #-- over its defaults, so everything else keeps the stock panel look.
-    preset = name: color: writeTextDir "${name}/settings.json" (builtins.toJSON {
-        globalSettings = let
-            normal = {
-                enabled = true;
-                foregroundColor = {
-                    enabled = true;
-                    sourceType = 0;  # Custom
-                    custom = color;
-                    alpha = 1;
-                };
-            };
-        in {
-            widgets.normal = normal;
-            trayWidgets.normal = normal;
-        };
-    });
+    #-- Plasma script (org.kde.PlasmaShell.evaluateScript) that sets the
+    #-- foreground colour of panel widgets and tray items in every Panel
+    #-- Colorizer widget. The watcher prepends `var color = "#rrggbb";`.
+    #--
+    #-- It edits only those fields of the widget's globalSettings JSON — the
+    #-- `enabled` flags, sourceType 0 (custom), the colour, full alpha — and
+    #-- writes only when one differs, so everything set in Panel Colorizer's
+    #-- own settings window (transparency, blur, radius, …) stays. Loading a
+    #-- preset instead, as this used to, replaces globalSettings wholesale.
+    colorScript = writeText "panel-contrast-color.js" ''
+        var report = [];
+        panels().forEach(function (panel) {
+            panel.widgets("luisbocanegra.panel.colorizer").forEach(function (widget) {
+                widget.currentConfigGroup = ["General"];
+                var raw = String(widget.readConfig("globalSettings", ""));
+                var settings = {};
+                try {
+                    settings = raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    report.push(panel.id + "/" + widget.id + " unreadable");
+                    return;
+                }
+                var want = { enabled: true, sourceType: 0, custom: color, alpha: 1 };
+                var changed = false;
+                ["widgets", "trayWidgets"].forEach(function (scope) {
+                    var section = settings[scope] = settings[scope] || {};
+                    var normal = section.normal = section.normal || {};
+                    var fg = normal.foregroundColor = normal.foregroundColor || {};
+                    if (normal.enabled !== true) {
+                        normal.enabled = true;
+                        changed = true;
+                    }
+                    for (var key in want) {
+                        if (fg[key] !== want[key]) {
+                            fg[key] = want[key];
+                            changed = true;
+                        }
+                    }
+                });
+                if (changed) {
+                    widget.writeConfig("globalSettings", JSON.stringify(settings));
+                    widget.reloadConfig();
+                }
+                report.push(panel.id + "/" + widget.id + (changed ? " recoloured" : " unchanged"));
+            });
+        });
+        print(report.join(", "));
+    '';
 
-    presets = symlinkJoin {
-        name = "panel-contrast-presets";
-        paths = [
-            (preset "light-icons" lightColor)
-            (preset "dark-icons" darkColor)
-        ];
-    };
-
-    #-- Panel Colorizer widget settings that presets cannot carry (both keys
-    #-- are on its preset ignore list), so they are written into the widget's
+    #-- Panel Colorizer widget settings outside globalSettings (both keys are
+    #-- on its preset ignore list), written into the widget's
     #-- own config instead. They only say *how* tray icons are drawn — swap
-    #-- these icons, draw those as masks — while the colour still comes from
-    #-- whichever preset is loaded.
+    #-- these icons, draw those as masks — while the colour comes from
+    #-- colorScript.
     #--   systemTrayIconUserReplacements: regex on the tray item's title or
     #--     StatusNotifierItem id → replacement icon (name or file path).
     #--   forceForegroundColor: items whose icons are redrawn as a solid
@@ -128,16 +147,18 @@ writeShellApplication {
     ];
 
     runtimeEnv = {
-        PANEL_CONTRAST_PRESETS = presets;
+        PANEL_CONTRAST_LIGHT_COLOR = lightColor;
+        PANEL_CONTRAST_DARK_COLOR = darkColor;
+        PANEL_CONTRAST_COLOR_SCRIPT = colorScript;
         PANEL_CONTRAST_WIDGET_SCRIPT = widgetScript;
     };
 
     text = builtins.readFile ./panel-contrast.sh;
 
-    passthru = { inherit presets widgetScript; };
+    passthru = { inherit colorScript widgetScript; };
 
     meta = {
-        description = "Switch Panel Colorizer between light and dark panel icons to match the wallpaper behind the panel";
+        description = "Set Panel Colorizer's panel icon colour to light or dark to match the wallpaper behind the panel";
         license = lib.licenses.gpl2Plus;
         platforms = lib.platforms.linux;
         mainProgram = "panel-contrast";
