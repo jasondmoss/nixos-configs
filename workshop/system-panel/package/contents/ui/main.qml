@@ -144,7 +144,7 @@ PlasmoidItem {
             " \"$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader 2>/dev/null)\"" +
             " \"$(u=$(cut -d. -f1 /proc/uptime); echo $((u/3600))h $((u/60%60))m)\"" +
             " \"$(cat /sys/class/net/" + cfgIface + "/statistics/rx_bytes 2>/dev/null || echo 0)\"" +
-            " #sensors" + Date.now());
+            " #sensors");
     }
 
     function refreshLuma()
@@ -152,7 +152,7 @@ PlasmoidItem {
         exec.connectSource(
             "p=$(grep -m1 '^Image=' ~/.config/plasma-org.kde.plasma.desktop-appletsrc | cut -d= -f2- | sed 's#^file://##'); " +
             "[ -f \"$p\" ] && magick \"$p\" -gravity NorthEast -crop 22%x55%+0+3% +repage -resize 1x1 -colorspace Gray -format '%[fx:mean]' info: 2>/dev/null || echo -1" +
-            " #luma" + Date.now());
+            " #luma");
     }
 
     /**
@@ -167,7 +167,7 @@ PlasmoidItem {
             "printf '%s\\001%s'" +
             " \"$(TZ='America/Vancouver' date '+%-I:%M %p %Z')\"" +
             " \"$(TZ='Asia/Makassar' date '+%-I:%M %p %Z · %a')\"" +
-            " #zones" + Date.now()
+            " #zones"
         );
     }
 
