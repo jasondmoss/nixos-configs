@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Id": "org.jdmlabs.deck.pantheon",
+        "Name": "Deck: Pantheon",
+        "Description": "Environments and recent workflows of the Pantheon site your latest pipeline deploys to.",
+        "Icon": "network-server",
+        "Category": "Development Tools",
+        "Authors": [
+            {
+                "Name": "Jason D. Moss <jason@jdmlabs.com>"
+            }
+        ],
+        "License": "GPL-2.0-or-later",
+        "Version": "0.1",
+        "EnabledByDefault": true
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

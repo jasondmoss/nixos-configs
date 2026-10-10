@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Id": "org.jdmlabs.deck.gulp",
+        "Name": "Deck: Gulp",
+        "Description": "Runs and shows the Gulp watcher of the project open in PhpStorm.",
+        "Icon": "run-build",
+        "Category": "Development Tools",
+        "Authors": [
+            {
+                "Name": "Jason D. Moss <jason@jdmlabs.com>"
+            }
+        ],
+        "License": "GPL-2.0-or-later",
+        "Version": "0.1",
+        "EnabledByDefault": true
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

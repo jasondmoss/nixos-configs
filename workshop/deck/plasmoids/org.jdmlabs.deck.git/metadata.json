@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Id": "org.jdmlabs.deck.git",
+        "Name": "Deck: Git",
+        "Description": "Branch, ahead/behind and changed files of the project open in PhpStorm.",
+        "Icon": "vcs-normal",
+        "Category": "Development Tools",
+        "Authors": [
+            {
+                "Name": "Jason D. Moss <jason@jdmlabs.com>"
+            }
+        ],
+        "License": "GPL-2.0-or-later",
+        "Version": "0.1",
+        "EnabledByDefault": true
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

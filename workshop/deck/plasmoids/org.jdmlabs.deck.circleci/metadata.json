@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Id": "org.jdmlabs.deck.circleci",
+        "Name": "Deck: CircleCI",
+        "Description": "The CircleCI pipelines you triggered, with their workflows and jobs.",
+        "Icon": "applications-development",
+        "Category": "Development Tools",
+        "Authors": [
+            {
+                "Name": "Jason D. Moss <jason@jdmlabs.com>"
+            }
+        ],
+        "License": "GPL-2.0-or-later",
+        "Version": "0.1",
+        "EnabledByDefault": true
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

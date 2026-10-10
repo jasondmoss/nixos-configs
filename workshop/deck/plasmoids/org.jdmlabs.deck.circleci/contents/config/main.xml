@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <group name="General">
+        <entry name="port" type="Int">
+            <label>Port of the deck-agent service on 127.0.0.1.</label>
+            <default>47657</default>
+        </entry>
+        <entry name="interval" type="Int">
+            <label>Seconds between refreshes (the agent polls CircleCI on its own schedule).</label>
+            <default>10</default>
+        </entry>
+        <entry name="maxPipelines" type="Int">
+            <label>Pipelines listed.</label>
+            <default>6</default>
+        </entry>
+        <entry name="showJobs" type="Bool">
+            <label>List jobs of workflows that are running or failed.</label>
+            <default>true</default>
+        </entry>
+        <entry name="showSubject" type="Bool">
+            <label>Show the commit subject.</label>
+            <default>true</default>
+        </entry>
+    </group>
+</kcfg>

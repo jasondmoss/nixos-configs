@@ -2,6 +2,8 @@
     imports = [
         # Panel icons switch light/dark with the wallpaper (services.panel-contrast).
         ../packages/panel-contrast
+        # Desktop cards for the project open in PhpStorm (services.deck).
+        ../packages/deck
     ];
 
     qt.enable = true;

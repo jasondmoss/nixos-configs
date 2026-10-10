@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <group name="General">
+        <entry name="port" type="Int">
+            <label>Port of the deck-agent service on 127.0.0.1.</label>
+            <default>47657</default>
+        </entry>
+        <entry name="interval" type="Int">
+            <label>Seconds between refreshes.</label>
+            <default>3</default>
+        </entry>
+        <entry name="trackPhpStorm" type="Bool">
+            <label>Report the active PhpStorm window's project to the agent.</label>
+            <default>true</default>
+        </entry>
+        <entry name="showUntracked" type="Bool">
+            <label>List untracked files.</label>
+            <default>true</default>
+        </entry>
+        <entry name="showPath" type="Bool">
+            <label>Show the project path under the title.</label>
+            <default>true</default>
+        </entry>
+    </group>
+</kcfg>

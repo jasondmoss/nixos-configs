@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <group name="General">
+        <entry name="port" type="Int">
+            <label>Port of the deck-agent service on 127.0.0.1.</label>
+            <default>47657</default>
+        </entry>
+        <entry name="trackPhpStorm" type="Bool">
+            <label>Report the active PhpStorm window's project to the agent.</label>
+            <default>true</default>
+        </entry>
+        <entry name="fontSize" type="Int">
+            <label>Log font size in pixels.</label>
+            <default>11</default>
+        </entry>
+        <entry name="wrapLines" type="Bool">
+            <label>Wrap long log lines.</label>
+            <default>true</default>
+        </entry>
+        <entry name="maxLines" type="Int">
+            <label>Log lines kept in the card.</label>
+            <default>300</default>
+        </entry>
+    </group>
+</kcfg>
