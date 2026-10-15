@@ -25,5 +25,9 @@
             <label>Show the project path under the title.</label>
             <default>true</default>
         </entry>
+        <entry name="idleWhenNoProject" type="Bool">
+            <label>Show a placeholder while PhpStorm has no project open.</label>
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

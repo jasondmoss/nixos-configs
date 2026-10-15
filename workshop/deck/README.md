@@ -35,12 +35,33 @@ caption carries the project path in brackets, and Plasma's `TasksModel` gives
 the cards the active window, so no IDE plugin is needed. The agent seeds itself
 from PhpStorm's `recentProjects.xml` on start.
 
-The Gulp watcher runs the same command as PhpStorm's gulp run configuration
-(`node <theme>/node_modules/gulp/bin/gulp.js --color --gulpfile … default`),
-found through `.idea/workspace.xml` or `web/themes/custom/*/gulpfile.js`. A
-gulp started elsewhere for the same gulpfile (PhpStorm's Run window) is
-detected and shown as "running outside the agent" instead of starting a
-second one.
+The Gulp card manages whatever watches the theme, resolved per project:
+
+1. a `gulp.commands` override from the config (`{"<substring of the project
+   path>": {"cwd": "web/themes/custom/x", "command": ["npm", "run", "watch"]}}`);
+2. PhpStorm's gulp or npm run configuration from `.idea/workspace.xml`;
+3. a gulpfile in `web/themes/custom/*` — run exactly like PhpStorm does,
+   `node <theme>/node_modules/gulp/bin/gulp.js --color --gulpfile … default`;
+4. otherwise a `package.json` there with the first of `gulp.npm_scripts`
+   (`watch`, `dev`, `develop`, `start`) — `npm run watch` for the webpack
+   themes (washington, dc250, nextdc, visitfortmyers).
+
+Where several themes qualify, the one named like the project wins, then
+`origin`. An npm script runs inside the project's Lando node service when
+`.lando.yml` declares one with a different node major than the host
+(`gulp.lando = "auto"`; webpack 4 + webpack-cli 3 do not start on Node 24,
+and those projects pin `node:14`): `docker exec -t -w /app/<theme> -u <uid>
+<app>_node_1 npm run watch`, so the container must be up (`lando start`;
+the card says so and waits for Start instead of auto-starting). Stop also
+signals the processes inside the container, which outlive the `docker exec`
+client. The card's title shows what runs: `gulp default · origin`,
+`lando npm run watch · washington`.
+
+A watcher started elsewhere (PhpStorm's Run window, a terminal, inside the
+container by hand) is detected — by gulpfile argument, working directory or
+`docker top` — and shown as "running outside the agent" instead of starting
+a second one. Build events are recognised for gulp (`Starting`/`Finished`),
+webpack 4/5 stats and Babel.
 
 Repository → Pantheon site comes from the `.lando.yml` files under the
 configured project roots (`config.site`, `config.id`, plus `git remote
@@ -55,6 +76,11 @@ is running. Otherwise the CircleCI and Pantheon cards show a placeholder
 ("Off the clock") and the agent polls both services every `work.idle_interval`
 seconds instead of every minute or two. `GET /work` shows the verdict and why.
 Each of the two cards can opt out in its settings.
+
+The Git and Gulp cards sleep on a simpler rule: PhpStorm has no project window
+at all ("No project open"). A personal repository open in PhpStorm keeps them
+awake. The git poller slows to once a minute and stops fetching meanwhile; a
+running watcher is left alone (the card says so, with its Stop button).
 
 ## Configuration and secrets
 

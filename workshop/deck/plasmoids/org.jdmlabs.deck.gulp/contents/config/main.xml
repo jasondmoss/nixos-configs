@@ -25,5 +25,9 @@
             <label>Log lines kept in the card.</label>
             <default>300</default>
         </entry>
+        <entry name="idleWhenNoProject" type="Bool">
+            <label>Show a placeholder while PhpStorm has no project open.</label>
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

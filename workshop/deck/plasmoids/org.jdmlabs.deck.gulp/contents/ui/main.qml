@@ -20,6 +20,8 @@ PlasmoidItem {
     id: root
 
     readonly property var gulp: client.payload
+    readonly property bool noProject: Plasmoid.configuration.idleWhenNoProject && client.online
+        && gulp !== null && !!gulp.work && gulp.work.reported === true && gulp.work.windows === 0
     readonly property string state: client.online && gulp ? (gulp.state || "stopped") : "offline"
     readonly property bool running: state === "watching" || state === "compiling" || state === "error"
     readonly property var project: gulp && gulp.project ? gulp.project : null
@@ -31,7 +33,11 @@ PlasmoidItem {
 
     preferredRepresentation: fullRepresentation
     Plasmoid.backgroundHints: PlasmaCore.Types.DefaultBackground | PlasmaCore.Types.ConfigurableBackground
-    toolTipMainText: i18n("Gulp") + (root.gulp && root.gulp.theme ? " · " + root.gulp.theme : "")
+    // "gulp default · origin", "npm run watch · washington", or plain "Gulp".
+    readonly property string runnerTitle: root.gulp && root.gulp.label
+        ? root.gulp.label + (root.gulp.theme ? " · " + root.gulp.theme : "")
+        : i18n("Gulp")
+    toolTipMainText: root.runnerTitle
     toolTipSubText: root.statusText
 
     ListModel { id: lines }
@@ -116,7 +122,7 @@ PlasmoidItem {
         case "external":
             return i18n("Running outside the agent (PhpStorm?), pid %1 — its output is not visible here", g.external_pid);
         case "missing":
-            return g.message || i18n("No gulpfile in this project");
+            return g.message || i18n("No watcher in this project");
         default:
             return g && g.message ? g.message : i18n("Stopped");
         }
@@ -135,15 +141,16 @@ PlasmoidItem {
             CardHeader {
                 Layout.fillWidth: true
                 icon: "run-build"
-                title: i18n("Gulp") + (root.gulp && root.gulp.theme ? " · " + root.gulp.theme : "")
-                subtitle: root.project ? (root.projectTitle ? root.projectTitle + "  " : "") + (root.project.short || "") : ""
-                status: root.state === "offline" ? "muted" : root.state
+                title: root.noProject ? i18n("Gulp") : root.runnerTitle
+                subtitle: root.noProject ? i18n("no project open")
+                    : (root.project ? (root.projectTitle ? root.projectTitle + "  " : "") + (root.project.short || "") : "")
+                status: root.state === "offline" || root.noProject ? "muted" : root.state
 
                 PlasmaComponents3.ToolButton {
                     icon.name: root.running ? "media-playback-stop" : "media-playback-start"
                     enabled: client.online && root.gulp && root.gulp.available && root.state !== "external"
                     onClicked: root.action(root.running ? "stop" : "start")
-                    PlasmaComponents3.ToolTip.text: root.running ? i18n("Stop the watcher") : i18n("Start `gulp %1`", root.gulp ? root.gulp.task : "default")
+                    PlasmaComponents3.ToolTip.text: root.running ? i18n("Stop the watcher") : i18n("Start `%1`", root.gulp && root.gulp.label ? root.gulp.label : "gulp default")
                     PlasmaComponents3.ToolTip.visible: hovered
                     PlasmaComponents3.ToolTip.delay: Kirigami.Units.toolTipDelay
                 }
@@ -170,14 +177,25 @@ PlasmoidItem {
                     icon.name: "document-open"
                     visible: client.online && root.gulp && !!root.gulp.gulpfile
                     onClicked: client.post("/open", { path: root.gulp.gulpfile })
-                    PlasmaComponents3.ToolTip.text: i18n("Open the gulpfile in PhpStorm")
+                    PlasmaComponents3.ToolTip.text: root.gulp && root.gulp.runner === "gulp" ? i18n("Open the gulpfile in PhpStorm") : i18n("Open package.json in PhpStorm")
                     PlasmaComponents3.ToolTip.visible: hovered
                     PlasmaComponents3.ToolTip.delay: Kirigami.Units.toolTipDelay
                 }
             }
 
+            Offline {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: root.noProject
+                icon: "system-suspend"
+                message: root.running
+                    ? i18n("No project open\nThe last watcher is still running; stop it with the button above or leave it.")
+                    : i18n("No project open\nThe card wakes up with the next project in PhpStorm.")
+            }
+
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
+                visible: !root.noProject
                 text: root.statusText
                 font: Kirigami.Theme.smallFont
                 color: root.state === "offline" ? Kirigami.Theme.disabledTextColor : Utils.statusColor(root.state)
@@ -188,7 +206,7 @@ PlasmoidItem {
             // Watchers of other projects that are still running.
             Flow {
                 Layout.fillWidth: true
-                visible: client.online && root.gulp && root.gulp.others && root.gulp.others.length > 0
+                visible: client.online && root.gulp && root.gulp.others && root.gulp.others.length > 0 && !root.noProject
                 spacing: Kirigami.Units.smallSpacing
 
                 PlasmaComponents3.Label {
@@ -211,7 +229,7 @@ PlasmoidItem {
             // Error excerpt
             Rectangle {
                 Layout.fillWidth: true
-                visible: root.state === "error" && root.gulp.error && root.gulp.error.lines.length > 0
+                visible: root.state === "error" && !root.noProject && root.gulp.error && root.gulp.error.lines.length > 0
                 implicitHeight: errorText.implicitHeight + Kirigami.Units.smallSpacing * 2
                 radius: 4
                 color: Qt.rgba(1, 0.37, 0.43, 0.14)
@@ -234,7 +252,7 @@ PlasmoidItem {
             PlasmaComponents3.ScrollView {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: client.online
+                visible: client.online && !root.noProject
 
                 ListView {
                     id: logView
@@ -280,7 +298,7 @@ PlasmoidItem {
 
             PlasmaComponents3.ToolButton {
                 Layout.alignment: Qt.AlignRight
-                visible: !root.autoScroll && lines.count > 0
+                visible: !root.autoScroll && lines.count > 0 && !root.noProject
                 icon.name: "go-bottom"
                 text: i18n("Follow")
                 onClicked: {

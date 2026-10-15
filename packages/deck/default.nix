@@ -11,7 +11,8 @@
 #-- Plasma's TasksModel ("Title [~/path] – file") and post the project to the
 #-- agent, which then tracks that repository and runs `gulp default` with the
 #-- project's own node_modules/gulp — the same command as PhpStorm's gulp run
-#-- configuration, so the floating Run window is no longer needed. CircleCI
+#-- configuration, so the floating Run window is no longer needed — or, for
+#-- themes without a gulpfile, the theme's `npm run watch`. CircleCI
 #-- lists the pipelines you triggered across the organisation (API v2,
 #-- mine=true); Pantheon follows the site your latest pipeline deploys to
 #-- (repository → site from the projects' .lando.yml files) through terminus.
@@ -69,7 +70,9 @@ in {
                 ];
                 circleci.org_slug = "gh/originoutside";
                 gulp = {
-                    task = "default";
+                    task = "default";     # when the theme has a gulpfile …
+                    # … otherwise the first of these package.json scripts (webpack themes)
+                    npm_scripts = [ "watch" "dev" "develop" "start" ];
                     auto_start = true;    # start the watcher when a project becomes active
                     stop_others = false;  # keep other projects' watchers running
                 };

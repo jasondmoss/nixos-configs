@@ -177,9 +177,7 @@ PARAMETER num_ctx 8192
     services.comfyui = {
         enable = true;
         listen = [ "127.0.0.1" ];
-        package = pkgsCuda.comfyui.override {
-            cudaPackages_13 = pkgsCuda.cudaPackages;
-        };
+        package = pkgsCuda.comfyui;
     };
 
     systemd.services.comfyui = {

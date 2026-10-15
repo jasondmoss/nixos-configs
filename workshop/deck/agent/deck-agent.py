@@ -74,7 +74,13 @@ DEFAULTS = {
     },
     "gulp": {
         "node": "",             # empty: `node` from PATH (PhpStorm uses the system node)
-        "task": "default",
+        "task": "default",      # gulp task when the theme has a gulpfile
+        "npm_scripts": ["watch", "dev", "develop", "start"],  # else: first of these package.json scripts
+        # auto: run npm scripts inside the project's Lando node service when its
+        # node major differs from the host's (webpack 4 themes on node:14);
+        # always / never force it. Gulp always runs on the host.
+        "lando": "auto",
+        "commands": {},         # per-project override: {"<substring of project path>": {"cwd": "web/themes/custom/x", "command": ["npm", "run", "watch"]}}
         "auto_start": True,     # start the watcher when a project becomes active
         "stop_others": False,   # stop watchers of other projects when switching
         "buffer": 400,          # lines kept per watcher
@@ -158,7 +164,8 @@ def now_iso(ts=None):
 
 # Where a program lives when PATH is a systemd unit's minimal one.
 FALLBACK_BIN_DIRS = ("/run/wrappers/bin", "/run/current-system/sw/bin",
-                     os.path.expanduser("~/.nix-profile/bin"), "/usr/local/bin", "/usr/bin")
+                     os.path.expanduser("~/.nix-profile/bin"), os.path.expanduser("~/.config/node/bin"),
+                     os.path.expanduser("~/.local/bin"), os.path.expanduser("~/.lando/bin"), "/usr/local/bin", "/usr/bin")
 
 
 def find_bin(name):
@@ -360,10 +367,11 @@ def remote_web_url(remote):
 
 
 class GitPoller(threading.Thread):
-    def __init__(self, cfg, tracker):
+    def __init__(self, cfg, tracker, work=None):
         super().__init__(name="git", daemon=True)
         self.cfg = cfg["git"]
         self.tracker = tracker
+        self.work = work
         self.wake = threading.Event()
         self.fetch_now = threading.Event()
         self._lock = threading.Lock()
@@ -377,14 +385,15 @@ class GitPoller(threading.Thread):
 
     def run(self):
         while True:
+            asleep = self.work is not None and self.work.project_open() is False
             try:
-                self.collect()
+                self.collect(fetch=not asleep)
             except Exception as exc:  # noqa: BLE001
                 log(f"git: {exc}")
-            self.wake.wait(self.cfg["interval"])
+            self.wake.wait(60 if asleep else self.cfg["interval"])
             self.wake.clear()
 
-    def collect(self):
+    def collect(self, fetch=True):
         project = self.tracker.snapshot()
         path = project["path"]
         base = {"project": project, "updated_at": now_iso()}
@@ -399,7 +408,7 @@ class GitPoller(threading.Thread):
             return
         top = top.strip()
 
-        if self.cfg["fetch"] and (self.fetch_now.is_set()
+        if fetch and self.cfg["fetch"] and (self.fetch_now.is_set()
                                   or time.time() - self._fetched.get(top, 0) > self.cfg["fetch_interval"]):
             self.fetch_now.clear()
             self._fetched[top] = time.time()
@@ -583,35 +592,207 @@ def ansi_to_html(text):
 GULP_STARTING = re.compile(r"Starting '([^']+)'")
 GULP_FINISHED = re.compile(r"Finished '([^']+)' after (.+?)\s*$")
 GULP_ERRORED = re.compile(r"'([^']+)' errored after")
-GULP_ERROR_MARK = re.compile(r"(Error in plugin|\bError\b|SassError|TypeError|ReferenceError|SyntaxError|ENOENT|✖\s+\d+\s+problems?)")
+GULP_ERROR_MARK = re.compile(r"(Error in plugin|\bError\b|SassError|TypeError|ReferenceError|SyntaxError|ENOENT|✖\s+\d+\s+problems?"
+                             r"|^ERROR in |Module build failed|compiled with \d+ errors?|Failed to compile)")
 GULP_WARN_MARK = re.compile(r"(warning|✖|deprecat)", re.IGNORECASE)
+# webpack 5 / webpack 4 stats / Babel: a build just finished (no "Starting" line precedes it).
+BUILD_DONE = re.compile(r"(?:webpack(?: \S+)? compiled (?:successfully|with \d+ (?:errors?|warnings?)) in (\d+) ?ms"
+                        r"|^Time: (\d+)ms"
+                        r"|Successfully compiled \d+ files? with Babel \((\d+)ms\))")
+BUILD_TOOL = re.compile(r"(webpack|Babel)", re.IGNORECASE)
 
 
-def find_gulpfile(project, task):
-    """PhpStorm's gulp run configuration first, then the usual theme layout."""
+GULPFILE_NAMES = ("gulpfile.js", "gulpfile.mjs", "gulpfile.cjs", "gulpfile.babel.js", "Gulpfile.js")
+THEME_DIRS = ("web/themes/custom/*", "themes/custom/*", "docroot/themes/custom/*", ".")
+
+
+def _prefer_theme(paths, project):
+    """Several candidate themes: the one named like the project, then 'origin', then the first."""
+    name = os.path.basename(project.rstrip("/")).lower()
+    def rank(path):
+        theme = os.path.basename(os.path.dirname(path)).lower()
+        return (0 if theme == name else 1 if theme == "origin" else 2, path)
+    return sorted(paths, key=rank)[0]
+
+
+def resolve_runner(project, cfg):
+    """What runs the theme's watch: a dict with kind (gulp | npm | custom), cwd,
+    the command (a list; "node"/"npm" resolved at start), a label, the theme
+    name and the file it was found by — or None."""
+    task = cfg["task"]
+    # 0. explicit override from the config
+    for needle, spec in (cfg.get("commands") or {}).items():
+        if needle and needle in project and spec.get("command"):
+            cwd = os.path.join(project, spec.get("cwd", "."))
+            return {"kind": "custom", "cwd": cwd, "command": list(spec["command"]),
+                    "label": " ".join(spec["command"]), "theme": os.path.basename(cwd.rstrip("/")),
+                    "watch_file": os.path.join(cwd, "package.json")}
+    # 1. PhpStorm run configurations (gulp, then npm)
     workspace = Path(project) / ".idea" / "workspace.xml"
-    found = []
     if workspace.is_file():
         try:
             root = ET.parse(workspace).getroot()
-            for conf in root.iterfind("./component[@name='RunManager']/configuration[@type='js.build_tools.gulp']"):
-                gulpfile = conf.findtext("gulpfile")
-                tasks = [t.text for t in conf.iterfind("./tasks/task")]
-                if gulpfile:
-                    path = gulpfile.replace("$PROJECT_DIR$", project)
-                    if os.path.isfile(path):
-                        found.append((0 if task in tasks else 1, path))
+            gulp_confs, npm_confs = [], []
+            for conf in root.iterfind("./component[@name='RunManager']/configuration"):
+                kind = conf.get("type")
+                if kind == "js.build_tools.gulp":
+                    gulpfile = (conf.findtext("gulpfile") or "").replace("$PROJECT_DIR$", project)
+                    tasks = [t.text for t in conf.iterfind("./tasks/task")]
+                    if os.path.isfile(gulpfile):
+                        gulp_confs.append((0 if task in tasks else 1, gulpfile, (tasks or [task])[0]))
+                elif kind == "js.build_tools.npm":
+                    pkg = conf.find("package-json")
+                    pkg = (pkg.get("value") if pkg is not None else "").replace("$PROJECT_DIR$", project)
+                    scripts = [sc.get("value") for sc in conf.iterfind("./scripts/script")]
+                    if os.path.isfile(pkg) and scripts:
+                        wanted = [sc for sc in scripts if sc in cfg["npm_scripts"]]
+                        npm_confs.append((0 if wanted else 1, pkg, (wanted or scripts)[0]))
+            if gulp_confs:
+                _, gulpfile, chosen = sorted(gulp_confs)[0]
+                return _gulp_runner(gulpfile, task if task in [chosen, task] else chosen)
+            if npm_confs:
+                _, pkg, script = sorted(npm_confs)[0]
+                return lando_wrap(_npm_runner(pkg, script), cfg, project)
         except ET.ParseError as exc:
             log(f"workspace.xml {project}: {exc}")
-    if found:
-        return sorted(found)[0][1]
-    for pattern in ("web/themes/custom/*/gulpfile.js", "themes/custom/*/gulpfile.js",
-                    "docroot/themes/custom/*/gulpfile.js", "gulpfile.js"):
-        matches = sorted(glob.glob(os.path.join(project, pattern)))
+    # 2. a gulpfile in a theme
+    for theme_dir in THEME_DIRS:
+        matches = []
+        for name in GULPFILE_NAMES:
+            matches += glob.glob(os.path.join(project, theme_dir, name))
         if matches:
-            preferred = [m for m in matches if "/origin/" in m]
-            return (preferred or matches)[0]
+            return _gulp_runner(_prefer_theme(sorted(set(matches)), project), task)
+    # 3. a package.json with a watch-like script
+    for theme_dir in THEME_DIRS:
+        candidates = []
+        for pkg in sorted(glob.glob(os.path.join(project, theme_dir, "package.json"))):
+            try:
+                scripts = (json.loads(Path(pkg).read_text()).get("scripts") or {})
+            except (OSError, ValueError):
+                continue
+            script = next((sc for sc in cfg["npm_scripts"] if sc in scripts), None)
+            if script:
+                candidates.append((pkg, script))
+        if candidates:
+            pkg = _prefer_theme([c[0] for c in candidates], project)
+            return lando_wrap(_npm_runner(pkg, dict(candidates)[pkg]), cfg, project)
     return None
+
+
+def _gulp_runner(gulpfile, task):
+    cwd = os.path.dirname(gulpfile)
+    return {"kind": "gulp", "cwd": cwd, "command": ["gulp", "--color", "--gulpfile", gulpfile, task],
+            "label": f"gulp {task}", "theme": os.path.basename(cwd), "watch_file": gulpfile}
+
+
+def _npm_runner(package_json, script):
+    cwd = os.path.dirname(package_json)
+    return {"kind": "npm", "cwd": cwd, "command": ["npm", "run", script],
+            "label": f"npm run {script}", "theme": os.path.basename(cwd), "watch_file": package_json}
+
+
+_HOST_NODE_MAJOR = None
+
+
+def host_node_major(cfg):
+    global _HOST_NODE_MAJOR
+    if _HOST_NODE_MAJOR is None:
+        node = find_bin(cfg["node"] or "node")
+        code, out, _ = run([node, "--version"], timeout=10) if node else (1, "", "")
+        match = re.match(r"v?(\d+)", out.strip()) if code == 0 else None
+        _HOST_NODE_MAJOR = int(match.group(1)) if match else 0
+    return _HOST_NODE_MAJOR
+
+
+def lando_node_service(project):
+    """(app name, service name, node major, app root) from the nearest .lando.yml, or None."""
+    root = project
+    for _ in range(4):
+        lando = os.path.join(root, ".lando.yml")
+        if os.path.isfile(lando):
+            break
+        parent = os.path.dirname(root)
+        if parent == root:
+            return None
+        root = parent
+    else:
+        return None
+    try:
+        text = Path(lando).read_text()
+    except OSError:
+        return None
+    name = re.search(r"^name:\s*['\"]?([^\s'\"]+)", text, re.M)
+    service = re.search(r"^  ([A-Za-z0-9_-]+):\s*\n(?:    .*\n)*?    type:\s*node:?(\d+)?", text, re.M)
+    if not name or not service:
+        return None
+    return {"app": name.group(1), "service": service.group(1),
+            "node_major": int(service.group(2)) if service.group(2) else 0, "root": root}
+
+
+def lando_wrap(runner, cfg, project):
+    """Turn an npm runner into one that runs inside the project's Lando node
+    service: `docker exec -t` in the service container, as the host user, in
+    the theme's path under /app."""
+    mode = cfg.get("lando", "auto")
+    if runner["kind"] != "npm" or mode == "never":
+        return runner
+    svc = lando_node_service(project)
+    if not svc:
+        return runner
+    if mode == "auto" and (not svc["node_major"] or svc["node_major"] == host_node_major(cfg)):
+        return runner
+    rel = os.path.relpath(runner["cwd"], svc["root"])
+    container = f"{svc['app']}_{svc['service']}_1"
+    container_dir = "/app" if rel == "." else f"/app/{rel}"
+    script = runner["command"][-1]
+    return {
+        **runner, "kind": "lando",
+        "command": ["docker", "exec", "-t", "-w", container_dir, "-u", f"{os.getuid()}:{os.getgid()}",
+                    "-e", "FORCE_COLOR=1", container, "npm", "run", script],
+        "label": f"lando npm run {script}",
+        "container": container, "container_dir": container_dir, "script": script,
+        "app": svc["app"], "node_major": svc["node_major"],
+    }
+
+
+def container_running(container):
+    code, out, _ = run(["docker", "inspect", "-f", "{{.State.Running}}", container], timeout=15)
+    return code == 0 and out.strip() == "true"
+
+
+def container_processes(container):
+    """[(host pid, ppid, user, args)] from `docker top`, entrypoint chain excluded."""
+    code, out, _ = run(["docker", "top", container, "-o", "pid,ppid,user,args"], timeout=15)
+    if code != 0:
+        return []
+    rows = []
+    for line in out.splitlines()[1:]:
+        parts = line.split(None, 3)
+        if len(parts) < 4 or not parts[0].isdigit():
+            continue
+        pid, ppid, user, args = int(parts[0]), int(parts[1]), parts[2], parts[3]
+        if "lando-entrypoint" in args or args.startswith("su root") or args.startswith("tail -f"):
+            continue
+        rows.append((pid, ppid, user, args))
+    return rows
+
+
+def npm_sessions(container, script):
+    """Host pids of every process in `npm run <script>` trees inside the container."""
+    rows = container_processes(container)
+    pids = {r[0] for r in rows}
+    children = {}
+    for pid, ppid, _, _ in rows:
+        children.setdefault(ppid, []).append(pid)
+    roots = [pid for pid, ppid, _, args in rows
+             if ppid not in pids and (args == "npm" or args.startswith("npm ") or f"npm run {script}" in args)]
+    found = []
+    stack = list(roots)
+    while stack:
+        pid = stack.pop()
+        found.append(pid)
+        stack.extend(children.get(pid, []))
+    return found
 
 
 class GulpWatcher:
@@ -619,9 +800,11 @@ class GulpWatcher:
         self.cfg = cfg
         self.project = project
         self.task = cfg["task"]
-        self.gulpfile = find_gulpfile(project, self.task)
-        self.cwd = os.path.dirname(self.gulpfile) if self.gulpfile else None
-        self.theme = os.path.basename(self.cwd) if self.cwd else None
+        self.runner = resolve_runner(project, cfg)
+        self.gulpfile = self.runner["watch_file"] if self.runner else None   # the file the runner was found by
+        self.cwd = self.runner["cwd"] if self.runner else None
+        self.theme = self.runner["theme"] if self.runner else None
+        self.label = self.runner["label"] if self.runner else None
         self.proc = None
         self.pgid = None
         self.started_at = None
@@ -643,30 +826,47 @@ class GulpWatcher:
     # -- process ------------------------------------------------------------
 
     def _resolve_command(self):
+        """The runner's command with real binaries: gulp through the theme's own
+        node_modules (what PhpStorm's run configuration does), npm from PATH or
+        the usual user locations."""
         node = find_bin(self.cfg["node"] or "node")
         if not node:
             return None, "node not found — set gulp.node in ~/.config/deck/config.json"
-        candidates = [
-            os.path.join(self.cwd, "node_modules", "gulp", "bin", "gulp.js"),
-            os.path.join(self.cwd, "node_modules", ".bin", "gulp"),
-        ]
-        gulp_bin = next((c for c in candidates if os.path.exists(c)), None)
-        if gulp_bin and gulp_bin.endswith("gulp.js"):
-            cmd = [node, gulp_bin]
-        elif gulp_bin:
-            cmd = [gulp_bin]
-        elif find_bin("gulp"):
-            cmd = [find_bin("gulp")]
-        else:
-            return None, f"gulp is not installed in {self.theme} — run yarn/npm install"
-        return cmd + ["--color", "--gulpfile", self.gulpfile, self.task], None
+        if not os.path.isdir(os.path.join(self.cwd, "node_modules")):
+            where = f"`lando npm install` in {self.theme}" if self.runner["kind"] == "lando" else f"npm/yarn install in {self.theme}"
+            return None, f"node_modules missing — run {where}"
+        head, rest = self.runner["command"][0], self.runner["command"][1:]
+        if head == "gulp":
+            gulp_js = os.path.join(self.cwd, "node_modules", "gulp", "bin", "gulp.js")
+            gulp_bin = os.path.join(self.cwd, "node_modules", ".bin", "gulp")
+            if os.path.exists(gulp_js):
+                return [node, gulp_js, *rest], None
+            if os.path.exists(gulp_bin):
+                return [gulp_bin, *rest], None
+            if find_bin("gulp"):
+                return [find_bin("gulp"), *rest], None
+            return None, f"gulp is not installed in {self.theme} — run npm/yarn install there"
+        if head == "docker":   # lando runner
+            docker = find_bin("docker")
+            if not docker:
+                return None, "docker not found"
+            if not container_running(self.runner["container"]):
+                return None, f"Lando app {self.runner['app']} is not running — `lando start` it first"
+            return [docker, *rest], None
+        if head in ("npm", "yarn", "pnpm", "npx"):
+            tool = find_bin(head)
+            if not tool:
+                return None, f"{head} not found — set gulp.commands or put it on the agent's PATH"
+            return [tool, *rest], None
+        tool = find_bin(head)
+        return ([tool, *rest], None) if tool else (None, f"{head} not found")
 
     def start(self):
         with self.lock:
             if self.running:
                 return True
-            if not self.gulpfile:
-                self.message = "No gulpfile found in this project"
+            if not self.runner:
+                self.message = "No watcher in this project (no theme gulpfile or package.json watch/dev script)"
                 return False
             cmd, error = self._resolve_command()
             if error:
@@ -674,6 +874,8 @@ class GulpWatcher:
                 return False
             env = dict(os.environ, FORCE_COLOR="1", DECK_AGENT_GULP="1", TERM="xterm-256color")
             env.pop("NODE_OPTIONS", None)
+            env["PATH"] = os.pathsep.join([os.path.join(self.cwd, "node_modules", ".bin"),
+                                          os.path.dirname(cmd[0]), env.get("PATH", "")])
             try:
                 self.proc = subprocess.Popen(
                     cmd, cwd=self.cwd, env=env, start_new_session=True,
@@ -690,7 +892,7 @@ class GulpWatcher:
             self.phase, self.cycle_error, self.error, self.warnings = "idle", False, None, 0
             self.message = None
             short_dir = self.cwd.replace(str(Path.home()), "~", 1)
-            self._append(f"$ gulp {self.task}  ({short_dir})", meta=True)
+            self._append(f"$ {self.label}  ({short_dir})", meta=True)
             threading.Thread(target=self._reader, name=f"gulp:{self.theme}", daemon=True).start()
             log(f"gulp start [{self.project}] {self.command}")
             return True
@@ -704,7 +906,7 @@ class GulpWatcher:
         try:
             os.killpg(pgid, signal.SIGTERM)
         except ProcessLookupError:
-            return
+            pass
         try:
             proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
@@ -712,6 +914,24 @@ class GulpWatcher:
                 os.killpg(pgid, signal.SIGKILL)
             except ProcessLookupError:
                 pass
+        if self.runner and self.runner["kind"] == "lando":
+            self._stop_in_container()
+
+    def _stop_in_container(self):
+        """`docker exec` leaves its processes running when the client dies; they
+        run as the host user and are visible here, so signal them directly."""
+        pids = []
+        for sig, wait in ((signal.SIGTERM, 3), (signal.SIGKILL, 0)):
+            pids = npm_sessions(self.runner["container"], self.runner["script"])
+            if not pids:
+                return
+            for pid in pids:
+                try:
+                    os.kill(pid, sig)
+                except (ProcessLookupError, PermissionError):
+                    pass
+            time.sleep(wait)
+        log(f"gulp [{self.project}]: stopped {len(pids)} container processes")
 
     @property
     def running(self):
@@ -782,6 +1002,18 @@ class GulpWatcher:
                 self.last_event = {"kind": "finished", "task": task, "duration": match.group(2), "at": stamp}
                 self.error_capture = 0
                 return
+            match = BUILD_DONE.search(plain)
+            if match:
+                tool = BUILD_TOOL.search(plain)
+                took = next((g for g in match.groups() if g), None)
+                self.phase = "idle"
+                if not self.cycle_error:
+                    self.error = None
+                self.cycle_error = False      # no "Starting" line for these tools: each build is a cycle
+                self.last_event = {"kind": "finished", "task": tool.group(1).lower() if tool else "build",
+                                   "duration": f"{took} ms" if took else None, "at": stamp}
+                self.error_capture = 0
+                return
             match = GULP_ERRORED.search(plain)
             if match or GULP_ERROR_MARK.search(plain):
                 if not self.cycle_error:
@@ -789,25 +1021,39 @@ class GulpWatcher:
                 self.cycle_error = True
                 self.error_capture = 8
             if self.error_capture > 0 and self.error is not None:
-                if len(self.error["lines"]) < 12:
+                if len(self.error["lines"]) < 12 and not re.match(r"^\s*at\s", plain):   # no stack frames
                     self.error["lines"].append(plain.strip())
                 self.error_capture -= 1
             elif GULP_WARN_MARK.search(plain):
                 self.warnings += 1
 
     def external_pid(self):
-        """A gulp for this gulpfile that is not ours (PhpStorm's Run window)."""
-        if not self.gulpfile:
+        """A watcher for this theme that is not ours (PhpStorm's Run window, a
+        terminal): gulp by its gulpfile argument, anything else by a node
+        process whose working directory is the theme."""
+        if not self.runner:
             return None
-        needle = self.gulpfile.encode()
+        if self.runner["kind"] == "lando":
+            if not container_running(self.runner["container"]):
+                return None
+            sessions = npm_sessions(self.runner["container"], self.runner["script"])
+            return sessions[0] if sessions else None
+        needle = self.gulpfile.encode() if self.runner["kind"] == "gulp" else None
         for entry in os.scandir("/proc"):
             if not entry.name.isdigit():
                 continue
             try:
                 with open(f"/proc/{entry.name}/cmdline", "rb") as fh:
                     cmdline = fh.read()
-                if b"gulp" not in cmdline or needle not in cmdline:
-                    continue
+                if needle is not None:
+                    if b"gulp" not in cmdline or needle not in cmdline:
+                        continue
+                else:
+                    argv0 = cmdline.split(b"\0", 1)[0]
+                    if not argv0.endswith((b"/node", b"node")) and b"npm" not in argv0:
+                        continue
+                    if os.readlink(f"/proc/{entry.name}/cwd") != self.cwd:
+                        continue
                 with open(f"/proc/{entry.name}/environ", "rb") as fh:
                     if b"DECK_AGENT_GULP=1" in fh.read():
                         continue
@@ -841,8 +1087,13 @@ class GulpWatcher:
             return {
                 "project": {"path": self.project, "name": os.path.basename(self.project),
                             "short": self.project.replace(str(Path.home()), "~", 1)},
-                "available": self.gulpfile is not None,
+                "available": self.runner is not None,
+                "runner": self.runner["kind"] if self.runner else None,
+                "label": self.label,
+                "container": self.runner.get("container") if self.runner else None,
+                "node_major": self.runner.get("node_major") if self.runner else None,
                 "gulpfile": self.gulpfile,
+                "cwd": self.cwd,
                 "theme": self.theme,
                 "task": self.task,
                 "command": self.command,
@@ -889,9 +1140,15 @@ class GulpManager:
             for other, w in list(self.watchers.items()):
                 if other != project and w.running:
                     w.stop()
-        if self.cfg["auto_start"] and watcher and watcher.gulpfile and not watcher.running \
-                and not watcher.stopped_by_user and not watcher.external_pid():
-            threading.Thread(target=watcher.start, daemon=True).start()
+        if self.cfg["auto_start"] and watcher and watcher.runner and not watcher.running \
+                and not watcher.stopped_by_user:
+            def maybe_start():
+                if watcher.runner["kind"] == "lando" and not container_running(watcher.runner["container"]):
+                    watcher.message = f"Lando app {watcher.runner['app']} is not running — `lando start` it, then press Start"
+                    return
+                if not watcher.external_pid():
+                    watcher.start()
+            threading.Thread(target=maybe_start, daemon=True).start()
 
     def _external(self, watcher):
         cached = self._external_cache.get(watcher.project)
@@ -1399,6 +1656,7 @@ class WorkDetector(threading.Thread):
         self.active = None
         self.changed_at = None
         self.listeners = []
+        self.window_listeners = []
         self._lock = threading.Lock()
         self.wake = threading.Event()
 
@@ -1415,9 +1673,13 @@ class WorkDetector(threading.Thread):
             if path:
                 paths.append(os.path.expanduser(path).rstrip("/"))
         with self._lock:
+            changed = sorted(set(paths)) != self.windows or self.windows_at == 0
             self.windows = sorted(set(paths))
             self.windows_at = time.time()
         self.evaluate()  # so the reply to this report already carries the new state
+        if changed:
+            for listener in self.window_listeners:
+                listener()
 
     def scan_processes(self):
         patterns = [p for p in self.cfg["processes"] if p]
@@ -1466,6 +1728,11 @@ class WorkDetector(threading.Thread):
                     log(f"work listener: {exc}")
         return active
 
+    def project_open(self):
+        """None until a card has reported PhpStorm's windows; else whether any project is open."""
+        with self._lock:
+            return bool(self.windows) if self.windows_at > 0 else None
+
     def is_active(self):
         if self.active is None or time.time() - self.processes_at > 10:
             return self.evaluate()
@@ -1487,6 +1754,7 @@ class WorkDetector(threading.Thread):
                 "enabled": bool(self.cfg["enabled"]),
                 "active": bool(self.active) if self.active is not None else True,
                 "work_project": work_project,
+                "reported": self.windows_at > 0,   # a card has listed PhpStorm's windows
                 "windows": len(self.windows),
                 "processes": list(self.processes),
                 "roots": [r.replace(str(Path.home()), "~", 1) for r in self.roots],
@@ -1504,13 +1772,14 @@ class Agent:
         self.secrets = Secrets()
         self.tracker = ProjectTracker(cfg)
         self.work = WorkDetector(cfg, self.tracker)
-        self.git = GitPoller(cfg, self.tracker)
+        self.git = GitPoller(cfg, self.tracker, self.work)
         self.gulp = GulpManager(cfg, self.tracker)
         self.circleci = CircleCIPoller(cfg, self.secrets, self.work)
         self.sitemap = SiteMap(cfg["project_roots"])
         self.pantheon = PantheonPoller(cfg, self.secrets, self.tracker, self.circleci, self.sitemap, self.work)
         # Back on the clock → refresh both remote cards right away.
         self.work.listeners.append(lambda active: active and (self.circleci.wake.set(), self.pantheon.wake.set()))
+        self.work.window_listeners.append(lambda: self.git.wake.set())
 
     def start(self):
         self.tracker.seed_from_recent_projects()
@@ -1576,10 +1845,10 @@ class Handler(BaseHTTPRequestHandler):
         if route == "/project":
             return self._send(agent.tracker.snapshot())
         if route == "/git":
-            return self._send(agent.git.snapshot())
+            return self._send({**agent.git.snapshot(), "work": agent.work.snapshot()})
         if route == "/gulp":
             since = int(query.get("since", ["0"])[0] or 0)
-            return self._send(agent.gulp.snapshot(query.get("path", [None])[0], since))
+            return self._send({**agent.gulp.snapshot(query.get("path", [None])[0], since), "work": agent.work.snapshot()})
         if route == "/work":
             return self._send(agent.work.snapshot())
         if route == "/circleci":

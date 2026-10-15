@@ -8,6 +8,7 @@ Kirigami.FormLayout {
 
     property alias cfg_port: portSpin.value
     property alias cfg_trackPhpStorm: trackCheck.checked
+    property alias cfg_idleWhenNoProject: idleCheck.checked
     property alias cfg_fontSize: fontSpin.value
     property alias cfg_wrapLines: wrapCheck.checked
     property alias cfg_maxLines: linesSpin.value
@@ -25,6 +26,11 @@ Kirigami.FormLayout {
         id: trackCheck
         Kirigami.FormData.label: i18n("PhpStorm:")
         text: i18n("Follow the project of the active PhpStorm window")
+    }
+
+    QQC2.CheckBox {
+        id: idleCheck
+        text: i18n("Show a placeholder while no project is open")
     }
 
     Item { Kirigami.FormData.isSection: true }

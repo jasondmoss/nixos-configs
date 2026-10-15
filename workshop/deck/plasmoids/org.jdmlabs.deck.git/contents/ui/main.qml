@@ -19,7 +19,10 @@ PlasmoidItem {
     id: root
 
     readonly property var git: client.payload
-    readonly property bool ready: client.online && git !== null && git.available === true
+    // PhpStorm has no project window at all (closed, or only the welcome screen).
+    readonly property bool noProject: Plasmoid.configuration.idleWhenNoProject && client.online
+        && git !== null && !!git.work && git.work.reported === true && git.work.windows === 0
+    readonly property bool ready: client.online && git !== null && git.available === true && !root.noProject
     readonly property var project: git && git.project ? git.project : null
     readonly property string projectTitle: project ? (project.title || project.name || "") : ""
     readonly property string projectPath: project && project.short ? project.short : ""
@@ -115,13 +118,14 @@ PlasmoidItem {
             CardHeader {
                 Layout.fillWidth: true
                 icon: "vcs-normal"
-                title: root.projectTitle || i18n("Git")
-                subtitle: Plasmoid.configuration.showPath ? root.projectPath : ""
+                title: root.noProject ? i18n("Git") : (root.projectTitle || i18n("Git"))
+                subtitle: root.noProject ? i18n("no project open") : (Plasmoid.configuration.showPath ? root.projectPath : "")
                 status: root.statusWord
 
                 PlasmaComponents3.ToolButton {
                     icon.name: "view-refresh"
                     enabled: root.ready
+                    visible: !root.noProject
                     onClicked: client.post("/git/fetch", {}, () => fetchDelay.restart())
                     PlasmaComponents3.ToolTip.text: i18n("Fetch")
                     PlasmaComponents3.ToolTip.visible: hovered
@@ -147,7 +151,15 @@ PlasmoidItem {
             Offline {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: !root.ready
+                visible: root.noProject
+                icon: "system-suspend"
+                message: i18n("No project open\nThe card wakes up with the next project in PhpStorm.")
+            }
+
+            Offline {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: !root.ready && !root.noProject
                 icon: client.online ? "vcs-normal" : "network-disconnect"
                 message: client.online
                     ? (root.git && root.git.error ? root.git.error : i18n("Waiting for the agent…"))
