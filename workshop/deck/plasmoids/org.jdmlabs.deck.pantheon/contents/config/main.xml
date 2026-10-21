@@ -35,7 +35,7 @@
             <default>true</default>
         </entry>
         <entry name="idleWhenOffWork" type="Bool">
-            <label>Show a placeholder instead of data while no work project is open and no work program runs.</label>
+            <label>Show a placeholder instead of data while no work project is open in PhpStorm.</label>
             <default>true</default>
         </entry>
     </group>

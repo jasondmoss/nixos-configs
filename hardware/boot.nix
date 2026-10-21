@@ -4,7 +4,22 @@
     ];
 
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest;
+        kernelPackages = pkgs.linuxPackages_xanmod_latest.extend (final: prev: {
+            # nixpkgs#575192 — since the kmodigest module signing (nixpkgs#571181) the
+            # module aggregator wants a <module>.ko.cer beside every external module, and
+            # only Kbuild's modules_install writes one. nixpkgs' ryzen-smu (enabled in
+            # power.nix) copies its .ko by hand, so re-install it through modules_install.
+            # Drop once upstream ryzen-smu installs that way itself.
+            ryzen-smu = prev.ryzen-smu.overrideAttrs (old: {
+                postInstall = (old.postInstall or "") + ''
+                    rm -f $out/lib/modules/${final.kernel.modDirVersion}/kernel/drivers/ryzen_smu/ryzen_smu.ko
+                    make -C ${final.kernel.dev}/lib/modules/${final.kernel.modDirVersion}/build M="$PWD" \
+                        ${lib.escapeShellArgs final.kernelModuleMakeFlags} \
+                        INSTALL_MOD_PATH=$out INSTALL_MOD_DIR=kernel/drivers/ryzen_smu DEPMOD=true \
+                        modules_install
+                '';
+            });
+        });
 
         initrd = {
             systemd.enable = true;

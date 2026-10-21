@@ -73,7 +73,7 @@ public Q_SLOTS:
         EffectWindow *w,
         WindowPrePaintData &data
     ) override;
-    void paintWindow(
+    bool paintWindow(
         const RenderTarget &renderTarget,
         const RenderViewport &viewport,
         EffectWindow *w,

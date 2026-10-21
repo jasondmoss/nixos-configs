@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
         owner = "strawberrymusicplayer";
         repo = pname;
         rev = version;
-        hash = "sha256-Hg3yQskugHyqr9uPWTljx1zU8pEns9cFFSyg+81kJFA=";
+        hash = "sha256-YLmmb0ECymfXHQ0A0PXz1uCfTCNuM0xpMYNpudOUV50=";
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,
@@ -42,6 +42,7 @@ substituteInPlace src/context/contextalbum.cpp \
         libpthreadstubs
         libtasn1
         libuchardet
+        kdePackages.layer-shell-qt # "OSD Pretty" on Wayland (required since 2026-10 master)
         kdePackages.qtbase
         rapidjson
         sparsehash

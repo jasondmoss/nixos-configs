@@ -98,13 +98,14 @@ DEFAULTS = {
         "interval": 120,
         "workflow_limit": 10,
     },
-    # "At work" = a PhpStorm window shows a project under one of the work roots,
-    # or one of these programs is running. Otherwise the CircleCI and Pantheon
-    # cards show an off-the-clock placeholder and the agent polls both rarely.
+    # "At work" = a PhpStorm window shows a project under one of the work roots
+    # (optionally also: one of `processes` is running). Otherwise the CircleCI
+    # and Pantheon cards show an off-the-clock placeholder and the agent polls
+    # both rarely.
     "work": {
         "enabled": True,
-        "roots": [],                    # empty: project_roots
-        "processes": ["google-chrome"],  # matched against /proc/<pid>/exe and argv[0]
+        "roots": [],            # empty: project_roots
+        "processes": [],        # e.g. ["google-chrome"]; matched against /proc/<pid>/exe and argv[0]
         "idle_interval": 900,
     },
 }
@@ -1758,6 +1759,8 @@ class WorkDetector(threading.Thread):
                 "windows": len(self.windows),
                 "processes": list(self.processes),
                 "roots": [r.replace(str(Path.home()), "~", 1) for r in self.roots],
+                "rule": "a work project is open in PhpStorm"
+                        + (" or " + ", ".join(self.cfg["processes"]) + " is running" if self.cfg["processes"] else ""),
                 "changed_at": self.changed_at,
             }
 

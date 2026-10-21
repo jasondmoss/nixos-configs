@@ -64,7 +64,7 @@ Kirigami.FormLayout {
     QQC2.CheckBox {
         id: idleCheck
         Kirigami.FormData.label: i18n("Off the clock:")
-        text: i18n("Show a placeholder while no work project is open and Chrome is not running")
+        text: i18n("Show a placeholder while no work project is open in PhpStorm")
     }
 
     QQC2.CheckBox {

@@ -113,7 +113,8 @@ PlasmoidItem {
                 Layout.fillHeight: true
                 visible: root.offWork
                 icon: "system-suspend"
-                message: i18n("Off the clock\nPipelines show up again when a work project is open in PhpStorm or Chrome is running.")
+                message: i18n("Off the clock\nPipelines show up again when %1.", root.ci && root.ci.work && root.ci.work.rule
+                    ? root.ci.work.rule : i18n("a work project is open in PhpStorm"))
             }
 
             Offline {

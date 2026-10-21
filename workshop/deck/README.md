@@ -70,9 +70,9 @@ get-url origin`).
 ## Off the clock
 
 The agent decides you are working when any PhpStorm window shows a project
-under one of the `project_roots` (every card reports the full window list),
-or when one of `work.processes` (default: Google Chrome, used for work only)
-is running. Otherwise the CircleCI and Pantheon cards show a placeholder
+under one of the `project_roots` (every card reports the full window list).
+`work.processes` can add programs whose running also counts (empty by
+default). Otherwise the CircleCI and Pantheon cards show a placeholder
 ("Off the clock") and the agent polls both services every `work.idle_interval`
 seconds instead of every minute or two. `GET /work` shows the verdict and why.
 Each of the two cards can opt out in its settings.

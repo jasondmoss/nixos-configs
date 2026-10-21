@@ -7,6 +7,7 @@
 #include "shortcuts.h"
 #include "stagemanagerconfig.h"
 
+#include "compositor.h"
 #include "core/colorspace.h"
 #include "core/output.h"
 #include "core/rendertarget.h"
@@ -20,6 +21,9 @@
 #include "opengl/glvertexbuffer.h"
 #include "options.h"
 #include "scene/itemgeometry.h"
+#include "scene/itemrenderer.h"
+#include "scene/windowitem.h"
+#include "scene/workspacescene.h"
 #include "window.h"
 
 #include <KGlobalAccel>
@@ -614,12 +618,20 @@ void StageManagerEffect::updateMiniatureTexture(EffectWindow *w, WindowState &st
 {
     /**
      * Keep an offscreen, mipmapped copy of the window (expanded geometry:
-     * frame + decoration + shadow) up to date. Rendering through
-     * EffectsHandler::renderWindow bypasses the effect chain, and with a
-     * viewport matching the window's own geometry the item renderer's clipping
-     * is exact, so the copy is complete regardless of where the miniature is
-     * shown.
+     * frame + decoration + shadow) up to date. Rendering the window item
+     * straight through the scene's item renderer bypasses the effect chain
+     * (KWin 6.8 dropped EffectsHandler::renderWindow; this is what its own
+     * screenshot plugin does), and with a viewport matching the window's own
+     * geometry the item renderer's clipping is exact, so the copy is complete
+     * regardless of where the miniature is shown.
      */
+    ItemRenderer *renderer = effects->scene()->renderer(
+        Compositor::self()->primaryDevice()
+    );
+    if (!renderer) {
+        return;
+    }
+
     const double devScale = w->screen()->scale();
     const RectF expanded = w->expandedGeometry();
     const auto snap = [devScale](double v) {
@@ -677,16 +689,22 @@ void StageManagerEffect::updateMiniatureTexture(EffectWindow *w, WindowState &st
 
     WindowPaintData data;
     data.setOpacity(1.0);
-    effects->renderWindow(
+    const bool rendered = renderer->renderItem(
         renderTarget,
         viewport,
-        w,
+        w->windowItem(),
         PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT,
         Region::infinite(),
-        data
+        data,
+        {},
+        {}
     );
 
     GLFramebuffer::popFramebuffer();
+
+    if (!rendered) {
+        return; // GPU reset: stays dirty, retried on the next paint.
+    }
 
     st.texture->bind();
     st.texture->generateMipmaps();
@@ -1509,7 +1527,7 @@ void StageManagerEffect::prePaintWindow(
     AnimationEffect::prePaintWindow(view, w, data);
 }
 
-void StageManagerEffect::paintWindow(
+bool StageManagerEffect::paintWindow(
     const RenderTarget &renderTarget,
     const RenderViewport &viewport,
     EffectWindow *w,
@@ -1529,7 +1547,9 @@ void StageManagerEffect::paintWindow(
          * content-sized desktop-type window must not get a grid painted over
          * it.
          */
-        AnimationEffect::paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
+        if (!AnimationEffect::paintWindow(renderTarget, viewport, w, mask, deviceRegion, data)) {
+            return false;
+        }
 
         const double opacity = (m_gridMode == GridAlways)
             ? 1.0
@@ -1538,7 +1558,7 @@ void StageManagerEffect::paintWindow(
             renderGrid(viewport, opacity);
         }
 
-        return;
+        return true;
     }
     /**
      * KWin's item renderer software-clips a window's quads against the paint
@@ -1608,7 +1628,7 @@ void StageManagerEffect::paintWindow(
             if (effects->isOpenGLCompositing()) {
                 updateMiniatureTexture(w, *it);
                 if (paintMiniature(renderTarget, viewport, w, *it, deviceRegion, data)) {
-                    return;
+                    return true;
                 }
             }
 
@@ -1623,7 +1643,7 @@ void StageManagerEffect::paintWindow(
         }
     }
 
-    AnimationEffect::paintWindow(renderTarget, viewport, w, mask, clipRegion, data);
+    return AnimationEffect::paintWindow(renderTarget, viewport, w, mask, clipRegion, data);
 }
 
 void StageManagerEffect::postPaintScreen()
