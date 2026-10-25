@@ -22,7 +22,7 @@
         });
 
         initrd = {
-            systemd.enable = true;
+            #systemd.enable = true;
 
             kernelModules = [
                 "nvidia"

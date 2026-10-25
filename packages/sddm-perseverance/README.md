@@ -92,10 +92,18 @@ This theme imports, beyond what `plasma6.nix` already supplies:
 | `Qt5Compat.GraphicalEffects` | `kdePackages.qt5compat` |
 | `org.kde.plasma.workspace.components` | `kdePackages.plasma-workspace` |
 | `org.kde.breeze.components` | `kdePackages.plasma-workspace` |
+| `org.kde.plasma.workspace.keyboardlayout` | `kdePackages.plasma-workspace` |
 
 Both were confirmed necessary: with them removed from the import path,
 `Main.qml` fails on `Qt5Compat.GraphicalEffects` and `org.kde.breeze.components`
-(and consequently on `GaussianBlur` and `VirtualKeyboardLoader`).
+(and consequently on `GaussianBlur`).
+
+Plasma 6.8 removed `VirtualKeyboardLoader` from `org.kde.breeze.components`,
+and SDDM silently fell back to its embedded theme ("VirtualKeyboardLoader is
+not a type" in `journalctl -b -t sddm-greeter-qt6`). The virtual keyboard
+button now drives KWin's keyboard through `Keyboards.KWinVirtualKeyboard`,
+as Breeze's own SDDM theme does. When Plasma updates, lint against the new
+release before blaming the config.
 
 If you add an import, add its package there too, then re-run the qmllint check
 above — a missing QML module makes the greeter render a blank screen with no

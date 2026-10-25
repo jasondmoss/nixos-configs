@@ -77,7 +77,7 @@ let
             gst_all_1.gst-plugins-good
 
             audacity_3
-            audacity
+            #audacity
             cairo
             cuetools
             easytag

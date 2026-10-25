@@ -26,6 +26,9 @@ import org.kde.plasma.components 3.0 as PlasmaComponents
 
 import Qt5Compat.GraphicalEffects
 import org.kde.kirigami 2.20 as Kirigami
+// Plasma 6.8 dropped breeze.components' VirtualKeyboardLoader; the on-screen
+// keyboard is now KWin's own, driven over D-Bus like in Breeze's SDDM theme.
+import org.kde.plasma.workspace.keyboardlayout as Keyboards
 
 import org.kde.breeze.components
 
@@ -70,7 +73,7 @@ Item {
         anchors.fill: parent
 
         property bool uiVisible: true
-        property bool blockUI: mainStack.depth > 1 || userListComponent.mainPasswordBox.text.length > 0 || inputPanel.keyboardActive || config.type != "image"
+        property bool blockUI: mainStack.depth > 1 || userListComponent.mainPasswordBox.text.length > 0 || Keyboards.KWinVirtualKeyboard.visible || config.type != "image"
 
         hoverEnabled: true
         drag.filterChildren: true
@@ -170,18 +173,6 @@ Item {
             }
         }
 
-                // IMported from org.kde.breeze.components
-        VirtualKeyboardLoader {
-            id: inputPanel
-
-            z: 1
-
-            screenRoot: root
-            mainStack: mainStack
-            mainBlock: userListComponent
-            passwordField: userListComponent.mainPasswordBox
-        }
-
 
         Component {
             id: userPromptComponent
@@ -231,30 +222,30 @@ Item {
                 iconSource: Qt.resolvedUrl("assets/suspend.svg")                      
                 onClicked: sddm.suspend()
                 enabled: sddm.canSuspend
-                visible: !inputPanel.keyboardActive
+                visible: !Keyboards.KWinVirtualKeyboard.visible
             }
             ActionButton {
                 iconSource: Qt.resolvedUrl("assets/restart.svg")
                 onClicked: sddm.reboot()
                 enabled: sddm.canReboot
-                visible: !inputPanel.keyboardActive
+                visible: !Keyboards.KWinVirtualKeyboard.visible
             }
             ActionButton {
                 iconSource: Qt.resolvedUrl("assets/shutdown.svg")
                 onClicked: sddm.powerOff()
                 enabled: sddm.canPowerOff
-                visible: !inputPanel.keyboardActive
+                visible: !Keyboards.KWinVirtualKeyboard.visible
             }
             ActionButton {
                 iconSource: Qt.resolvedUrl("assets/change_user.svg")
                 onClicked: actionButtonsColumn.changeMainstackView(1)
                 enabled: true
-                visible: !userListComponent.showUsernamePrompt && !inputPanel.keyboardActive && actionButtonsColumn.showChangeUserButton
+                visible: !userListComponent.showUsernamePrompt && !Keyboards.KWinVirtualKeyboard.visible && actionButtonsColumn.showChangeUserButton
             }
             ActionButton {
                 iconSource: "go-previous"
                 onClicked: actionButtonsColumn.changeMainstackView(2)
-                visible: !inputPanel.keyboardActive && !actionButtonsColumn.showChangeUserButton
+                visible: !Keyboards.KWinVirtualKeyboard.visible && !actionButtonsColumn.showChangeUserButton
             }
 
         }
@@ -336,14 +327,17 @@ Item {
             PlasmaComponents.ToolButton {
                 text: i18ndc("plasma_lookandfeel_org.kde.lookandfeel", "Button to show/hide virtual keyboard", "Virtual Keyboard")
                 font.pointSize: config.fontSize
-                icon.name: inputPanel.keyboardActive ? "input-keyboard-virtual-on" : "input-keyboard-virtual-off"
+                icon.name: Keyboards.KWinVirtualKeyboard.visible ? "input-keyboard-virtual-on" : "input-keyboard-virtual-off"
                 onClicked: {
-                    // Otherwise the password field loses focus and virtual keyboard
-                    // keystrokes get eaten
-                    userListComponent.mainPasswordBox.forceActiveFocus();
-                    inputPanel.showHide()
+                    if (Keyboards.KWinVirtualKeyboard.visible) {
+                        Keyboards.KWinVirtualKeyboard.active = false;
+                    } else {
+                        // Otherwise the password field loses focus and virtual keyboard
+                        // keystrokes get eaten
+                        userListComponent.mainPasswordBox.forceActiveFocus();
+                        Keyboards.KWinVirtualKeyboard.forceActivate();
+                    }
                 }
-                visible: inputPanel.status == Loader.Ready
             }
 
             KeyboardButton {
