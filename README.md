@@ -130,7 +130,7 @@ is intentional: Docker relies on iptables for NAT.
 | `qbittorrent-vpn.nix` | qBittorrent confined to a WireGuard/ProtonVPN network namespace — a kill switch by construction |
 | `pcp.nix`             | Performance Co-Pilot (pmcd/pmlogger/pmie/pmproxy) — always-on metrics with replayable archives, loopback only |
 | `pcp-grafana.nix`     | Grafana + Redis/pmseries front-end for PCP, loopback only             |
-| `docker.nix`          | Docker (overlay2, unpinned `pkgs.docker`, weekly auto-prune), docker-compose, docker-buildx. DDEV handles PHP/Drupal dev work |
+| `docker.nix`          | Docker (overlay2, unpinned `pkgs.docker`, weekly auto-prune), docker-compose, docker-buildx, and `docker-raw-rules-gc` (deletes the raw-table DROP rules Docker leaks when a network is removed). DDEV handles PHP/Drupal dev work |
 | `ai.nix`              | CUDA toolkit, Ollama, Open WebUI, ComfyUI, KRunner → Ollama, voice pipeline, AI CLIs, CUDA binary caches, `HF_HOME` |
 | `ai-home.nix`         | Sandboxed read-only home-directory access + full-text/semantic search for local models (`services.ai-home.*`) |
 
