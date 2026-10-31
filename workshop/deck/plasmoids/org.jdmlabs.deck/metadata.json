@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Id": "org.jdmlabs.deck",
+        "Name": "Deck",
+        "Description": "Git and Gulp, CircleCI and Pantheon — the four Deck cards as two tabbed pairs in one widget, following the project open in PhpStorm.",
+        "Icon": "view-list-details",
+        "Category": "Development Tools",
+        "Authors": [
+            {
+                "Name": "Jason D. Moss <jason@jdmlabs.com>"
+            }
+        ],
+        "License": "GPL-2.0-or-later",
+        "Version": "0.1",
+        "EnabledByDefault": true
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

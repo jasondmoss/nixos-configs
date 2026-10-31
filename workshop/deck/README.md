@@ -6,7 +6,8 @@ widget background, the stock edit handle, a settings page each.
 
 | Card | Plugin id | Shows |
 |---|---|---|
-| Git | `org.jdmlabs.deck.git` | Branch, upstream, ahead/behind, stashes, last commit, changed files (click → open in PhpStorm) of the project open in PhpStorm. Fetch + "open repository" buttons. |
+| Deck | `org.jdmlabs.deck` | All four as two tabbed pairs in one widget: **Git \| Gulp** and **CircleCI \| Pantheon**. Each tab button carries a status dot summarising its pair; the chosen tab is remembered. Cards on the hidden tab pause their polling (except Git, which keeps reporting PhpStorm's windows, and CircleCI, so its dot stays current). |
+| Git | `org.jdmlabs.deck.git` | Branch, upstream, ahead/behind, stashes, last commit, changed files (click → open in PhpStorm) of the project open in PhpStorm. Fetch + "open repository" buttons. For a project with a `.lando.yml`: a **lando** pill (up / off / 3/7 / starting… / failed; click opens the site) and a start/stop button. |
 | Gulp | `org.jdmlabs.deck.gulp` | The agent's own `gulp default` watcher for that project: state (watching / compiling / error / exited / running elsewhere), last compile, error excerpt, live coloured log. Start / stop / restart / clear. |
 | CircleCI | `org.jdmlabs.deck.circleci` | The pipelines *you* triggered across the organisation, with workflows and — for anything not green — jobs. Rows and chips open the browser. |
 | Pantheon | `org.jdmlabs.deck.pantheon` | Site, plan, environments (dev/test/live/multidev), connection mode, PHP/Drush, recent workflows, open site/admin/dashboard, clear caches (two clicks). Follows the site your latest pipeline deploys to, or the PhpStorm project, or a pinned site. |
@@ -25,10 +26,15 @@ Cards poll GET /git /gulp?since= /circleci /pantheon  ◀─── 127.0.0.1:476
   endpoints; `GET /state` dumps everything; `deck-agent --print-config` shows
   the merged configuration.
 * `GET /work` — on/off the clock and the reason.
-* `plasmoids/<id>/` — one KPackage per card. `plasmoids/common/` holds the
-  shared QML (`DeckClient` polling, `ProjectTracker`, `CardHeader`, `Pill`,
-  `StatusDot`, `Offline`, `Utils.js`), symlinked into each package and
-  dereferenced by the Nix build.
+* `plasmoids/<id>/` — one KPackage per widget. The card bodies are the
+  components `GitCard`, `GulpCard`, `CircleCiCard` and `PantheonCard` in
+  `plasmoids/common/`, next to the shared pieces (`DeckClient` polling,
+  `ProjectTracker`, `CardHeader`, `Pill`, `StatusDot`, `Offline`, `Utils.js`,
+  `icons/`); everything is symlinked into each package and dereferenced by
+  the Nix build. A card's configuration properties default to
+  `Plasmoid.configuration.<same name>`, which is what the four standalone
+  widgets rely on; the Deck widget binds them to its own keys
+  (`gitInterval`, `ciInterval`, `pantheonInterval`, …).
 
 The active project is the PhpStorm window that was focused last. PhpStorm's
 caption carries the project path in brackets, and Plasma's `TasksModel` gives
@@ -62,6 +68,15 @@ container by hand) is detected — by gulpfile argument, working directory or
 `docker top` — and shown as "running outside the agent" instead of starting
 a second one. Build events are recognised for gulp (`Starting`/`Finished`),
 webpack 4/5 stats and Babel.
+
+The Git card's Lando pill comes from `docker ps -a --filter
+label=io.lando.root=<dir of the nearest .lando.yml>` (every Lando container
+carries that label; milliseconds, where `lando list` takes seconds), the site
+URL from the traefik router rules on the running containers. Start/stop run
+`lando start` / `lando stop` in that directory in the background (`GET /lando`
+shows the job's last output lines; a failure stays red until the app reaches
+the wanted state anyway). `lando stop` first pauses a Gulp watcher running in
+the app's node container; the next start from the card resumes it.
 
 Repository → Pantheon site comes from the `.lando.yml` files under the
 configured project roots (`config.site`, `config.id`, plus `git remote

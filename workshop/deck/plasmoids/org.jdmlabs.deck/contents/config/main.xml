@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <group name="General">
+        <entry name="port" type="Int">
+            <label>Port of the deck-agent service on 127.0.0.1.</label>
+            <default>47657</default>
+        </entry>
+        <entry name="currentTab" type="Int">
+            <label>Tab shown last (remembered across restarts).</label>
+            <default>0</default>
+        </entry>
+        <entry name="trackPhpStorm" type="Bool">
+            <label>Report PhpStorm's open projects to the agent.</label>
+            <default>true</default>
+        </entry>
+        <entry name="idleWhenNoProject" type="Bool">
+            <label>Git and Gulp show a placeholder while PhpStorm has no project open.</label>
+            <default>true</default>
+        </entry>
+        <entry name="idleWhenOffWork" type="Bool">
+            <label>CircleCI and Pantheon show a placeholder while no work project is open in PhpStorm.</label>
+            <default>true</default>
+        </entry>
+        <entry name="gitInterval" type="Int">
+            <label>Seconds between Git refreshes.</label>
+            <default>3</default>
+        </entry>
+        <entry name="showUntracked" type="Bool">
+            <label>List untracked files.</label>
+            <default>true</default>
+        </entry>
+        <entry name="showPath" type="Bool">
+            <label>Show the project path under the Git title.</label>
+            <default>true</default>
+        </entry>
+        <entry name="fontSize" type="Int">
+            <label>Gulp log font size in pixels.</label>
+            <default>11</default>
+        </entry>
+        <entry name="wrapLines" type="Bool">
+            <label>Wrap long Gulp log lines.</label>
+            <default>true</default>
+        </entry>
+        <entry name="maxLines" type="Int">
+            <label>Gulp log lines kept in the card.</label>
+            <default>300</default>
+        </entry>
+        <entry name="ciInterval" type="Int">
+            <label>Seconds between CircleCI refreshes.</label>
+            <default>10</default>
+        </entry>
+        <entry name="maxPipelines" type="Int">
+            <label>Pipelines listed.</label>
+            <default>6</default>
+        </entry>
+        <entry name="showJobs" type="Bool">
+            <label>List jobs of workflows that are running or failed.</label>
+            <default>true</default>
+        </entry>
+        <entry name="showSubject" type="Bool">
+            <label>Show the commit subject.</label>
+            <default>true</default>
+        </entry>
+        <entry name="pantheonInterval" type="Int">
+            <label>Seconds between Pantheon refreshes.</label>
+            <default>15</default>
+        </entry>
+        <entry name="follow" type="Enum">
+            <label>Which Pantheon site the card shows.</label>
+            <choices>
+                <choice name="Pipeline"><label>The site your latest CircleCI pipeline deploys to</label></choice>
+                <choice name="PhpStorm"><label>The site of the project open in PhpStorm</label></choice>
+                <choice name="Pinned"><label>A fixed site</label></choice>
+            </choices>
+            <default>0</default>
+        </entry>
+        <entry name="pinnedSite" type="String">
+            <label>Pantheon site name when pinned.</label>
+            <default></default>
+        </entry>
+        <entry name="maxWorkflows" type="Int">
+            <label>Recent Pantheon workflows listed.</label>
+            <default>6</default>
+        </entry>
+    </group>
+</kcfg>

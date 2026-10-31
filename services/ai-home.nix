@@ -60,18 +60,17 @@ with lib;
 let
     cfg = config.services.ai-home;
 
-    # nixpkgs#575004 (2026-10) moved python3Packages.mcp to 2.x: fastmcp-slim
-    # 3.x is marked broken on it, and mcp-proxy 0.13 / mcp-server-git require
-    # mcp<2. All of them get mcp 1.x instead — the fix upstream used for ha-mcp
-    # (nixpkgs#578535). No-op on a nixpkgs without mcp_1; drop once they
-    # support mcp 2 (fastmcp 4: nixpkgs#563493).
+    # nixpkgs#575004 (2026-10) moved python3Packages.mcp to 2.x and fastmcp-slim
+    # 3.x is marked broken on it, so the fastmcp envs get mcp 1.x instead — the
+    # fix upstream used for ha-mcp (nixpkgs#578535). No-op on a nixpkgs without
+    # mcp_1; drop once fastmcp supports mcp 2 (fastmcp 4: nixpkgs#563493).
+    # mcp-proxy and mcp-server-git need nothing here any more: nixpkgs pins
+    # mcp-proxy 0.13 to mcp_1 itself, and mcp-server-git 2.1.0 requires
+    # mcp>=2.3 (forcing mcp_1 on it broke the 2026-10-31 nxup).
     mcp1Python = pkgs.python3.override {
         self = mcp1Python;
         packageOverrides = final: prev: optionalAttrs (prev ? mcp_1) { mcp = final.mcp_1; };
     };
-    withMcp1 = app: app.override { python3Packages = mcp1Python.pkgs; };
-    mcpProxy = withMcp1 pkgs.mcp-proxy;
-    mcpServerGit = withMcp1 pkgs.mcp-server-git;
 
     homeSearchPython = mcp1Python.withPackages (ps: [ ps.fastmcp ]);
 
@@ -220,7 +219,7 @@ noContentSuffixes+ = ${concatStringsSep " " cfg.noContentSuffixes}
     namedServers = {
         files  = "${pkgs.mcp-server-filesystem}/bin/mcp-server-filesystem ${cfg.home}";
         search = "${homeSearchMcp}/bin/home-search-mcp";
-        git    = "${mcpServerGit}/bin/mcp-server-git";
+        git    = "${pkgs.mcp-server-git}/bin/mcp-server-git";
         docs   = "${pkgs.markitdown-mcp}/bin/markitdown-mcp";
     } // optionalAttrs semanticEnabled {
         semantic = "${homeSemantic}/bin/home-semantic serve";
@@ -492,7 +491,7 @@ mkdir -p ${cfg.stateDir}/recoll
 install -m 0644 ${recollConf} ${cfg.stateDir}/recoll/recoll.conf
                 '';
                 ExecStart = concatStringsSep " " ([
-                    "${mcpProxy}/bin/mcp-proxy"
+                    "${pkgs.mcp-proxy}/bin/mcp-proxy"
                     "--host 127.0.0.1 --port ${toString cfg.port}"
                     "--pass-environment"
                 ] ++ mapAttrsToList (n: c: "--named-server ${n} ${escapeShellArg c}") namedServers);

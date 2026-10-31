@@ -9,7 +9,8 @@ caption through Plasma's TasksModel), and the agent follows it:
 
   /git        branch, ahead/behind, changed files and last commit of the
               active project (git status --porcelain=v2, polled; fetch on a
-              slower timer)
+              slower timer), plus its Lando app's state (/lando; `lando
+              start` / `lando stop` in the background)
   /gulp       the agent's own `gulp <task>` watcher for the active project —
               started with the project's node_modules/gulp like PhpStorm's
               run configuration — with its output (ANSI → HTML) and a small
@@ -705,19 +706,26 @@ def host_node_major(cfg):
     return _HOST_NODE_MAJOR
 
 
-def lando_node_service(project):
-    """(app name, service name, node major, app root) from the nearest .lando.yml, or None."""
+def find_landofile(project):
+    """The nearest .lando.yml at or up to three levels above the project, or None."""
     root = project
     for _ in range(4):
         lando = os.path.join(root, ".lando.yml")
         if os.path.isfile(lando):
-            break
+            return lando
         parent = os.path.dirname(root)
         if parent == root:
             return None
         root = parent
-    else:
+    return None
+
+
+def lando_node_service(project):
+    """(app name, service name, node major, app root) from the nearest .lando.yml, or None."""
+    lando = find_landofile(project)
+    if not lando:
         return None
+    root = os.path.dirname(lando)
     try:
         text = Path(lando).read_text()
     except OSError:
@@ -752,7 +760,7 @@ def lando_wrap(runner, cfg, project):
                     "-e", "FORCE_COLOR=1", container, "npm", "run", script],
         "label": f"lando npm run {script}",
         "container": container, "container_dir": container_dir, "script": script,
-        "app": svc["app"], "node_major": svc["node_major"],
+        "app": svc["app"], "node_major": svc["node_major"], "root": svc["root"],
     }
 
 
@@ -812,6 +820,7 @@ class GulpWatcher:
         self.ended_at = None
         self.exit_code = None
         self.stopped_by_user = False
+        self.lando_paused = False  # stopped for `lando stop`; resumes after the next `lando start`
         self.phase = "idle"      # idle | compiling
         self.cycle_error = False
         self.error = None        # {"at", "task", "lines"}
@@ -1197,6 +1206,202 @@ class GulpManager:
     def stop_all(self):
         for watcher in list(self.watchers.values()):
             watcher.stop(by_user=False)
+
+    def _lando_watchers(self, root):
+        return [w for w in list(self.watchers.values())
+                if w.runner and w.runner["kind"] == "lando" and w.runner.get("root") == root]
+
+    def lando_stopping(self, root):
+        """Before `lando stop`: end the watchers running in its node container,
+        as a pause rather than a user stop, so the next start resumes them."""
+        for watcher in self._lando_watchers(root):
+            if watcher.running:
+                watcher.stop()
+                watcher.lando_paused = True
+                watcher.message = f"Lando app {watcher.runner['app']} stopped — the watcher resumes when the Git card starts it again"
+
+    def lando_started(self, root):
+        """After `lando start`: start the watchers that were waiting for the container."""
+        for watcher in self._lando_watchers(root):
+            resume = watcher.lando_paused or (self.cfg["auto_start"] and not watcher.stopped_by_user)
+            watcher.lando_paused = False
+            if resume and not watcher.running and not watcher.external_pid():
+                watcher.stopped_by_user = False
+                watcher.start()
+
+
+# --------------------------------------------------------------------------
+# Lando
+# --------------------------------------------------------------------------
+
+def lando_urls(container_ids):
+    """Proxy URLs of the app, from the traefik router rules on its containers;
+    https where the router terminates TLS, the web services' URLs first."""
+    code, out, _ = run(["docker", "inspect", "--format", "{{json .Config.Labels}}", *container_ids], timeout=15)
+    if code != 0:
+        return []
+    found = {}
+    for line in out.splitlines():
+        try:
+            labels = json.loads(line) or {}
+        except ValueError:
+            continue
+        service = labels.get("com.docker.compose.service", "")
+        rank = 0 if service == "appserver_nginx" else 1 if service == "appserver" else 2
+        for key, rule in labels.items():
+            match = re.fullmatch(r"traefik\.http\.routers\.([^.]+)\.rule", key)
+            if not match:
+                continue
+            tls = labels.get(f"traefik.http.routers.{match.group(1)}.tls") == "true"
+            for host in re.findall(r"`([^`]+)`", rule):
+                if host.startswith("/") or "." not in host or any(c in host for c in "{}*"):
+                    continue
+                url = ("https://" if tls else "http://") + host
+                if host not in found or (tls and found[host][1].startswith("http:")):
+                    found[host] = (rank, url)
+    return [url for _, url in sorted(found.values())]
+
+
+class LandoManager:
+    """Whether the active project's Lando app is up, and `lando start` /
+    `lando stop` for it in the background. Status comes from `docker ps` on
+    the io.lando.root label every Lando container carries — milliseconds,
+    where `lando list` takes seconds."""
+
+    STATUS_TTL = 3
+
+    def __init__(self, gulp):
+        self.gulp = gulp
+        self.lock = threading.Lock()
+        self.jobs = {}          # app root → the last start/stop
+        self._status = {}       # app root → (time, status)
+        self._urls = {}         # app root → (container ids, urls)
+        self.listeners = []     # called with the app root when a job ends
+
+    @staticmethod
+    def app_for(project):
+        lando = find_landofile(project) if project else None
+        if not lando:
+            return None
+        try:
+            name = re.search(r"^name:\s*['\"]?([^\s'\"]+)", Path(lando).read_text(), re.M)
+        except OSError:
+            name = None
+        # Lando labels containers with the real path of the directory it ran in.
+        root = os.path.realpath(os.path.dirname(lando))
+        return {"root": root, "app": name.group(1) if name else os.path.basename(root)}
+
+    def status(self, root):
+        cached = self._status.get(root)
+        if cached and time.time() - cached[0] < self.STATUS_TTL:
+            return cached[1]
+        code, out, err = run(["docker", "ps", "-a", "--filter", f"label=io.lando.root={root}",
+                              "--format", "{{.ID}}\t{{.State}}"], timeout=15)
+        if code != 0:
+            status = {"state": "unknown", "running": 0, "total": 0, "url": None,
+                      "error": (err.strip().splitlines() or ["docker ps failed"])[-1]}
+        else:
+            rows = [line.split("\t") for line in out.splitlines() if "\t" in line]
+            up = sorted(cid for cid, state in rows if state == "running")
+            if not rows:
+                state = "missing"
+            elif len(up) == len(rows):
+                state = "running"
+            elif not up:
+                state = "stopped"
+            else:
+                state = "partial"
+            urls = []
+            if up:
+                known = self._urls.get(root)
+                if known and known[0] == up:
+                    urls = known[1]
+                else:
+                    urls = lando_urls(up)
+                    self._urls[root] = (up, urls)
+            status = {"state": state, "running": len(up), "total": len(rows),
+                      "url": urls[0] if urls else None, "urls": urls, "error": None}
+        self._status[root] = (time.time(), status)
+        return status
+
+    def snapshot(self, project):
+        app = self.app_for(project)
+        if not app:
+            return None
+        status = self.status(app["root"])
+        with self.lock:
+            job = self.jobs.get(app["root"])
+            job = dict(job, lines=list(job["lines"])) if job else None
+        busy = job is not None and job["exit_code"] is None
+        state = ("starting" if job["verb"] == "start" else "stopping") if busy else status["state"]
+        # A failed job counts until the app reaches the state it was after anyway.
+        failed = bool(job) and not busy and job["exit_code"] != 0 \
+            and status["state"] != ("running" if job["verb"] == "start" else "stopped")
+        return {
+            **app, **status, "state": state, "busy": busy, "failed": failed,
+            "job": {
+                "verb": job["verb"], "exit_code": job["exit_code"],
+                "started_at": now_iso(job["started_at"]),
+                "ended_at": now_iso(job["ended_at"]) if job["ended_at"] else None,
+                "last": job["lines"][-1] if job["lines"] else "",
+                "tail": job["lines"][-8:],
+            } if job else None,
+        }
+
+    def action(self, verb, project):
+        if verb not in ("start", "stop"):
+            return {"ok": False, "error": f"unknown action {verb}"}
+        app = self.app_for(project)
+        if not app:
+            return {"ok": False, "error": "No .lando.yml in this project"}
+        lando = find_bin("lando")
+        if not lando:
+            return {"ok": False, "error": "lando not found"}
+        root = app["root"]
+        with self.lock:
+            job = self.jobs.get(root)
+            if job and job["exit_code"] is None:
+                return {"ok": False, "error": f"lando {job['verb']} is still running"}
+            job = {"verb": verb, "started_at": time.time(), "ended_at": None, "exit_code": None,
+                   "lines": collections.deque(maxlen=60), "proc": None}
+            self.jobs[root] = job
+        threading.Thread(target=self._run, args=(job, lando, root, app["app"]),
+                         name=f"lando:{app['app']}", daemon=True).start()
+        return {"ok": True, "state": "starting" if verb == "start" else "stopping"}
+
+    def _run(self, job, lando, root, name):
+        verb = job["verb"]
+        if verb == "stop":
+            self.gulp.lando_stopping(root)
+        # lando is a node script (#!/usr/bin/env node) and finds its own docker-compose.
+        env = dict(os.environ, NO_COLOR="1", FORCE_COLOR="0")
+        env["PATH"] = os.pathsep.join([os.path.dirname(lando), os.path.expanduser("~/.lando/bin"),
+                                      env.get("PATH", ""), "/run/current-system/sw/bin"])
+        log(f"lando {verb} [{name}] {root}")
+        try:
+            proc = subprocess.Popen([lando, verb], cwd=root, env=env, start_new_session=True,
+                                    stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        except OSError as exc:
+            job["lines"].append(str(exc))
+            code = 127
+        else:
+            job["proc"] = proc
+            for raw in proc.stdout:
+                # Spinners redraw with \r; keep each frame's text as its own line.
+                for part in re.split(r"[\r\n]+", ANSI_RE.sub("", raw.decode("utf-8", "replace"))):
+                    part = part.strip()
+                    if part and not re.fullmatch(r"[\W_]+", part):
+                        with self.lock:
+                            job["lines"].append(part)
+            code = proc.wait()
+        with self.lock:
+            job["exit_code"], job["ended_at"] = code, time.time()
+            self._status.pop(root, None)
+        log(f"lando {verb} [{name}] exited {code}" + (f": {job['lines'][-1]}" if code and job["lines"] else ""))
+        if verb == "start" and code == 0:
+            self.gulp.lando_started(root)
+        for listener in self.listeners:
+            listener(root)
 
 
 # --------------------------------------------------------------------------
@@ -1777,12 +1982,14 @@ class Agent:
         self.work = WorkDetector(cfg, self.tracker)
         self.git = GitPoller(cfg, self.tracker, self.work)
         self.gulp = GulpManager(cfg, self.tracker)
+        self.lando = LandoManager(self.gulp)
         self.circleci = CircleCIPoller(cfg, self.secrets, self.work)
         self.sitemap = SiteMap(cfg["project_roots"])
         self.pantheon = PantheonPoller(cfg, self.secrets, self.tracker, self.circleci, self.sitemap, self.work)
         # Back on the clock → refresh both remote cards right away.
         self.work.listeners.append(lambda active: active and (self.circleci.wake.set(), self.pantheon.wake.set()))
         self.work.window_listeners.append(lambda: self.git.wake.set())
+        self.lando.listeners.append(lambda _root: self.git.wake.set())
 
     def start(self):
         self.tracker.seed_from_recent_projects()
@@ -1841,14 +2048,18 @@ class Handler(BaseHTTPRequestHandler):
         query = urllib.parse.parse_qs(url.query)
         route = url.path.rstrip("/") or "/"
         if route == "/":
-            text = "deck-agent %s\nGET  /health /project /work /git /gulp?since=N /circleci /pantheon /state\nPOST /project /git/fetch /gulp/{start,stop,restart,clear} /circleci/refresh /pantheon/{refresh,clear-cache,follow} /open\n" % VERSION
+            text = "deck-agent %s\nGET  /health /project /work /git /lando /gulp?since=N /circleci /pantheon /state\nPOST /project /git/fetch /lando/{start,stop} /gulp/{start,stop,restart,clear} /circleci/refresh /pantheon/{refresh,clear-cache,follow} /open\n" % VERSION
             return self._send(text.encode(), content_type="text/plain")
         if route == "/health":
             return self._send(agent.health())
         if route == "/project":
             return self._send(agent.tracker.snapshot())
         if route == "/git":
-            return self._send({**agent.git.snapshot(), "work": agent.work.snapshot()})
+            git = agent.git.snapshot()
+            project = (git.get("project") or {}).get("path")
+            return self._send({**git, "lando": agent.lando.snapshot(project), "work": agent.work.snapshot()})
+        if route == "/lando":
+            return self._send(agent.lando.snapshot(query.get("path", [None])[0] or agent.tracker.snapshot()["path"]))
         if route == "/gulp":
             since = int(query.get("since", ["0"])[0] or 0)
             return self._send({**agent.gulp.snapshot(query.get("path", [None])[0], since), "work": agent.work.snapshot()})
@@ -1861,6 +2072,7 @@ class Handler(BaseHTTPRequestHandler):
         if route == "/state":
             return self._send({
                 "health": agent.health(), "git": agent.git.snapshot(), "gulp": agent.gulp.snapshot(),
+                "lando": agent.lando.snapshot(agent.tracker.snapshot()["path"]),
                 "circleci": agent.circleci.snapshot(), "pantheon": agent.pantheon.snapshot(),
             })
         self._send({"error": "not found"}, 404)
@@ -1889,6 +2101,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._send({"ok": True})
         if route.startswith("/gulp/"):
             return self._send(agent.gulp.action(route[6:], body.get("path")))
+        if route.startswith("/lando/"):
+            return self._send(agent.lando.action(route[7:], body.get("path") or agent.tracker.snapshot()["path"]))
         if route == "/circleci/refresh":
             agent.circleci.wake.set()
             return self._send({"ok": True})

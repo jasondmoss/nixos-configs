@@ -78,10 +78,7 @@ in {
         rofi
         waybar
 
-        # hyprland-dialog (ANR prompts) + update screen; Hyprland warns at
-        # every start when they are missing. nixpkgs still ships the Qt-era
-        # name for what upstream now calls hyprland-guiutils.
-        hyprland-qtutils
+        hyprland-guiutils
 
         # Clipboard history, screenshots (Spectacle needs KWin), colour picker.
         cliphist
