@@ -1,14 +1,20 @@
 { lib, stdenv, fetchFromGitHub, kdePackages, cmake, python3, xcursorgen }:
 
+let
+    ## Tracks upstream `main`, pinned to a commit. Everything in manifest.json
+    ## comes from ./update.sh (run by nxmanifest before every nxup): the
+    ## commit, its date, its fetchFromGitHub hash and the `<date>.<rev>`
+    ## version.
+    manifest = lib.importJSON ./manifest.json;
+in
 stdenv.mkDerivation rec {
     pname = "vinyl";
-    version = "main";
+    inherit (manifest) version;
 
     src = fetchFromGitHub {
         owner = "ekaaty";
         repo = "vinyl-theme";
-        rev = version;
-        hash = "sha256-mJ59zxuQV8oRDDud0/ykXYd09NiNdEr7Dn0bprj00gc=";
+        inherit (manifest) rev hash;
     };
 
     buildInputs = [
@@ -58,7 +64,7 @@ find $out/share/icons -xtype l -delete
     meta = {
         description = "A theme suite for KDE Plasma (application style, decorations, plasma/global themes, icons, cursors, SDDM, splash)";
         homepage = "https://github.com/ekaaty/vinyl-theme";
-        changelog = "https://github.com/ekaaty/vinyl-theme/commits/main";
+        changelog = "https://github.com/ekaaty/vinyl-theme/commits/${manifest.rev}";
         license = with lib.licenses; [ bsd3 cc0 gpl2Only gpl2Plus gpl3Only lgpl21Plus mit ];
     };
 }

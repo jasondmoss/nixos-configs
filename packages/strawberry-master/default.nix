@@ -8,23 +8,29 @@
 
 let
     inherit (lib) optionals;
+
+    ## Tracks upstream `master`, pinned to a commit. Everything in
+    ## manifest.json comes from ./update.sh (run by nxmanifest before every
+    ## nxup): the commit, its date, its fetchFromGitHub hash and the
+    ## `<date>.<rev>` version.
+    manifest = lib.importJSON ./manifest.json;
 in
 stdenv.mkDerivation rec {
     pname = "strawberry";
-    version = "master";
+    inherit (manifest) version;
 
     src = fetchFromGitHub {
         owner = "strawberrymusicplayer";
         repo = pname;
-        rev = version;
-        hash = "sha256-YLmmb0ECymfXHQ0A0PXz1uCfTCNuM0xpMYNpudOUV50=";
+        inherit (manifest) rev hash;
     };
 
     # The big strawberry shown in the context menu is *very* much in your face,
-    # so use the grey version instead.
+    # so use the grey version instead. --replace-fail, so a bump that moves
+    # the image fails verify.nix instead of silently dropping the swap.
     postPatch = ''
 substituteInPlace src/context/contextalbum.cpp \
- --replace pictures/strawberry.png pictures/strawberry-grey.png
+ --replace-fail pictures/strawberry.png pictures/strawberry-grey.png
     '';
 
     buildInputs = [
@@ -90,7 +96,7 @@ qtWrapperArgs+=(
     meta = with lib; {
         description = "Music player and music collection organizer";
         homepage = "https://www.strawberrymusicplayer.org/";
-        changelog = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry/${version}/Changelog";
+        changelog = "https://raw.githubusercontent.com/strawberrymusicplayer/strawberry/${manifest.rev}/Changelog";
         license = licenses.gpl3Only;
         maintainers = with maintainers; [ peterhoeg ];
         platforms = platforms.linux;

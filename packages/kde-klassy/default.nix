@@ -1,14 +1,20 @@
 { lib, stdenv, fetchFromGitHub, kdePackages, cmake }:
 
+let
+    ## Tracks upstream `master`, pinned to a commit. Everything in
+    ## manifest.json comes from ./update.sh (run by nxmanifest before every
+    ## nxup): the commit, its date, its fetchFromGitHub hash and the
+    ## `<date>.<rev>` version.
+    manifest = lib.importJSON ./manifest.json;
+in
 stdenv.mkDerivation rec {
     pname = "klassy";
-    version = "master";
+    inherit (manifest) version;
 
     src = fetchFromGitHub {
         owner = "paulmcauley";
         repo = "klassy";
-        rev = version;
-        hash = "sha256-2M1SGmYSEnZ1AlsOvhrM25oQi8mz/H8df4pzyFYybN8=";
+        inherit (manifest) rev hash;
     };
 
     buildInputs = [
@@ -36,7 +42,7 @@ stdenv.mkDerivation rec {
     meta = {
         description = "A highly customizable binary Window Decoration and Application Style plugin for recent versions of the KDE Plasma desktop";
         homepage = "https://github.com/paulmcauley/klassy";
-        changelog = "https://github.com/paulmcauley/klassy/releases/tag/${version}";
+        changelog = "https://github.com/paulmcauley/klassy/commits/${manifest.rev}";
         license = with lib.licenses; [ bsd3 cc0 fdl12Plus gpl2Only gpl2Plus gpl3Only mit ];
     };
 }
