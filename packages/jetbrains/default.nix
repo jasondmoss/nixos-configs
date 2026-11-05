@@ -1,10 +1,13 @@
 self: pkgs:
 let
   # Version, build number and checksum come from manifest.json — refresh it
-  # with ./update.sh (same workflow as packages/claude-desktop and
-  # packages/vivaldi-snapshot), then rebuild. Unattended refreshes stay inside
-  # the pinned feature series because the JCEF fixup below is series-specific;
-  # see the comment in update.sh.
+  # with `sh update.sh [version]` (same workflow as packages/claude-desktop and
+  # packages/vivaldi-snapshot), then rebuild. nxup refreshes it to the newest
+  # release and builds it through verify.nix first, so a bump that breaks the
+  # JCEF fixup below is rolled back instead of failing the rebuild.
+  #
+  # This overlay is the whole PhpStorm override — system/nixpkgs.nix only
+  # imports it, so verify.nix builds the same derivation the rebuild uses.
   manifest = pkgs.lib.importJSON ./manifest.json;
   baseUrl = "https://download.jetbrains.com/webide";
 

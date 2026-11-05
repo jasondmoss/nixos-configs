@@ -29,17 +29,10 @@
             # Firefox Nightly.
             (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
-            # PhpStorm.
+            # PhpStorm — the whole override lives in the package (its nss/nspr/
+            # libxkbcommon fix too), so packages/jetbrains/verify.nix builds the
+            # exact derivation this rebuild uses.
             (import ../packages/jetbrains)
-            (final: prev: {
-                phpstorm = prev.phpstorm.overrideAttrs (old: {
-                    buildInputs = old.buildInputs ++ [
-                        pkgs.nss
-                        pkgs.nspr
-                        pkgs.libxkbcommon
-                    ];
-                });
-            })
 
             (import ../../overlays/default.nix)
 

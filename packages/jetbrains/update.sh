@@ -16,24 +16,16 @@ ENTRIES="$(curl -fsSL "$API_URL" | jq -r '
 ')"
 
 if [ -n "${1:-}" ]; then
-    ## Explicit version — the only way to cross into a new feature series.
+    ## Explicit version — pin (or roll back to) a specific release.
     ENTRY="$(awk -v v="$1" '$1 == v' <<< "$ENTRIES")"
 else
-    ## Unattended bumps stay inside the currently pinned feature series
-    ## (2026.2.x). default.nix overrides nixpkgs' phpstorm with a JCEF fixup
-    ## that is specific to the series, and this script runs from nxup where a
-    ## broken IDE build would fail the whole system rebuild. Cross a series
-    ## deliberately: ./update.sh 2026.3
-    SERIES="$(jq -r '.version | split(".")[0:2] | join(".")' manifest.json)"
-    ENTRY="$(awk -v s="$SERIES" '$1 == s || index($1, s ".") == 1' <<< "$ENTRIES" \
-        | sort --version-sort | tail --lines=1)"
-
-    NEWEST="$(sort --version-sort <<< "$ENTRIES" | tail --lines=1 | awk '{print $1}')"
-    NEWEST_SERIES="$(cut -d. -f1,2 <<< "$NEWEST")"
-    if [ "$NEWEST_SERIES" != "$SERIES" ]; then
-        echo "phpstorm: note — $NEWEST is out (series $NEWEST_SERIES); staying on $SERIES." >&2
-        echo "phpstorm: review the JCEF override in default.nix, then: ./update.sh $NEWEST" >&2
-    fi
+    ## Newest release, feature-series jumps included (2026.2.x -> 2026.3).
+    ## Until 2026-11-05 unattended bumps stayed inside the pinned series,
+    ## because the JCEF fixup in default.nix might not fit a new series and a
+    ## broken IDE build would fail the whole nxup rebuild. verify.nix now
+    ## covers that: nxmanifest builds every bump and restores the previous
+    ## manifest.json if the build fails.
+    ENTRY="$(sort --version-sort <<< "$ENTRIES" | tail --lines=1)"
 fi
 
 if [ -z "$ENTRY" ]; then
