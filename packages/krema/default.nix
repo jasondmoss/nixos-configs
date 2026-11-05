@@ -41,10 +41,24 @@ in stdenv.mkDerivation (finalAttrs: {
         ./patches/0002-vertical-dock-dodge-ref-position.patch
     ];
 
-    # Qt's QML disk cache can serve stale compiled QML from ~/.cache/krema/qmlcache
-    # across rebuilds of this patched package (qrc URL + timestamps don't change under
-    # Nix), silently masking patch changes. Startup recompile cost is negligible.
-    qtWrapperArgs = [ "--set QML_DISABLE_DISK_CACHE 1" ];
+    # QML disk cache — left ON (2026-11-05). Krema's QML is a plain qrc
+    # (qt_add_resources, no qmlcachegen), compiled at runtime into
+    # ~/.cache/krema/qmlcache. This used to be `--set QML_DISABLE_DISK_CACHE 1`,
+    # because the cache was validated by source time stamp and under Nix every
+    # build embeds the same one (rcc uses SOURCE_DATE_EPOCH), so a rebuild of
+    # this patched package kept running the old compiled QML. Qt 6.12.0 saves
+    # every cache unit in content-hash mode instead (MD5 of the QML source,
+    # re-checked on load — qtdeclarative src/qml/common/qv4compileddata.cpp,
+    # verified against the 6.12.0 source), so a changed patch recompiles.
+    #
+    # The --set was also inherited by every app launched from the dock: it
+    # switched the QML cache off for all of them and broke apps that ship
+    # AOT-compiled QML with the qrc sources stripped (Clate — every panel
+    # failed with "Expected token `numeric literal'"). Only re-applied on a Qt
+    # older than the version checked above.
+    qtWrapperArgs = lib.optionals (lib.versionOlder qtdeclarative.version "6.12") [
+        "--set QML_DISABLE_DISK_CACHE 1"
+    ];
 
     nativeBuildInputs = [
         cmake

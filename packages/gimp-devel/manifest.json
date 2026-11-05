@@ -1,7 +1,7 @@
 {
-  "version": "3.2.6",
-  "filename": "gimp-3.2.6.tar.xz",
-  "sha256": "sha256-QLFekK0MDGMbdto8Rn6phH+lwk83QTrFtJKASGCijNg=",
+  "version": "3.2.8",
+  "filename": "gimp-3.2.8.tar.xz",
+  "sha256": "sha256-FqJpbK3J4Dou+XzLiV4GL2VMsrghH7VwdNuF8mZGyEc=",
   "babl": {
     "version": "0.1.128",
     "filename": "babl-0.1.128.tar.xz",

@@ -4,6 +4,9 @@ let
     # --- Custom Package Definitions ---
     customPkgs = {
         antigravity    = pkgs.callPackage ../packages/antigravity-cli {};
+        # Launcher only — the app is installed by Qt's own installer into
+        # ~/.config/ClateBeta<NN>; see the header of packages/clate.
+        clate          = pkgs.callPackage ../packages/clate {};
         claude-desktop = pkgs.callPackage ../packages/claude-desktop {};
         gh-clone       = pkgs.callPackage ../packages/gh-clone {};
         jopdf          = pkgs.callPackage ../packages/jopdf {};

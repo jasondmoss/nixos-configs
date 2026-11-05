@@ -11,6 +11,8 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.plasma5support as P5Support
+import org.kde.plasma.workspace.calendar
+import org.kde.kirigami as Kirigami
 
 PlasmoidItem {
     id: root
@@ -214,6 +216,13 @@ PlasmoidItem {
         onTriggered: root.now = new Date()
     }
 
+    /**
+     * Calendar popup state. As in the shell's CompactApplet, the flag only
+     * follows the popup closing itself (focus loss) 100 ms later, so a click
+     * on the clock that closes the popup isn't read as "closed, so reopen".
+     */
+    property bool calendarOpen: false
+
     // 12-hour clock, no AM/PM, no locale punctuation.
     function clock12(d)
     {
@@ -267,6 +276,7 @@ PlasmoidItem {
             spacing: 0
 
             PlasmaComponents.Label {
+                id: clockLabel
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: root.clock12(root.now)
@@ -284,6 +294,7 @@ PlasmoidItem {
              * September 30, 2026" ≈ 308px) shrink to fit the panel width.
              */
             PlasmaComponents.Label {
+                id: dateLabel
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: root.now.toLocaleDateString(Qt.locale(), Locale.LongFormat)
@@ -403,6 +414,64 @@ PlasmoidItem {
                 label: "Download:";
                 value: root.sDown + " Kb/sec";
                 fs: 13
+            }
+        }
+
+        // Clicking the clock or date toggles the calendar. Covers the
+        // right-aligned text only, not the empty space to its left.
+        MouseArea {
+            id: clockArea
+            anchors.right: column.right
+            y: clockLabel.y
+            width: Math.max(clockLabel.contentWidth, dateLabel.contentWidth)
+            height: dateLabel.y + dateLabel.height - clockLabel.y
+            cursorShape: Qt.PointingHandCursor
+
+            property bool wasOpen: false
+            onPressed: wasOpen = root.calendarOpen
+            onClicked: root.calendarOpen = !wasOpen
+        }
+
+        Timer {
+            id: calendarSync
+            interval: 100
+            onTriggered: root.calendarOpen = calendarPopup.visible
+        }
+
+        /**
+         * The panel calendar's popup (an AppletPopup, which is this window
+         * plus applet plumbing), opening towards the desktop. Content size =
+         * that popup's saved popupWidth/popupHeight; the window adds the
+         * frame padding, as AppletPopup does.
+         */
+        PlasmaCore.PopupPlasmaWindow {
+            id: calendarPopup
+            visualParent: clockArea
+            popupDirection: Qt.LeftEdge
+            floating: true
+            animated: true
+            hideOnWindowDeactivate: true
+            margin: Kirigami.Units.largeSpacing
+            visible: root.calendarOpen
+            width: Math.round(560 + leftPadding + rightPadding)
+            height: Math.round(400 + topPadding + bottomPadding)
+
+            onVisibleChanged: {
+                if (visible) {
+                    requestActivate();
+                } else {
+                    calendarSync.restart();
+                }
+            }
+
+            mainItem: FocusScope {
+                focus: true
+                Keys.onEscapePressed: root.calendarOpen = false
+
+                MonthView {
+                    anchors.fill: parent
+                    today: root.now
+                }
             }
         }
     }

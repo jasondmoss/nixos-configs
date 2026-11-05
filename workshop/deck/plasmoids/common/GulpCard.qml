@@ -39,7 +39,10 @@ Item {
     readonly property string projectTitle: project ? (project.title || project.name || "") : ""
     property string projectPath: ""
     property int lastSeq: 0
+    // Tail mode: the log sticks to its newest line until the user scrolls up
+    // (wheel, scrollbar, drag or keys); scrolling back to the bottom resumes it.
     property bool autoScroll: true
+    property bool pinning: false
     property double now: Date.now()
 
     // "gulp default · origin", "npm run watch · washington", or plain "Gulp".
@@ -80,6 +83,7 @@ Item {
             // Another project's watcher, or the agent restarted: start over.
             root.projectPath = path;
             lines.clear();
+            root.autoScroll = true;
             if (root.lastSeq !== 0) {
                 root.lastSeq = 0;
                 client.refresh();
@@ -99,6 +103,21 @@ Item {
         while (lines.count > max) {
             lines.remove(0);
         }
+        // Not via the view's countChanged: once the log is full every append
+        // is matched by a trim, the count stays put and following would stop.
+        root.stickToEnd();
+    }
+
+    // Programmatic scrolls are fenced off so onContentYChanged reads only
+    // the user's scrolling as "left the bottom".
+    function stickToEnd()
+    {
+        if (!root.autoScroll || !logView.visible) {
+            return;
+        }
+        root.pinning = true;
+        logView.positionViewAtEnd();
+        root.pinning = false;
     }
 
     function action(verb)
@@ -276,13 +295,18 @@ Item {
                     color: Kirigami.Theme.textColor
                 }
 
-                onCountChanged: {
-                    if (root.autoScroll) {
-                        Qt.callLater(() => logView.positionViewAtEnd());
+                // Plasma's ScrollView scrolls through Kirigami's WheelHandler and the
+                // scrollbar sets contentY directly; neither emits movementEnded.
+                onContentYChanged: {
+                    if (!root.pinning) {
+                        root.autoScroll = contentY + height >= originY + contentHeight - 2;
                     }
                 }
-                onMovementEnded: root.autoScroll = logView.atYEnd
-                onFlickEnded: root.autoScroll = logView.atYEnd
+                // Re-pin when the view resizes (error excerpt, Follow button,
+                // rewrapped lines) or comes back from a hidden Deck tab.
+                onHeightChanged: Qt.callLater(root.stickToEnd)
+                onContentHeightChanged: Qt.callLater(root.stickToEnd)
+                onVisibleChanged: Qt.callLater(root.stickToEnd)
 
                 PlasmaComponents3.Label {
                     anchors.centerIn: parent
@@ -307,7 +331,7 @@ Item {
             text: i18n("Follow")
             onClicked: {
                 root.autoScroll = true;
-                logView.positionViewAtEnd();
+                root.stickToEnd();
             }
         }
     }
