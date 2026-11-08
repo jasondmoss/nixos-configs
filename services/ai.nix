@@ -132,20 +132,10 @@ PARAMETER num_ctx 8192
     services.open-webui = {
         enable = true;
         port = 8180;
-        # nixpkgs#576478: the package passes makeWrapperArgs as one
-        # "--set FRONTEND_BUILD_DIR <dir>" string, which makeWrapper rejects
-        # under __structuredAttrs (fails on nixos-unstable 02c087f, 2026-10).
-        # Splitting it into separate words is a no-op on older revisions.
-        # Drop once nixpkgs#575801 lands.
-        # nixpkgs#575004 moved python3Packages.mcp to 2.x, which marks posthog
-        # broken; the python set gets mcp 1.x (as upstream did for ha-mcp,
-        # nixpkgs#578535). No-op without mcp_1; drop once nixpkgs#578265 lands.
-        package = (pkgs.open-webui.override {
-            python3Packages = pkgs.python3Packages.overrideScope (final: prev:
-                lib.optionalAttrs (prev ? mcp_1) { mcp = final.mcp_1; });
-        }).overridePythonAttrs (old: {
-            makeWrapperArgs = lib.concatMap (lib.splitString " ") old.makeWrapperArgs;
-        });
+        # Stock package since 2026-11-08 (channel f9a75f4, open-webui 0.12.5):
+        # the old makeWrapperArgs split (nixpkgs#576478) and mcp = mcp_1
+        # override (nixpkgs#575004) are both fixed upstream, and 0.12.5 needs
+        # mcp 2.x (`from mcp import Client`) — forcing mcp_1 broke the switch.
         environment = {
             OLLAMA_BASE_URL = "http://127.0.0.1:11434";
             WEBUI_AUTH = "False";
