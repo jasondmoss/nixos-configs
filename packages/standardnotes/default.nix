@@ -1,9 +1,17 @@
 {
-    lib, stdenv, fetchurl, dpkg, makeWrapper, electron, libsecret, asar,
+    lib, stdenv, fetchurl, dpkg, makeWrapper, electron_44, libsecret, asar,
     python3, glib, desktop-file-utils,
 }:
 
 let
+    ## Pinned, not the default `electron`: the app's sandboxed preload and
+    ## web bundle call `Buffer.from(...)`, and Electron 45 no longer provides
+    ## `Buffer` there — the UI never loads ("Error: Buffer is not defined" in
+    ## the renderer console; default electron moved 43 → 45 in the 2026-11-12
+    ## nxup). Upstream bundles Electron 35. 43 and 44 both work; re-test on
+    ## the default once a release stops relying on the Buffer global
+    ## (ELECTRON_ENABLE_LOGGING=1 standardnotes, look for CONSOLE errors).
+    electron = electron_44;
     ## Upstream GitHub releases (amd64 only — see meta.platforms). Version +
     ## checksum come from manifest.json — refresh it with ./update.sh (same
     ## workflow as packages/claude-desktop and packages/vivaldi-snapshot),

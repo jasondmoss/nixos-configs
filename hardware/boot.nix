@@ -4,7 +4,18 @@
     ];
 
     boot = {
-        kernelPackages = pkgs.linuxPackages_xanmod_latest.extend (final: prev: {
+        # xanmod 7.3 already carries upstream 10a47fb6 ("tools: add 128-bit
+        # integer types for aarch64"), but nixpkgs still applies its backport
+        # (kernelPatches.tools_128bit_types) to every xanmod variant, while its
+        # mainline linux_7_3 omits it. Re-applying it fails patchPhase in the
+        # kernel and cpupower (2026-11-09). Dropped on >= 7.3 only; the filter is
+        # a no-op once nixpkgs stops listing it, so delete the override then.
+        kernelPackages = (pkgs.linuxPackagesFor (pkgs.linux_xanmod_latest.override (old: {
+            kernelPatches = builtins.filter
+                (p: !(lib.versionAtLeast pkgs.linux_xanmod_latest.version "7.3"
+                      && p.name == pkgs.kernelPatches.tools_128bit_types.name))
+                old.kernelPatches;
+        }))).extend (final: prev: {
             # nixpkgs#575192 — since the kmodigest module signing (nixpkgs#571181) the
             # module aggregator wants a <module>.ko.cer beside every external module, and
             # only Kbuild's modules_install writes one. nixpkgs' ryzen-smu (enabled in
