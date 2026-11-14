@@ -85,6 +85,9 @@ let
 
     # Environment for PCP services + interactive CLI tools.
     # Override PCP_*_DIR to mutable system paths (the store copies are read-only).
+    # The package's pcp.conf already carries the /var/log + /var/lib/pcp/tmp
+    # paths (pmpost ignores the environment); PCP_VAR_DIR and the pmcd.conf path
+    # exist only here.
     pcpEnv = {
         PCP_CONF = pcpConf;
         PCP_DIR = pcpDir;
@@ -137,6 +140,17 @@ let
     );
 
     pmproxyHardening = baseHardening;
+
+    # PATH for the units that run pmlogger_daily (pmlogger.service runs it as
+    # `pmlogger_daily -K` from pmlogger_check). pmlogger_daily only turns
+    # compression on (COMPRESSAFTER=0) when `which zstd` succeeds — its xz probe
+    # looks for "zx", an upstream typo — and pmlogcompress picks zstd for volumes
+    # ≥ 50 MB, xz below that. Without `which`/`zstd`/`xz` here compression
+    # silently stayed at "never".
+    pmloggerPath = with pkgs; [
+        coreutils gawk gnused gnugrep hostname findutils util-linux procps
+        which zstd xz cfg.package
+    ];
 
     ipFiltering = optionalAttrs (cfg.allowedNetworks != []) {
         IPAddressAllow = cfg.allowedNetworks;
@@ -417,12 +431,23 @@ in
                 restartTriggers = [ pmcdConf ];
                 serviceConfig = {
                     Type = if hasBccPmda then "simple" else "forking";
-                    # Deploy a fresh writable pmcd.conf before each start.
-                    ExecStartPre = "${pkgs.coreutils}/bin/install -Dm0644 ${pmcdConf} /etc/pcp/pmcd/pmcd.conf";
+                    ExecStartPre = [
+                        # /run/pcp must stay pcp-writable: pmlogger (pmlogger.pid),
+                        # pmlogger_check and pmlogger_daily (their .pid files) run as
+                        # pcp. This used to be RuntimeDirectory=pcp, which re-owned
+                        # the tmpfiles-created dir to root:root 0755 on every pmcd
+                        # start ("pmlogger_daily.pid: Permission denied") and deleted
+                        # it, sockets and all, on every pmcd stop.
+                        "${pkgs.coreutils}/bin/install -d -m 0775 -o pcp -g pcp /run/pcp"
+                        # Deploy a fresh writable pmcd.conf before each start.
+                        "${pkgs.coreutils}/bin/install -Dm0644 ${pmcdConf} /etc/pcp/pmcd/pmcd.conf"
+                    ];
                     ExecStart = "${cfg.package}/libexec/pcp/bin/pmcd"
                         + optionalString hasBccPmda " -f -q 60 -t 30";
                     Restart = "on-failure";
-                    RuntimeDirectory = "pcp";
+                    # pmcd and its PMDAs log to relative names (pmcd.log, proc.log)
+                    # in the working directory — "/" without this.
+                    WorkingDirectory = "${constants.paths.logDir}/pmcd";
                     StateDirectory = "pcp";
                 } // optionalAttrs (!hasBccPmda) {
                     PIDFile = "/run/pcp/pmcd.pid";
@@ -440,12 +465,28 @@ in
                 after = [ "pmcd.service" ];
                 bindsTo = [ "pmcd.service" ];
                 environment = pcpEnv;
-                path = with pkgs; [ coreutils gawk gnused gnugrep hostname findutils util-linux procps cfg.package ];
+                path = pmloggerPath;
                 serviceConfig = {
                     Type = "oneshot";
                     RemainAfterExit = true;
+                    # Stale-PID guard. After pmlogger_daily's SIGUSR2 rotation pmlogger
+                    # re-execs (same PID), cannot reopen its own 0444 pmlogger.pid
+                    # and so loses the atexit hook that unlinks it; the file then
+                    # outlives the process. A later start's pmlogger cannot rewrite
+                    # it either, pmlogger_janitor resolves the primary through it,
+                    # finds the old PID dead and kills the new pmlogger as an orphan
+                    # (seen 2026-11-14). Upstream's unit dodges this via PIDFile=,
+                    # which systemd deletes on stop; a oneshot has none. Nothing of
+                    # this unit runs before ExecStartPre, so the file is always stale.
+                    ExecStartPre = "${pkgs.coreutils}/bin/rm -f /run/pcp/pmlogger.pid";
                     ExecStart = "${cfg.package}/libexec/pcp/bin/pmlogger_check -V";
-                    ExecStop = "${cfg.package}/libexec/pcp/bin/pmlogger_check -s -V";
+                    # -q: no `pmlogger_daily -K` compression pass after the stop.
+                    # pmlogger is gone by then, so it always failed with "no pmlogger
+                    # instance running" (logged as "pmlogger_daily failed" on every
+                    # stop, shutdown included). Compression happens on the next start
+                    # and at 00:10. Upstream's stop path (services/pmlogger
+                    # stop-systemd) only sends TERM as well.
+                    ExecStop = "${cfg.package}/libexec/pcp/bin/pmlogger_check -s -q -V";
                     User = "pcp";
                     Group = "pcp";
                     StateDirectory = "pcp";
@@ -533,11 +574,16 @@ in
                 after = [ "pmcd.service" ];
                 bindsTo = [ "pmcd.service" ];
                 environment = pcpEnv;
+                # libpcp reads .zst archive volumes by spawning `zstd -dcq` (.xz
+                # goes through liblzma in-process); see pmloggerPath.
+                path = [ pkgs.zstd ];
                 serviceConfig = {
                     Type = "forking";
                     ExecStart = "${cfg.package}/libexec/pcp/bin/pmproxy";
                     PIDFile = "/run/pcp/pmproxy.pid";
                     Restart = "on-failure";
+                    # pmproxy.log is a relative name, like pmcd's (see above).
+                    WorkingDirectory = "${constants.paths.logDir}/pmproxy";
                 } // pmproxyHardening // ipFiltering;
             };
 
@@ -549,13 +595,23 @@ in
                     Persistent = true;
                 };
             };
+            # Runs as pcp like upstream's pmlogger_daily.service: it renames and
+            # compresses archives the pcp-owned pmlogger writes and signals that
+            # pmlogger to start a new archive. Ordered after pmlogger.service so a
+            # Persistent catch-up run at boot doesn't fire before pmlogger is up
+            # ("no pmlogger instance running" → rotation skipped). The other
+            # boot-time run is pmlogger_check's own `pmlogger_daily -K`
+            # (compression only, log in pmlogger_daily-K.log).
             systemd.services.pmlogger-daily = mkIf cfg.pmlogger.enable {
                 description = "PCP Logger Daily Maintenance";
+                after = [ "pmlogger.service" ];
                 environment = pcpEnv;
-                path = with pkgs; [ coreutils gawk gnused gnugrep hostname findutils util-linux procps cfg.package ];
+                path = pmloggerPath;
                 serviceConfig = {
                     Type = "oneshot";
                     ExecStart = "${cfg.package}/libexec/pcp/bin/pmlogger_daily";
+                    User = "pcp";
+                    Group = "pcp";
                 };
             };
 

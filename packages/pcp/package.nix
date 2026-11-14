@@ -171,6 +171,15 @@ pkgs.stdenv.mkDerivation rec {
   # we only want qmake on PATH for the pmchart subdir build.
   dontUseQmakeConfigure = withQt;
 
+  # wrapQtAppsHook's automatic pass wraps every executable file under bin/ and
+  # libexec/ — including the 73 PMDA DSOs in libexec/pcp/pmdas (installed 0755),
+  # each replaced by a makeBinaryWrapper *executable* named pmda_<x>.so. pmcd's
+  # dlopen() then fails with "cannot dynamically load position-independent
+  # executable", so the linux and pmcd PMDAs never loaded (every kernel.*/mem.*/
+  # pmcd.* metric missing, pmlogger_check's pmcd probe failing, no archives
+  # since 2026-08-10). Only the four Qt GUI tools get wrapped, in postFixup.
+  dontWrapQtApps = true;
+
   configureFlags = lib.concatLists [
 
     [
@@ -337,6 +346,17 @@ pkgs.stdenv.mkDerivation rec {
         --replace-quiet "$out/etc/sysconfig" "$out/share/pcp/etc/sysconfig" \
         --replace-quiet "PCP_ETC_DIR=$out/etc" "PCP_ETC_DIR=$out/share/pcp/etc"
 
+      # Runtime-writable locations must not point into the read-only store:
+      # services/pcp.nix overrides them via environment, but pmpost scrubs its
+      # environment down to PCP_DIR/PCP_CONF/TZ and re-reads pcp.conf, and
+      # PCP_REMOTE_ARCHIVE_DIR was never overridden (pmlogger_daily's do_compress
+      # failed to cd into $out/var/log/pcp/pmproxy). "$out/var/log" covers
+      # PCP_LOG_DIR, PCP_ARCHIVE_DIR, PCP_REMOTE_ARCHIVE_DIR, PCP_SA_DIR and
+      # PCP_IMPORTLOG_DIR. The directories are created by the module's tmpfiles.
+      substituteInPlace $out/share/pcp/etc/pcp.conf \
+        --replace-fail "$out/var/log" "/var/log" \
+        --replace-fail "PCP_TMP_DIR=$out/var/lib/pcp/tmp" "PCP_TMP_DIR=/var/lib/pcp/tmp"
+
       # Fix symlinks that pointed to /etc/pcp/...
       find $out/var/lib/pcp -type l | while read link; do
         target=$(readlink "$link")
@@ -454,7 +474,17 @@ pkgs.stdenv.mkDerivation rec {
     done
   '';
 
-  postFixup = ''
+  postFixup = lib.optionalString withQt ''
+    # Qt wrapping limited to ELF executables that link Qt (pmchart, pmdumptext,
+    # pmquery, pmtime as of 7.2.2) — see dontWrapQtApps above.
+    for f in $out/bin/* $out/libexec/pcp/bin/*; do
+      [ -f "$f" ] && [ ! -L "$f" ] && [ -x "$f" ] && isELF "$f" || continue
+      if patchelf --print-needed "$f" 2>/dev/null | grep -q '^libQt5'; then
+        echo "pcp: wrapping Qt application $f"
+        wrapQtApp "$f"
+      fi
+    done
+  '' + ''
     # Wrap Python scripts in libexec/pcp/bin
     for script in $out/libexec/pcp/bin/pcp-*; do
       if head -1 "$script" 2>/dev/null | grep -q python; then
