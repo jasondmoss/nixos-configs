@@ -88,8 +88,14 @@ in {
                 };
             };
 
+            # DrKonqi's coredump launcher is off. Masking only the template left
+            # its socket (which refuses to start a masked service) and the pickup
+            # service (which connects to that socket) failing on every login.
             "drkonqi-coredump-launcher@".enable = false;
+            drkonqi-coredump-pickup.enable = false;
         };
+
+        user.sockets.drkonqi-coredump-launcher.enable = false;
     };
 }
 

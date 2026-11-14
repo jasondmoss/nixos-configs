@@ -52,8 +52,10 @@
             ];
         };
 
+        # No kvm-amd: SVM is off in the BIOS, so it only failed at boot, and
+        # Docker/DDEV/Lando don't use KVM. To run VMs (quickemu etc.), enable
+        # SVM Mode in the BIOS and add "kvm-amd" back.
         kernelModules = [
-            "kvm-amd"
             "k10temp"
         ];
 

@@ -106,20 +106,51 @@ Host pantheon.io *.pantheon.io
         SSH_ASKPASS_REQUIRE = "prefer";
     };
 
+    # Each key is added on its own, so one failure does not skip the rest; any
+    # failure fails the unit, which retries (the session's WAYLAND_DISPLAY can
+    # reach the user manager after graphical-session.target starts). Fixed
+    # 2026-11-14 — it had never succeeded: ExecStart is not run by a shell (the
+    # old `&&` chain only ever ran the first ssh-add), and the unit's minimal
+    # service PATH could not resolve the bare SSH_ASKPASS=ksshaskpass, so no
+    # passphrase ever came from KWallet. Also replaces the old ~/Mega
+    # 1_addssh.sh / 0_ksshaskpass.sh autostart scripts.
     systemd.user.services.ssh-key-pollen = {
         description = "Load SSH keys into agent via KWallet";
         wantedBy = [ "graphical-session.target" ];
         partOf = [ "graphical-session.target" ];
+        after = [ "graphical-session.target" ];
+
+        environment = {
+            SSH_ASKPASS = "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
+            SSH_ASKPASS_REQUIRE = "prefer";
+        };
+
+        script = ''
+            failed=0
+            for key in \
+                id_ed25519_2026_jasondmoss \
+                id_ed25519_2026_originoutside \
+                id_ed25519_2026_bitbucket \
+                id_ed25519_2026_gitlab \
+                id_development_cyan \
+                id_development_global \
+                id_rsa
+            do
+                ${pkgs.openssh}/bin/ssh-add "$HOME/.ssh/$key" < /dev/null || failed=1
+            done
+            exit $failed
+        '';
 
         serviceConfig = {
-            ExecStart = lib.concatStringsSep " && " [
-                "${pkgs.bash}/bin/bash -c '${pkgs.openssh}/bin/ssh-add %h/.ssh/id_ed25519_2026_jasondmoss'"
-                "${pkgs.bash}/bin/bash -c '${pkgs.openssh}/bin/ssh-add %h/.ssh/id_ed25519_2026_originoutside'"
-                "${pkgs.bash}/bin/bash -c '${pkgs.openssh}/bin/ssh-add %h/.ssh/id_ed25519_2026_bitbucket'"
-                "${pkgs.bash}/bin/bash -c '${pkgs.openssh}/bin/ssh-add %h/.ssh/id_ed25519_2026_gitlab < /dev/null'"
-            ];
             Type = "oneshot";
-            RemainAfterExit = "yes";
+            RemainAfterExit = true;
+            Restart = "on-failure";
+            RestartSec = "10s";
+        };
+
+        unitConfig = {
+            StartLimitIntervalSec = "5min";
+            StartLimitBurst = 10;
         };
     };
 }

@@ -32,7 +32,6 @@ in {
             system-features = [
                 "benchmark"
                 "big-parallel"
-                "kvm"
                 "nixos-test"
                 "gccarch-znver2"
             ];

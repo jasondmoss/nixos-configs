@@ -126,7 +126,7 @@ is intentional: Docker relies on iptables for NAT.
 
 | File                  | Purpose                                                            |
 |-----------------------|--------------------------------------------------------------------|
-| `base.nix`            | dbus, devmon, fstrim, gnome-keyring, irqbalance, pcscd, fwupd, journald cap (1 GiB), sysstat, earlyoom, plocate (hourly); user units: megasync autostart, DrKonqi coredump launcher off |
+| `base.nix`            | dbus, devmon, fstrim, gnome-keyring, irqbalance, pcscd, fwupd, journald cap (1 GiB), sysstat, earlyoom, plocate (hourly); user units: megasync autostart, DrKonqi coredump handling off |
 | `qbittorrent-vpn.nix` | qBittorrent confined to a WireGuard/ProtonVPN network namespace — a kill switch by construction |
 | `pcp.nix`             | Performance Co-Pilot (pmcd/pmlogger/pmie/pmproxy) — always-on metrics with replayable archives, loopback only |
 | `pcp-grafana.nix`     | Grafana + Redis/pmseries front-end for PCP, loopback only             |
