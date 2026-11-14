@@ -16,11 +16,7 @@
                 "gfx.webrender.all" = true;
                 "layers.acceleration.force-enabled" = true;
                 "widget.dmabuf.force-enabled" = true;
-                "browser.ml.chat.enabled" = true;
-                "browser.ml.chat.provider" = "http://localhost:8180";
-                "browser.ml.chat.hideLocalhost" = false;
-                "browser.smartwindow.customEndpoint" = "http://127.0.0.1:11434/v1";
-                "browser.smartwindow.model" = "qwen3.5:4b";
+                "browser.ml.chat.enabled" = false;
             };
         };
     };

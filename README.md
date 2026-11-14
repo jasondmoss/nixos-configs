@@ -59,7 +59,7 @@ sets both `services.pipewire` and `security.rtkit`).
 | `hardware/` | The physical machine: kernel and boot, mounts, GPU, peripherals, power |
 | `desktop/`  | The graphical session: Plasma (+ an opt-in Hyprland session), fonts, audio, browsers, colour palette |
 | `system/`   | OS plumbing, one file per NixOS namespace (nixpkgs, networking, security, users, environment, programs, packages) plus git/SSH identity routing |
-| `services/` | Self-contained service stacks, each removable as a unit: base daemons, qBittorrent VPN, PCP + Grafana, Docker, local AI |
+| `services/` | Self-contained service stacks, each removable as a unit: base daemons, qBittorrent VPN, PCP + Grafana, Docker |
 | `packages/` | Custom package derivations and package-level modules (see below) — always here |
 | `workshop/` | In-development KDE projects, built by `packages/stage-manager` and `packages/system-panel` |
 
@@ -89,7 +89,7 @@ sets both `services.pipewire` and `security.rtkit`).
 | `plasma.nix`   | KDE Plasma 6, SDDM (Wayland greeter, local *Perseverance* theme; Ly kept commented out), XDG portals, Wayland/Qt session vars |
 | `fonts.nix`    | Font packages and fontconfig rules                                        |
 | `audio.nix`    | PipeWire (ALSA + 32-bit, PulseAudio, JACK) and rtkit                      |
-| `browsers.nix` | `programs.firefox` (nixpkgs Firefox with VAAPI + local-AI sidebar prefs), Firefox Nightly as the MIME default and `DEFAULT_BROWSER`, 1Password browser allowlist, Chrome external-extension directory (Unclutter) |
+| `browsers.nix` | `programs.firefox` (nixpkgs Firefox with VAAPI prefs, AI chatbot sidebar off), Firefox Nightly as the MIME default and `DEFAULT_BROWSER`, 1Password browser allowlist, Chrome external-extension directory (Unclutter) |
 | `hyprland.nix` | Opt-in second session next to Plasma: Hyprland under UWSM ("Hyprland (uwsm-managed)" in SDDM), Waybar/rofi/mako/hyprpaper/hyprlock/nwg-dock, the Hyprland portal config and the UWSM env that lets KDE apps (Dolphin etc.) work outside Plasma. Dotfiles live outside this repo |
 | `theme.nix`    | 16-color terminal palette (plain Nix value, imported by `configuration.nix`) |
 
@@ -131,34 +131,12 @@ is intentional: Docker relies on iptables for NAT.
 | `pcp.nix`             | Performance Co-Pilot (pmcd/pmlogger/pmie/pmproxy) — always-on metrics with replayable archives, loopback only |
 | `pcp-grafana.nix`     | Grafana + Redis/pmseries front-end for PCP, loopback only             |
 | `docker.nix`          | Docker (overlay2, unpinned `pkgs.docker`, weekly auto-prune), docker-compose, docker-buildx, and `docker-raw-rules-gc` (deletes the raw-table DROP rules Docker leaks when a network is removed). DDEV handles PHP/Drupal dev work |
-| `ai.nix`              | CUDA toolkit, Ollama, Open WebUI, ComfyUI, KRunner → Ollama, voice pipeline, AI CLIs, CUDA binary caches, `HF_HOME` |
-| `ai-home.nix`         | Sandboxed read-only home-directory access + full-text/semantic search for local models (`services.ai-home.*`) |
 
 **qBittorrent VPN kill switch:** qBittorrent runs inside a dedicated network namespace
 (`qbit`) whose only route out is a WireGuard tunnel (config at `/etc/wireguard/qbit.conf`,
 root-only, never in the nix store or git). If the tunnel drops, qBittorrent simply loses
 network. The passwordless sudo rule for entering the namespace requires `runuser -u me`, so
 it cannot yield a root shell.
-
-#### Local AI (`ai.nix`, `ai-home.nix`)
-
-Everything below is **local and loopback-only**. Nothing about the user or the home
-directory is sent to any cloud model.
-
-| Component       | Details                                                                     |
-|-----------------|-----------------------------------------------------------------------------|
-| Ollama          | CUDA, models on the /home NVMe, `127.0.0.1:11434`. Flash attention, q8 K/V cache, 32k context, cloud features disabled (`OLLAMA_NO_CLOUD`) |
-| Open WebUI      | Private chat/RAG UI over Ollama, `127.0.0.1:8180`, no login, RAG embeddings via Ollama, image generation via ComfyUI, telemetry/update checks off |
-| ComfyUI         | Image generation/editing (CUDA torch), `127.0.0.1:8188`, models bind-mounted read-only from `~/Repository/ai/comfyui/models` |
-| Voice           | `whisper-cpp-vulkan` (GPU transcription) + `piper-tts`, driven by the `talk` script |
-| Agents          | `opencode` (local models via Ollama), `goose-cli`; `claude-code` for cloud-assisted coding |
-| **ai-home**     | Sandboxed, read-only view of `/home/me` for local models via MCP (`127.0.0.1:8300`): filesystem tools, Recoll full-text search, meaning-based search (Ollama `qwen3-embedding:0.6b-8k` embeddings of the document folders in an in-process sqlite-vec store), git, document-to-Markdown. Hidden paths are enforced by systemd `InaccessiblePaths` and never indexed; the units have no network egress. Edit `services.ai-home.hiddenPaths` to change what the AI can see |
-| **krunner-ollama** | KRunner runner: `ai <question>` (or `? <question>`) shows the first line of the local model's answer as a match; Enter copies the full answer to the clipboard, the action button opens the question in Open WebUI (`/?q=…`). `services.krunner-ollama.*` — module + package in `packages/krunner-ollama`; hardened systemd user unit whose only network client is pinned to the loopback Ollama URL |
-
-Firefox's AI chatbot sidebar is pointed at the local Open WebUI in both installed Firefoxes
-(`programs.firefox` in `desktop/browsers.nix` and the Nightly wrapper), and Smart Window's
-*Custom* assistant at Ollama's OpenAI-compatible API (`http://127.0.0.1:11434/v1`, model
-`qwen3.5:4b`).
 
 ---
 
@@ -171,8 +149,8 @@ Packages are organized into named category lists, flattened into
 |-----------------------|-------------------------------------------------------------------|
 | `nixos`               | fastfetch, nixos-icons, nixos-rebuild-ng, nix-prefetch-github, nh |
 | `system-tools`        | btrfs-progs, htop, lsd, inxi, pciutils, smartmontools, dysk, etc. |
-| `graphics-multimedia` | FFmpeg, mpv, Inkscape, Audacity, Shotcut, GStreamer plugins, MKVToolNix |
-| `development`         | GCC, Rust/Cargo, Node.js, CMake, Qt/KDE dev tools, PhpStorm, Valgrind, PHP QA tools, Android tools |
+| `graphics-multimedia` | FFmpeg, mpv, Inkscape, Audacity, Shotcut, GStreamer plugins, MKVToolNix, Real-ESRGAN (Vulkan upscaler) |
+| `development`         | GCC, Rust/Cargo, Node.js, CMake, Qt/KDE dev tools, PhpStorm, Valgrind, PHP QA tools, Android tools, claude-monitor |
 | `kde-plasma-core`     | Plasma workspace, Baloo, KWallet, Breeze, NetworkManager-Qt, layer-shell-qt, etc. |
 | `kde-applications`    | Dolphin, Kate, Kdenlive, Okular, Ark, KDevelop, etc.              |
 | `kde-pim`             | Akonadi stack (calendar, contacts, search, MIME)                  |
@@ -194,17 +172,14 @@ gnome-tour, gnome-weather.
 Local derivations for software not in nixpkgs or requiring customization. Most pin their
 version + checksum in a `manifest.json` refreshed by a sibling `update.sh`.
 
-**`customPkgs` attrset** (via `pkgs.callPackage ../packages/<name>` in `system/packages.nix`): `antigravity-cli`,
+**`customPkgs` attrset** (via `pkgs.callPackage ../packages/<name>` in `system/packages.nix`): `claude-code`,
 `claude-desktop`, `gh-clone`, `jopdf`, `kde-darkly`, `kde-klassy`, `kde-vinyl`, `krema`,
 `nyxt-custom`, `proton-drive-cli`, `sddm-perseverance`, `stage-manager`, `standardnotes`,
 `strawberry-master`, `system-panel`, `vivaldi-snapshot`, `wavebox-beta`.
 
 **Module imports** (from `system/packages.nix` unless noted): `gimp` (+ `gimp-devel`),
 `claude-code-browser`, `gps-signature`, `vaapi` (from `hardware/gpu.nix`), `pcp` (via `services/pcp.nix`), `grafana-pcp`
-(via `services/pcp-grafana.nix`), `ai-home` (full-text and semantic search server scripts, via `services/ai-home.nix`),
-`krunner-ollama` (KRunner runner module + package, via `services/ai.nix`).
-
-**Inline `callPackage`:** `claude-code` (`services/ai.nix`).
+(via `services/pcp-grafana.nix`).
 
 **Overlay-based:** `firefox-nightly` (nixpkgs-mozilla + wrapper in `../overlays/default.nix`),
 `unclutter` (browser extension built from source with bun/WXT; shipped to Firefox Nightly as a

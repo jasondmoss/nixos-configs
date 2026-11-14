@@ -9,7 +9,7 @@
 # from configuration.nix to drop the experiment entirely.
 #
 # UWSM runs the session: it starts graphical-session.target (ssh-key-pollen,
-# megasync, protonvpn, krunner-ollama, gps-signature) and
+# megasync, protonvpn, gps-signature) and
 # xdg-desktop-autostart.target (KDE Connect, pam_kwallet_init, gnome-keyring,
 # ~/.config/autostart), which Hyprland 0.56 does not do on its own.
 #

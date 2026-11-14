@@ -36,18 +36,6 @@
 
             (import ../../overlays/default.nix)
 
-            # opencode 2.2.5 — nixpkgs shipped a stale node_modules outputHash
-            # (nixpkgs#582675 carries the correct one). Guarded on the stale hash,
-            # so it goes inert once the channel moves on; drop it then.
-            (final: prev: {
-                opencode = prev.opencode.overrideAttrs (old:
-                    prev.lib.optionalAttrs (old.node_modules.outputHash == "sha256-xfOVcw1+waLVNhFDwzOtzxrUSQEogvn88YomydOlhwc=") {
-                        node_modules = old.node_modules.overrideAttrs {
-                            outputHash = "sha256-prx9dX7kUvs/E3zopkaPk5LXh3xJAy5sZeum/W8L7cA=";
-                        };
-                    });
-            })
-
             # rar 7.23 is a prebuilt binary; autoPatchelfHook with patchelf 0.19.2
             # leaves rar/unrar segfaulting on every run (same regression as
             # nvidia-smi, nixpkgs#576412). Ark's clirar plugin ignores the crash
@@ -73,8 +61,7 @@
             # Rust system libs (2026-11-09) — cargoSetupHook now forces the
             # system aws-lc, openssl, zlib, sqlite, zstd, libgit2, … into every
             # Rust build (26.11 release notes), and packages nixpkgs has not
-            # adapted yet panic in their -sys build scripts (tectonic: aws-lc;
-            # goose-cli, primp: aws-lc + zstd; chromadb: sqlite).
+            # adapted yet panic in their -sys build scripts (tectonic: aws-lc).
             # dontCargoUseSystemLibs is the documented opt-out and restores the
             # vendored build Hydra did before. Not self-retiring: drop an entry
             # once its package shows up as "will be fetched" in
@@ -84,49 +71,6 @@
                 vendored = _: { dontCargoUseSystemLibs = true; };
             in {
                 tectonic-unwrapped = prev.tectonic-unwrapped.overrideAttrs vendored;
-                goose-cli = prev.goose-cli.overrideAttrs vendored;
-
-                pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-                    (pyfinal: pyprev: {
-                        primp = pyprev.primp.overridePythonAttrs vendored;       # → ddgs → open-webui
-                        chromadb = pyprev.chromadb.overridePythonAttrs vendored; # → open-webui
-                    })
-                ];
-            })
-
-            # Python test-suite breakage (2026-11-09); each entry drops only the
-            # failing tests, drop the entry once nixpkgs builds the package.
-            # speechrecognition 3.17.0 — openai 3.14 sends through
-            # the httpx2 fork, which respx (mocks httpx only) cannot intercept,
-            # so test_openai.py hits the real API and fails on the sandbox's
-            # missing DNS. Chain: speechrecognition → markitdown →
-            # markitdown-mcp → ai-home-mcp. Drop once nixpkgs skips it itself.
-            (final: prev: {
-                pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-                    (pyfinal: pyprev: {
-                        speechrecognition = pyprev.speechrecognition.overridePythonAttrs (old: {
-                            disabledTestPaths = (old.disabledTestPaths or [ ])
-                                ++ [ "tests/recognizers/whisper_api/test_openai.py" ];
-                        });
-
-                        # geopandas 1.1.4 → pdfplumber/markitdown → markitdown-mcp.
-                        # nixpkgs' shapely 2.2.0 reports __version__ '0+unknown',
-                        # so pyogrio's `Version(shapely.__version__) < 2.0` check
-                        # rejects the mask= tests; the geoarrow point round-trips
-                        # trip pyarrow 24 (ArrowInvalid column length). Test-only:
-                        # fixing shapely itself would rebuild scikit-learn,
-                        # torchaudio, langchain, … locally.
-                        geopandas = pyprev.geopandas.overridePythonAttrs (old: {
-                            disabledTests = (old.disabledTests or [ ]) ++ [
-                                "test_read_file_mask"
-                                "test_read_file_crs_warning_messages"
-                                "test_read_file_multi_layer_with_layer_arg_no_warning"
-                                "test_geoarrow_roundtrip"
-                                "test_geoarrow_missing"
-                            ];
-                        });
-                    })
-                ];
             })
 
             # Disable Vulkan for Chrome — incompatible with

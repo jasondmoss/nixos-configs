@@ -59,22 +59,8 @@ let
         "layers.acceleration.force-enabled" = true;
         "widget.dmabuf.force-enabled" = true;
 
-        # Firefox's AI chatbot sidebar → the local Open WebUI (ai.nix), not a
-        # cloud provider. Selected-text prompts arrive as ?q=, which Open WebUI
-        # accepts; nothing leaves the machine.
-        "browser.ml.chat.enabled" = true;
-        "browser.ml.chat.provider" = "http://localhost:8180";
-        "browser.ml.chat.hideLocalhost" = false;
-
-        # Smart Window's "Custom: Use your own LLM" assistant → Ollama's
-        # OpenAI-compatible API (Firefox appends /chat/completions), not Open
-        # WebUI: its frontend answers POST with 405 and its own API
-        # (/api/chat/completions) wants a bearer token. Chat model only:
-        # Ollama refuses embedding models ("does not support chat").
-        # Status "default": a value saved on the Smart Window settings page
-        # is a user pref and shadows this one until changed there.
-        "browser.smartwindow.customEndpoint" = "http://127.0.0.1:11434/v1";
-        "browser.smartwindow.model" = "qwen3.5:4b";
+        # Firefox's AI chatbot sidebar: off (no local LLM stack since 2026-11-14).
+        "browser.ml.chat.enabled" = false;
     };
 
     firefoxStablePolicies = {

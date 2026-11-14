@@ -101,8 +101,6 @@ in {
         ./services/pcp.nix
         ./services/pcp-grafana.nix
         ./services/docker.nix
-        ./services/ai.nix
-        ./services/ai-home.nix
     ];
 }
 
