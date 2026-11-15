@@ -46,6 +46,31 @@ in {
         };
     };
 
+    # Tray apps started at login through XDG autostart, not as user units:
+    # NixOS gives its own units a minimal PATH, and Claude Desktop passes its
+    # environment on to every session it starts. Exec is a bare command name,
+    # so these survive package updates. (Claude's own "run on startup" writes
+    # ~/.config/autostart/claude-desktop.desktop with an absolute store path;
+    # that file shadows this one and dies at the next garbage collection, so
+    # leave the in-app switch alone or delete the file it creates.)
+    environment.etc = {
+        "xdg/autostart/claude-desktop.desktop".text = ''
+            [Desktop Entry]
+            Type=Application
+            Name=Claude
+            Icon=claude-desktop
+            Exec=claude-desktop --startup
+        '';
+
+        "xdg/autostart/1password.desktop".text = ''
+            [Desktop Entry]
+            Type=Application
+            Name=1Password
+            Icon=1password
+            Exec=1password --silent
+        '';
+    };
+
     systemd = {
         user.services = {
             megasync = {

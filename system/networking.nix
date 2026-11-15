@@ -39,6 +39,56 @@ iptables -A nixos-fw -p tcp --dport 22 -s 192.168.100.0/24 -j nixos-fw-accept
             wifi.powersave = false;
             plugins = with pkgs; [ networkmanager-openvpn ];
 
+            # One uplink at a time. With the cable in, Wi-Fi used to join the
+            # same LAN as a second interface. Now Wi-Fi is disconnected while
+            # a wired link is up and reconnects when the last one goes down.
+            # Nothing is persistent: the radio stays on, and a boot without
+            # the cable autoconnects Wi-Fi as before. To use both for a
+            # while: `nmcli device connect wlp5s0` after unplugging, or stop
+            # NetworkManager-dispatcher.service.
+            dispatcherScripts = [{
+                type = "basic";
+                source = pkgs.writeShellScript "wifi-yields-to-ethernet" ''
+                    iface="''${1:-}"
+                    action="''${2:-}"
+                    nmcli="''${NMCLI:-${pkgs.networkmanager}/bin/nmcli}"
+
+                    type_of() { "$nmcli" -g GENERAL.TYPE device show "$1" 2>/dev/null; }
+                    wired_up() {
+                        "$nmcli" -t -f TYPE,STATE device \
+                            | ${pkgs.gnugrep}/bin/grep -qx 'ethernet:connected'
+                    }
+                    wifi_devices() {
+                        "$nmcli" -t -f DEVICE,TYPE device \
+                            | ${pkgs.gnused}/bin/sed -n 's/:wifi$//p'
+                    }
+
+                    case "$action" in
+                        up)
+                            # A wired link came up, or Wi-Fi connected while
+                            # one was already up.
+                            case "$(type_of "$iface")" in
+                                ethernet|wifi) ;;
+                                *) exit 0 ;;
+                            esac
+                            if wired_up; then
+                                for dev in $(wifi_devices); do
+                                    "$nmcli" device disconnect "$dev" || true
+                                done
+                            fi
+                            ;;
+                        down)
+                            [ "$(type_of "$iface")" = ethernet ] || exit 0
+                            if ! wired_up; then
+                                for dev in $(wifi_devices); do
+                                    "$nmcli" device connect "$dev" || true
+                                done
+                            fi
+                            ;;
+                    esac
+                '';
+            }];
+
             # The generated keyfile is passed through envsubst with the
             # variables from environmentFiles, so every `$VAR` below is filled
             # in at activation and never appears in this (public) repo. The

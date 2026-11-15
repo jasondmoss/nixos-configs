@@ -11,8 +11,10 @@ let
         gh-clone       = pkgs.callPackage ../packages/gh-clone {};
         jopdf          = pkgs.callPackage ../packages/jopdf {};
         kde-darkly     = pkgs.callPackage ../packages/kde-darkly {};
+        # kde-klassy, kde-vinyl and proton-drive-cli are archived as tarballs
+        # in ../../archive/; unpack one into ../packages/ to use it again.
         #kde-klassy     = pkgs.callPackage ../packages/kde-klassy {};
-        kde-vinyl      = pkgs.callPackage ../packages/kde-vinyl {};
+        #kde-vinyl      = pkgs.callPackage ../packages/kde-vinyl {};
         krema          = pkgs.kdePackages.callPackage ../packages/krema {};
         #ladybird       = pkgs.callPackage ../packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ../packages/nyxt-custom { };
@@ -136,7 +138,6 @@ let
             # IDEs & Tools
             cppcheck
             phpstorm
-            phpunit
             sublime4-dev
 
             # PHP Quality Tools (global — wired into PhpStorm)

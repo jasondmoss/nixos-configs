@@ -103,7 +103,7 @@ backend, XDG portal delegation for KDE/GTK. No input-method framework (US layout
 | File              | Purpose                                                                |
 |-------------------|------------------------------------------------------------------------|
 | `nixpkgs.nix`     | Host platform, `allowUnfree`, overlays (Firefox Nightly, PhpStorm, Chrome Vulkan-disable + extensions dir, Steam `libgdiplus`) |
-| `networking.nix`  | iptables firewall for IPv4 and IPv6 (nothing open to the world; SSH from the LAN only), NetworkManager + OpenVPN, CoreDNS on loopback with DNS-over-TLS, OpenSSH (key-only, root disabled) |
+| `networking.nix`  | iptables firewall for IPv4 and IPv6 (nothing open to the world; SSH from the LAN only), NetworkManager + OpenVPN (a dispatcher hook keeps Wi-Fi off the LAN while Ethernet is up), CoreDNS on loopback with DNS-over-TLS, OpenSSH (key-only, root disabled) |
 | `security.nix`    | PAM (KWallet), polkit, sudo (`execWheelOnly`), `protectKernelImage`, Lando CA, fail2ban |
 | `users.nix`       | User account and group memberships                                      |
 | `environment.nix` | Session/env vars: XDG base dirs, `Qt6_DIR`, telemetry opt-outs, Electron/Ozone Wayland, GStreamer plugin path |
@@ -126,7 +126,7 @@ is intentional: Docker relies on iptables for NAT.
 
 | File                  | Purpose                                                            |
 |-----------------------|--------------------------------------------------------------------|
-| `base.nix`            | dbus, fstrim, irqbalance, fwupd, journald cap (1 GiB), earlyoom, plocate (daily, Docker's data pruned); user units: megasync autostart, DrKonqi coredump handling off |
+| `base.nix`            | dbus, fstrim, irqbalance, fwupd, journald cap (1 GiB), earlyoom, plocate (daily, Docker's data pruned); XDG autostart entries for Claude Desktop and 1Password; user units: megasync autostart, DrKonqi coredump handling off |
 | `qbittorrent-vpn.nix` | qBittorrent confined to a WireGuard/ProtonVPN network namespace — a kill switch by construction |
 | `pcp.nix`             | Performance Co-Pilot (pmcd/pmlogger/pmie/pmproxy) — always-on metrics with replayable archives, loopback only |
 | `pcp-grafana.nix`     | Grafana + Redis/pmseries front-end for PCP, loopback only             |
@@ -173,10 +173,9 @@ Local derivations for software not in nixpkgs or requiring customization. Most p
 version + checksum in a `manifest.json` refreshed by a sibling `update.sh`.
 
 **`customPkgs` attrset** (via `pkgs.callPackage ../packages/<name>` in `system/packages.nix`): `claude-code`,
-`claude-desktop`, `jopdf`, `kde-darkly`, `krema`,
+`claude-desktop`, `gh-clone`, `jopdf`, `kde-darkly`, `krema`,
 `nyxt-custom`, `sddm-perseverance`, `stage-manager`, `standardnotes`,
-`strawberry-master`, `system-panel`, `vivaldi-snapshot`, `wavebox-beta`. Present in `packages/`
-but not installed: `gh-clone`, `kde-klassy`, `kde-vinyl`, `proton-drive-cli`.
+`strawberry-master`, `system-panel`, `vivaldi-snapshot`, `wavebox-beta`.
 
 **Module imports** (from `system/packages.nix` unless noted): `gimp` (+ `gimp-devel`),
 `claude-code-browser`, `gps-signature`, `vaapi` (from `hardware/gpu.nix`), `pcp` (via `services/pcp.nix`), `grafana-pcp`
