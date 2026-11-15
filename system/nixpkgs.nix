@@ -16,6 +16,8 @@
             allowBroken = false;
             allowUnfree = true;
 
+            # Steam itself is not installed any more; this still shapes the
+            # steam-run FHS environment that packages/clate launches in.
             packageOverrides = pkgs: {
                 steam = pkgs.steam.override {
                     extraPkgs = pkgs: with pkgs; [
@@ -56,21 +58,6 @@
                             })
                         ] ++ old.nativeBuildInputs;
                     });
-            })
-
-            # Rust system libs (2026-11-09) — cargoSetupHook now forces the
-            # system aws-lc, openssl, zlib, sqlite, zstd, libgit2, … into every
-            # Rust build (26.11 release notes), and packages nixpkgs has not
-            # adapted yet panic in their -sys build scripts (tectonic: aws-lc).
-            # dontCargoUseSystemLibs is the documented opt-out and restores the
-            # vendored build Hydra did before. Not self-retiring: drop an entry
-            # once its package shows up as "will be fetched" in
-            # `nix-build '<nixpkgs/nixos>' -A config.system.build.toplevel --dry-run`
-            # without it.
-            (final: prev: let
-                vendored = _: { dontCargoUseSystemLibs = true; };
-            in {
-                tectonic-unwrapped = prev.tectonic-unwrapped.overrideAttrs vendored;
             })
 
             # Disable Vulkan for Chrome — incompatible with

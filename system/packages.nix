@@ -11,12 +11,11 @@ let
         gh-clone       = pkgs.callPackage ../packages/gh-clone {};
         jopdf          = pkgs.callPackage ../packages/jopdf {};
         kde-darkly     = pkgs.callPackage ../packages/kde-darkly {};
-        kde-klassy     = pkgs.callPackage ../packages/kde-klassy {};
+        #kde-klassy     = pkgs.callPackage ../packages/kde-klassy {};
         kde-vinyl      = pkgs.callPackage ../packages/kde-vinyl {};
         krema          = pkgs.kdePackages.callPackage ../packages/krema {};
         #ladybird       = pkgs.callPackage ../packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ../packages/nyxt-custom { };
-        proton-drive   = pkgs.callPackage ../packages/proton-drive-cli {};
         # Local SDDM greeter theme; selected by name in ../desktop/plasma.nix.
         sddm-persev    = pkgs.callPackage ../packages/sddm-perseverance {};
         stage-manager  = pkgs.callPackage ../packages/stage-manager {};
@@ -44,9 +43,7 @@ let
         nixos = with pkgs; [
             fastfetch
             nixos-icons
-            nixos-rebuild-ng
             nix-prefetch-github
-            nh
         ];
 
         system-tools = with pkgs; [
@@ -81,7 +78,6 @@ let
 
             audacity_3
             #audacity
-            cairo
             cuetools
             easytag
             ffmpeg-full
@@ -89,21 +85,20 @@ let
             flacon
             imagemagick
             inkscape
-            mpv-unwrapped
-            mpvScripts.autosub
-            mpvScripts.sponsorblock
-            mpvScripts.uosc
+            # Scripts only load when they are wrapped in; listed beside
+            # mpv-unwrapped (as until 2026-11-15) they were never used.
+            # mpvScripts.autosub is left out: its subliminal -> knowit ->
+            # pymediainfo chain fails its tests against libmediainfo 26.10
+            # (channel d5cc683) and broke the whole rebuild.
+            (mpv.override { scripts = with mpvScripts; [ sponsorblock uosc ]; })
             nomacs
             nvtopPackages.full
             pavucontrol
             realesrgan-ncnn-vulkan         # Vulkan upscaler (`enlarge` shell function)
             shotcut
-            taglib-sharp
-            taglib_extras
             vorbis-tools
             vulkan-tools
             wayland-utils
-            xnviewmp
 
             # MKVToolNix
             mkvtoolnix
@@ -137,15 +132,11 @@ let
 
             # GNOME/GTK Development
             glib-networking
-            gtk4
-            libadwaita
 
             # IDEs & Tools
-            claude-monitor                 # Claude Code usage monitor
             cppcheck
             phpstorm
             phpunit
-            pre-commit
             sublime4-dev
 
             # PHP Quality Tools (global — wired into PhpStorm)
@@ -184,9 +175,7 @@ let
             # Theming & Assets
             breeze
             breeze-icons
-            kiconthemes
             ksvg
-            qtstyleplugin-kvantum
 
             # Qt 6 Base
             qtbase
@@ -202,38 +191,20 @@ let
             dolphin-plugins
             filelight
             ffmpegthumbs
-            isoimagewriter
             kate
             kcalc
             kdbusaddons
             kdegraphics-thumbnailers
-            kdenlive
             kdesdk-thumbnailers
-            kdevelop
-            kompare
-            krdc
             krdp
             ksshaskpass
             okular
             partitionmanager
         ];
 
-        kde-pim = with pkgs.kdePackages; [
-            akonadi
-            akonadi-calendar
-            akonadi-calendar-tools
-            akonadi-contacts
-            akonadi-import-wizard
-            akonadi-mime
-            akonadi-search
-            calendarsupport
-        ];
-
         gnome-stack = with pkgs; [
             adwaita-icon-theme
             gcolor3
-            gnome-tweaks
-            morewaita-icon-theme
             nautilus
         ];
 
@@ -241,14 +212,11 @@ let
             filezilla
             firefox-nightly
             google-chrome
-            megatools
             microsoft-edge
             mullvad-browser
-            openvpn
             proton-vpn
             tor-browser
             unclutter
-            wireguard-tools
         ];
 
         office = with pkgs; [
@@ -257,23 +225,20 @@ let
 
         utilities = with pkgs; [
             fuzzel
+            hyprpicker                     # `hp` colour picker (with fuzzel + wl-copy)
+            libnotify
             p7zip-rar
             pandoc
             python3Packages.weasyprint
-            quickemu
             rar
-            tectonic
             unrar
             unzip
             wezterm
+            wl-clipboard
         ];
 
         theming-compat = with pkgs; [
-            adwaita-qt6
             comixcursors
-            kdePackages.qt6ct
-            materia-kde-theme
-            qadwaitadecorations-qt6
         ];
 
         custom = (builtins.attrValues customPkgs);
@@ -287,8 +252,11 @@ in {
 
     # KDE exclude list.
     environment.plasma6.excludePackages = with pkgs.kdePackages; [
+        discover                   # no Flatpak/PackageKit backend on NixOS
         elisa
         itinerary
+        khelpcenter
+        plasma-browser-integration # no browser carries its extension
     ];
 
     # GNOME exclude list.

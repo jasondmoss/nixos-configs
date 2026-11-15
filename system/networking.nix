@@ -1,6 +1,13 @@
 { lib, pkgs, ... }: {
     networking = {
-        enableIPv6 = false;
+        # IPv6 stays on so that the firewall covers it. With enableIPv6 = false
+        # the NixOS firewall generates no ip6tables rules at all, yet IPv6 was
+        # live anyway: NetworkManager re-enables it per interface (the wired
+        # profile's ipv6.method is "auto") and the Proton VPN app brings up
+        # its own v6 addresses, so everything bound to [::] was unfiltered
+        # (found 2026-11-14). The rules below now apply to both families. SSH
+        # stays IPv4/LAN-only: its extraCommands rule is iptables-only.
+        enableIPv6 = true;
         useDHCP = lib.mkDefault true;
         nftables.enable = false;
 
@@ -14,8 +21,7 @@
 
             # Nothing is open to the world. SSH is admitted from the LAN only
             # (extraCommands below); KDE Connect's 1714–1764 TCP/UDP range is
-            # opened by programs.kdeconnect itself (programs.nix), Steam Remote
-            # Play by programs.steam.
+            # opened by programs.kdeconnect itself (programs.nix).
             allowedTCPPorts = [];
             allowedUDPPorts = [];
 
@@ -60,8 +66,7 @@ iptables -A nixos-fw -p tcp --dport 22 -s 192.168.100.0/24 -j nixos-fw-accept
                         psk = "$WIFI_PSK";
                     };
                     ipv4.method = "auto";
-                    # IPv6 is off system-wide (enableIPv6 = false); stop NM from
-                    # running a DHCPv6/RA client on the link anyway.
+                    # Wi-Fi stays IPv4-only; the wired link carries IPv6.
                     ipv6.method = "disabled";
                 };
             };

@@ -57,10 +57,13 @@ in {
             };
         };
 
+        # No "--all": it also deleted every image not used by a *running*
+        # container, so each weekly run made Lando/DDEV pull their images
+        # again. Stopped containers, unused networks, dangling images and
+        # build cache still go.
         autoPrune = {
             enable = true;
             dates = "weekly";
-            flags = [ "--all" ];
         };
     };
 

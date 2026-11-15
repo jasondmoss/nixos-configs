@@ -15,11 +15,10 @@ polkit.addRule(function(action, subject) {
             '';
         };
 
+        # No pam.sshAgentAuth: it let the one key in authorized_keys.d grant
+        # passwordless sudo to anything holding a forwarded agent, for an
+        # inbound SSH path that is not in use. sudo asks for the password.
         pam = {
-            sshAgentAuth = {
-                enable = true;
-            };
-
             services = {
                 login = {
                     enableKwallet = true;
@@ -47,10 +46,6 @@ polkit.addRule(function(action, subject) {
         sudo = {
             enable = true;
             execWheelOnly = true;
-            extraConfig = ''
-# Keep SSH_AUTH_SOCK so that pam_ssh_agent_auth.so can do its magic.
-Defaults env_keep+=SSH_AUTH_SOCK
-            '';
         };
     };
 

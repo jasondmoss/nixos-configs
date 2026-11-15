@@ -60,7 +60,6 @@
         ];
 
         kernelParams = [
-            "amd_iommu=on"
             "amd_pstate=active"
             "nvidia-drm.fbdev=1"
             "nvidia-drm.modeset=1"
@@ -95,10 +94,16 @@
             # zram swap (./filesystems.nix): no readahead of swap pages
             # (each is decompressed individually anyway).
             "vm.page-cluster" = 0;
+            # ...and prefer compressing idle anonymous pages over dropping
+            # page cache: swap is RAM-speed here, so the kernel docs suggest
+            # values above 100. It was 10, which nothing in this config set.
+            "vm.swappiness" = 150;
         };
 
         loader = {
             grub.enable = false;
+            # 1 s instead of the default 5; hold Space during boot for the menu.
+            timeout = 1;
 
             systemd-boot = {
                 enable = true;

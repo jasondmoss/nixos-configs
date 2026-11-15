@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, options, pkgs, ... }:
 
 let
     # Proton VPN only looks for a tray (org.kde.StatusNotifierWatcher, hosted
@@ -13,13 +13,13 @@ let
     '';
 in {
     services = {
+        # Dropped 2026-11-15, all idle: devmon (never mounted anything;
+        # Plasma's device notifier + udisks2 do that), gnome-keyring (ksecretd
+        # owns org.freedesktop.secrets under Plasma), pcscd (no smartcard
+        # reader), sysstat (PCP already records the same counters).
         dbus.enable = true;
-        devmon.enable = true;
         fstrim.enable = true;
-        gnome.gcr-ssh-agent.enable = false;
-        gnome.gnome-keyring.enable = true;
         irqbalance.enable = true;
-        pcscd.enable = true;
 
         # Firmware updates via LVFS (fwupdmgr refresh && fwupdmgr update):
         # Samsung NVMe, Logitech receivers and UEFI dbx all ship there.
@@ -27,7 +27,6 @@ in {
 
         # Cap the journal.
         journald.settings.Journal.SystemMaxUse = "1G";
-        sysstat.enable = true;
         systembus-notify.enable = lib.mkForce true;
 
         earlyoom = {
@@ -37,10 +36,13 @@ in {
             freeSwapThreshold = 10; # % of swap
         };
 
+        # Daily, and not into Docker's layers and volumes: the hourly run
+        # took up to 7 min, 5 GiB of reads and 2.3 GiB of RAM (2026-11-14).
         locate = {
             enable = true;
-            interval = "hourly";
+            interval = "daily";
             package = pkgs.plocate;
+            prunePaths = options.services.locate.prunePaths.default ++ [ "/var/lib/docker" ];
         };
     };
 

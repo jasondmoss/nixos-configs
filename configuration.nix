@@ -23,7 +23,7 @@ in {
         package = pkgs.nixVersions.latest;
 
         settings = {
-            trusted-users = [ "root" "me" "@wheel" ];
+            trusted-users = [ "root" ];
             allowed-users = [ "root" "me" "@wheel" ];
             experimental-features = [ "nix-command" ];
             auto-optimise-store = true;
@@ -83,7 +83,6 @@ in {
         ./desktop/fonts.nix
         ./desktop/audio.nix
         ./desktop/browsers.nix
-        ./desktop/hyprland.nix
 
         # System.
         ./system/networking.nix

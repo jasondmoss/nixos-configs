@@ -57,7 +57,7 @@ sets both `services.pipewire` and `security.rtkit`).
 | Directory   | Holds                                                                  |
 |-------------|------------------------------------------------------------------------|
 | `hardware/` | The physical machine: kernel and boot, mounts, GPU, peripherals, power |
-| `desktop/`  | The graphical session: Plasma (+ an opt-in Hyprland session), fonts, audio, browsers, colour palette |
+| `desktop/`  | The graphical session: Plasma, fonts, audio, browsers, colour palette |
 | `system/`   | OS plumbing, one file per NixOS namespace (nixpkgs, networking, security, users, environment, programs, packages) plus git/SSH identity routing |
 | `services/` | Self-contained service stacks, each removable as a unit: base daemons, qBittorrent VPN, PCP + Grafana, Docker |
 | `packages/` | Custom package derivations and package-level modules (see below) — always here |
@@ -73,7 +73,7 @@ sets both `services.pipewire` and `security.rtkit`).
 | `boot.nix`        | xanmod kernel, systemd initrd (NVIDIA modules early), kernel params, modprobe options, blacklist, sysctl hardening, systemd-boot |
 | `filesystems.nix` | Mounts (ext4 root, Btrfs `/home` + `~/Repository` with zstd, media drives), 16 GiB swapfile, zram, monthly Btrfs scrub |
 | `gpu.nix`         | NVIDIA **open** kernel module (bleeding-edge driver), VAAPI, DRM modesetting, `<nixos-hardware>` blackwell profile |
-| `peripherals.nix` | Bluetooth, QMK keyboard firmware, printing, SMART monitoring, udev  |
+| `peripherals.nix` | Bluetooth, QMK keyboard firmware, SMART monitoring, udev            |
 | `power.nix`       | AMD microcode, `amd_pstate=active`, static `performance` governor (TLP/power-profiles-daemon disabled) |
 
 **Kernel params:** `amd_iommu=on`, `amd_pstate=active`, `nvidia-drm.modeset=1`, `nvidia-drm.fbdev=1`, `pcie_aspm=off`. nouveau and `i2c-nvidia_gpu` are blacklisted.
@@ -88,9 +88,9 @@ sets both `services.pipewire` and `security.rtkit`).
 |----------------|---------------------------------------------------------------------------|
 | `plasma.nix`   | KDE Plasma 6, SDDM (Wayland greeter, local *Perseverance* theme; Ly kept commented out), XDG portals, Wayland/Qt session vars |
 | `fonts.nix`    | Font packages and fontconfig rules                                        |
-| `audio.nix`    | PipeWire (ALSA + 32-bit, PulseAudio, JACK) and rtkit                      |
+| `audio.nix`    | PipeWire (ALSA, PulseAudio, JACK) and rtkit                      |
 | `browsers.nix` | `programs.firefox` (nixpkgs Firefox with VAAPI prefs, AI chatbot sidebar off), Firefox Nightly as the MIME default and `DEFAULT_BROWSER`, 1Password browser allowlist, Chrome external-extension directory (Unclutter) |
-| `hyprland.nix` | Opt-in second session next to Plasma: Hyprland under UWSM ("Hyprland (uwsm-managed)" in SDDM), Waybar/rofi/mako/hyprpaper/hyprlock/nwg-dock, the Hyprland portal config and the UWSM env that lets KDE apps (Dolphin etc.) work outside Plasma. Dotfiles live outside this repo |
+| `hyprland.nix` | **Not imported** (commented out in `configuration.nix`). Opt-in second session next to Plasma: Hyprland under UWSM ("Hyprland (uwsm-managed)" in SDDM), Waybar/rofi/mako/hyprpaper/hyprlock/nwg-dock, the Hyprland portal config and the UWSM env that lets KDE apps (Dolphin etc.) work outside Plasma. Dotfiles live outside this repo |
 | `theme.nix`    | 16-color terminal palette (plain Nix value, imported by `configuration.nix`) |
 
 **Plasma 6** is configured Qt 6 only (`enableQt5Integration = false`), RHI rendering
@@ -103,18 +103,18 @@ backend, XDG portal delegation for KDE/GTK. No input-method framework (US layout
 | File              | Purpose                                                                |
 |-------------------|------------------------------------------------------------------------|
 | `nixpkgs.nix`     | Host platform, `allowUnfree`, overlays (Firefox Nightly, PhpStorm, Chrome Vulkan-disable + extensions dir, Steam `libgdiplus`) |
-| `networking.nix`  | iptables firewall (nothing open to the world; SSH from the LAN only), NetworkManager + OpenVPN, CoreDNS on loopback with DNS-over-TLS, OpenSSH (key-only, root disabled) |
-| `security.nix`    | PAM (KWallet, ssh-agent auth), polkit, sudo (`execWheelOnly`), `protectKernelImage`, Lando CA, fail2ban |
+| `networking.nix`  | iptables firewall for IPv4 and IPv6 (nothing open to the world; SSH from the LAN only), NetworkManager + OpenVPN, CoreDNS on loopback with DNS-over-TLS, OpenSSH (key-only, root disabled) |
+| `security.nix`    | PAM (KWallet), polkit, sudo (`execWheelOnly`), `protectKernelImage`, Lando CA, fail2ban |
 | `users.nix`       | User account and group memberships                                      |
 | `environment.nix` | Session/env vars: XDG base dirs, `Qt6_DIR`, telemetry opt-outs, Electron/Ozone Wayland, GStreamer plugin path |
-| `programs.nix`    | Program toggles: bash completion, direnv, gamemode, KDE Connect, mtr, nix-ld, xwayland, Steam, GnuPG agent, neovim, 1Password, nix-index + weekly prebuilt-database fetch |
+| `programs.nix`    | Program toggles: bash completion, direnv, KDE Connect, mtr, nix-ld, xwayland, GnuPG agent, neovim, 1Password, nix-index + weekly prebuilt-database fetch |
 | `development.nix` | Source-control identity routing: git `includeIf` per repository tree → `/etc/gitconfig.*`, one SSH key per host alias, `ssh-key-pollen` loads them at login |
 | `packages.nix`    | Central package manifest organized by category (see below), `customPkgs` wiring, KDE/GNOME exclude lists, `systemPython` (exposed at `/etc/jetbrains/python`) |
 
 **Networking:** CoreDNS on `127.0.0.1` is the system resolver, forwarding over **DNS-over-TLS**
 to Cloudflare. A `local` zone resolves `*.local` to `127.0.0.1`. The firewall opens nothing
-globally: SSH (22) is admitted from the LAN subnet only, KDE Connect (1714–1764) and Steam
-Remote Play open their own ports through their program modules. `nftables.enable = false`
+globally: SSH (22) is admitted from the LAN subnet only, KDE Connect (1714–1764) opens
+its own ports through its program module. IPv6 is enabled so that the same rules filter it. `nftables.enable = false`
 is intentional: Docker relies on iptables for NAT.
 
 **Nix store:** auto-optimise enabled, GC runs weekly (deletes generations older than
@@ -126,11 +126,11 @@ is intentional: Docker relies on iptables for NAT.
 
 | File                  | Purpose                                                            |
 |-----------------------|--------------------------------------------------------------------|
-| `base.nix`            | dbus, devmon, fstrim, gnome-keyring, irqbalance, pcscd, fwupd, journald cap (1 GiB), sysstat, earlyoom, plocate (hourly); user units: megasync autostart, DrKonqi coredump handling off |
+| `base.nix`            | dbus, fstrim, irqbalance, fwupd, journald cap (1 GiB), earlyoom, plocate (daily, Docker's data pruned); user units: megasync autostart, DrKonqi coredump handling off |
 | `qbittorrent-vpn.nix` | qBittorrent confined to a WireGuard/ProtonVPN network namespace — a kill switch by construction |
 | `pcp.nix`             | Performance Co-Pilot (pmcd/pmlogger/pmie/pmproxy) — always-on metrics with replayable archives, loopback only |
 | `pcp-grafana.nix`     | Grafana + Redis/pmseries front-end for PCP, loopback only             |
-| `docker.nix`          | Docker (overlay2, unpinned `pkgs.docker`, weekly auto-prune), docker-compose, docker-buildx, and `docker-raw-rules-gc` (deletes the raw-table DROP rules Docker leaks when a network is removed). DDEV handles PHP/Drupal dev work |
+| `docker.nix`          | Docker (overlay2, unpinned `pkgs.docker`, weekly auto-prune that keeps tagged images), docker-compose, docker-buildx, and `docker-raw-rules-gc` (deletes the raw-table DROP rules Docker leaks when a network is removed). DDEV handles PHP/Drupal dev work |
 
 **qBittorrent VPN kill switch:** qBittorrent runs inside a dedicated network namespace
 (`qbit`) whose only route out is a WireGuard tunnel (config at `/etc/wireguard/qbit.conf`,
@@ -147,21 +147,21 @@ Packages are organized into named category lists, flattened into
 
 | Category              | Contents                                                          |
 |-----------------------|-------------------------------------------------------------------|
-| `nixos`               | fastfetch, nixos-icons, nixos-rebuild-ng, nix-prefetch-github, nh |
+| `nixos`               | fastfetch, nixos-icons, nix-prefetch-github                       |
 | `system-tools`        | btrfs-progs, htop, lsd, inxi, pciutils, smartmontools, dysk, etc. |
-| `graphics-multimedia` | FFmpeg, mpv, Inkscape, Audacity, Shotcut, GStreamer plugins, MKVToolNix, Real-ESRGAN (Vulkan upscaler) |
-| `development`         | GCC, Rust/Cargo, Node.js, CMake, Qt/KDE dev tools, PhpStorm, Valgrind, PHP QA tools, Android tools, claude-monitor |
+| `graphics-multimedia` | FFmpeg, mpv (wrapped with uosc + SponsorBlock), Inkscape, Audacity, Shotcut, GStreamer plugins, MKVToolNix, Real-ESRGAN (Vulkan upscaler) |
+| `development`         | GCC, Rust/Cargo, Node.js, CMake, Qt/KDE dev tools, PhpStorm, Valgrind, PHP QA tools |
 | `kde-plasma-core`     | Plasma workspace, Baloo, KWallet, Breeze, NetworkManager-Qt, layer-shell-qt, etc. |
-| `kde-applications`    | Dolphin, Kate, Kdenlive, Okular, Ark, KDevelop, etc.              |
-| `kde-pim`             | Akonadi stack (calendar, contacts, search, MIME)                  |
-| `gnome-stack`         | Nautilus, GNOME Tweaks, Adwaita icons (for GTK app compatibility) |
-| `network-web`         | Firefox Nightly (overlay wrapper), Chrome, Edge, Mullvad Browser, Tor Browser, ProtonVPN, WireGuard tools (plain Firefox comes from `programs.firefox`) |
+| `kde-applications`    | Dolphin, Kate, Okular, Ark, Filelight, etc.                       |
+| `gnome-stack`         | Nautilus, gcolor3, Adwaita icons (for GTK app compatibility)      |
+| `network-web`         | Firefox Nightly (overlay wrapper), Chrome, Mullvad Browser, Tor Browser, ProtonVPN (plain Firefox comes from `programs.firefox`) |
 | `office`              | LibreOffice (Qt)                                                  |
-| `utilities`           | Wezterm, fuzzel, pandoc, quickemu, p7zip, rar, tectonic           |
-| `theming-compat`      | adwaita-qt6, Kvantum, qt6ct, Materia KDE, comixcursors            |
+| `utilities`           | Wezterm, fuzzel, hyprpicker, wl-clipboard, pandoc, p7zip, rar     |
+| `theming-compat`      | comixcursors                                                      |
 | `custom`              | All local package derivations (see below)                         |
 
-KDE excluded packages: `elisa`, `itinerary`. GNOME excluded packages: decibels, geary,
+KDE excluded packages: `discover`, `elisa`, `itinerary`, `khelpcenter`,
+`plasma-browser-integration`; the KDE PIM suite is off (`programs.kde-pim.enable = false`). GNOME excluded packages: decibels, geary,
 gnome-calculator, gnome-calendar, gnome-console, gnome-contacts, gnome-maps, gnome-music,
 gnome-tour, gnome-weather.
 
@@ -173,9 +173,10 @@ Local derivations for software not in nixpkgs or requiring customization. Most p
 version + checksum in a `manifest.json` refreshed by a sibling `update.sh`.
 
 **`customPkgs` attrset** (via `pkgs.callPackage ../packages/<name>` in `system/packages.nix`): `claude-code`,
-`claude-desktop`, `gh-clone`, `jopdf`, `kde-darkly`, `kde-klassy`, `kde-vinyl`, `krema`,
-`nyxt-custom`, `proton-drive-cli`, `sddm-perseverance`, `stage-manager`, `standardnotes`,
-`strawberry-master`, `system-panel`, `vivaldi-snapshot`, `wavebox-beta`.
+`claude-desktop`, `jopdf`, `kde-darkly`, `krema`,
+`nyxt-custom`, `sddm-perseverance`, `stage-manager`, `standardnotes`,
+`strawberry-master`, `system-panel`, `vivaldi-snapshot`, `wavebox-beta`. Present in `packages/`
+but not installed: `gh-clone`, `kde-klassy`, `kde-vinyl`, `proton-drive-cli`.
 
 **Module imports** (from `system/packages.nix` unless noted): `gimp` (+ `gimp-devel`),
 `claude-code-browser`, `gps-signature`, `vaapi` (from `hardware/gpu.nix`), `pcp` (via `services/pcp.nix`), `grafana-pcp`

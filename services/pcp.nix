@@ -17,9 +17,10 @@
 # `pcp atop -a <archive>`, `pmrep -a <archive> ...`, `pmchart`, etc. — the
 # "what was the box doing at 3am" question that live htop/btop can't answer.
 #
-# Everything stays on loopback: the firewall is NOT opened, so pmcd (44321) and
-# pmproxy (if enabled) are reachable only by local clients. Archives are culled
-# daily by pmlogger_daily.
+# Local clients only: the firewall is NOT opened, and allowedNetworks (set to
+# "localhost" in the host profile below) has systemd drop non-loopback traffic
+# to pmcd (44321) and pmproxy, which themselves bind every address. Archives
+# are culled daily by pmlogger_daily.
 #
 { config, pkgs, lib, ... }:
 with lib;
@@ -305,6 +306,10 @@ in
                 preset = mkDefault "standalone";
                 pmproxy.enable = mkDefault true;
                 openFirewall = mkDefault false;
+                # pmcd and pmproxy bind every address (`ss` shows 0.0.0.0:44321-3),
+                # so on top of the closed firewall systemd drops anything that is
+                # not loopback (IPAddressAllow/IPAddressDeny on both units).
+                allowedNetworks = mkDefault [ "localhost" ];
 
                 # proc PMDA (pipe) — needed for per-process + hotproc metrics used by
                 # the desktop RSS rule below.

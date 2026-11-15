@@ -82,6 +82,12 @@
         speechd.enable = false;
     };
 
+    # Plasma turns the KDE PIM suite on by default (KMail, Kontact, Merkuro +
+    # kdepim-runtime). Nothing here uses it, and Akonadi then runs 17
+    # processes plus a MariaDB (~1.2 GB) in every session. Its data stays in
+    # ~/.local/share/akonadi; set this back to true to get the apps again.
+    programs.kde-pim.enable = false;
+
     xdg.portal = {
         enable = true;
         xdgOpenUsePortal = true;

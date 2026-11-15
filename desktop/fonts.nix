@@ -21,6 +21,7 @@
             google-fonts
             jetbrains-mono
             liberation_ttf
+            nerd-fonts.symbols-only    # icon glyphs for `lsd` (the `ls` alias)
             paratype-pt-sans
             paratype-pt-mono
             profont

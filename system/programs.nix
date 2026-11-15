@@ -3,18 +3,10 @@
         bash.completion.enable = true;
         command-not-found.enable = false;
         direnv.enable = true;
-        gamemode.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;
         nix-ld.enable = true;
         xwayland.enable = true;
-
-        steam = {
-            enable = true;
-            # No game servers are hosted here — keep 27015 closed.
-            dedicatedServer.openFirewall = false;
-            remotePlay.openFirewall = true;
-        };
 
         gnupg.agent = {
             enable = true;
