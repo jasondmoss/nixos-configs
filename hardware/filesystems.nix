@@ -52,6 +52,10 @@
     fileSystems."/boot/efi" = {
         device = "/dev/disk/by-uuid/3430-092D";
         fsType = "vfat";
+        # Root only. systemd-boot keeps its random seed here and logs a
+        # "security hole" at every boot while the mount is world-readable
+        # (vfat has no permissions of its own; the default masks are 0022).
+        options = [ "fmask=0077" "dmask=0077" ];
     };
 
     swapDevices = [{
