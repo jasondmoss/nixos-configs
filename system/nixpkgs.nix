@@ -16,8 +16,6 @@
             allowBroken = false;
             allowUnfree = true;
 
-            # Steam itself is not installed any more; this still shapes the
-            # steam-run FHS environment that packages/clate launches in.
             packageOverrides = pkgs: {
                 steam = pkgs.steam.override {
                     extraPkgs = pkgs: with pkgs; [
@@ -31,9 +29,7 @@
             # Firefox Nightly.
             (import ../../overlays/nixpkgs-mozilla/firefox-overlay.nix)
 
-            # PhpStorm — the whole override lives in the package (its nss/nspr/
-            # libxkbcommon fix too), so packages/jetbrains/verify.nix builds the
-            # exact derivation this rebuild uses.
+            # PhpStorm.
             (import ../packages/jetbrains)
 
             (import ../../overlays/default.nix)

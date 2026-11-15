@@ -30,7 +30,6 @@
     };
 
     environment = {
-        # sessionVariables.DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-stable";
         sessionVariables.DEFAULT_BROWSER = "/run/current-system/sw/bin/firefox-nightly";
 
         etc = {

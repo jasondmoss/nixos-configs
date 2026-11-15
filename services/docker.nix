@@ -5,17 +5,6 @@
 # that clears the raw-table rules Docker leaks when a network is removed.
 { config, pkgs, ... }:
 let
-    # Docker 29 guards every container with a port published on 127.0.0.1 by a
-    # raw PREROUTING rule, `-d <container-ip> ! -i br-<network> -j DROP`, and
-    # does not delete it when the network goes away. The next network to hand
-    # out that IP then has all traffic to it from its own bridge dropped: on
-    # 2026-10-26 this cut a Lando appserver off from its database and redis
-    # (every Lando URL check timed out, `lando pull` hung). The host itself is
-    # unaffected, because locally generated packets skip PREROUTING.
-    #
-    # Only rules whose bridge no longer exists are removed, so the protection
-    # stays in place for every live network. Runs once when Docker starts,
-    # then after each network removal (Lando poweroff/destroy, autoPrune).
     dockerRawRulesGc = pkgs.writeShellApplication {
         name = "docker-raw-rules-gc";
         runtimeInputs = [ pkgs.iptables pkgs.gnugrep config.virtualisation.docker.package ];
@@ -47,7 +36,6 @@ in {
         enableOnBoot = true;
         storageDriver = "overlay2";
         package = pkgs.docker;
-#        package = pkgs.docker_25;
 
         daemon.settings = {
             default-ulimits.nofile = {

@@ -3,27 +3,20 @@
 let
     # --- Custom Package Definitions ---
     customPkgs = {
-        # Launcher only — the app is installed by Qt's own installer into
-        # ~/.config/ClateBeta<NN>; see the header of packages/clate.
         clate          = pkgs.callPackage ../packages/clate {};
         claude-code    = pkgs.callPackage ../packages/claude-code {};
         claude-desktop = pkgs.callPackage ../packages/claude-desktop {};
         gh-clone       = pkgs.callPackage ../packages/gh-clone {};
         jopdf          = pkgs.callPackage ../packages/jopdf {};
         kde-darkly     = pkgs.callPackage ../packages/kde-darkly {};
-        # kde-klassy, kde-vinyl and proton-drive-cli are archived as tarballs
-        # in ../../archive/; unpack one into ../packages/ to use it again.
         #kde-klassy     = pkgs.callPackage ../packages/kde-klassy {};
         #kde-vinyl      = pkgs.callPackage ../packages/kde-vinyl {};
         krema          = pkgs.kdePackages.callPackage ../packages/krema {};
-        #ladybird       = pkgs.callPackage ../packages/ladybird {};
         nyxt-custom    = pkgs.callPackage ../packages/nyxt-custom { };
-        # Local SDDM greeter theme; selected by name in ../desktop/plasma.nix.
-        sddm-persev    = pkgs.callPackage ../packages/sddm-perseverance {};
+        #sddm-persev    = pkgs.callPackage ../packages/sddm-perseverance {};
         stage-manager  = pkgs.callPackage ../packages/stage-manager {};
         standardnotes  = pkgs.callPackage ../packages/standardnotes {};
         strawberry     = pkgs.callPackage ../packages/strawberry-master {};
-        # Calendar widget with a panel icon in the panel's text colour.
         symbolic-cal   = pkgs.callPackage ../packages/symbolic-calendar {};
         system-panel   = pkgs.callPackage ../packages/system-panel {};
         vivaldi        = pkgs.callPackage ../packages/vivaldi-snapshot {
@@ -87,16 +80,11 @@ let
             flacon
             imagemagick
             inkscape
-            # Scripts only load when they are wrapped in; listed beside
-            # mpv-unwrapped (as until 2026-11-15) they were never used.
-            # mpvScripts.autosub is left out: its subliminal -> knowit ->
-            # pymediainfo chain fails its tests against libmediainfo 26.10
-            # (channel d5cc683) and broke the whole rebuild.
             (mpv.override { scripts = with mpvScripts; [ sponsorblock uosc ]; })
             nomacs
             nvtopPackages.full
             pavucontrol
-            realesrgan-ncnn-vulkan         # Vulkan upscaler (`enlarge` shell function)
+            realesrgan-ncnn-vulkan # Vulkan upscaler (`enlarge` shell function)
             shotcut
             vorbis-tools
             vulkan-tools
@@ -140,11 +128,11 @@ let
             phpstorm
             sublime4-dev
 
-            # PHP Quality Tools (global — wired into PhpStorm)
-            php83                          # host PHP CLI: PhpStorm interpreter + runs project-local vendor/bin tools
-            phpPackages.php-codesniffer   # phpcs + phpcbf
-            phpPackages.php-cs-fixer       # php-cs-fixer
-            phpstan                        # static analysis
+            # PHP Quality Tools
+            php83                # host PHP CLI: PhpStorm interpreter + runs project-local vendor/bin tools
+            phpPackages.php-codesniffer # phpcs + phpcbf
+            phpPackages.php-cs-fixer    # php-cs-fixer
+            phpstan               # static analysis
 
             # Android
             android-tools
@@ -226,7 +214,7 @@ let
 
         utilities = with pkgs; [
             fuzzel
-            hyprpicker                     # `hp` colour picker (with fuzzel + wl-copy)
+            hyprpicker # `hp` colour picker (with fuzzel + wl-copy)
             libnotify
             p7zip-rar
             pandoc
@@ -253,11 +241,11 @@ in {
 
     # KDE exclude list.
     environment.plasma6.excludePackages = with pkgs.kdePackages; [
-        discover                   # no Flatpak/PackageKit backend on NixOS
+        discover
         elisa
         itinerary
         khelpcenter
-        plasma-browser-integration # no browser carries its extension
+        plasma-browser-integration
     ];
 
     # GNOME exclude list.

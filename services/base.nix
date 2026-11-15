@@ -13,10 +13,6 @@ let
     '';
 in {
     services = {
-        # Dropped 2026-11-15, all idle: devmon (never mounted anything;
-        # Plasma's device notifier + udisks2 do that), gnome-keyring (ksecretd
-        # owns org.freedesktop.secrets under Plasma), pcscd (no smartcard
-        # reader), sysstat (PCP already records the same counters).
         dbus.enable = true;
         fstrim.enable = true;
         irqbalance.enable = true;
@@ -36,8 +32,6 @@ in {
             freeSwapThreshold = 10; # % of swap
         };
 
-        # Daily, and not into Docker's layers and volumes: the hourly run
-        # took up to 7 min, 5 GiB of reads and 2.3 GiB of RAM (2026-11-14).
         locate = {
             enable = true;
             interval = "daily";
@@ -46,13 +40,6 @@ in {
         };
     };
 
-    # Tray apps started at login through XDG autostart, not as user units:
-    # NixOS gives its own units a minimal PATH, and Claude Desktop passes its
-    # environment on to every session it starts. Exec is a bare command name,
-    # so these survive package updates. (Claude's own "run on startup" writes
-    # ~/.config/autostart/claude-desktop.desktop with an absolute store path;
-    # that file shadows this one and dies at the next garbage collection, so
-    # leave the in-app switch alone or delete the file it creates.)
     environment.etc = {
         "xdg/autostart/claude-desktop.desktop".text = ''
             [Desktop Entry]
@@ -82,15 +69,7 @@ in {
                 serviceConfig = {
                     Type = "simple";
                     ExecStart = "${pkgs.megasync}/bin/megasync";
-                    # MEGAsync is Qt 5. The session's QML2_IMPORT_PATH also lists
-                    # Plasma's qt-6/qml trees, whose qmldirs Qt 5 rejects ("invalid
-                    # version auto"), so its QML dialogs never build and opening one
-                    # segfaults in QmlDialogWrapperBase::show. The wrapper's
-                    # NIXPKGS_QT5_QML_IMPORT_PATH already carries its own modules.
                     UnsetEnvironment = "QML2_IMPORT_PATH";
-                    # IPv4 only: over the Proton VPN, MEGA's API never answers on its
-                    # IPv6 addresses and libcurl does not fall back, so MEGAsync hangs
-                    # at "logging in". Without AF_INET6 every IPv6 attempt fails at once.
                     RestrictAddressFamilies = "AF_UNIX AF_INET AF_NETLINK";
                     Restart = "on-failure";
                     RestartSec = "5s";
@@ -98,8 +77,7 @@ in {
             };
 
             # Starts in the tray; the server it connects to comes from the
-            # app's own "Connect at app startup" setting
-            # (~/.config/Proton/VPN/app-config.json), not from here.
+            # app's own "Connect at app startup" setting.
             protonvpn = {
                 description = "Proton VPN";
                 after = [ "graphical-session.target" "plasma-kded6.service" "plasma-plasmashell.service" ];
@@ -115,9 +93,6 @@ in {
                 };
             };
 
-            # DrKonqi's coredump launcher is off. Masking only the template left
-            # its socket (which refuses to start a masked service) and the pickup
-            # service (which connects to that socket) failing on every login.
             "drkonqi-coredump-launcher@".enable = false;
             drkonqi-coredump-pickup.enable = false;
         };

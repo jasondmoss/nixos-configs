@@ -28,7 +28,6 @@
                     "gitdir/i:/home/me/Repository/personal/" .path = "/etc/gitconfig.personal";
                     # Fallback for your main config repo if it's not in the personal folder.
                     "gitdir/i:/home/me/Repository/system/" .path = "/etc/gitconfig.personal";
-
                     # GitLab
                     "gitdir/i:/home/me/Repository/work/cyan-solutions/" .path = "/etc/gitconfig.gitlab";
                 };
@@ -108,12 +107,7 @@ Host pantheon.io *.pantheon.io
 
     # Each key is added on its own, so one failure does not skip the rest; any
     # failure fails the unit, which retries (the session's WAYLAND_DISPLAY can
-    # reach the user manager after graphical-session.target starts). Fixed
-    # 2026-11-14 — it had never succeeded: ExecStart is not run by a shell (the
-    # old `&&` chain only ever ran the first ssh-add), and the unit's minimal
-    # service PATH could not resolve the bare SSH_ASKPASS=ksshaskpass, so no
-    # passphrase ever came from KWallet. Also replaces the old ~/Mega
-    # 1_addssh.sh / 0_ksshaskpass.sh autostart scripts.
+    # reach the user manager after graphical-session.target starts).
     systemd.user.services.ssh-key-pollen = {
         description = "Load SSH keys into agent via KWallet";
         wantedBy = [ "graphical-session.target" ];

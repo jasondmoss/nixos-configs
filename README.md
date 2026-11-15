@@ -24,7 +24,7 @@ Grafana's secret key live under `/var/lib` and `/etc` on the machine only.
 | Bootloader      | systemd-boot (EFI)                           |
 | Display server  | Wayland                                      |
 | Desktop         | KDE Plasma 6                                 |
-| Display manager | SDDM (kwin_wayland greeter, local theme)     |
+| Display manager | Ly (TUI greeter on tty1, custom package)     |
 | Audio           | PipeWire (ALSA + PulseAudio + JACK)          |
 | NixOS channel   | nixos-unstable                               |
 
@@ -86,7 +86,7 @@ sets both `services.pipewire` and `security.rtkit`).
 
 | File           | Purpose                                                                   |
 |----------------|---------------------------------------------------------------------------|
-| `plasma.nix`   | KDE Plasma 6, SDDM (Wayland greeter, local *Perseverance* theme; Ly kept commented out), XDG portals, Wayland/Qt session vars |
+| `plasma.nix`   | KDE Plasma 6, Ly display manager (custom `packages/ly`; the SDDM setup with the local *Perseverance* theme is kept commented out), XDG portals, Wayland/Qt session vars |
 | `fonts.nix`    | Font packages and fontconfig rules                                        |
 | `audio.nix`    | PipeWire (ALSA, PulseAudio, JACK) and rtkit                      |
 | `browsers.nix` | `programs.firefox` (nixpkgs Firefox with VAAPI prefs, AI chatbot sidebar off), Firefox Nightly as the MIME default and `DEFAULT_BROWSER`, 1Password browser allowlist, Chrome external-extension directory (Unclutter) |
@@ -174,8 +174,9 @@ version + checksum in a `manifest.json` refreshed by a sibling `update.sh`.
 
 **`customPkgs` attrset** (via `pkgs.callPackage ../packages/<name>` in `system/packages.nix`): `claude-code`,
 `claude-desktop`, `gh-clone`, `jopdf`, `kde-darkly`, `krema`,
-`nyxt-custom`, `sddm-perseverance`, `stage-manager`, `standardnotes`,
+`nyxt-custom`, `stage-manager`, `standardnotes`,
 `strawberry-master`, `system-panel`, `vivaldi-snapshot`, `wavebox-beta`.
+`sddm-perseverance` (local SDDM greeter theme) is commented out there while Ly is the display manager.
 
 **Module imports** (from `system/packages.nix` unless noted): `gimp` (+ `gimp-devel`),
 `claude-code-browser`, `gps-signature`, `vaapi` (from `hardware/gpu.nix`), `pcp` (via `services/pcp.nix`), `grafana-pcp`

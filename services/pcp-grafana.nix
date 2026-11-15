@@ -29,14 +29,14 @@ let
     pmproxyUrl = "http://127.0.0.1:44322";
 in
 {
-    # ─── Redis backend for pmproxy's pmseries (historical time series) ────────
+    # Redis backend for pmproxy's pmseries (historical time series)
     services.redis.servers.pcp = {
         enable = true;
         bind = "127.0.0.1";
         port = 6379;
     };
 
-    # ─── Grafana ──────────────────────────────────────────────────────────────
+    # Grafana
     services.grafana = {
         enable = true;
 
@@ -48,15 +48,14 @@ in
                 http_port = 3000;
                 domain = "localhost";
             };
-            # Private/telemetry-off, matching the local-AI stack conventions.
+            # Private/telemetry-off.
             analytics = {
                 reporting_enabled = false;
                 check_for_updates = false;
                 feedback_links_enabled = false;
             };
             "log" = { level = "info"; };
-            # NixOS 26.05 dropped the built-in default secret_key (used to encrypt
-            # secrets in Grafana's DB). This instance stores no credentials — the
+            # This instance stores no credentials — the
             # provisioned datasources are auth-less — but the option is now mandatory.
             # Read it from a file that preStart generates on first boot, so no secret
             # is committed to this repo.

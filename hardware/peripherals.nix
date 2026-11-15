@@ -24,9 +24,11 @@
             packages = [ pkgs.via ];
         };
 
-        # No CUPS: the only printer was cups-pdf, used once (2025-10). Apps
-        # print to PDF themselves. To add a real printer, bring back
-        # printing = { enable = true; browsing = false; startWhenNeeded = true; };
+        #printing = {
+        #    enable = true;
+        #    browsing = false;
+        #    startWhenNeeded = true;
+        #};
     };
 }
 

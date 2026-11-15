@@ -13,62 +13,66 @@
         displayManager = {
             enable = true;
 
-            sddm = {
-                enable = true;
-
-                wayland = {
-                    enable = true;
-                    compositor = "kwin";
-                };
-
-                theme = "Perseverance";
-
-                extraPackages = with pkgs.kdePackages; [
-                    plasma-workspace
-                    qt5compat
-                ];
-
-                enableHidpi = true;
-                autoNumlock = false;
-
-                settings = {
-                    Theme = {
-                        CursorTheme = "ComixCursors";
-                        Font = "Noto Sans,10,-1,0,50,0,0,0,0,0";
-                    };
-
-                    Users = {
-                        DefaultPath = "/run/current-system/sw/bin";
-
-                        RememberLastUser = true;
-                        RememberLastSession = true;
-                    };
-                };
-            };
-
-            #ly = {
+            # SDDM (Wayland greeter on kwin_wayland, local Perseverance theme) —
+            # retired 2026-11-15 in favour of Ly. To switch back: uncomment this
+            # block and `sddm-persev` in ../system/packages.nix, and comment out
+            # the ly block below.
+            #sddm = {
             #    enable = true;
-            #    package = pkgs.callPackage ../packages/ly {};
-            #    x11Support = false;
+            #
+            #    wayland = {
+            #        enable = true;
+            #        compositor = "kwin";
+            #    };
+            #
+            #    theme = "Perseverance";
+            #
+            #    extraPackages = with pkgs.kdePackages; [
+            #        plasma-workspace
+            #        qt5compat
+            #    ];
+            #
+            #    enableHidpi = true;
+            #    autoNumlock = false;
             #
             #    settings = {
-            #        clear_password = true;
-            #        clock = "%c";
+            #        Theme = {
+            #            CursorTheme = "ComixCursors";
+            #            Font = "Noto Sans,10,-1,0,50,0,0,0,0,0";
+            #        };
             #
-            #        #animation = "dur_file";
-            #        #dur_file_path = "${../packages/ly/animations/blackhole-smooth-240x67.dur}";
-            #        #dur_offset_alignment = "center";
+            #        Users = {
+            #            DefaultPath = "/run/current-system/sw/bin";
             #
-            #        #animation = "matrix";
-            #        #animation = "colormix";
-            #        #animation = "doom";
-            #        #animation = "gameoflife";
-            #        #animation_timeout_sec = "20";
-            #        #full_color = true;
-            #        input_len = "64";
-            #        waylandsessions = "${pkgs.kdePackages.plasma-workspace.sessions}/share/wayland-sessions";
+            #            RememberLastUser = true;
+            #            RememberLastSession = true;
+            #        };
             #    };
             #};
+
+            ly = {
+                enable = true;
+                package = pkgs.callPackage ../packages/ly {};
+                x11Support = false;
+
+                settings = {
+                    clear_password = true;
+                    clock = "%c";
+
+                    #animation = "dur_file";
+                    #dur_file_path = "${../packages/ly/animations/blackhole-smooth-240x67.dur}";
+                    #dur_offset_alignment = "center";
+
+                    #animation = "matrix";
+                    #animation = "colormix";
+                    #animation = "doom";
+                    #animation = "gameoflife";
+                    #animation_timeout_sec = "20";
+                    #full_color = true;
+                    input_len = "64";
+                    waylandsessions = "${pkgs.kdePackages.plasma-workspace.sessions}/share/wayland-sessions";
+                };
+            };
 
             defaultSession = "plasma";
         };
@@ -82,10 +86,6 @@
         speechd.enable = false;
     };
 
-    # Plasma turns the KDE PIM suite on by default (KMail, Kontact, Merkuro +
-    # kdepim-runtime). Nothing here uses it, and Akonadi then runs 17
-    # processes plus a MariaDB (~1.2 GB) in every session. Its data stays in
-    # ~/.local/share/akonadi; set this back to true to get the apps again.
     programs.kde-pim.enable = false;
 
     xdg.portal = {

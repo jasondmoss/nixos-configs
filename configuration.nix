@@ -2,7 +2,7 @@
  ##                                                                          ##
  ##                             ·: ATREIDES :·                               ##
  ##                                                                          ##
- ##          NixOS 26.05                                                     ##
+ ##          NixOS 26.11                                                     ##
  ##          AMD Ryzen 9 3900X                                               ##
  ##          NVIDIA RTX 5060 Ti -- 32 GiB RAM                                ##
  ##          KDE Plasma 6                                                    ##

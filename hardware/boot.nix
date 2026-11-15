@@ -52,9 +52,6 @@
             ];
         };
 
-        # No kvm-amd: SVM is off in the BIOS, so it only failed at boot, and
-        # Docker/DDEV/Lando don't use KVM. To run VMs (quickemu etc.), enable
-        # SVM Mode in the BIOS and add "kvm-amd" back.
         kernelModules = [
             "k10temp"
         ];
@@ -96,13 +93,12 @@
             "vm.page-cluster" = 0;
             # ...and prefer compressing idle anonymous pages over dropping
             # page cache: swap is RAM-speed here, so the kernel docs suggest
-            # values above 100. It was 10, which nothing in this config set.
+            # values above 100.
             "vm.swappiness" = 150;
         };
 
         loader = {
             grub.enable = false;
-            # 1 s instead of the default 5; hold Space during boot for the menu.
             timeout = 1;
 
             systemd-boot = {

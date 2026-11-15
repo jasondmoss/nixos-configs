@@ -1,12 +1,5 @@
 { lib, pkgs, ... }: {
     networking = {
-        # IPv6 stays on so that the firewall covers it. With enableIPv6 = false
-        # the NixOS firewall generates no ip6tables rules at all, yet IPv6 was
-        # live anyway: NetworkManager re-enables it per interface (the wired
-        # profile's ipv6.method is "auto") and the Proton VPN app brings up
-        # its own v6 addresses, so everything bound to [::] was unfiltered
-        # (found 2026-11-14). The rules below now apply to both families. SSH
-        # stays IPv4/LAN-only: its extraCommands rule is iptables-only.
         enableIPv6 = true;
         useDHCP = lib.mkDefault true;
         nftables.enable = false;
@@ -42,50 +35,46 @@ iptables -A nixos-fw -p tcp --dport 22 -s 192.168.100.0/24 -j nixos-fw-accept
             # One uplink at a time. With the cable in, Wi-Fi used to join the
             # same LAN as a second interface. Now Wi-Fi is disconnected while
             # a wired link is up and reconnects when the last one goes down.
-            # Nothing is persistent: the radio stays on, and a boot without
-            # the cable autoconnects Wi-Fi as before. To use both for a
-            # while: `nmcli device connect wlp5s0` after unplugging, or stop
-            # NetworkManager-dispatcher.service.
             dispatcherScripts = [{
                 type = "basic";
                 source = pkgs.writeShellScript "wifi-yields-to-ethernet" ''
-                    iface="''${1:-}"
-                    action="''${2:-}"
-                    nmcli="''${NMCLI:-${pkgs.networkmanager}/bin/nmcli}"
+iface="''${1:-}"
+action="''${2:-}"
+nmcli="''${NMCLI:-${pkgs.networkmanager}/bin/nmcli}"
 
-                    type_of() { "$nmcli" -g GENERAL.TYPE device show "$1" 2>/dev/null; }
-                    wired_up() {
-                        "$nmcli" -t -f TYPE,STATE device \
-                            | ${pkgs.gnugrep}/bin/grep -qx 'ethernet:connected'
-                    }
-                    wifi_devices() {
-                        "$nmcli" -t -f DEVICE,TYPE device \
-                            | ${pkgs.gnused}/bin/sed -n 's/:wifi$//p'
-                    }
+type_of() { "$nmcli" -g GENERAL.TYPE device show "$1" 2>/dev/null; }
+wired_up() {
+    "$nmcli" -t -f TYPE,STATE device \
+        | ${pkgs.gnugrep}/bin/grep -qx 'ethernet:connected'
+}
+wifi_devices() {
+    "$nmcli" -t -f DEVICE,TYPE device \
+        | ${pkgs.gnused}/bin/sed -n 's/:wifi$//p'
+}
 
-                    case "$action" in
-                        up)
-                            # A wired link came up, or Wi-Fi connected while
-                            # one was already up.
-                            case "$(type_of "$iface")" in
-                                ethernet|wifi) ;;
-                                *) exit 0 ;;
-                            esac
-                            if wired_up; then
-                                for dev in $(wifi_devices); do
-                                    "$nmcli" device disconnect "$dev" || true
-                                done
-                            fi
-                            ;;
-                        down)
-                            [ "$(type_of "$iface")" = ethernet ] || exit 0
-                            if ! wired_up; then
-                                for dev in $(wifi_devices); do
-                                    "$nmcli" device connect "$dev" || true
-                                done
-                            fi
-                            ;;
-                    esac
+case "$action" in
+    up)
+        # A wired link came up, or Wi-Fi connected while
+        # one was already up.
+        case "$(type_of "$iface")" in
+            ethernet|wifi) ;;
+            *) exit 0 ;;
+        esac
+        if wired_up; then
+            for dev in $(wifi_devices); do
+                "$nmcli" device disconnect "$dev" || true
+            done
+        fi
+        ;;
+    down)
+        [ "$(type_of "$iface")" = ethernet ] || exit 0
+        if ! wired_up; then
+            for dev in $(wifi_devices); do
+                "$nmcli" device connect "$dev" || true
+            done
+        fi
+        ;;
+esac
                 '';
             }];
 
