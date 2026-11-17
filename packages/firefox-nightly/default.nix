@@ -84,6 +84,9 @@ let
                 # for why not "default".
                 "media.hardware-video-decoding-vulkan.enabled" = { Value = false; Status = "user"; };
                 "media.hardware-video-decoding.force-enabled" = { Value = true; Status = "user"; };
+                # Background-video decode suspension off (2026-11-17): the VA-API
+                # decoder rebuilt on tab return froze YouTube — see desktop/browsers.nix.
+                "media.suspend-background-video.enabled" = { Value = false; Status = "user"; };
             };
         };
     };

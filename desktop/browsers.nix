@@ -37,6 +37,20 @@
                 Status = "user";
             };
 
+            # Background-video decode suspension off (2026-11-17). After 10 s
+            # hidden (other tab, or the window unfocused/minimised) Firefox
+            # frees the video decoder ("null decode") and on return recreates
+            # the VA-API decoder and seeks. In the main Nightly profile that
+            # recreation intermittently stalled YouTube: player "playing", clock
+            # frozen, Play did nothing until a reload. Never reproduced in the
+            # Claude profile (4/4 clean resumes), but with this off the freezes
+            # stopped. Cost: hidden videos keep decoding on NVDEC. Status "user"
+            # like the two above. Runtime pref, no restart needed to test.
+            policies.Preferences."media.suspend-background-video.enabled" = {
+                Value = false;
+                Status = "user";
+            };
+
             preferencesStatus = "default";
             preferences = {
                 "media.ffmpeg.vaapi.enabled" = true;
