@@ -63,7 +63,6 @@ let
     # below therefore uses the distribution/extensions mechanism instead.
     firefoxNightlyPrefs = {
         "media.ffmpeg.vaapi.enabled" = true;
-        "media.hardware-video-decoding.force-enabled" = true;
         "media.rdd-ffvpx.enabled" = false;
         "media.navigator.mediadatadecoder_vpx_enabled" = true;
         "media.ffvpx.enabled" = false;
@@ -79,7 +78,13 @@ let
     firefoxNightlyPolicies = {
         policies = {
             DisableAppUpdate = true;
-            Preferences = lib.mapAttrs (_: v: { Value = v; Status = "default"; }) firefoxNightlyPrefs;
+            Preferences = lib.mapAttrs (_: v: { Value = v; Status = "default"; }) firefoxNightlyPrefs // {
+                # Vulkan Video decoder off and hardware decoding force-enabled,
+                # as user-branch values — see desktop/browsers.nix (2026-11-16)
+                # for why not "default".
+                "media.hardware-video-decoding-vulkan.enabled" = { Value = false; Status = "user"; };
+                "media.hardware-video-decoding.force-enabled" = { Value = true; Status = "user"; };
+            };
         };
     };
 in

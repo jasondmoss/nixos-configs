@@ -5,8 +5,20 @@
         direnv.enable = true;
         kdeconnect.enable = true;
         mtr.enable = true;
-        nix-ld.enable = true;
         xwayland.enable = true;
+
+        # The module's base set (systemd + nix deps) is merged in automatically;
+        # these extras let Playwright's prebuilt Chromium in ~/.cache/ms-playwright
+        # start — needed by the Axe MCP Server (npx axe-mcp-server, Claude Code
+        # axe-accessibility plugin) and any other npx/Playwright tooling.
+        nix-ld = {
+            enable = true;
+            libraries = with pkgs; [
+                alsa-lib at-spi2-core cairo cups dbus expat glib libgbm
+                libx11 libxcb libxcomposite libxdamage libxext libxfixes
+                libxkbcommon libxrandr nspr nss pango
+            ];
+        };
 
         gnupg.agent = {
             enable = true;

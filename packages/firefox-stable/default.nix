@@ -51,7 +51,6 @@ let
     # effect.)
     firefoxStablePrefs = {
         "media.ffmpeg.vaapi.enabled" = true;
-        "media.hardware-video-decoding.force-enabled" = true;
         "media.rdd-ffvpx.enabled" = false;
         "media.navigator.mediadatadecoder_vpx_enabled" = true;
         "media.ffvpx.enabled" = false;
@@ -66,7 +65,13 @@ let
     firefoxStablePolicies = {
         policies = {
             DisableAppUpdate = true;
-            Preferences = pkgs.lib.mapAttrs (_: v: { Value = v; Status = "default"; }) firefoxStablePrefs;
+            Preferences = pkgs.lib.mapAttrs (_: v: { Value = v; Status = "default"; }) firefoxStablePrefs // {
+                # Vulkan Video decoder off and hardware decoding force-enabled,
+                # as user-branch values — see desktop/browsers.nix (2026-11-16)
+                # for why not "default".
+                "media.hardware-video-decoding-vulkan.enabled" = { Value = false; Status = "user"; };
+                "media.hardware-video-decoding.force-enabled" = { Value = true; Status = "user"; };
+            };
         };
     };
 

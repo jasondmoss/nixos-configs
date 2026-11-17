@@ -154,6 +154,7 @@ let
             bluedevil
             drkonqi
             kde-cli-tools
+            koko
             kwallet
             kwallet-pam
             kwayland
