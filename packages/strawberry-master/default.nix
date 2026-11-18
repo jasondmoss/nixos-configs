@@ -27,7 +27,7 @@ stdenv.mkDerivation rec {
 
     # The big strawberry shown in the context menu is *very* much in your face,
     # so use the grey version instead. --replace-fail, so a bump that moves
-    # the image fails verify.nix instead of silently dropping the swap.
+    # the image fails the build instead of silently dropping the swap.
     postPatch = ''
 substituteInPlace src/context/contextalbum.cpp \
  --replace-fail pictures/strawberry.png pictures/strawberry-grey.png

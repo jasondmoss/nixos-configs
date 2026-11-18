@@ -1,3 +1,8 @@
+## DISABLED 2026-11-18: strawberry tracks master, so nearly every nxup bumped
+## it and paid for a full build here before the rebuild (twice whenever the
+## channel moved too). nxmanifest only verifies when verify.nix exists —
+## rename this back to verify.nix to re-enable.
+##
 ## Post-refresh build check for nxmanifest (same contract as packages/krema):
 ## `nix-build verify.nix` must succeed before a manifest bump is accepted.
 ## pkgs.callPackage, as in system/packages.nix, so the rebuild reuses it.

@@ -40,9 +40,9 @@ if [ -z "$HASH" ] || [ "$HASH" = "null" ] || [ -z "$DATE" ] || [ "$DATE" = "null
     exit 1
 fi
 
-## Version = commit date + short rev: nxmanifest compares versions to decide
-## whether verify.nix must build the bump, so two commits on one day must
-## still differ.
+## Version = commit date + short rev: nxmanifest compares versions to report
+## a bump (and to decide whether verify.nix must build it, when enabled), so
+## two commits on one day must still differ.
 VERSION="$DATE.${REV:0:7}"
 
 cat > manifest.json << EOF
