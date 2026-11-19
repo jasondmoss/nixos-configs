@@ -3,8 +3,8 @@
     expat, fetchurl, gtk3, lib, libcap_ng, libdrm, libglvnd, libnotify,
     libseccomp, libsecret, libx11, libxcb, libxcomposite, libxdamage, libxext,
     libxfixes, libxkbcommon, libxrandr, libxscrnsaver, libxshmfence, libxtst,
-    makeWrapper, mesa, nspr, nss, pipewire, stdenv, systemd, vulkan-loader,
-    xdg-utils
+    makeWrapper, mesa, nspr, nss, pipewire, python3, stdenv, systemd,
+    vulkan-loader, xdg-utils
 }:
 with lib;
 
@@ -39,7 +39,7 @@ stdenv.mkDerivation {
     inherit meta;
     inherit src;
 
-    nativeBuildInputs = [ autoPatchelfHook dpkg makeWrapper ];
+    nativeBuildInputs = [ autoPatchelfHook dpkg makeWrapper python3 ];
 
     buildInputs = [
         alsa-lib
@@ -84,6 +84,11 @@ cp -r usr/lib usr/share $out/
 
 # The .deb ships its own desktop file and hicolor icons; only the
 # launcher symlink needs replacing with a wrapper.
+
+# Left-click on the tray icon = the menu's "Show App" (upstream sets
+# only a context menu, so left-click did nothing on Linux).
+python3 ${./patch-asar.py} $out/lib/claude-desktop/resources/app.asar \
+ ${./tray-click.js} nixos-tray-click.js
     '';
 
     postFixup = ''
