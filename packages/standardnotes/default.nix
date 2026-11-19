@@ -62,6 +62,21 @@ asar e $out/share/standardnotes/app.asar asar-unpacked
 find asar-unpacked -name '*.node' -exec patchelf \
  --add-rpath "${libPath}" \
  {} \;
+## `--hidden`: start in the tray (login autostart, services/base.nix).
+## Upstream shows the main window unconditionally on ready-to-show; stay
+## hidden only while "Minimize to tray on close" is on, since without it
+## there is no tray icon to bring the window back. Launching the app again
+## shows it (upstream's second-instance handler). --replace-fail turns an
+## upstream rewrite of this line into a build failure.
+substituteInPlace asar-unpacked/dist/index.js --replace-fail \
+ 'a.once("ready-to-show",(()=>{a.show()}))' \
+ 'a.once("ready-to-show",(()=>{process.argv.includes("--hidden")&&c.trayManager.shouldMinimizeToTray()||a.show()}))'
+## Left-click on the tray icon shows the window. Upstream binds the click
+## only on Windows, so on Linux a left-click did nothing (verified via the
+## SNI Activate call) and the window came back only through the menu.
+substituteInPlace asar-unpacked/dist/index.js --replace-fail \
+ 'n.setToolTip(mi),_()&&n.on("click",a)' \
+ 'n.setToolTip(mi),n.on("click",a)'
 asar p asar-unpacked $out/share/standardnotes/app.asar
 
 makeWrapper ${electron}/bin/electron $out/bin/standardnotes \

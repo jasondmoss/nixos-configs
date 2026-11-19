@@ -56,6 +56,17 @@ in {
             Icon=1password
             Exec=1password --silent
         '';
+
+        ## --hidden is a local patch (packages/standardnotes); it stays in
+        ## the tray only while the app's Window → "Minimize to tray on
+        ## close" is on, otherwise the window opens as before.
+        "xdg/autostart/standard-notes.desktop".text = ''
+            [Desktop Entry]
+            Type=Application
+            Name=Standard Notes
+            Icon=standard-notes
+            Exec=standardnotes --hidden
+        '';
     };
 
     systemd = {
