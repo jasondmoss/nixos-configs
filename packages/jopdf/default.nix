@@ -1,6 +1,6 @@
 {
     lib, stdenv, fetchurl, dpkg, autoPatchelfHook, patchelfUnstable, makeWrapper, addDriverRunpath,
-    zlib, libgpg-error, gmp, e2fsprogs, fontconfig, freetype, libglvnd, xorg,
+    zlib, libgpg-error, gmp, e2fsprogs, fontconfig, freetype, libglvnd, libx11, libxcb,
 }:
 
 let
@@ -40,8 +40,8 @@ in stdenv.mkDerivation {
         e2fsprogs.out # libcom_err.so.2, wanted by the bundled libkrb5/libgssapi_krb5
         fontconfig
         freetype
-        xorg.libX11
-        xorg.libxcb
+        libx11
+        libxcb
         libglvnd # libGL.so.1 / libEGL.so.1 dispatch; NVIDIA vendor libs via addDriverRunpath
     ];
 

@@ -122,8 +122,8 @@ ln -sf $out/bin/gimp-3.2 $out/bin/gimp
                 gmic = final.gmic-qt.overrideAttrs (oldAttrs: {
                     buildInputs = (oldAttrs.buildInputs or []) ++ [
                         gimp-compat-shim
-                        final.xorg.libXdmcp
-                        final.xorg.libpthreadstubs
+                        final.libxdmcp
+                        final."libpthread-stubs"
                         final.glib.dev
                     ] ++ gimpPublicDeps;
 

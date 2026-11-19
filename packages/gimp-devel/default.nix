@@ -5,7 +5,8 @@
   poppler, poppler_data, libtiff, libmng, librsvg, libwmf, zlib, xz, libzip,
   ghostscript, aalib, shared-mime-info, python3, libexif, gettext,
   wrapGAppsHook3, libxslt, gobject-introspection, vala, gi-docgen, perl,
-  appstream, desktop-file-utils, xorg, glib-networking, json-glib, libmypaint,
+  appstream, desktop-file-utils, libx11, libxmu, libxpm, libxext, libxcursor,
+  glib-networking, json-glib, libmypaint,
   gexiv2_0_10, mypaint-brushes, libwebp, libheif, gjs, libgudev, openexr,
   xvfb-run, dbus, adwaita-icon-theme, alsa-lib, libunwind, bash-completion,
   glibcLocales
@@ -46,7 +47,7 @@ in stdenv.mkDerivation (finalAttrs: {
         libpng librsvg libiff libwmf libgudev zlib xz libzip graphviz gjs
         appstream alsa-lib ghostscript aalib fontconfig libilbm libjpeg poppler
         poppler_data libmng adwaita-icon-theme libunwind bash-completion
-        xorg.libX11 xorg.libXmu xorg.libXpm xorg.libXext xorg.libXcursor
+        libx11 libxmu libxpm libxext libxcursor
         python python3.pkgs.pygobject3
     ];
 

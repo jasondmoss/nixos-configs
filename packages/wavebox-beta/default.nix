@@ -1,7 +1,8 @@
 {
     addDriverRunpath, alsa-lib, autoPatchelfHook, fetchurl, gtk3, gtk4, libdrm,
     libglvnd, libnotify, kdePackages, makeDesktopItem, makeWrapper, nss, lib,
-    mesa, stdenv, udev, vulkan-loader, xdg-utils, xorg
+    mesa, stdenv, udev, vulkan-loader, xdg-utils, libxcomposite, libxdamage,
+    libxdmcp, libxscrnsaver, libxshmfence, libxtst
 }:
 with lib;
 
@@ -60,14 +61,13 @@ stdenv.mkDerivation rec {
 
     nativeBuildInputs = [ autoPatchelfHook makeWrapper kdePackages.wrapQtAppsHook ];
 
-    buildInputs = with xorg; [
-        libXdmcp
-        libXcomposite
-        libXScrnSaver
-        libXtst
+    buildInputs = [
+        libxdmcp
+        libxcomposite
+        libxscrnsaver
+        libxtst
         libxshmfence
-        libXdamage
-    ] ++ [
+        libxdamage
         alsa-lib
         gtk3
         nss
