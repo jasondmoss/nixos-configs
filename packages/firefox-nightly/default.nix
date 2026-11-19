@@ -79,14 +79,14 @@ let
         policies = {
             DisableAppUpdate = true;
             Preferences = lib.mapAttrs (_: v: { Value = v; Status = "default"; }) firefoxNightlyPrefs // {
-                # Vulkan Video decoder off and hardware decoding force-enabled,
-                # as user-branch values — see desktop/browsers.nix (2026-11-16)
-                # for why not "default".
+                # Vulkan Video decoder off and hardware decoding off (software
+                # decode since 2026-11-18), as user-branch values — see
+                # desktop/browsers.nix for why not "default" and why off.
                 "media.hardware-video-decoding-vulkan.enabled" = { Value = false; Status = "user"; };
-                "media.hardware-video-decoding.force-enabled" = { Value = true; Status = "user"; };
-                # Background-video decode suspension off (2026-11-17): the VA-API
-                # decoder rebuilt on tab return froze YouTube — see desktop/browsers.nix.
-                "media.suspend-background-video.enabled" = { Value = false; Status = "user"; };
+                "media.hardware-video-decoding.force-enabled" = { Value = false; Status = "user"; };
+                # Retired 2026-11-18 (not the freeze's cause): clears the user value
+                # the 2026-11-17 entry wrote — see desktop/browsers.nix.
+                "media.suspend-background-video.enabled" = { Status = "clear"; };
             };
         };
     };
