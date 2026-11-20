@@ -12,6 +12,7 @@ let
         #kde-klassy     = pkgs.callPackage ../packages/kde-klassy {};
         #kde-vinyl      = pkgs.callPackage ../packages/kde-vinyl {};
         krema          = pkgs.kdePackages.callPackage ../packages/krema {};
+        marktext       = pkgs.callPackage ../packages/marktext {};
         nyxt-custom    = pkgs.callPackage ../packages/nyxt-custom { };
         #sddm-persev    = pkgs.callPackage ../packages/sddm-perseverance {};
         stage-manager  = pkgs.callPackage ../packages/stage-manager {};
