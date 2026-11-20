@@ -5,7 +5,7 @@
 #
 # Data path:
 #   pmlogger archives ──▶ pmproxy (series.discover) ──▶ Redis (pmseries index)
-#                                    ▲                        │
+#                                   ▲                         │
 #                        Grafana ───┘  (REST 44322)  ◀────────┘
 #
 # The grafana-pcp app plugin (packages/grafana-pcp, not in nixpkgs) is injected
@@ -48,17 +48,16 @@ in
                 http_port = 3000;
                 domain = "localhost";
             };
+
             # Private/telemetry-off.
             analytics = {
                 reporting_enabled = false;
                 check_for_updates = false;
                 feedback_links_enabled = false;
             };
+
             "log" = { level = "info"; };
-            # This instance stores no credentials — the
-            # provisioned datasources are auth-less — but the option is now mandatory.
-            # Read it from a file that preStart generates on first boot, so no secret
-            # is committed to this repo.
+
             security.secret_key = "$__file{/var/lib/grafana/secret_key}";
         };
 
@@ -87,9 +86,6 @@ in
         };
     };
 
-    # Grafana should come up after its data sources exist, and needs its
-    # encryption key present before start. preStart runs as the grafana user with
-    # /var/lib/grafana as its state dir, so it can create the key file itself.
     systemd.services.grafana = {
         after = [ "pmproxy.service" "redis-pcp.service" ];
         wants = [ "pmproxy.service" "redis-pcp.service" ];

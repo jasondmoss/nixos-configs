@@ -89,7 +89,7 @@ sets both `services.pipewire` and `security.rtkit`).
 | `plasma.nix`   | KDE Plasma 6, Ly display manager (custom `packages/ly`; the SDDM setup with the local *Perseverance* theme is kept commented out), XDG portals, Wayland/Qt session vars |
 | `fonts.nix`    | Font packages and fontconfig rules                                        |
 | `audio.nix`    | PipeWire (ALSA, PulseAudio, JACK) and rtkit                      |
-| `browsers.nix` | `programs.firefox` (nixpkgs Firefox with VAAPI prefs, AI chatbot sidebar off), Firefox Nightly as the MIME default and `DEFAULT_BROWSER`, 1Password browser allowlist, Chrome external-extension directory (Unclutter) |
+| `browsers.nix` | `programs.firefox` (nixpkgs Firefox with VAAPI prefs, AI chatbot sidebar off), Firefox Nightly as the MIME default and `DEFAULT_BROWSER`, 1Password browser allowlist |
 | `hyprland.nix` | **Not imported** (commented out in `configuration.nix`). Opt-in second session next to Plasma: Hyprland under UWSM ("Hyprland (uwsm-managed)" in SDDM), Waybar/rofi/mako/hyprpaper/hyprlock/nwg-dock, the Hyprland portal config and the UWSM env that lets KDE apps (Dolphin etc.) work outside Plasma. Dotfiles live outside this repo |
 | `theme.nix`    | 16-color terminal palette (plain Nix value, imported by `configuration.nix`) |
 
@@ -183,9 +183,7 @@ version + checksum in a `manifest.json` refreshed by a sibling `update.sh`.
 (via `services/pcp-grafana.nix`).
 
 **Overlay-based:** `firefox-nightly` (nixpkgs-mozilla + wrapper in `../overlays/default.nix`),
-`unclutter` (browser extension built from source with bun/WXT; shipped to Firefox Nightly as a
-distribution add-on and to Google Chrome as an external CRX via `/etc/opt/chrome/extensions`),
-`jetbrains` (PhpStorm), `google-chrome` (Vulkan disabled, external-extensions symlink), `steam`
+`jetbrains` (PhpStorm), `google-chrome` (Vulkan disabled, Plasma/Qt integration), `steam`
 (`libgdiplus`), `drkonqi` (GDB preamble patch).
 
 ---

@@ -40,7 +40,7 @@
             # and reports success, so "Extract and trash archive" trashed RARs
             # unextracted. Pin patchelf 0.15.2 for this build, as nixpkgs does
             # for CUDA redists. Guarded on 0.19.2, so it goes inert once patchelf
-            # moves; check that `unrar` still runs then.
+            # moves.
             (final: prev: {
                 rar = prev.rar.overrideAttrs (old:
                     prev.lib.optionalAttrs (prev.patchelf.version == "0.19.2") {
@@ -65,10 +65,6 @@
                 google-chrome = (prev.google-chrome.override {
                     commandLineArgs = "--disable-features=Vulkan";
                     plasmaSupport = true;
-                }).overrideAttrs (old: {
-                    postInstall = (old.postInstall or "") + ''
-                        ln -s /etc/opt/chrome/extensions "$out/share/google/chrome/extensions"
-                    '';
                 });
             })
         ];

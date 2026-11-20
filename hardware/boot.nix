@@ -4,23 +4,12 @@
     ];
 
     boot = {
-        # xanmod 7.3 already carries upstream 10a47fb6 ("tools: add 128-bit
-        # integer types for aarch64"), but nixpkgs still applies its backport
-        # (kernelPatches.tools_128bit_types) to every xanmod variant, while its
-        # mainline linux_7_3 omits it. Re-applying it fails patchPhase in the
-        # kernel and cpupower (2026-11-09). Dropped on >= 7.3 only; the filter is
-        # a no-op once nixpkgs stops listing it, so delete the override then.
         kernelPackages = (pkgs.linuxPackagesFor (pkgs.linux_xanmod_latest.override (old: {
             kernelPatches = builtins.filter
                 (p: !(lib.versionAtLeast pkgs.linux_xanmod_latest.version "7.3"
                       && p.name == pkgs.kernelPatches.tools_128bit_types.name))
                 old.kernelPatches;
         }))).extend (final: prev: {
-            # nixpkgs#575192 — since the kmodigest module signing (nixpkgs#571181) the
-            # module aggregator wants a <module>.ko.cer beside every external module, and
-            # only Kbuild's modules_install writes one. nixpkgs' ryzen-smu (enabled in
-            # power.nix) copies its .ko by hand, so re-install it through modules_install.
-            # Drop once upstream ryzen-smu installs that way itself.
             ryzen-smu = prev.ryzen-smu.overrideAttrs (old: {
                 postInstall = (old.postInstall or "") + ''
                     rm -f $out/lib/modules/${final.kernel.modDirVersion}/kernel/drivers/ryzen_smu/ryzen_smu.ko
@@ -33,8 +22,6 @@
         });
 
         initrd = {
-            #systemd.enable = true;
-
             kernelModules = [
                 "nvidia"
                 "nvidia_drm"
@@ -91,7 +78,7 @@
             # zram swap (./filesystems.nix): no readahead of swap pages
             # (each is decompressed individually anyway).
             "vm.page-cluster" = 0;
-            # ...and prefer compressing idle anonymous pages over dropping
+            # Prefer compressing idle anonymous pages over dropping
             # page cache: swap is RAM-speed here, so the kernel docs suggest
             # values above 100.
             "vm.swappiness" = 150;

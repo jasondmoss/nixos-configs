@@ -45,10 +45,6 @@ in {
             };
         };
 
-        # No "--all": it also deleted every image not used by a *running*
-        # container, so each weekly run made Lando/DDEV pull their images
-        # again. Stopped containers, unused networks, dangling images and
-        # build cache still go.
         autoPrune = {
             enable = true;
             dates = "weekly";
@@ -61,8 +57,6 @@ in {
         description = "Remove Docker raw-table DROP rules left behind by deleted networks";
         after = [ "docker.service" ];
         bindsTo = [ "docker.service" ];
-        # multi-user.target so a rebuild starts it; docker.service so it comes
-        # back whenever Docker is restarted (bindsTo stops it with Docker).
         wantedBy = [ "multi-user.target" "docker.service" ];
         serviceConfig = {
             ExecStart = "${dockerRawRulesGc}/bin/docker-raw-rules-gc";

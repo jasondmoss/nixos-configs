@@ -1,4 +1,4 @@
-{ lib,  stdenv,  makeDesktopItem,  firefox-src,  unclutter }:
+{ lib,  stdenv,  makeDesktopItem,  firefox-src }:  # unclutter: retired 2026-11-20
 
 let
     firefoxNightlyDesktopItem = makeDesktopItem {
@@ -59,8 +59,8 @@ let
     # (desktop/browsers.nix) writes it. Nightly shares MOZ_APP_NAME=firefox, so today
     # this file is skipped and the prefs below only apply because
     # programs.firefox.preferences carries the same set. Anything that must
-    # reach Nightly *only* cannot go through policies; the Unclutter add-on
-    # below therefore uses the distribution/extensions mechanism instead.
+    # reach Nightly *only* cannot go through policies; the (retired) Unclutter
+    # add-on below therefore used the distribution/extensions mechanism.
     firefoxNightlyPrefs = {
         "media.ffmpeg.vaapi.enabled" = true;
         "media.rdd-ffvpx.enabled" = false;
@@ -152,19 +152,24 @@ echo '${builtins.toJSON firefoxNightlyPolicies}' > "$LIB_DIR/distribution/polici
 #    about:addons only lasts until the next start for the same reason; drop
 #    it from the config to remove it.
 # Default prefs, not locked: still overridable in about:config.
-mkdir -p "$LIB_DIR/distribution/extensions"
-cp ${unclutter}/share/unclutter/unclutter.xpi \
-    "$LIB_DIR/distribution/extensions/${unclutter.geckoId}.xpi"
-cat > "$LIB_DIR/defaults/pref/autoconfig.js" <<EOF
-//
-pref("general.config.filename", "mozilla.cfg");
-pref("general.config.obscure_value", 0);
-EOF
-cat > "$LIB_DIR/mozilla.cfg" <<EOF
-// First line must be a comment. Autoconfig for the Unclutter distribution add-on.
-defaultPref("xpinstall.signatures.required", false);
-clearPref("extensions.installedDistroAddon.${unclutter.geckoId}");
-EOF
+#
+# Retired 2026-11-20 (package archived as ../archive/unclutter.tar.gz); the
+# autoconfig existed only for this add-on, so it went too. To restore, unpack
+# the package, re-add `unclutter` to the argument list, uncomment and drop
+# the escaping quote pairs before each dollar-brace.
+#mkdir -p "$LIB_DIR/distribution/extensions"
+#cp ''${unclutter}/share/unclutter/unclutter.xpi \
+#    "$LIB_DIR/distribution/extensions/''${unclutter.geckoId}.xpi"
+#cat > "$LIB_DIR/defaults/pref/autoconfig.js" <<EOF
+#//
+#pref("general.config.filename", "mozilla.cfg");
+#pref("general.config.obscure_value", 0);
+#EOF
+#cat > "$LIB_DIR/mozilla.cfg" <<EOF
+#// First line must be a comment. Autoconfig for the Unclutter distribution add-on.
+#defaultPref("xpinstall.signatures.required", false);
+#clearPref("extensions.installedDistroAddon.''${unclutter.geckoId}");
+#EOF
 
 # Desktop Item
 mkdir -p "$out/share/applications"

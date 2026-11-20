@@ -12,15 +12,12 @@
             checkReversePath = "loose";
             logRefusedConnections = true;
 
-            # Nothing is open to the world. SSH is admitted from the LAN only
-            # (extraCommands below); KDE Connect's 1714–1764 TCP/UDP range is
-            # opened by programs.kdeconnect itself (programs.nix).
             allowedTCPPorts = [];
             allowedUDPPorts = [];
 
             # SSH from the local subnet only. services.openssh.openFirewall is
             # off (below), so this rule is the only way in. Widen the source
-            # range if you ever need to reach the box from another network.
+            # range to reach the box from another network.
             extraCommands = ''
 iptables -A nixos-fw -p tcp --dport 22 -s 192.168.100.0/24 -j nixos-fw-accept
             '';
@@ -32,9 +29,8 @@ iptables -A nixos-fw -p tcp --dport 22 -s 192.168.100.0/24 -j nixos-fw-accept
             wifi.powersave = false;
             plugins = with pkgs; [ networkmanager-openvpn ];
 
-            # One uplink at a time. With the cable in, Wi-Fi used to join the
-            # same LAN as a second interface. Now Wi-Fi is disconnected while
-            # a wired link is up and reconnects when the last one goes down.
+            # One uplink at a time. Wi-Fi is disconnected while a wired link is
+            # up and reconnects when the last one goes down.
             dispatcherScripts = [{
                 type = "basic";
                 source = pkgs.writeShellScript "wifi-yields-to-ethernet" ''

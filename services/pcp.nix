@@ -85,10 +85,6 @@ ${optionalString (pmdaEntries != "") ''
     customPmieFile = pkgs.writeText "pcp-atreides.pmie" cfg.pmieConfig;
 
     # Environment for PCP services + interactive CLI tools.
-    # Override PCP_*_DIR to mutable system paths (the store copies are read-only).
-    # The package's pcp.conf already carries the /var/log + /var/lib/pcp/tmp
-    # paths (pmpost ignores the environment); PCP_VAR_DIR and the pmcd.conf path
-    # exist only here.
     pcpEnv = {
         PCP_CONF = pcpConf;
         PCP_DIR = pcpDir;
@@ -142,15 +138,19 @@ ${optionalString (pmdaEntries != "") ''
 
     pmproxyHardening = baseHardening;
 
-    # PATH for the units that run pmlogger_daily (pmlogger.service runs it as
-    # `pmlogger_daily -K` from pmlogger_check). pmlogger_daily only turns
-    # compression on (COMPRESSAFTER=0) when `which zstd` succeeds — its xz probe
-    # looks for "zx", an upstream typo — and pmlogcompress picks zstd for volumes
-    # ≥ 50 MB, xz below that. Without `which`/`zstd`/`xz` here compression
-    # silently stayed at "never".
     pmloggerPath = with pkgs; [
-        coreutils gawk gnused gnugrep hostname findutils util-linux procps
-        which zstd xz cfg.package
+        coreutils
+        gawk
+        gnused
+        gnugrep
+        hostname
+        findutils
+        util-linux
+        procps
+        which
+        zstd
+        xz
+        cfg.package
     ];
 
     ipFiltering = optionalAttrs (cfg.allowedNetworks != []) {
@@ -160,9 +160,9 @@ ${optionalString (pmdaEntries != "") ''
 
 in
 {
-    # ═══════════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════════════════
     # Options interface (kept compatible with upstream services.pcp.*)
-    # ═══════════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════════════════
 
     options.services.pcp = {
         enable = mkEnableOption "Performance Co-Pilot monitoring services";
@@ -295,7 +295,6 @@ in
     # ═══════════════════════════════════════════════════════════════════════
 
     config = mkMerge [
-
         # atreides host profile
         #
         # Self-activating: local always-on collector + archive logger + inference,
@@ -312,8 +311,8 @@ in
                 # not loopback (IPAddressAllow/IPAddressDeny on both units).
                 allowedNetworks = mkDefault [ "localhost" ];
 
-                # proc PMDA (pipe) — needed for per-process + hotproc metrics used by
-                # the desktop RSS rule below.
+                # proc PMDA (pipe) — needed for per-process + hotproc metrics used
+                # by the desktop RSS rule below.
                 pmdas.proc = {
                     domain = 3;
                     type = "pipe";

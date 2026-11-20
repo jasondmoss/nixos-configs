@@ -20,8 +20,8 @@
             # Telemetry opt-outs honoured by common dev tooling. None of these
             # change functionality; they only stop usage/crash reporting.
             DO_NOT_TRACK = "1";
-            DISABLE_TELEMETRY = "1";                # claude-code (Statsig) + others
-            DISABLE_ERROR_REPORTING = "1";          # claude-code (Sentry)
+            DISABLE_TELEMETRY = "1";           # claude-code (Statsig) + others
+            DISABLE_ERROR_REPORTING = "1";     # claude-code (Sentry)
             DOTNET_CLI_TELEMETRY_OPTOUT = "1";
             NEXT_TELEMETRY_DISABLED = "1";
             NUXT_TELEMETRY_DISABLED = "1";
@@ -29,7 +29,7 @@
             GATSBY_TELEMETRY_DISABLED = "1";
             STORYBOOK_DISABLE_TELEMETRY = "1";
             TURBO_TELEMETRY_DISABLED = "1";
-            CHECKPOINT_DISABLE = "1";               # prisma
+            CHECKPOINT_DISABLE = "1";          # prisma
 
             # Electron/Ozone.
             NIXOS_OZONE_WL = "1";

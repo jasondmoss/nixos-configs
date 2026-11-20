@@ -96,8 +96,6 @@ let
 
         development = with pkgs; [
             # Base Toolchain
-            #cargo              # retired 2026-11-19: no Rust projects, never run
-            #cmake              # retired 2026-11-19: only used in workshop/kde-dev-shell.nix, which has its own
             ddev
             gcc
             gh
@@ -107,25 +105,15 @@ let
             ninja
             nodejs
             pkg-config
-            #rustc              # retired 2026-11-19: no Rust projects, never run
             yarn
 
             # Python — the declared env from the let block above
             systemPython
 
-            # KDE/Qt Specific Development
-            # Retired 2026-11-19: never run, no config files.
-            #clazy
-            #gammaray
-            #heaptrack
-            #qtcreator
-            #valgrind
-
             # GNOME/GTK Development
             glib-networking
 
             # IDEs & Tools
-            #cppcheck           # retired 2026-11-19: never run
             phpstorm
             sublime4-dev
 
@@ -155,7 +143,7 @@ let
             bluedevil
             drkonqi
             kde-cli-tools
-            #koko               # retired 2026-11-19: never opened (nomacs is the viewer)
+            koko
             kwallet
             kwallet-pam
             kwayland
@@ -187,7 +175,6 @@ let
             kdbusaddons
             kdegraphics-thumbnailers
             kdesdk-thumbnailers
-            #krdp               # retired 2026-11-19: unused since 2026-04; also excluded below
             ksshaskpass
             okular
             partitionmanager
@@ -207,7 +194,6 @@ let
             mullvad-browser
             proton-vpn
             tor-browser
-            unclutter
         ];
 
         office = with pkgs; [
@@ -247,9 +233,9 @@ in {
         elisa
         itinerary
         khelpcenter
-        krdp                        # 2026-11-19: Plasma default; RDP server, unused
+        krdp
         plasma-browser-integration
-        plasma-workspace-wallpapers # 2026-11-19: own wallpapers; default "Next" ships in breeze
+        #plasma-workspace-wallpapers
     ];
 
     # GNOME exclude list.
